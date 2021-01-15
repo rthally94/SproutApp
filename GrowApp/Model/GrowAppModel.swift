@@ -32,4 +32,10 @@ class GrowAppModel {
             plants.append(newPlant)
         }
     }
+    
+    func deletePlant(atIndex index: Int) {
+        if index >= plants.startIndex && index < plants.endIndex {
+            plants.remove(at: index)
+        }
+    }
 }

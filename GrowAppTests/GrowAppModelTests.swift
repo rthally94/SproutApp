@@ -22,4 +22,11 @@ class GrowAppModelTests: XCTestCase {
         
         XCTAssertEqual(newPlant, sut.getPlants()[0])
     }
+    
+    func test_whenPlantsIsEmpty_andAPlantIsDeleted_NoErrorOccurs() {
+        let sut = GrowAppModel.preview
+        XCTAssertTrue(sut.getPlants().isEmpty)
+        
+        sut.deletePlant(atIndex: 0)
+    }
 }
