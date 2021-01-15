@@ -29,4 +29,15 @@ class GrowAppModelTests: XCTestCase {
         
         sut.deletePlant(atIndex: 0)
     }
+    
+    func test_whenPlantsHasOnePlant_andAPlantIsDeleted_PlantIsRemoved() {
+        let sut = GrowAppModel.preview
+        sut.addPlant(Plant())
+        
+        XCTAssertEqual(sut.getPlants().count, 1)
+        
+        sut.deletePlant(atIndex: 0)
+        
+        XCTAssertTrue(sut.getPlants().isEmpty)
+    }
 }
