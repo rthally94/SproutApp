@@ -19,23 +19,18 @@ class GrowAppModel {
     
     private init() {}
     
-    private var plants = [Plant]()
+    private var plants = Set<Plant>()
     
     // MARK:- Intents
-    
     func getPlants() -> [Plant] {
-        return plants
+        return Array(plants)
     }
     
     func addPlant(_ newPlant: Plant) {
-        if !plants.contains(newPlant) {
-            plants.append(newPlant)
-        }
+        plants.insert(newPlant)
     }
     
-    func deletePlant(atIndex index: Int) {
-        if index >= plants.startIndex && index < plants.endIndex {
-            plants.remove(at: index)
-        }
+    func deletePlant(_ plant: Plant) {
+        plants.remove(plant)
     }
 }

@@ -7,10 +7,18 @@
 
 import Foundation
 
-class Plant: Equatable {
+class Plant: Hashable, Equatable {
     static func == (lhs: Plant, rhs: Plant) -> Bool {
         lhs.id == rhs.id
+            && lhs.careDates == rhs.careDates
     }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(careDates)
+    }
+    
+    
     
     private(set) var id = UUID()
     private(set) var careDates = [Date]()
