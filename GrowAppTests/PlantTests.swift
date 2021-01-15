@@ -9,20 +9,20 @@ import XCTest
 @testable import GrowApp
 
 class PlantTests: XCTestCase {
-    func test_whenPlantIsIntialized_UUIDIsSet() {
+    func test_initialState_whenPlantIsIntialized_UUIDIsSet() {
         let sut1 = Plant()
         let sut2 = Plant()
         
         XCTAssertNotEqual(sut1.id, sut2.id)
     }
     
-    func test_whenPlantIsInitialized_careDatesIsEmpty() {
+    func test_initialState_whenPlantIsInitialized_careDatesIsEmpty() {
         let sut = Plant()
         
         XCTAssertTrue(sut.careDates.isEmpty)
     }
     
-    func test_whenCareDatesIsEmpty_andACareDateIsAdded_careDatesEquals1() {
+    func test_careDates_whenCareDatesIsEmpty_andACareDateIsAdded_careDatesEquals1() {
         let sut = Plant()
         
         sut.logCare()
