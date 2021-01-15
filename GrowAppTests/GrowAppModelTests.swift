@@ -9,12 +9,12 @@ import XCTest
 @testable import GrowApp
 
 class GrowAppModelTests: XCTestCase {
-    func test_whenModelIsInitialized_withNoData_getAllPlantsIsEmpty() {
+    func test_initialState_whenModelIsInitialized_withNoData_getAllPlantsIsEmpty() {
         let sut = GrowAppModel.preview
         XCTAssertTrue(sut.getPlants().isEmpty)
     }
     
-    func test_whenModelIsInitialized_andOnePlantIsAdded_theNewPlantIsAdded() {
+    func test_initialState_whenModelIsInitialized_andOnePlantIsAdded_theNewPlantIsAdded() {
         let sut = GrowAppModel.preview
         
         let newPlant = Plant()
