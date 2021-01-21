@@ -25,7 +25,11 @@ class Plant: Hashable, Equatable {
     
     //MARK:- Intents
     func logCare() {
-        careDates.append(Date())
+        logCare(on: Date())
+    }
+    
+    func logCare(on date: Date) {
+        careDates.append(date)
     }
     
     var nextCareDate: Date {
