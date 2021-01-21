@@ -31,6 +31,8 @@ class GrowAppModel {
     private var plants = Set<Plant>()
     
     // MARK:- Intents
+    
+    // All Plants
     func getPlants() -> [Plant] {
         return Array(plants)
     }
@@ -41,5 +43,10 @@ class GrowAppModel {
     
     func deletePlant(_ plant: Plant) {
         plants.remove(plant)
+    }
+    
+    // Plant Care
+    func getPlantsNeedingCare(on date: Date) -> [Plant] {
+        plants.filter { Calendar.current.isDate($0.nextCareDate, inSameDayAs: date) }
     }
 }
