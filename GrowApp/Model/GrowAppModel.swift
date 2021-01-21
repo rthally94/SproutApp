@@ -13,6 +13,15 @@ class GrowAppModel {
         let model = GrowAppModel()
         
         // Configure preconfigured model
+        for i in 0...4 {
+            let plant = Plant()
+            
+            let interval = (86_400*i) - 172_800
+            let careDate = Date(timeIntervalSinceNow: Double(interval))
+            plant.logCare(on: careDate)
+            
+            model.addPlant(plant)
+        }
         
         return model
     }
