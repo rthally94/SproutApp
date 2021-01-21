@@ -8,10 +8,33 @@
 import UIKit
 
 class TimelineViewController: UIViewController, UICollectionViewDataSource {
+    static let sectionHeaderElementKind = "sectionHeaderElementKind"
+    
+    let model = GrowAppModel.preview
+    
+    var plantsNeedingCare = [Plant]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        
+        return formatter
+    }()
+    
     var collectionView: UICollectionView!
+    var datePicker = DatePickerCard(frame: .zero)
     
     override func loadView() {
+        super.loadView()
+        
         configureCollectionView()
+        configureDatePicker()
         configureHiearchy()
     }
     
@@ -21,8 +44,9 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
         collectionView.dataSource = self
         
         collectionView.register(TimelineCell.self, forCellWithReuseIdentifier: TimelineCell.reuseIdentifier)
+        collectionView.register(LargeHeader.self, forSupplementaryViewOfKind: TimelineViewController.sectionHeaderElementKind, withReuseIdentifier: LargeHeader.reuseIdentifer)
         
-        collectionView.backgroundColor = .systemBackground
+        collectionView.backgroundColor = .clear
     }
     
     private func makeLayout() -> UICollectionViewLayout {
@@ -30,10 +54,16 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
+            item.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0)
+            
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(100))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
+            
+            let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
+            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: TimelineViewController.sectionHeaderElementKind, alignment: .topLeading)
+            section.boundarySupplementaryItems = [sectionHeader]
             
             return section
         }
@@ -41,8 +71,55 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
         return layout
     }
     
+    private func configureDatePicker() {
+        datePicker.titleLabel.text = "Select Date"
+        datePicker.subtitleLabel.text = TimelineViewController.dateFormatter.string(from: Date())
+    }
+    
     private func configureHiearchy() {
-        view = collectionView
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        datePicker.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(collectionView)
+        view.addSubview(datePicker)
+        
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            datePicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            datePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            datePicker.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            datePicker.heightAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 1.0)
+        ])
+    }
+    
+    private func configureNavBar() {
+        navigationItem.title = TimelineViewController.dateFormatter.string(from: Date())
+        
+        let calendarButton = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(openCalendarPicker))
+        navigationItem.leftBarButtonItem = calendarButton
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        configureNavBar()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        plantsNeedingCare = model.getPlantsNeedingCare(on: Date())
+    }
+    
+    // MARK:- Actions
+    @objc private func openCalendarPicker() {
+        
     }
     
     // MARK:- UICollectionView DataSource
@@ -52,15 +129,29 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        4
+        plantsNeedingCare.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TimelineCell.reuseIdentifier, for: indexPath) as? TimelineCell else { fatalError("Unable to dequeu Timeline Cell") }
         
-        cell.titleLabel.text = "Title"
-        cell.subtitleLabel.text = "Subtitle"
+        if indexPath.item == 0 {
+            cell.imageView.image = UIImage(systemName: "drop.fill")
+        }
+        
+        let plant = plantsNeedingCare[indexPath.item]
+        
+        cell.titleLabel.text = plant.id.uuidString
+        cell.subtitleLabel.text = TimelineViewController.dateFormatter.string(from: Date())
         
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        guard kind == TimelineViewController.sectionHeaderElementKind, let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LargeHeader.reuseIdentifer, for: indexPath) as? LargeHeader else { return UICollectionReusableView() }
+        
+        header.textLabel.text = TimelineViewController.dateFormatter.string(from: Date())
+        
+        return header
     }
 }

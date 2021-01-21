@@ -9,7 +9,10 @@ import UIKit
 
 class TimelineCell: UICollectionViewCell {
     static let reuseIdentifier = "TimelineCellReuseIdentifier"
+    var imageView: UIImageView!
+    
     let divider = DividerView()
+    let cellBackground = RoundedRectContainer(cornerRadius: 16, frame: .zero)
     
     var titleLabel: UILabel!
     var subtitleLabel: UILabel!
@@ -18,6 +21,7 @@ class TimelineCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
+        configureImageView()
         configureTitleLabel()
         configureSubtitleLabel()
         configureTextStack()
@@ -26,6 +30,15 @@ class TimelineCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func configureImageView() {
+        imageView = UIImageView()
+        
+        let symbolConfiguration = UIImage.SymbolConfiguration.init(scale: .large)
+        imageView.preferredSymbolConfiguration = symbolConfiguration
+        imageView.contentMode = .center
+        imageView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
     }
     
     private func configureTitleLabel() {
@@ -42,24 +55,36 @@ class TimelineCell: UICollectionViewCell {
         textStack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
         textStack.alignment = .leading
         textStack.axis = .vertical
+        textStack.distribution = .fillEqually
+        
     }
     
     private func configureHiearchy() {
-        divider.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+//        divider.translatesAutoresizingMaskIntoConstraints = false
+        cellBackground.translatesAutoresizingMaskIntoConstraints = false
         textStack.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(divider)
+        
+        addSubview(imageView)
+//        addSubview(divider)
+        addSubview(cellBackground)
         addSubview(textStack)
         
         NSLayoutConstraint.activate([
-            divider.topAnchor.constraint(equalTo: topAnchor),
-            divider.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            divider.widthAnchor.constraint(equalToConstant: 1),
-            divider.bottomAnchor.constraint(equalTo: bottomAnchor),
+            imageView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: cellBackground.leadingAnchor),
+            imageView.heightAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.heightAnchor, multiplier: 1),
             
-            textStack.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            textStack.leadingAnchor.constraint(equalToSystemSpacingAfter: divider.trailingAnchor, multiplier: 1.0),
-            textStack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-            textStack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
+            cellBackground.topAnchor.constraint(equalTo: topAnchor),
+            cellBackground.leadingAnchor.constraint(equalToSystemSpacingAfter: layoutMarginsGuide.leadingAnchor, multiplier: 4),
+            cellBackground.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            cellBackground.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            textStack.topAnchor.constraint(equalTo: cellBackground.layoutMarginsGuide.topAnchor),
+            textStack.leadingAnchor.constraint(equalTo: cellBackground.layoutMarginsGuide.leadingAnchor),
+            textStack.trailingAnchor.constraint(equalTo: cellBackground.layoutMarginsGuide.trailingAnchor),
+            textStack.bottomAnchor.constraint(equalTo: cellBackground.layoutMarginsGuide.bottomAnchor)
         ])
     }
 }
