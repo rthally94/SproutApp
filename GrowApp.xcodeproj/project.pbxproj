@@ -18,6 +18,10 @@
 		FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */; };
 		FB5F348925B63E6900CCE6BC /* TimelineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* TimelineCell.swift */; };
 		FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348C25B6411F00CCE6BC /* DividerView.swift */; };
+		FB5F349125B7266A00CCE6BC /* RoundedRectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */; };
+		FB5F349725B79BEC00CCE6BC /* LargeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */; };
+		FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F349A25B8829300CCE6BC /* DatePickerCard.swift */; };
+		FB5F34A325B8FA3900CCE6BC /* SlideInPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F34A225B8FA3900CCE6BC /* SlideInPresentationManager.swift */; };
 		FB7490EB25B1E71200925C29 /* GrowAppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */; };
 		FB7490F725B1EB3B00925C29 /* PlantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490F625B1EB3B00925C29 /* PlantTests.swift */; };
 /* End PBXBuildFile section */
@@ -46,6 +50,10 @@
 		FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		FB5F348825B63E6900CCE6BC /* TimelineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineCell.swift; sourceTree = "<group>"; };
 		FB5F348C25B6411F00CCE6BC /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
+		FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectContainer.swift; sourceTree = "<group>"; };
+		FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeHeader.swift; sourceTree = "<group>"; };
+		FB5F349A25B8829300CCE6BC /* DatePickerCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCard.swift; sourceTree = "<group>"; };
+		FB5F34A225B8FA3900CCE6BC /* SlideInPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideInPresentationManager.swift; sourceTree = "<group>"; };
 		FB7490E825B1E71200925C29 /* GrowAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowAppModelTests.swift; sourceTree = "<group>"; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -116,7 +124,10 @@
 		FB5F348225B4C28300CCE6BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FB5F34A025B8FA0700CCE6BC /* BottomCard */,
 				FB5F348C25B6411F00CCE6BC /* DividerView.swift */,
+				FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */,
+				FB5F349A25B8829300CCE6BC /* DatePickerCard.swift */,
 				FB5F348325B4C29100CCE6BC /* Timeline */,
 			);
 			path = Views;
@@ -127,8 +138,25 @@
 			children = (
 				FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */,
 				FB5F348825B63E6900CCE6BC /* TimelineCell.swift */,
+				FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */,
 			);
 			path = Timeline;
+			sourceTree = "<group>";
+		};
+		FB5F34A025B8FA0700CCE6BC /* BottomCard */ = {
+			isa = PBXGroup;
+			children = (
+				FB5F34A125B8FA1100CCE6BC /* BottomSlidePresentation */,
+			);
+			path = BottomCard;
+			sourceTree = "<group>";
+		};
+		FB5F34A125B8FA1100CCE6BC /* BottomSlidePresentation */ = {
+			isa = PBXGroup;
+			children = (
+				FB5F34A225B8FA3900CCE6BC /* SlideInPresentationManager.swift */,
+			);
+			path = BottomSlidePresentation;
 			sourceTree = "<group>";
 		};
 		FB7490E925B1E71200925C29 /* GrowAppTests */ = {
@@ -245,9 +273,13 @@
 				FB5F348925B63E6900CCE6BC /* TimelineCell.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
 				FB21B71225B1E61100D02384 /* Plant.swift in Sources */,
+				FB5F34A325B8FA3900CCE6BC /* SlideInPresentationManager.swift in Sources */,
+				FB5F349725B79BEC00CCE6BC /* LargeHeader.swift in Sources */,
+				FB5F349125B7266A00CCE6BC /* RoundedRectContainer.swift in Sources */,
 				FB21B70F25B1E5F500D02384 /* GrowAppModel.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
 				FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */,
+				FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
