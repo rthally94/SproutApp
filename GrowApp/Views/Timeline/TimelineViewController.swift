@@ -28,13 +28,11 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
     }()
     
     var collectionView: UICollectionView!
-    var datePicker = DatePickerCard(frame: .zero)
     
     override func loadView() {
         super.loadView()
         
         configureCollectionView()
-        configureDatePicker()
         configureHiearchy()
     }
     
@@ -71,17 +69,10 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
         return layout
     }
     
-    private func configureDatePicker() {
-        datePicker.titleLabel.text = "Select Date"
-        datePicker.subtitleLabel.text = TimelineViewController.dateFormatter.string(from: Date())
-    }
-    
     private func configureHiearchy() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        datePicker.translatesAutoresizingMaskIntoConstraints = false
         
         view.addSubview(collectionView)
-        view.addSubview(datePicker)
         
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -89,20 +80,13 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
-        
-        NSLayoutConstraint.activate([
-            datePicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            datePicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            datePicker.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            datePicker.heightAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 1.0)
-        ])
     }
     
     private func configureNavBar() {
         navigationItem.title = TimelineViewController.dateFormatter.string(from: Date())
         
         let calendarButton = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(openCalendarPicker))
-        navigationItem.leftBarButtonItem = calendarButton
+        navigationItem.rightBarButtonItem = calendarButton
     }
     
     override func viewDidLoad() {
@@ -119,7 +103,9 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
     
     // MARK:- Actions
     @objc private func openCalendarPicker() {
-        
+        let vc = DatePickerCardViewController(nibName: nil, bundle: nil)
+        vc.modalPresentationStyle = .automatic
+        self.present(vc, animated: true)
     }
     
     // MARK:- UICollectionView DataSource
