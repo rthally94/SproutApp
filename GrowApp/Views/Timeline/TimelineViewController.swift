@@ -109,6 +109,7 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
         weekPicker.layer.shadowRadius = 1
         weekPicker.layer.shadowOpacity = 0.2
         weekPicker.layer.shadowOffset = CGSize(width: 0, height: 0)
+        weekPicker.delegate = self
     }
     
     override func viewDidLoad() {
@@ -167,5 +168,11 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
         header.textLabel.text = TimelineViewController.dateFormatter.string(from: Date())
         
         return header
+    }
+}
+
+extension TimelineViewController: WeekPickerDelegate {
+    func weekPicker(_ weekPicker: WeekPicker, didSelect date: Date) {
+        self.navigationItem.title = TimelineViewController.dateFormatter.string(from: date)
     }
 }

@@ -7,13 +7,19 @@
 
 import UIKit
 
+protocol WeekPickerDelegate {
+    func weekPicker(_ weekPicker: WeekPicker, didSelect date: Date)
+}
+
 class WeekPicker: UIView {
     private var pickerView: UICollectionView!
     private var pickerHeader: UIStackView!
     private var currentDateLabel = UILabel(frame: .zero)
     
     var selectedWeekday: Int = Calendar.current.component(.weekday, from: Date())
+    
     var dates = [Date]()
+    var delegate: WeekPickerDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -88,15 +94,15 @@ class WeekPicker: UIView {
     }
     
     private func configureDates(for date: Date) {
-        guard let startOfWeek = Calendar.current.nextWeekend(startingAfter: date, direction: .backward)?.start,
-              let previousWeek = Calendar.current.date(byAdding: .day, value: -7, to: startOfWeek),
+        guard let startOfWeek = Calendar.current.dateComponents([.calendar, .yearForWeekOfYear, .weekOfYear], from: date).date,
+              let previousWeek = Calendar.current.date(byAdding: .day, value: -8, to: startOfWeek),
               let nextWeek = Calendar.current.date(byAdding: .day, value: 14, to: startOfWeek)
         else { return }
         
         var dates = [Date]()
         Calendar.current.enumerateDates(startingAfter: previousWeek, matching: .init(hour: 0, minute: 0, second: 0), matchingPolicy: .nextTime, using: {(date, strict, stop) in
             if let date = date {
-                if date <= nextWeek {
+                if date < nextWeek {
                     dates.append(date)
                 } else {
                     stop = true
@@ -112,32 +118,56 @@ class WeekPicker: UIView {
         selectedWeekday = Calendar.current.component(.weekday, from: date)
         configureDates(for: date)
         pickerView.reloadData()
-        pickerView.scrollToItem(at: IndexPath(item: 7+selectedWeekday, section: 0), at: .centeredHorizontally, animated: animated)
+        pickerView.scrollToItem(at: IndexPath(item: 0, section: 1), at: .centeredHorizontally, animated: animated)
+        delegate?.weekPicker(self, didSelect: date)
     }
 }
 
 extension WeekPicker: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return 3
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dates.count
+        return 7
         
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: WeekPickerCell.reuseIdentifier, for: indexPath) as? WeekPickerCell else { return UICollectionViewCell() }
         
-        let date = dates[indexPath.item]
+        let date = dates[(indexPath.section * 7) + indexPath.item]
+        
         cell.textLabel.text = String(Calendar.current.component(.day, from: date))
         
-        if Calendar.current.isDateInToday(date) {
-            cell.textLabel.textColor = .red
-        }
+        let isSelectedDay = indexPath.section == 1 && (indexPath.item % 7)+1 == selectedWeekday
+        let isToday = Calendar.current.isDateInToday(date)
         
-        if (indexPath.item % 7)+1 == selectedWeekday {
-            cell.textLabel.font = UIFont.preferredFont(forTextStyle: .title3)
+        if isSelectedDay && isToday {
+            // Apply accent color
+            let accentColor = UIColor(named: "AccentColor")
+            var brightness: CGFloat = 0.0
+            accentColor?.getWhite(&brightness, alpha: nil)
+            
+            cell.tintColor = accentColor
+            
+            // Configure background circle
+            let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 32, weight: .bold)
+            cell.imageView.image = UIImage(systemName: "circle.fill", withConfiguration: symbolConfiguration)
+            
+            // Configure text label
+            cell.textLabel.textColor = brightness > 0.75 ? UIColor.black : UIColor.white
+            
+        } else if isToday {
+            cell.tintColor = window?.tintColor
+            
+        } else if isSelectedDay {
+            // Configure background circle
+            let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 32, weight: .bold)
+            cell.imageView.image = UIImage(systemName: "circle.fill", withConfiguration: symbolConfiguration)
+            
+            // Configure text label
+            cell.textLabel.textColor = .systemGray6
         }
         
         return cell
@@ -152,6 +182,10 @@ extension WeekPicker: UICollectionViewDelegate {
         } else if newPage == 2 {
             selectDate(dates[(selectedWeekday-1) + 7*newPage], animated: false)
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectDate(dates[indexPath.item%7 + 7], animated: true)
     }
 }
 
