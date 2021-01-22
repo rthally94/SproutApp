@@ -9,15 +9,6 @@ import UIKit
 
 class TimelineViewController: UIViewController, UICollectionViewDataSource {
     static let sectionHeaderElementKind = "sectionHeaderElementKind"
-    
-    let model = GrowAppModel.preview
-    
-    var plantsNeedingCare = [Plant]() {
-        didSet {
-            collectionView.reloadData()
-        }
-    }
-    
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         
@@ -27,6 +18,15 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
         return formatter
     }()
     
+    let model = GrowAppModel.preview
+    
+    var plantsNeedingCare = [Plant]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
+    
+    var weekPicker = WeekPicker(frame: .zero)
     var collectionView: UICollectionView!
     
     override func loadView() {
@@ -70,12 +70,19 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
     }
     
     private func configureHiearchy() {
+        weekPicker.translatesAutoresizingMaskIntoConstraints = false
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         
+        view.addSubview(weekPicker)
         view.addSubview(collectionView)
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            weekPicker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            weekPicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            weekPicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            weekPicker.heightAnchor.constraint(equalTo: weekPicker.widthAnchor, multiplier: 1/7, constant: 36),
+
+            collectionView.topAnchor.constraint(equalTo: weekPicker.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
@@ -83,22 +90,43 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
     }
     
     private func configureNavBar() {
-        navigationItem.title = TimelineViewController.dateFormatter.string(from: Date())
-        
         let calendarButton = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(openCalendarPicker))
         navigationItem.rightBarButtonItem = calendarButton
+        
+        let navigationBar = navigationController?.navigationBar
+        let navigationBarAppearence = UINavigationBarAppearance()
+        navigationBarAppearence.shadowColor = .clear
+        navigationBarAppearence.backgroundColor = UIColor(named: "NavBarColor")
+        navigationBar?.scrollEdgeAppearance = navigationBarAppearence
+        navigationBar?.standardAppearance = navigationBarAppearence
+        
+        navigationBar?.isTranslucent = false
+    }
+    
+    private func configureWeekPicker() {
+        weekPicker.backgroundColor = UIColor(named: "NavBarColor")
+        weekPicker.layer.masksToBounds = false
+        weekPicker.layer.shadowRadius = 1
+        weekPicker.layer.shadowOpacity = 0.2
+        weekPicker.layer.shadowOffset = CGSize(width: 0, height: 0)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureNavBar()
+        configureWeekPicker()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         plantsNeedingCare = model.getPlantsNeedingCare(on: Date())
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        weekPicker.selectDate(Date(), animated: false)
     }
     
     // MARK:- Actions

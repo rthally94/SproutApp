@@ -7,13 +7,19 @@
 
 import UIKit
 
+protocol DatePickerCardDelegate {
+    func didSelect(date: Date)
+}
+
 class DatePickerCard: UIView {
     let background = RoundedRectContainer(cornerRadius: 20, frame: .zero)
     let datePicker = UIDatePicker()
+    var delegate: DatePickerCardDelegate?
     
     func configureDatePicker() {
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .inline
+        datePicker.addTarget(self, action: #selector(dateSelected), for: .valueChanged)
     }
     
     func configureHiearchy() {
@@ -38,7 +44,7 @@ class DatePickerCard: UIView {
         ])
     }
     
-    // MARK:- View Lifecycle
+    // MARK:- Inits
     convenience init() {
         self.init(frame: .zero)
     }
@@ -49,6 +55,7 @@ class DatePickerCard: UIView {
         configureHiearchy()
     }
     
+    // MARK:- View Lifecycle
     override func layoutSubviews() {
         super.layoutSubviews()
 
@@ -57,5 +64,14 @@ class DatePickerCard: UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK:- Actions
+    
+    @objc private func dateSelected() {
+        if let delegate = delegate {
+            let date = datePicker.date
+            delegate.didSelect(date: date)
+        }
     }
 }
