@@ -11,7 +11,6 @@ class TimelineCell: UICollectionViewCell {
     static let reuseIdentifier = "TimelineCellReuseIdentifier"
     var imageView: UIImageView!
     
-    let divider = DividerView()
     let cellBackground = RoundedRectContainer(cornerRadius: 16, frame: .zero)
     
     var titleLabel: UILabel!
@@ -61,12 +60,10 @@ class TimelineCell: UICollectionViewCell {
     
     private func configureHiearchy() {
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        divider.translatesAutoresizingMaskIntoConstraints = false
         cellBackground.translatesAutoresizingMaskIntoConstraints = false
         textStack.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(imageView)
-//        addSubview(divider)
         addSubview(cellBackground)
         addSubview(textStack)
         
