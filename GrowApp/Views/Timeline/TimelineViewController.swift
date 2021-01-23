@@ -20,6 +20,7 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
     
     let model = GrowAppModel.preview
     
+    var selectedDate: Date = Date()
     var plantsNeedingCare = [Plant]() {
         didSet {
             collectionView.reloadData()
@@ -38,12 +39,8 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
     
     private func configureCollectionView() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        
         collectionView.dataSource = self
-        
         collectionView.register(TimelineCell.self, forCellWithReuseIdentifier: TimelineCell.reuseIdentifier)
-        collectionView.register(LargeHeader.self, forSupplementaryViewOfKind: TimelineViewController.sectionHeaderElementKind, withReuseIdentifier: LargeHeader.reuseIdentifer)
-        
         collectionView.backgroundColor = .clear
     }
     
@@ -58,11 +55,6 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
             
             let section = NSCollectionLayoutSection(group: group)
-            
-            let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(50))
-            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: TimelineViewController.sectionHeaderElementKind, alignment: .topLeading)
-            section.boundarySupplementaryItems = [sectionHeader]
-            
             return section
         }
         
@@ -122,12 +114,12 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        plantsNeedingCare = model.getPlantsNeedingCare(on: Date())
+        plantsNeedingCare = model.getPlantsNeedingCare(on: selectedDate)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        weekPicker.selectDate(Date(), animated: false)
+        weekPicker.selectDate(selectedDate, animated: false)
     }
     
     // MARK:- Actions
@@ -158,21 +150,19 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
         
         cell.titleLabel.text = plant.id.uuidString
         cell.subtitleLabel.text = TimelineViewController.dateFormatter.string(from: Date())
+        cell.cellBackground.backgroundColor = .systemGray6
         
         return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        guard kind == TimelineViewController.sectionHeaderElementKind, let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: LargeHeader.reuseIdentifer, for: indexPath) as? LargeHeader else { return UICollectionReusableView() }
-        
-        header.textLabel.text = TimelineViewController.dateFormatter.string(from: Date())
-        
-        return header
     }
 }
 
 extension TimelineViewController: WeekPickerDelegate {
     func weekPicker(_ weekPicker: WeekPicker, didSelect date: Date) {
-        self.navigationItem.title = TimelineViewController.dateFormatter.string(from: date)
+        if date != selectedDate {
+            selectedDate = date
+            self.navigationItem.title = TimelineViewController.dateFormatter.string(from: selectedDate)
+            self.plantsNeedingCare = model.getPlantsNeedingCare(on: selectedDate)
+            self.collectionView.reloadData()
+        }
     }
 }
