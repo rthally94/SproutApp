@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 class GrowAppModel {
     static var shared = GrowAppModel()
@@ -14,11 +15,12 @@ class GrowAppModel {
         
         // Configure preconfigured model
         for i in 0...4 {
-            let plant = Plant()
+            let task = Task(name: "DefaultTask", iconImage: UIImage(systemName: "drop.fill"), logs: [])
+            let plant = Plant(name: "My Plant \(i)", common_names: [], tasks: [task])
             
             let interval = (86_400*i) - 172_800
             let careDate = Date(timeIntervalSinceNow: Double(interval))
-            plant.logCare(on: careDate)
+            plant.tasks.first?.logCompletedCare(on: careDate)
             
             model.addPlant(plant)
         }
@@ -47,6 +49,14 @@ class GrowAppModel {
     
     // Plant Care
     func getPlantsNeedingCare(on date: Date) -> [Plant] {
-        plants.filter { Calendar.current.isDate($0.nextCareDate, inSameDayAs: date) }
+        plants.filter { plant in
+            for task in plant.tasks {
+                if Calendar.current.isDate(task.nextCareDate, inSameDayAs: date) == true {
+                    return true
+                }
+            }
+            
+            return false
+        }
     }
 }

@@ -6,37 +6,46 @@
 //
 
 import Foundation
+import UIKit
 
-class Plant: Hashable, Equatable {
+class Plant {
+    var id: UUID
+    
+    var name: String
+    var scientific_name: String?
+    var common_names: [String]
+    
+    var iconImage: UIImage?
+    
+    var tasks: [Task]
+    
+    internal init(id: UUID = UUID(), name: String, scientific_name: String? = nil, common_names: [String], iconImage: UIImage? = nil, tasks: [Task]) {
+        self.id = id
+        self.name = name
+        self.scientific_name = scientific_name
+        self.common_names = common_names
+        self.iconImage = iconImage
+        self.tasks = tasks
+    }
+}
+
+//MARK:- Intents
+extension Plant {
+    func logCare(for task: Task) {
+        logCare(for: task, on: Date())
+    }
+    
+    func logCare(for task: Task, on date: Date) {
+        task.logCompletedCare(on: date)
+    }
+}
+
+extension Plant: Hashable, Equatable {
     static func == (lhs: Plant, rhs: Plant) -> Bool {
         lhs.id == rhs.id
-            && lhs.careDates == rhs.careDates
     }
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
-        hasher.combine(careDates)
-    }
-    
-    
-    
-    private(set) var id = UUID()
-    private(set) var careDates = [Date]()
-    
-    //MARK:- Intents
-    func logCare() {
-        logCare(on: Date())
-    }
-    
-    func logCare(on date: Date) {
-        careDates.append(date)
-    }
-    
-    var nextCareDate: Date {
-        if let lastDate = careDates.last, let next = Calendar.current.date(byAdding: .day, value: 1, to: lastDate) {
-            return Calendar.current.startOfDay(for: next)
-        } else {
-            return Calendar.current.startOfDay(for: Date())
-        }
     }
 }

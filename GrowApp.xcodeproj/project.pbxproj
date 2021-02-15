@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0A9F2625DACEA00084AED8 /* Task.swift */; };
+		FB0A9F2B25DACF450084AED8 /* LogEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0A9F2A25DACF450084AED8 /* LogEntry.swift */; };
 		FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */; };
 		FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B6F925B1E5CC00D02384 /* SceneDelegate.swift */; };
 		FB21B6FC25B1E5CC00D02384 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B6FB25B1E5CC00D02384 /* ViewController.swift */; };
-		FB21B6FF25B1E5CC00D02384 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB21B6FD25B1E5CC00D02384 /* Main.storyboard */; };
 		FB21B70125B1E5CC00D02384 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB21B70025B1E5CC00D02384 /* Assets.xcassets */; };
 		FB21B70425B1E5CC00D02384 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB21B70225B1E5CC00D02384 /* LaunchScreen.storyboard */; };
 		FB21B70F25B1E5F500D02384 /* GrowAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B70E25B1E5F500D02384 /* GrowAppModel.swift */; };
@@ -35,6 +36,8 @@
 		FB7B817A25BF47EC0053E543 /* ToggleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B817925BF47EC0053E543 /* ToggleTableViewCell.swift */; };
 		FB7B817E25BF58C20053E543 /* FormCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B817D25BF58C20053E543 /* FormCell.swift */; };
 		FB7B818225BF7F5E0053E543 /* CareInfoHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B818125BF7F5E0053E543 /* CareInfoHeaderCell.swift */; };
+		FB7B818B25C073EA0053E543 /* FormController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B818A25C073EA0053E543 /* FormController.swift */; };
+		FB7B819125C08F380053E543 /* CareInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B819025C08F380053E543 /* CareInfoCell.swift */; };
 		FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -49,11 +52,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FB0A9F2625DACEA00084AED8 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		FB0A9F2A25DACF450084AED8 /* LogEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogEntry.swift; sourceTree = "<group>"; };
 		FB21B6F425B1E5CC00D02384 /* GrowApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrowApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB21B6F925B1E5CC00D02384 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FB21B6FB25B1E5CC00D02384 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		FB21B6FE25B1E5CC00D02384 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		FB21B70025B1E5CC00D02384 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB21B70325B1E5CC00D02384 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FB21B70525B1E5CC00D02384 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -81,6 +85,8 @@
 		FB7B817925BF47EC0053E543 /* ToggleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTableViewCell.swift; sourceTree = "<group>"; };
 		FB7B817D25BF58C20053E543 /* FormCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormCell.swift; sourceTree = "<group>"; };
 		FB7B818125BF7F5E0053E543 /* CareInfoHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoHeaderCell.swift; sourceTree = "<group>"; };
+		FB7B818A25C073EA0053E543 /* FormController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormController.swift; sourceTree = "<group>"; };
+		FB7B819025C08F380053E543 /* CareInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoCell.swift; sourceTree = "<group>"; };
 		FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCardViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,7 +134,6 @@
 				FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */,
 				FB21B6F925B1E5CC00D02384 /* SceneDelegate.swift */,
 				FB21B6FB25B1E5CC00D02384 /* ViewController.swift */,
-				FB21B6FD25B1E5CC00D02384 /* Main.storyboard */,
 				FB21B70025B1E5CC00D02384 /* Assets.xcassets */,
 				FB21B70225B1E5CC00D02384 /* LaunchScreen.storyboard */,
 				FB21B70525B1E5CC00D02384 /* Info.plist */,
@@ -141,6 +146,8 @@
 			children = (
 				FB21B70E25B1E5F500D02384 /* GrowAppModel.swift */,
 				FB21B71125B1E61100D02384 /* Plant.swift */,
+				FB0A9F2625DACEA00084AED8 /* Task.swift */,
+				FB0A9F2A25DACF450084AED8 /* LogEntry.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -197,6 +204,7 @@
 		FB7B812425B9D4B80053E543 /* Compoents */ = {
 			isa = PBXGroup;
 			children = (
+				FB7B818925C073C40053E543 /* FormController */,
 				FB7B815A25BE19060053E543 /* OutlineImageCell.swift */,
 				FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */,
 				FB5F348C25B6411F00CCE6BC /* DividerView.swift */,
@@ -240,8 +248,17 @@
 				FB7B817925BF47EC0053E543 /* ToggleTableViewCell.swift */,
 				FB7B817D25BF58C20053E543 /* FormCell.swift */,
 				FB7B818125BF7F5E0053E543 /* CareInfoHeaderCell.swift */,
+				FB7B819025C08F380053E543 /* CareInfoCell.swift */,
 			);
 			path = TableViewCells;
+			sourceTree = "<group>";
+		};
+		FB7B818925C073C40053E543 /* FormController */ = {
+			isa = PBXGroup;
+			children = (
+				FB7B818A25C073EA0053E543 /* FormController.swift */,
+			);
+			path = FormController;
 			sourceTree = "<group>";
 		};
 		FBB102FA25B9C790005C3C8E /* DatePickerCard */ = {
@@ -335,7 +352,6 @@
 			files = (
 				FB21B70425B1E5CC00D02384 /* LaunchScreen.storyboard in Resources */,
 				FB21B70125B1E5CC00D02384 /* Assets.xcassets in Resources */,
-				FB21B6FF25B1E5CC00D02384 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -359,9 +375,11 @@
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
 				FB7B817A25BF47EC0053E543 /* ToggleTableViewCell.swift in Sources */,
 				FB21B71225B1E61100D02384 /* Plant.swift in Sources */,
+				FB0A9F2B25DACF450084AED8 /* LogEntry.swift in Sources */,
 				FB5F34A325B8FA3900CCE6BC /* SlideInPresentationManager.swift in Sources */,
 				FB5F349725B79BEC00CCE6BC /* LargeHeader.swift in Sources */,
 				FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */,
+				FB7B818B25C073EA0053E543 /* FormController.swift in Sources */,
 				FB7B812125B9D4AC0053E543 /* CapsuleButton.swift in Sources */,
 				FB7B816325BE2CAE0053E543 /* PlantTypeViewController.swift in Sources */,
 				FB7B817625BF39880053E543 /* TextFieldTableViewCell.swift in Sources */,
@@ -372,10 +390,12 @@
 				FB7B813225BA25740053E543 /* WeekPicker.swift in Sources */,
 				FB7B815F25BE2BE10053E543 /* PlantConfigurationViewController.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
+				FB7B819125C08F380053E543 /* CareInfoCell.swift in Sources */,
 				FB7B818225BF7F5E0053E543 /* CareInfoHeaderCell.swift in Sources */,
 				FB7B815525BE18BE0053E543 /* PlantTypePicker.swift in Sources */,
 				FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */,
 				FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */,
+				FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -400,14 +420,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		FB21B6FD25B1E5CC00D02384 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FB21B6FE25B1E5CC00D02384 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		FB21B70225B1E5CC00D02384 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

@@ -7,99 +7,40 @@
 
 import UIKit
 
-struct FormSection {
-    let headerText: String?
-    let cells: [FormCell]
-}
-
-struct FormModel {
-    // Section 1
-    var plantName: String = ""
+class PlantConfigurationDriver {
+    static let listFormatter: ListFormatter = {
+        let formatter = ListFormatter()
+        
+        return formatter
+    }()
     
-    // Section 3
-    var isWateringEnabled: Bool = false
-    var wateringMethod: String = ""
-    var wateringFrequency: String = ""
-}
-
-class PlantConfigurationViewController: UITableViewController {
+    var formController: FormController!
     var sections = [FormSection]()
-    var state = FormModel() {
+    var state = GrowAppModel.shared.getPlants().first! {
         didSet {
             print(state)
             buildSections()
-            
-            tableView.beginUpdates()
-            
-            if state.isWateringEnabled {
-                tableView.insertRows(at: [IndexPath(row: 1, section: 2), IndexPath(row: 2, section: 2)], with: .automatic)
-            } else {
-                tableView.deleteRows(at: [IndexPath(row: 1, section: 2), IndexPath(row: 2, section: 2)], with: .automatic)
-            }
-            
-            tableView.endUpdates()
+            formController.sections = sections
         }
     }
     
     func buildSections() {
+        let wateringCell = CareInfoCell()
+        
         sections = [
             FormSection(headerText: nil, cells: [
                 TextFieldTableViewCell(placeholder: "Plant Name"),
             ]),
-            FormSection(headerText: nil, cells: [
-                ToggleTableViewCell(image: UIImage(systemName: "bell.fill"), title: "Reminders") {
-                    
-                },
+            FormSection(headerText: "Care Info", cells: [
+                wateringCell
             ])
         ]
-        
-        var wateringSectionCells: [FormCell] = [
-            ToggleTableViewCell(image: UIImage(systemName: "drop.fill"), title: "Watering") { [unowned self] in
-                state.isWateringEnabled.toggle()
-            }
-        ]
-        
-        if state.isWateringEnabled {
-            wateringSectionCells += [
-                TextFieldTableViewCell(placeholder: "Method"),
-                TextFieldTableViewCell(placeholder: "Frequency"),
-            ]
-        }
-        
-        let wateringSection = FormSection(headerText: "Care Info", cells: wateringSectionCells)
-        sections.append(wateringSection)
-        
     }
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    init() {
+        formController = FormController(style: .insetGrouped)
         
         buildSections()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        
-        buildSections()
-    }
-    
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        sections.count
-    }
-    
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        sections[section].cells.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return sections[indexPath.section].cells[indexPath.row]
-    }
-    
-    override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-        return sections[indexPath.section].cells[indexPath.row].shouldHighlight
-    }
-    
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section].headerText
+        formController.sections = sections
     }
 }
