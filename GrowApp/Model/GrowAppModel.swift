@@ -15,8 +15,15 @@ class GrowAppModel {
         
         // Configure preconfigured model
         for i in 0...4 {
-            let task = Task(name: "DefaultTask", iconImage: UIImage(systemName: "drop.fill"), logs: [])
-            let plant = Plant(name: "My Plant \(i)", common_names: [], tasks: [task])
+            let tasks = [
+                Task(name: "Never Task", iconImage: UIImage(systemName: "swift"), interval: .none, logs: []),
+                Task(name: "Daily Task", iconImage: UIImage(systemName: "swift"), interval: .daily(1), logs: []),
+                Task(name: "Weekly Task", iconImage: UIImage(systemName: "swift"), interval: .weekly([1, 3, 5]), logs: []),
+                Task(name: "Monthly Task", iconImage: UIImage(systemName: "swift"), interval: .monthly([10, 20]), logs: [])
+            ]
+
+            let type = PlantType(scientific_name: "Echeveria", common_names: ["Hen and Chicks"], image: nil)
+            let plant = Plant(name: "My Plant \(i)", type: type, icon: .text("🌱", backgroundColor: UIColor.systemRed), tasks: tasks)
             
             let interval = (86_400*i) - 172_800
             let careDate = Date(timeIntervalSinceNow: Double(interval))

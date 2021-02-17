@@ -8,39 +8,40 @@
 import UIKit
 
 class CareInfoCell: FormCell {
+    var iconView = UIImageView()
+    var titleLabel = UILabel()
     var valueLabel = UILabel()
     
     init() {
         super.init(style: .default, reuseIdentifier: nil)
         
-        guard let textLabel = textLabel else { fatalError() }
-        textLabel.removeConstraints(textLabel.constraints)
-        textLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        iconView.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        iconView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .body)
         
-        textLabel.textColor = tintColor
-        
-        guard let imageView = imageView else { fatalError() }
-        imageView.removeConstraints(imageView.constraints)
-        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .body)
-        
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.font = UIFont.preferredFont(forTextStyle: .body)
+        titleLabel.textColor = tintColor
         
         valueLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         valueLabel.layer.opacity = 0.7
         
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        contentView.addSubview(iconView)
+        contentView.addSubview(titleLabel)
         contentView.addSubview(valueLabel)
         
         contentView.addConstraints([
-            imageView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
-            imageView.firstBaselineAnchor.constraint(equalTo: textLabel.firstBaselineAnchor),
-            imageView.lastBaselineAnchor.constraint(equalTo: textLabel.lastBaselineAnchor),
+            iconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            iconView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            iconView.firstBaselineAnchor.constraint(equalTo: titleLabel.firstBaselineAnchor),
+            iconView.lastBaselineAnchor.constraint(equalTo: titleLabel.lastBaselineAnchor),
             
-            textLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1.0),
-            textLabel.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
+            titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: iconView.trailingAnchor, multiplier: 1.0),
+            titleLabel.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
             
-            valueLabel.topAnchor.constraint(equalToSystemSpacingBelow: textLabel.bottomAnchor, multiplier: 1.0),
+            valueLabel.topAnchor.constraint(equalToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 1.0),
             valueLabel.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
             valueLabel.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
             valueLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)

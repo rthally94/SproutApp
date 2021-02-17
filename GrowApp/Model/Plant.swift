@@ -12,19 +12,17 @@ class Plant {
     var id: UUID
     
     var name: String
-    var scientific_name: String?
-    var common_names: [String]
+    var type: PlantType
     
-    var iconImage: UIImage?
+    var icon: PlantIcon
     
     var tasks: [Task]
     
-    internal init(id: UUID = UUID(), name: String, scientific_name: String? = nil, common_names: [String], iconImage: UIImage? = nil, tasks: [Task]) {
+    internal init(id: UUID = UUID(), name: String, type: PlantType, icon: PlantIcon? = nil, tasks: [Task]) {
         self.id = id
         self.name = name
-        self.scientific_name = scientific_name
-        self.common_names = common_names
-        self.iconImage = iconImage
+        self.type = type
+        self.icon = icon ?? .text(name, backgroundColor: .systemBlue)
         self.tasks = tasks
     }
 }
