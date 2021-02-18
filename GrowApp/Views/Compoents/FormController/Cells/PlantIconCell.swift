@@ -17,8 +17,13 @@ class PlantIconCell: UICollectionViewCell {
             switch icon {
                 case let .image(image):
                     content.image = image
-                case let .text(emoji, backgroundColor):
-                    content.text = emoji
+                case let .text(text, backgroundColor):
+                    content.text = text
+                    content.backgroundColor = backgroundColor
+                case let .emoji(emoji, backgroundColor):
+                    if let emoji = emoji.first {
+                        content.text = String(emoji)
+                    }
                     content.backgroundColor = backgroundColor
                 case let .symbol(name, backgroundColor):
                     content.image = UIImage(systemName: name)
@@ -70,10 +75,11 @@ class PlantIconContentView: UIView & UIContentView {
         addSubview(plantIcon)
         plantIcon.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            plantIcon.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            plantIcon.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            plantIcon.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
-            plantIcon.widthAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.widthAnchor, multiplier: 1.0)
+            plantIcon.centerXAnchor.constraint(equalTo: centerXAnchor),
+            plantIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
+            plantIcon.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, multiplier: 1.0),
+            plantIcon.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
+            plantIcon.heightAnchor.constraint(equalTo: heightAnchor)
         ])
     }
 
@@ -85,6 +91,6 @@ class PlantIconContentView: UIView & UIContentView {
         // configure view
         plantIcon.image = configuration.image
         plantIcon.text = configuration.text
-        plantIcon.backgroundColor = configuration.backgroundColor
+//        plantIcon.backgroundColor = configuration.backgroundColor
     }
 }

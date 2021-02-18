@@ -8,7 +8,7 @@
 import UIKit
 
 class TextFieldCell: UICollectionViewListCell {
-    var text: String? {
+    var value: String? {
         didSet {
             setNeedsUpdateConfiguration()
         }
@@ -29,7 +29,7 @@ class TextFieldCell: UICollectionViewListCell {
     override func updateConfiguration(using state: UICellConfigurationState) {
         var content = TextFieldContentConfiguration().updated(for: state)
         content.placeholder = placeholder
-        content.text = text
+        content.value = value
         content.onChange = onChange
         contentConfiguration = content
 
@@ -38,16 +38,16 @@ class TextFieldCell: UICollectionViewListCell {
 
 struct TextFieldContentConfiguration: UIContentConfiguration, Hashable {
     static func == (lhs: TextFieldContentConfiguration, rhs: TextFieldContentConfiguration) -> Bool {
-        return lhs.text == rhs.text
+        return lhs.value == rhs.value
             && lhs.placeholder == rhs.placeholder
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(text)
+        hasher.combine(value)
         hasher.combine(placeholder)
     }
 
-    var text: String? = nil
+    var value: String? = nil
     var placeholder: String? = nil
     var onChange: ((String) -> Void)?
 
@@ -86,10 +86,10 @@ class TextFieldContentView: UIView & UIContentView {
         addSubview(textField)
         textField.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            textField.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            textField.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-            textField.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            textField.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
+            textField.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor, constant: 12),
+            textField.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor, constant: -12),
+            textField.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: 2),
+            textField.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, constant: -2)
         ])
     }
 
@@ -100,7 +100,7 @@ class TextFieldContentView: UIView & UIContentView {
 
         // configure view
         textField.placeholder = configuration.placeholder
-        textField.text = configuration.text
+        textField.text = configuration.value
     }
 }
 

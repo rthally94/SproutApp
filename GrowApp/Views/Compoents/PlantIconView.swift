@@ -33,6 +33,7 @@ class PlantIconView: UIView {
 
     private var imageView: UIImageView! = nil
     private var textLabel: UILabel! = nil
+    private var background: RoundedRect! = nil
 
     init() {
         super.init(frame: .zero)
@@ -42,39 +43,47 @@ class PlantIconView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        layer.cornerRadius = min(bounds.height, bounds.width) / 2
-    }
 }
 
 extension PlantIconView {
     private func configureHiearchy() {
         imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
+        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 56, weight: .semibold)
 
         textLabel = UILabel()
-        textLabel.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        textLabel.font = UIFont.systemFont(ofSize: 56)
         textLabel.textAlignment = .center
 
+        background = RoundedRect()
+        background.tintColor = .systemBlue
+
+        addSubview(background)
         addSubview(textLabel)
         addSubview(imageView)
 
+
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        background.translatesAutoresizingMaskIntoConstraints = false
+
+        let scale: CGFloat = 0.6
 
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            imageView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
+            background.centerYAnchor.constraint(equalTo: centerYAnchor),
+            background.centerXAnchor.constraint(equalTo: centerXAnchor),
+            background.heightAnchor.constraint(equalTo: heightAnchor),
+            background.widthAnchor.constraint(equalTo: heightAnchor),
 
-            textLabel.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            textLabel.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            textLabel.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
-            textLabel.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor)
+            imageView.centerYAnchor.constraint(equalTo: background.centerYAnchor),
+            imageView.centerXAnchor.constraint(equalTo: background.centerXAnchor),
+            imageView.heightAnchor.constraint(equalTo: background.heightAnchor, multiplier: scale),
+            imageView.widthAnchor.constraint(equalTo: background.widthAnchor, multiplier: scale),
+
+            textLabel.centerYAnchor.constraint(equalTo: background.centerYAnchor),
+            textLabel.centerXAnchor.constraint(equalTo: background.centerXAnchor),
+            textLabel.heightAnchor.constraint(equalTo: background.heightAnchor, multiplier: scale),
+            textLabel.widthAnchor.constraint(equalTo: background.widthAnchor, multiplier: scale),
         ])
     }
 }
