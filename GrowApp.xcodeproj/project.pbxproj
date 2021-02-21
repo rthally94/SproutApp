@@ -122,15 +122,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		FB0A9F3425DC5D5C0084AED8 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				FB0A9F3525DC5D7E0084AED8 /* TextFieldCell.swift */,
-				FBC7330225DDB4F00048999C /* PlantIconCell.swift */,
-			);
-			path = Cells;
-			sourceTree = "<group>";
-		};
 		FB21B6EB25B1E5CC00D02384 = {
 			isa = PBXGroup;
 			children = (
@@ -230,7 +221,6 @@
 			isa = PBXGroup;
 			children = (
 				FBF8AC5125DD80AC00E7E8EB /* PlantIconView.swift */,
-				FB7B818925C073C40053E543 /* FormController */,
 				FB7B815A25BE19060053E543 /* OutlineImageCell.swift */,
 				FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */,
 				FB5F348C25B6411F00CCE6BC /* DividerView.swift */,
@@ -238,7 +228,6 @@
 				FB7B816A25BF187B0053E543 /* TableViewCells */,
 				FBC7330C25DEBACB0048999C /* Circle.swift */,
 				FBC7331025DECCC20048999C /* RoundedRect.swift */,
-				FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */,
 			);
 			path = Compoents;
 			sourceTree = "<group>";
@@ -255,19 +244,20 @@
 		FB7B815225BE188E0053E543 /* Plant Configuration */ = {
 			isa = PBXGroup;
 			children = (
-				FB7B815325BE189E0053E543 /* Plant Type */,
 				FB7B815E25BE2BE10053E543 /* PlantConfigurationViewController.swift */,
+				FBC7331A25E2E0D70048999C /* Collection View Cells */,
+				FB7B815325BE189E0053E543 /* Plant Type Configuration */,
 			);
 			path = "Plant Configuration";
 			sourceTree = "<group>";
 		};
-		FB7B815325BE189E0053E543 /* Plant Type */ = {
+		FB7B815325BE189E0053E543 /* Plant Type Configuration */ = {
 			isa = PBXGroup;
 			children = (
 				FB7B815425BE18BE0053E543 /* PlantTypePicker.swift */,
 				FB7B816225BE2CAE0053E543 /* PlantTypeViewController.swift */,
 			);
-			path = "Plant Type";
+			path = "Plant Type Configuration";
 			sourceTree = "<group>";
 		};
 		FB7B816A25BF187B0053E543 /* TableViewCells */ = {
@@ -282,14 +272,6 @@
 			path = TableViewCells;
 			sourceTree = "<group>";
 		};
-		FB7B818925C073C40053E543 /* FormController */ = {
-			isa = PBXGroup;
-			children = (
-				FB0A9F3425DC5D5C0084AED8 /* Cells */,
-			);
-			path = FormController;
-			sourceTree = "<group>";
-		};
 		FBB102FA25B9C790005C3C8E /* DatePickerCard */ = {
 			isa = PBXGroup;
 			children = (
@@ -297,6 +279,16 @@
 				FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */,
 			);
 			path = DatePickerCard;
+			sourceTree = "<group>";
+		};
+		FBC7331A25E2E0D70048999C /* Collection View Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FB0A9F3525DC5D7E0084AED8 /* TextFieldCell.swift */,
+				FBC7330225DDB4F00048999C /* PlantIconCell.swift */,
+				FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */,
+			);
+			path = "Collection View Cells";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
