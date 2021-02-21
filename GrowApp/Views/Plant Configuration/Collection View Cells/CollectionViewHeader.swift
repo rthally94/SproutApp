@@ -39,6 +39,8 @@ extension CollectionViewHeader {
         addSubview(textLabel)
         addSubview(accessoryButton)
 
+        layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
+
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         accessoryButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -47,13 +49,12 @@ extension CollectionViewHeader {
 
         NSLayoutConstraint.activate([
             textLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            textLabel.bottomAnchor.constraint(equalTo: accessoryButton.bottomAnchor),
+            textLabel.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
 
-            accessoryButton.topAnchor.constraint(equalTo: topAnchor),
-            accessoryButton.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, constant: -4),
             accessoryButton.leadingAnchor.constraint(equalToSystemSpacingAfter: textLabel.trailingAnchor, multiplier: 1.0),
             accessoryButton.trailingAnchor.constraint(equalTo: trailingAnchor),
-            accessoryButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
+            accessoryButton.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
+            accessoryButton.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
         ])
     }
 }

@@ -8,7 +8,11 @@
 import UIKit
 
 class PlantIconCell: UICollectionViewCell {
-    var icon: PlantIcon?
+    var icon: PlantIcon? {
+        didSet {
+            setNeedsUpdateConfiguration()
+        }
+    }
 
     override func updateConfiguration(using state: UICellConfigurationState) {
         var content = PlantIconContentConfiguration().updated(for: state)
@@ -77,8 +81,8 @@ class PlantIconContentView: UIView & UIContentView {
         NSLayoutConstraint.activate([
             plantIcon.centerXAnchor.constraint(equalTo: centerXAnchor),
             plantIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-            plantIcon.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor, multiplier: 1.0),
-            plantIcon.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
+            plantIcon.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0),
+//            plantIcon.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
             plantIcon.heightAnchor.constraint(equalTo: heightAnchor)
         ])
     }
