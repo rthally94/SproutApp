@@ -21,9 +21,8 @@ class PlantIconView: UIView {
         didSet {
             guard let text = text else { return }
             if text.count > 2 {
-                let startIndex = text.startIndex
                 let endIndex = text.index(after: text.startIndex)
-                textLabel.text = String(text[startIndex...endIndex])
+                textLabel.text = String(text[...endIndex])
             } else {
                 textLabel.text = text
             }
@@ -33,7 +32,7 @@ class PlantIconView: UIView {
 
     private var imageView: UIImageView! = nil
     private var textLabel: UILabel! = nil
-    private var background: RoundedRect! = nil
+    private var background: Circle! = nil
 
     init() {
         super.init(frame: .zero)
@@ -55,7 +54,7 @@ extension PlantIconView {
         textLabel.font = UIFont.systemFont(ofSize: 56)
         textLabel.textAlignment = .center
 
-        background = RoundedRect()
+        background = Circle()
         background.tintColor = .systemBlue
 
         addSubview(background)

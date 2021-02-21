@@ -44,6 +44,7 @@
 		FBC7330925DDD5BE0048999C /* PlantIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330825DDD5BE0048999C /* PlantIcon.swift */; };
 		FBC7330D25DEBACB0048999C /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330C25DEBACB0048999C /* Circle.swift */; };
 		FBC7331125DECCC20048999C /* RoundedRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7331025DECCC20048999C /* RoundedRect.swift */; };
+		FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */; };
 		FBF8AC5225DD80AC00E7E8EB /* PlantIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF8AC5125DD80AC00E7E8EB /* PlantIconView.swift */; };
 /* End PBXBuildFile section */
 
@@ -99,6 +100,7 @@
 		FBC7330825DDD5BE0048999C /* PlantIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIcon.swift; sourceTree = "<group>"; };
 		FBC7330C25DEBACB0048999C /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
 		FBC7331025DECCC20048999C /* RoundedRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRect.swift; sourceTree = "<group>"; };
+		FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewHeader.swift; sourceTree = "<group>"; };
 		FBF8AC5125DD80AC00E7E8EB /* PlantIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -236,6 +238,7 @@
 				FB7B816A25BF187B0053E543 /* TableViewCells */,
 				FBC7330C25DEBACB0048999C /* Circle.swift */,
 				FBC7331025DECCC20048999C /* RoundedRect.swift */,
+				FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */,
 			);
 			path = Compoents;
 			sourceTree = "<group>";
@@ -396,6 +399,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB21B6FC25B1E5CC00D02384 /* ViewController.swift in Sources */,
+				FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */,
 				FB7B817E25BF58C20053E543 /* FormCell.swift in Sources */,
 				FB5F348925B63E6900CCE6BC /* TimelineCell.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,

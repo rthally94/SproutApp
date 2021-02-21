@@ -8,15 +8,24 @@
 import UIKit
 
 class PlantConfigurationViewController: UIViewController {
-    enum Section: Hashable, CaseIterable {
+    enum Section: Hashable, CaseIterable, CustomStringConvertible {
         case image
         case plantInfo
         case care
+
+        var description: String {
+            switch self {
+                case .image: return "Image"
+                case .plantInfo: return "General Information"
+                case .care: return "Care Reminders"
+            }
+        }
     }
 
     enum Item: Hashable {
         case plantIcon(PlantIcon)
         case list(image: UIImage?, text: String?, secondaryText: String?)
+        case listValue(image: UIImage?, text: String?, secondaryText: String?)
         case textField(image: UIImage?, value: String?, placeholder: String?)
     }
 
@@ -33,8 +42,15 @@ class PlantConfigurationViewController: UIViewController {
 
 extension PlantConfigurationViewController {
     private func createLayout() -> UICollectionViewLayout {
-        let config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-        return UICollectionViewCompositionalLayout.list(using: config)
+        let layout = UICollectionViewCompositionalLayout() { sectionIndex, layoutEnvironment in
+            var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+            config.headerMode = sectionIndex == 0 ? .none : .supplementary
+
+            let section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
+            return section
+        }
+
+        return layout
     }
 
     private func configureHiearchy() {
@@ -70,7 +86,7 @@ extension PlantConfigurationViewController {
 
         snapshot.appendItems([
             .textField(image: UIImage(systemName: "leaf.fill"), value: plant.name, placeholder: "Plant Name"),
-            .list(image: UIImage(systemName: "leaf.fill"), text: "Plant Type", secondaryText: plant.type.scientific_name)
+            .listValue(image: nil, text: "Plant Type", secondaryText: plant.type.scientific_name)
         ], toSection: .plantInfo)
 
         let tasks: [Item] = plant.tasks.map {
@@ -101,6 +117,21 @@ extension PlantConfigurationViewController {
         }
     }
 
+    func createValueCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
+            var configuration = UIListContentConfiguration.valueCell()
+
+            if case let .listValue(image, text, secondaryText) = item {
+                configuration.image = image
+                configuration.text = text
+                configuration.secondaryText = secondaryText
+            }
+
+            cell.accessories = [.disclosureIndicator()]
+            cell.contentConfiguration = configuration
+        }
+    }
+
     func createDefaultListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
             var configuration = cell.defaultContentConfiguration()
@@ -116,9 +147,24 @@ extension PlantConfigurationViewController {
         }
     }
 
+    func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<CollectionViewHeader> {
+        return UICollectionView.SupplementaryRegistration<CollectionViewHeader>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
+
+            let section = Section.allCases[indexPath.section]
+
+            supplementaryView.textLabel.text = section.description
+
+            if section == .care {
+                supplementaryView.accessoryButton.setImage(UIImage(systemName: "plus"), for: .normal)
+                supplementaryView.onTap = { print("🍻") }
+            }
+        }
+    }
+
     private func configureDataSource() {
         let plantIconRegistration = createPlantIconCellRegistration()
         let plantNameCellRegistration = createPlantNameCellRegistration()
+        let valueCellResistration = createValueCellRegistration()
         let defaultRegistration = createDefaultListCellRegistration()
 
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
@@ -126,11 +172,18 @@ extension PlantConfigurationViewController {
             switch item {
                 case .list:
                     return collectionView.dequeueConfiguredReusableCell(using: defaultRegistration, for: indexPath, item: item)
+                case .listValue:
+                    return collectionView.dequeueConfiguredReusableCell(using: valueCellResistration, for: indexPath, item: item)
                 case .plantIcon:
                     return collectionView.dequeueConfiguredReusableCell(using: plantIconRegistration, for: indexPath, item: item)
                 case .textField:
                     return collectionView.dequeueConfiguredReusableCell(using: plantNameCellRegistration, for: indexPath, item: item)
             }
+        }
+
+        let supplementartyHeaderView = createSupplementaryHeaderRegistration()
+        dataSource.supplementaryViewProvider = { (collectionView, elementKind, indexPath) -> UICollectionReusableView? in
+            return collectionView.dequeueConfiguredReusableSupplementary(using: supplementartyHeaderView, for: indexPath)
         }
 
         // initial data
