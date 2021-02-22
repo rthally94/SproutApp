@@ -17,8 +17,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        
-        let nav = UINavigationController(rootViewController: PlantConfigurationViewController(nibName: nil, bundle: nil))
+
+        let vc = PlantConfigurationViewController(nibName: nil, bundle: nil)
+        vc.plant = GrowAppModel.preview.getPlants().first!
+
+        let nav = UINavigationController(rootViewController: vc)
 
         window.rootViewController = nav
         window.backgroundColor = .systemBackground

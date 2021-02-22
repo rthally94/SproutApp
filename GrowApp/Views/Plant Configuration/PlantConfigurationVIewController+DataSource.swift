@@ -39,7 +39,7 @@ extension PlantConfigurationViewController {
                 configuration.secondaryText = secondaryText
             }
 
-            if item.destination != nil {
+            if item.onTap != nil {
                 cell.accessories = [.disclosureIndicator()]
             }
             
@@ -57,7 +57,7 @@ extension PlantConfigurationViewController {
                 configuration.secondaryText = secondaryText
             }
 
-            if item.destination != nil {
+            if item.onTap != nil {
                 cell.accessories = [.disclosureIndicator()]
             }
 
@@ -90,11 +90,11 @@ extension PlantConfigurationViewController {
         snapshot.appendItems([
             Item(
                 rowType: .list(image: UIImage(systemName: "leaf.fill"), text: "Plant Name", secondaryText: nil),
-                destination: nil
+                onTap: nil
             ),
             Item(
                 rowType: .list(image: UIImage(systemName: "leaf.fill"), text: "Plant Type", secondaryText: "Select"),
-                destination: nil)
+                onTap: nil)
         ], toSection: .plantInfo)
 
         return snapshot
@@ -108,24 +108,29 @@ extension PlantConfigurationViewController {
         snapshot.appendItems([
             Item(
                 rowType: .plantIcon(plant.icon),
-                destination: nil)
+                onTap: nil)
         ], toSection: .image)
 
         snapshot.appendItems([
             Item(
                 rowType: .textField(image: UIImage(systemName: "leaf.fill"), value: plant.name, placeholder: "Plant Name"),
-                destination: nil
+                onTap: nil
             ),
             Item(
-                rowType: .listValue(image: nil, text: "Plant Type", secondaryText: plant.type.scientific_name),
-                destination: PlantTypeViewController(nibName: nil, bundle: nil)
+                rowType: .listValue(image: nil, text: "Plant Type", secondaryText: plant.type.scientificName),
+                onTap: {
+                    let vc = PlantTypeViewController(nibName: nil, bundle: nil)
+                    vc.selectedPlantType = plant.type
+                    vc.delegate = self
+                    self.navigateTo(vc)
+                }
             )
         ], toSection: .plantInfo)
 
         let tasks: [Item] = plant.tasks.map {
             Item(
                 rowType: .list(image: $0.iconImage, text: $0.name, secondaryText: $0.interval.description),
-                destination: nil
+                onTap: nil
             )
         }
         snapshot.appendItems(tasks, toSection: .care)
@@ -159,7 +164,14 @@ extension PlantConfigurationViewController {
         }
 
         // initial data
-        let snapshot = createDataSource(from: GrowAppModel.preview.getPlants().first!)
+        let snapshot: NSDiffableDataSourceSnapshot<Section, Item>
+
+        if let plant = plant {
+            snapshot = createDataSource(from: plant)
+        } else {
+            snapshot = createDefaultDataSource()
+        }
+
         dataSource.apply(snapshot, animatingDifferences: false)
     }
 }

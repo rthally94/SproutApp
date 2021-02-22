@@ -10,6 +10,7 @@ import UIKit
 class PlantConfigurationViewController: UIViewController {
     var plant: Plant? = nil {
         didSet {
+            guard dataSource != nil else { return }
             if let strongPlant = plant {
                 dataSource.apply(createDataSource(from: strongPlant))
             } else {
@@ -45,8 +46,16 @@ class PlantConfigurationViewController: UIViewController {
     }
 
     struct Item: Hashable {
+        static func == (lhs: PlantConfigurationViewController.Item, rhs: PlantConfigurationViewController.Item) -> Bool {
+            lhs.rowType == rhs.rowType
+        }
+
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(rowType)
+        }
+
         let rowType: RowType
-        let destination: UIViewController?
+        let onTap: (() -> Void)?
     }
 
     enum RowType: Hashable {
@@ -99,4 +108,13 @@ extension PlantConfigurationViewController {
     }
 }
 
+extension PlantConfigurationViewController: PlantTypePickerDelegate {
+    func plantTypePicker(didSelectType type: PlantType) {
+        if let strongPlant = plant, strongPlant.type != type {
+            strongPlant.type = type
+            plant = strongPlant
+//            dataSource.apply(createDataSource(from: strongPlant))
+        }
+    }
+}
 

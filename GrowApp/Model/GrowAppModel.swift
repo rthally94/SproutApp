@@ -22,7 +22,7 @@ class GrowAppModel {
                 Task(name: "Monthly Task", iconImage: UIImage(systemName: "swift"), interval: .monthly([10, 20]), logs: [])
             ]
 
-            let type = PlantType(scientific_name: "Echeveria", common_names: ["Hen and Chicks"], image: nil)
+            let type = PlantType.allTypes.randomElement()!
             let plant = Plant(name: "My Plant \(i)", type: type, icon: .symbol(name: "drop.fill", backgroundColor: UIColor.systemBlue), tasks: tasks)
             
             let interval = (86_400*i) - 172_800
