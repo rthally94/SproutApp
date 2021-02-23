@@ -49,6 +49,10 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>We use the camera to set the plant icon and help identify it.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We use the photo library to set the plant icon and help identify it.</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

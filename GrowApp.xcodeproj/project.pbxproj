@@ -46,6 +46,8 @@
 		FBC7331D25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7331C25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift */; };
 		FBC7332125E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7332025E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift */; };
 		FBC7332925E307DF0048999C /* PlantTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7332825E307DF0048999C /* PlantTypeViewController.swift */; };
+		FBC7333025E404CC0048999C /* PlantIconPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7332F25E404CC0048999C /* PlantIconPickerViewController.swift */; };
+		FBC7333425E478D20048999C /* CameraOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333325E478D20048999C /* CameraOverlayView.swift */; };
 		FBF8AC5225DD80AC00E7E8EB /* PlantIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF8AC5125DD80AC00E7E8EB /* PlantIconView.swift */; };
 /* End PBXBuildFile section */
 
@@ -103,6 +105,8 @@
 		FBC7331C25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantConfigurationVIewController+DataSource.swift"; sourceTree = "<group>"; };
 		FBC7332025E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantConfigurationViewController+CollectionViewDelegate.swift"; sourceTree = "<group>"; };
 		FBC7332825E307DF0048999C /* PlantTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTypeViewController.swift; sourceTree = "<group>"; };
+		FBC7332F25E404CC0048999C /* PlantIconPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconPickerViewController.swift; sourceTree = "<group>"; };
+		FBC7333325E478D20048999C /* CameraOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraOverlayView.swift; sourceTree = "<group>"; };
 		FBF8AC5125DD80AC00E7E8EB /* PlantIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -230,6 +234,7 @@
 				FB7B816A25BF187B0053E543 /* TableViewCells */,
 				FBC7330C25DEBACB0048999C /* Circle.swift */,
 				FBC7331025DECCC20048999C /* RoundedRect.swift */,
+				FBC7333325E478D20048999C /* CameraOverlayView.swift */,
 			);
 			path = Compoents;
 			sourceTree = "<group>";
@@ -250,6 +255,7 @@
 				FBC7331C25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift */,
 				FBC7332025E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift */,
 				FBC7331A25E2E0D70048999C /* Collection View Cells */,
+				FBC7332E25E404A40048999C /* PlantIconPicker */,
 				FB7B815325BE189E0053E543 /* Plant Type Configuration */,
 			);
 			path = "Plant Configuration";
@@ -292,6 +298,14 @@
 				FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */,
 			);
 			path = "Collection View Cells";
+			sourceTree = "<group>";
+		};
+		FBC7332E25E404A40048999C /* PlantIconPicker */ = {
+			isa = PBXGroup;
+			children = (
+				FBC7332F25E404CC0048999C /* PlantIconPickerViewController.swift */,
+			);
+			path = PlantIconPicker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -395,6 +409,7 @@
 			files = (
 				FB21B6FC25B1E5CC00D02384 /* ViewController.swift in Sources */,
 				FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */,
+				FBC7333425E478D20048999C /* CameraOverlayView.swift in Sources */,
 				FB7B817E25BF58C20053E543 /* FormCell.swift in Sources */,
 				FB5F348925B63E6900CCE6BC /* TimelineCell.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
@@ -427,6 +442,7 @@
 				FB0A9F3625DC5D7E0084AED8 /* TextFieldCell.swift in Sources */,
 				FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */,
 				FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */,
+				FBC7333025E404CC0048999C /* PlantIconPickerViewController.swift in Sources */,
 				FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */,
 			);

@@ -69,13 +69,18 @@ class PlantConfigurationViewController: UIViewController {
     var collectionView: UICollectionView! = nil
     internal var selectedIndexPath: IndexPath?
 
+    override func loadView() {
+        super.loadView()
+
+        configureHiearchy()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        configureHiearchy()
         configureDataSource()
     }
-
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 

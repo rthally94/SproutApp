@@ -108,7 +108,12 @@ extension PlantConfigurationViewController {
         snapshot.appendItems([
             Item(
                 rowType: .plantIcon(plant.icon),
-                onTap: nil)
+                onTap: {
+                    let vc = PlantIconPickerViewController(nibName: nil, bundle: nil)
+                    vc.plant = plant
+                    let nav = UINavigationController(rootViewController: vc)
+                    self.navigateTo(nav, modal: true)
+                })
         ], toSection: .image)
 
         snapshot.appendItems([

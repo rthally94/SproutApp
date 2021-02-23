@@ -22,8 +22,8 @@ extension PlantConfigurationViewController: UICollectionViewDelegate {
         }
     }
 
-    func navigateTo(_ destination: UIViewController) {
-        if let navigationController = navigationController {
+    func navigateTo(_ destination: UIViewController, modal: Bool = false) {
+        if let navigationController = navigationController, modal == false {
             navigationController.pushViewController(destination, animated: true)
         } else {
             present(destination, animated: true)

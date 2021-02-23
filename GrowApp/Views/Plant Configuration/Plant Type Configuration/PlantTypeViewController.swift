@@ -37,8 +37,8 @@ class PlantTypeViewController: UIViewController {
         var isSelected: Bool
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func loadView() {
+        super.loadView()
 
         view.backgroundColor = .systemBackground
         configureHiearchy()
