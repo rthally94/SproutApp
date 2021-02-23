@@ -82,7 +82,6 @@ extension PlantIconPickerViewController {
                 case .currentImage:
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
 
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(150))
                     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
@@ -93,7 +92,8 @@ extension PlantIconPickerViewController {
                 default:
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/4), heightDimension: .fractionalWidth(1/4))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    item.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
+                    let inset = layoutEnvironment.container.effectiveContentSize.width / 16
+                    item.contentInsets = NSDirectionalEdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset)
 
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(100))
                     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
