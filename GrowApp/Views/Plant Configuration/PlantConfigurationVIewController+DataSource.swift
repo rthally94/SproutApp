@@ -78,6 +78,16 @@ extension PlantConfigurationViewController {
             }
         }
     }
+
+    func createIconBadgeRegistration() -> UICollectionView.SupplementaryRegistration<PlantIconSupplementaryView> {
+        return UICollectionView.SupplementaryRegistration<PlantIconSupplementaryView>(elementKind: PlantIconSupplementaryView.badgeElementKind) { supplementaryView, elementKind, indexPath in
+            guard let itemIdentifier: Item = self.dataSource.itemIdentifier(for: indexPath) else { return }
+
+            if case .plantIcon(_) = itemIdentifier.rowType {
+                supplementaryView.imageView.image = UIImage(systemName: "pencil.circle.fill")
+            }
+        }
+    }
 }
 
 // MARK: - DataSource Configuration
@@ -165,8 +175,16 @@ extension PlantConfigurationViewController {
         }
 
         let supplementartyHeaderView = createSupplementaryHeaderRegistration()
+        let iconBadgeView = createIconBadgeRegistration()
         dataSource.supplementaryViewProvider = { (collectionView, elementKind, indexPath) -> UICollectionReusableView? in
-            return collectionView.dequeueConfiguredReusableSupplementary(using: supplementartyHeaderView, for: indexPath)
+            switch elementKind {
+                case UICollectionView.elementKindSectionHeader:
+                    return collectionView.dequeueConfiguredReusableSupplementary(using: supplementartyHeaderView, for: indexPath)
+                case PlantIconSupplementaryView.badgeElementKind:
+                    return collectionView.dequeueConfiguredReusableSupplementary(using: iconBadgeView, for: indexPath)
+                default:
+                    return nil
+            }
         }
 
         // initial data

@@ -101,8 +101,14 @@ extension PlantConfigurationViewController {
 
             switch sectionInfo {
                 case .image:
+                    let badgeAnchor = NSCollectionLayoutAnchor(edges: [.bottom], fractionalOffset: CGPoint(x: 1.1, y: 0))
+                    let badgeSize = NSCollectionLayoutSize(widthDimension: .absolute(44), heightDimension: .absolute(44))
+
+                    let badge = NSCollectionLayoutSupplementaryItem(layoutSize: badgeSize, elementKind: PlantIconSupplementaryView.badgeElementKind, containerAnchor: badgeAnchor)
+
                     let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize, supplementaryItems: [badge])
+                    item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
 
                     let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(150))
                     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
@@ -140,7 +146,6 @@ extension PlantConfigurationViewController: PlantTypePickerDelegate {
         if let strongPlant = plant, strongPlant.type != type {
             strongPlant.type = type
             plant = strongPlant
-//            dataSource.apply(createDataSource(from: strongPlant))
         }
     }
 }

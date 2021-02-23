@@ -22,16 +22,19 @@ class PlantIconCell: UICollectionViewCell {
                 case let .image(image):
                     content.image = image
                     content.presentationMode = .full
-                case let .text(text, backgroundColor):
+                case let .text(text, foregroundColor, backgroundColor):
                     content.text = text
+                    content.foregroundColor = foregroundColor
                     content.backgroundColor = backgroundColor
-                case let .emoji(emoji, backgroundColor):
+                case let .emoji(emoji, foregroundColor, backgroundColor):
                     if let emoji = emoji.first {
                         content.text = String(emoji)
                     }
+                    content.foregroundColor = foregroundColor
                     content.backgroundColor = backgroundColor
-                case let .symbol(name, backgroundColor):
+                case let .symbol(name, foregroundColor, backgroundColor):
                     content.image = UIImage(systemName: name)
+                    content.foregroundColor = foregroundColor
                     content.backgroundColor = backgroundColor
             }
         }
@@ -43,6 +46,7 @@ class PlantIconCell: UICollectionViewCell {
 struct PlantIconContentConfiguration: UIContentConfiguration, Hashable {
     var text: String? = nil
     var image: UIImage? = nil
+    var foregroundColor: UIColor? = nil
     var backgroundColor: UIColor? = nil
     var presentationMode: PlantIconView.PresentationMode = .padded(multiplier: 0.6, points: 0.0)
 
@@ -96,6 +100,7 @@ class PlantIconContentView: UIView & UIContentView {
         // configure view
         plantIcon.image = configuration.image
         plantIcon.text = configuration.text
+        plantIcon.tintColor = configuration.foregroundColor
         plantIcon.backgroundColor = configuration.backgroundColor
         plantIcon.presentationMode = configuration.presentationMode
     }

@@ -23,7 +23,7 @@ class GrowAppModel {
             ]
 
             let type = PlantType.allTypes.randomElement()!
-            let plant = Plant(name: "My Plant \(i)", type: type, icon: .symbol(name: "drop.fill", backgroundColor: UIColor.systemBlue), tasks: tasks)
+            let plant = Plant(name: "My Plant \(i)", type: type, icon: .symbol(name: "drop.fill", foregroundColor: UIColor.systemBlue, backgroundColor: UIColor.secondarySystemGroupedBackground), tasks: tasks)
             
             let interval = (86_400*i) - 172_800
             let careDate = Date(timeIntervalSinceNow: Double(interval))

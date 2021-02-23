@@ -72,15 +72,15 @@ class PlantIconView: UIView {
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
-        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 56, weight: .semibold)
+
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
 
     private lazy var textLabel: UILabel = {
         let textLabel = UILabel()
-        textLabel.font = UIFont.systemFont(ofSize: 56)
         textLabel.textAlignment = .center
+        textLabel.adjustsFontSizeToFitWidth = true
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         return textLabel
     }()
