@@ -21,6 +21,7 @@ class PlantIconCell: UICollectionViewCell {
             switch icon {
                 case let .image(image):
                     content.image = image
+                    content.presentationMode = .full
                 case let .text(text, backgroundColor):
                     content.text = text
                     content.backgroundColor = backgroundColor
@@ -43,6 +44,7 @@ struct PlantIconContentConfiguration: UIContentConfiguration, Hashable {
     var text: String? = nil
     var image: UIImage? = nil
     var backgroundColor: UIColor? = nil
+    var presentationMode: PlantIconView.PresentationMode = .padded(multiplier: 0.6, points: 0.0)
 
     func makeContentView() -> UIView & UIContentView {
         return PlantIconContentView(configuration: self)
@@ -95,5 +97,6 @@ class PlantIconContentView: UIView & UIContentView {
         plantIcon.image = configuration.image
         plantIcon.text = configuration.text
         plantIcon.backgroundColor = configuration.backgroundColor
+        plantIcon.presentationMode = configuration.presentationMode
     }
 }

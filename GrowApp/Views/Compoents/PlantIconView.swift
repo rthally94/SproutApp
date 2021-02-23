@@ -11,6 +11,7 @@ import CoreGraphics
 class PlantIconView: UIView {
     var image: UIImage? {
         didSet {
+            guard image != oldValue else { return }
             guard let image = image else { return }
             imageView.image = image
             textLabel.text = nil
@@ -19,6 +20,7 @@ class PlantIconView: UIView {
 
     var text: String? {
         didSet {
+            guard text != oldValue else { return }
             guard let text = text else { return }
             if text.count > 2 {
                 let endIndex = text.index(after: text.startIndex)
@@ -30,7 +32,31 @@ class PlantIconView: UIView {
         }
     }
 
-    var iconMode: IconMode = .circle
+    var iconMode: IconMode = .circle {
+        didSet {
+            guard iconMode != oldValue else { return }
+            setNeedsLayout()
+        }
+    }
+
+    var presentationMode: PresentationMode? {
+        didSet {
+            guard presentationMode != oldValue else { return }
+            switch presentationMode {
+                case let .padded(multiplier, points):
+                    scaledConstraint.isActive = false
+                    scaledConstraint = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: multiplier, constant: points)
+                    scaledConstraint.isActive = true
+                    fullConstraint.isActive = false
+                case .full:
+                    scaledConstraint.isActive = false
+                    fullConstraint.isActive = true
+                case .none:
+                    scaledConstraint.isActive = false
+                    fullConstraint.isActive = true
+            }
+        }
+    }
 
     enum IconMode: Hashable {
         case circle
@@ -38,11 +64,37 @@ class PlantIconView: UIView {
         case none
     }
 
-    private var imageView: UIImageView! = nil
-    private var textLabel: UILabel! = nil
+    enum PresentationMode: Hashable {
+        case padded(multiplier: CGFloat, points: CGFloat)
+        case full
+    }
 
-    init() {
-        super.init(frame: .zero)
+    private lazy var imageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 56, weight: .semibold)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
+    private lazy var textLabel: UILabel = {
+        let textLabel = UILabel()
+        textLabel.font = UIFont.systemFont(ofSize: 56)
+        textLabel.textAlignment = .center
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        return textLabel
+    }()
+
+    private lazy var fullConstraint: NSLayoutConstraint = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1.0, constant: 0.0)
+    private lazy var scaledConstraint: NSLayoutConstraint = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.6, constant: 0.0)
+
+    convenience init() {
+        self.init(frame: .zero)
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
         configureHiearchy()
     }
 
@@ -50,9 +102,10 @@ class PlantIconView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+
     override func layoutSubviews() {
         super.layoutSubviews()
-
+        
         switch iconMode {
             case .circle:
                 layer.cornerRadius = min(frame.height, frame.width) / 2
@@ -61,37 +114,26 @@ class PlantIconView: UIView {
             default:
                 layer.cornerRadius = 0
         }
+
+        clipsToBounds = true
     }
 }
 
 extension PlantIconView {
     private func configureHiearchy() {
-        imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 56, weight: .semibold)
-
-        textLabel = UILabel()
-        textLabel.font = UIFont.systemFont(ofSize: 56)
-        textLabel.textAlignment = .center
-
         addSubview(textLabel)
         addSubview(imageView)
-
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-
-        let scale: CGFloat = 0.6
 
         NSLayoutConstraint.activate([
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: scale),
-            imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: scale),
+            fullConstraint,
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
 
             textLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             textLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            textLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: scale),
-            textLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: scale),
+            textLabel.widthAnchor.constraint(equalTo: imageView.widthAnchor),
+            textLabel.heightAnchor.constraint(equalTo: imageView.heightAnchor),
         ])
     }
 }
