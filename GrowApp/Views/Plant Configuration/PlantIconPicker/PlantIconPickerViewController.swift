@@ -13,7 +13,14 @@ protocol PlantIconPickerDelegate {
 
 class PlantIconPickerViewController: UIViewController {
 
-    var plant: Plant?
+    var plant: Plant? {
+        didSet {
+            oldIcon = plant?.icon
+        }
+    }
+
+    var oldIcon: PlantIcon?
+
     var delegate: PlantIconPickerDelegate?
 
     func setPlantIcon(to icon: PlantIcon) {
@@ -65,6 +72,10 @@ class PlantIconPickerViewController: UIViewController {
     }
 
     @objc private func dismissPicker() {
+        if let oldIcon = oldIcon {
+            setPlantIcon(to: oldIcon)
+        }
+        
         dismiss(animated: true)
     }
 
