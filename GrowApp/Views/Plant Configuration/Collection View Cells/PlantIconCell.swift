@@ -81,8 +81,7 @@ class PlantIconContentView: UIView & UIContentView {
         NSLayoutConstraint.activate([
             plantIcon.centerXAnchor.constraint(equalTo: centerXAnchor),
             plantIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-            plantIcon.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0),
-//            plantIcon.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
+            plantIcon.widthAnchor.constraint(equalTo: heightAnchor),
             plantIcon.heightAnchor.constraint(equalTo: heightAnchor)
         ])
     }
@@ -95,6 +94,6 @@ class PlantIconContentView: UIView & UIContentView {
         // configure view
         plantIcon.image = configuration.image
         plantIcon.text = configuration.text
-//        plantIcon.backgroundColor = configuration.backgroundColor
+        plantIcon.backgroundColor = configuration.backgroundColor
     }
 }

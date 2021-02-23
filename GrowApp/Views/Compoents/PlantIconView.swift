@@ -30,9 +30,16 @@ class PlantIconView: UIView {
         }
     }
 
+    var iconMode: IconMode = .circle
+
+    enum IconMode: Hashable {
+        case circle
+        case roundedRect
+        case none
+    }
+
     private var imageView: UIImageView! = nil
     private var textLabel: UILabel! = nil
-    private var background: Circle! = nil
 
     init() {
         super.init(frame: .zero)
@@ -41,6 +48,19 @@ class PlantIconView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        switch iconMode {
+            case .circle:
+                layer.cornerRadius = min(frame.height, frame.width) / 2
+            case .roundedRect:
+                layer.cornerRadius = min(frame.height, frame.width) / 4
+            default:
+                layer.cornerRadius = 0
+        }
     }
 }
 
@@ -54,35 +74,24 @@ extension PlantIconView {
         textLabel.font = UIFont.systemFont(ofSize: 56)
         textLabel.textAlignment = .center
 
-        background = Circle()
-        background.tintColor = .systemBlue
-
-        addSubview(background)
         addSubview(textLabel)
         addSubview(imageView)
 
-
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        background.translatesAutoresizingMaskIntoConstraints = false
 
         let scale: CGFloat = 0.6
 
         NSLayoutConstraint.activate([
-            background.centerYAnchor.constraint(equalTo: centerYAnchor),
-            background.centerXAnchor.constraint(equalTo: centerXAnchor),
-            background.heightAnchor.constraint(equalTo: heightAnchor),
-            background.widthAnchor.constraint(equalTo: heightAnchor),
+            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: scale),
+            imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: scale),
 
-            imageView.centerYAnchor.constraint(equalTo: background.centerYAnchor),
-            imageView.centerXAnchor.constraint(equalTo: background.centerXAnchor),
-            imageView.heightAnchor.constraint(equalTo: background.heightAnchor, multiplier: scale),
-            imageView.widthAnchor.constraint(equalTo: background.widthAnchor, multiplier: scale),
-
-            textLabel.centerYAnchor.constraint(equalTo: background.centerYAnchor),
-            textLabel.centerXAnchor.constraint(equalTo: background.centerXAnchor),
-            textLabel.heightAnchor.constraint(equalTo: background.heightAnchor, multiplier: scale),
-            textLabel.widthAnchor.constraint(equalTo: background.widthAnchor, multiplier: scale),
+            textLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            textLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            textLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: scale),
+            textLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: scale),
         ])
     }
 }
