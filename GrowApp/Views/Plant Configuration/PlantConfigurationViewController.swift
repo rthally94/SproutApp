@@ -78,6 +78,7 @@ class PlantConfigurationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        collectionView.backgroundColor = .systemGroupedBackground
         configureDataSource()
     }
     
@@ -98,8 +99,20 @@ extension PlantConfigurationViewController {
             var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
             config.headerMode = sectionInfo.headerMode
 
-            let section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
-            return section
+            switch sectionInfo {
+                case .image:
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(150))
+                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+                    let section = NSCollectionLayoutSection(group: group)
+                    section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0 )
+                    return section
+                default:
+                    return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
+            }
         }
 
         return layout
@@ -110,6 +123,15 @@ extension PlantConfigurationViewController {
         collectionView.delegate = self
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         view.addSubview(collectionView)
+    }
+}
+
+extension PlantConfigurationViewController: PlantIconPickerDelegate {
+    func didChangeIcon(to icon: PlantIcon) {
+        if let strongPlant = plant {
+            strongPlant.icon = icon
+            plant = strongPlant
+        }
     }
 }
 

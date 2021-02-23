@@ -111,6 +111,7 @@ extension PlantConfigurationViewController {
                 onTap: {
                     let vc = PlantIconPickerViewController(nibName: nil, bundle: nil)
                     vc.plant = plant
+                    vc.delegate = self
                     let nav = UINavigationController(rootViewController: vc)
                     self.navigateTo(nav, modal: true)
                 })

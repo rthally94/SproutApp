@@ -7,9 +7,22 @@
 
 import UIKit
 
+protocol PlantIconPickerDelegate {
+    func didChangeIcon(to icon: PlantIcon)
+}
+
 class PlantIconPickerViewController: UIViewController {
 
     var plant: Plant?
+    var delegate: PlantIconPickerDelegate?
+
+    func setPlantIcon(to icon: PlantIcon) {
+        if icon != plant?.icon {
+            plant?.icon = icon
+            delegate?.didChangeIcon(to: icon)
+            dataSource.apply(createDefaultSnapshot())
+        }
+    }
 
     enum Section: Hashable, CaseIterable {
         case currentImage
@@ -177,8 +190,8 @@ extension PlantIconPickerViewController: UIImagePickerControllerDelegate, UINavi
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.editedImage] as? UIImage else { return }
-        plant?.icon = PlantIcon.image(image)
-        dataSource.apply(createDefaultSnapshot())
+        setPlantIcon(to: PlantIcon.image(image))
+
         dismiss(animated: true)
     }
 }
