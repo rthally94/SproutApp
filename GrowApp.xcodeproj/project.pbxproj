@@ -52,6 +52,7 @@
 		FBC7333C25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333B25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift */; };
 		FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */; };
 		FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */; };
+		FBC7335025E708790048999C /* TimelineViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334F25E708790048999C /* TimelineViewController+DataSource.swift */; };
 		FBF8AC5225DD80AC00E7E8EB /* PlantIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF8AC5125DD80AC00E7E8EB /* PlantIconView.swift */; };
 /* End PBXBuildFile section */
 
@@ -115,6 +116,7 @@
 		FBC7333B25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantIconPickerViewController+Delegates.swift"; sourceTree = "<group>"; };
 		FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconSupplementaryView.swift; sourceTree = "<group>"; };
 		FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHeaderFooterView.swift; sourceTree = "<group>"; };
+		FBC7334F25E708790048999C /* TimelineViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimelineViewController+DataSource.swift"; sourceTree = "<group>"; };
 		FBF8AC5125DD80AC00E7E8EB /* PlantIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -201,6 +203,7 @@
 				FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */,
 				FB5F348825B63E6900CCE6BC /* TimelineCell.swift */,
 				FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */,
+				FBC7334F25E708790048999C /* TimelineViewController+DataSource.swift */,
 			);
 			path = Timeline;
 			sourceTree = "<group>";
@@ -432,6 +435,7 @@
 				FB5F349725B79BEC00CCE6BC /* LargeHeader.swift in Sources */,
 				FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */,
 				FB7B812125B9D4AC0053E543 /* CapsuleButton.swift in Sources */,
+				FBC7335025E708790048999C /* TimelineViewController+DataSource.swift in Sources */,
 				FBC7331125DECCC20048999C /* RoundedRect.swift in Sources */,
 				FBC7333C25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift in Sources */,
 				FB7B817625BF39880053E543 /* TextFieldTableViewCell.swift in Sources */,

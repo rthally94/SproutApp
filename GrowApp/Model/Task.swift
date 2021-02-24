@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-enum TaskInterval: CustomStringConvertible {
+enum TaskInterval: CustomStringConvertible, Hashable {
     static let listFormatter: ListFormatter = {
         let formatter = ListFormatter()
         return formatter
@@ -64,7 +64,15 @@ enum TaskInterval: CustomStringConvertible {
     }
 }
 
-class Task {
+class Task: Hashable {
+    static func == (lhs: Task, rhs: Task) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
     var id: UUID
     var name: String
     var iconImage: UIImage?

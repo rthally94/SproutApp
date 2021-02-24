@@ -7,12 +7,20 @@
 
 import Foundation
 
-enum LogState: String {
+enum LogState: String, Hashable {
     case complete
     case skipped
 }
 
-class LogEntry {
+class LogEntry: Hashable {
+    static func == (lhs: LogEntry, rhs: LogEntry) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
     var id: UUID
     weak var task: Task?
     var state: LogState

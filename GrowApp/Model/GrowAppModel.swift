@@ -55,15 +55,23 @@ class GrowAppModel {
     }
     
     // Plant Care
-    func getPlantsNeedingCare(on date: Date) -> [Plant] {
-        plants.filter { plant in
-            for task in plant.tasks {
-                if Calendar.current.isDate(task.nextCareDate, inSameDayAs: date) == true {
-                    return true
+    func getPlantsNeedingCare(on date: Date) -> [Task: [Plant]] {
+        plants.sorted(by: {$0.name < $1.name}).reduce(into: [Task: [Plant]]() ) { dict, plant in
+            plant.tasks.forEach { task in
+                if Calendar.current.isDate(task.nextCareDate, inSameDayAs: date) {
+                    dict[task, default: []].append(plant)
                 }
             }
-            
-            return false
         }
+
+//        plants.filter { plant in
+//            for task in plant.tasks {
+//                if Calendar.current.isDate(task.nextCareDate, inSameDayAs: date) == true {
+//                    return true
+//                }
+//            }
+//            
+//            return false
+//        }
     }
 }
