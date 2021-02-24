@@ -25,9 +25,16 @@ class PlantTypeViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     var delegate: PlantTypePickerDelegate? = nil
 
-    enum Section: Hashable, CaseIterable {
+    enum Section: Hashable, CaseIterable, CustomStringConvertible {
         case recent
         case allPlants
+
+        var description: String {
+            switch self {
+                case .recent: return "Recent Plants"
+                case .allPlants: return "All Plants"
+            }
+        }
     }
 
     struct Item: Hashable {
@@ -40,7 +47,6 @@ class PlantTypeViewController: UIViewController {
     override func loadView() {
         super.loadView()
 
-        view.backgroundColor = .systemBackground
         configureHiearchy()
     }
 }
@@ -58,7 +64,9 @@ extension PlantTypeViewController {
     }
 
     internal func makeLayout() -> UICollectionViewLayout {
-        let config = UICollectionLayoutListConfiguration(appearance: .plain)
+        var config = UICollectionLayoutListConfiguration(appearance: .grouped)
+        config.headerMode = .supplementary
+
         return UICollectionViewCompositionalLayout.list(using: config)
     }
 }
@@ -86,11 +94,31 @@ extension PlantTypeViewController {
         }
     }
 
+    func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<CollectionViewHeader> {
+        return UICollectionView.SupplementaryRegistration<CollectionViewHeader>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
+
+            let section = Section.allCases[indexPath.section]
+
+            supplementaryView.textLabel.text = section.description
+        }
+    }
+
     func configureDataSource() {
         let cellRegistration = makeCellRegistration()
 
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+        }
+
+        let headerRegistration = createSupplementaryHeaderRegistration()
+
+        dataSource.supplementaryViewProvider = { (collectionView, elementKind, indexPath) -> UICollectionReusableView? in
+            switch elementKind {
+                case UICollectionView.elementKindSectionHeader:
+                    return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+                default:
+                    return nil
+            }
         }
 
         // Apply Initial Snapshot
@@ -100,7 +128,7 @@ extension PlantTypeViewController {
     func applySnapshot() {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item >()
 
-        snapshot.appendSections(Section.allCases)
+        snapshot.appendSections([Section.allPlants])
 
         let items = plantTypes.sorted(by: {$0.commonName < $1.commonName}).map { type in
             return Item(id: type.id, scientificName: type.scientificName, commonName: type.commonName, isSelected: type == selectedPlantType)

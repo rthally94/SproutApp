@@ -88,6 +88,15 @@ extension PlantConfigurationViewController {
             }
         }
     }
+
+    func createAddNewReminderFooterRegistration() -> UICollectionView.SupplementaryRegistration<ButtonHeaderFooterView> {
+        return UICollectionView.SupplementaryRegistration<ButtonHeaderFooterView>(elementKind: UICollectionView.elementKindSectionFooter) { supplementaryView, elementKind, indexPath in
+            let section = Section.allCases[indexPath.section]
+
+            supplementaryView.imageView.image = section.footerImage
+            supplementaryView.textLabel.text = section.footerTitle
+        }
+    }
 }
 
 // MARK: - DataSource Configuration
@@ -175,11 +184,14 @@ extension PlantConfigurationViewController {
         }
 
         let supplementartyHeaderView = createSupplementaryHeaderRegistration()
+        let buttonFooterView = createAddNewReminderFooterRegistration()
         let iconBadgeView = createIconBadgeRegistration()
         dataSource.supplementaryViewProvider = { (collectionView, elementKind, indexPath) -> UICollectionReusableView? in
             switch elementKind {
                 case UICollectionView.elementKindSectionHeader:
                     return collectionView.dequeueConfiguredReusableSupplementary(using: supplementartyHeaderView, for: indexPath)
+                case UICollectionView.elementKindSectionFooter:
+                    return collectionView.dequeueConfiguredReusableSupplementary(using: buttonFooterView, for: indexPath)
                 case PlantIconSupplementaryView.badgeElementKind:
                     return collectionView.dequeueConfiguredReusableSupplementary(using: iconBadgeView, for: indexPath)
                 default:

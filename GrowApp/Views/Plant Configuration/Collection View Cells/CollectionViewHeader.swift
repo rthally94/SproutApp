@@ -8,8 +8,39 @@
 import UIKit
 
 class CollectionViewHeader: UICollectionReusableView {
-    var textLabel: UILabel! = nil
-    var accessoryButton: UIButton! = nil
+    lazy var imageView: UIView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+
+        let compressionResistence = imageView.contentCompressionResistancePriority(for: .horizontal) - 1
+        imageView.setContentCompressionResistancePriority(compressionResistence, for: .horizontal)
+        return imageView
+    }()
+
+    lazy var textLabel: UILabel = {
+        let textLabel = UILabel()
+        textLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+        return textLabel
+    }()
+
+    lazy var accessoryButton: UIButton = {
+        let accessoryButton = UIButton(type: .system)
+        accessoryButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
+        accessoryButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+
+        let huggingPriority = accessoryButton.contentHuggingPriority(for: .horizontal) + 1
+        accessoryButton.setContentHuggingPriority(huggingPriority, for: .horizontal)
+        return accessoryButton
+    }()
+
+    private lazy var headerStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fillProportionally
+        return stack
+    }()
+
     var onTap: (() -> Void)?
 
     @objc private func buttonTapped() {
@@ -29,32 +60,20 @@ class CollectionViewHeader: UICollectionReusableView {
 
 extension CollectionViewHeader {
     func configureHiearchy() {
-        textLabel = UILabel()
-        textLabel.font = UIFont.preferredFont(forTextStyle: .headline)
-
-        accessoryButton = UIButton(type: .system)
-        accessoryButton.titleLabel?.font = UIFont.preferredFont(forTextStyle: .body)
-        accessoryButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-
-        addSubview(textLabel)
-        addSubview(accessoryButton)
+        headerStack.addArrangedSubview(imageView)
+        headerStack.addArrangedSubview(textLabel)
+        headerStack.addArrangedSubview(accessoryButton)
 
         layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
 
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
-        accessoryButton.translatesAutoresizingMaskIntoConstraints = false
+        headerStack.translatesAutoresizingMaskIntoConstraints = false
 
-        let accessoryHuggingPriority = accessoryButton.contentHuggingPriority(for: .horizontal) + 1
-        accessoryButton.setContentHuggingPriority(accessoryHuggingPriority, for: .horizontal)
-
+        addSubview(headerStack)
         NSLayoutConstraint.activate([
-            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            textLabel.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
-
-            accessoryButton.leadingAnchor.constraint(equalToSystemSpacingAfter: textLabel.trailingAnchor, multiplier: 1.0),
-            accessoryButton.trailingAnchor.constraint(equalTo: trailingAnchor),
-            accessoryButton.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
-            accessoryButton.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            headerStack.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            headerStack.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            headerStack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            headerStack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
         ])
     }
 }

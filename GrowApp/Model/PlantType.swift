@@ -8,10 +8,12 @@
 import Foundation
 import UIKit
 
-struct PlantType: Identifiable, Equatable {
+struct PlantType: Identifiable, Equatable, Hashable {
     var id: UUID = UUID()
     var scientificName: String
     var commonName: String
+
+    static var previousChoices: Set<PlantType> = []
 }
 
 extension PlantType {

@@ -148,7 +148,7 @@ class TimelineViewController: UIViewController, UICollectionViewDataSource {
         
         let plant = plantsNeedingCare[indexPath.item]
         
-        cell.titleLabel.text = plant.id.uuidString
+        cell.titleLabel.text = plant.name
         cell.subtitleLabel.text = TimelineViewController.dateFormatter.string(from: Date())
         cell.cellBackground.backgroundColor = .systemGray6
         

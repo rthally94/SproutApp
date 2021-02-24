@@ -43,6 +43,24 @@ class PlantConfigurationViewController: UIViewController {
         var headerMode: UICollectionLayoutListConfiguration.HeaderMode {
             headerTitle == nil ? .none : .supplementary
         }
+
+        var footerTitle: String? {
+            switch self {
+                case .care: return "Add Reminder"
+                default: return nil
+            }
+        }
+
+        var footerImage: UIImage? {
+            switch self {
+                case .care: return UIImage(systemName: "plus")
+                default: return nil
+            }
+        }
+
+        var footerMode: UICollectionLayoutListConfiguration.FooterMode {
+            footerTitle == nil ? .none : .supplementary
+        }
     }
 
     struct Item: Hashable {
@@ -98,6 +116,7 @@ extension PlantConfigurationViewController {
 
             var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
             config.headerMode = sectionInfo.headerMode
+            config.footerMode = sectionInfo.footerMode
 
             switch sectionInfo {
                 case .image:

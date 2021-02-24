@@ -51,6 +51,7 @@
 		FBC7333825E572A30048999C /* PlantIconPickerViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333725E572A30048999C /* PlantIconPickerViewController+DataSource.swift */; };
 		FBC7333C25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333B25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift */; };
 		FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */; };
+		FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */; };
 		FBF8AC5225DD80AC00E7E8EB /* PlantIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF8AC5125DD80AC00E7E8EB /* PlantIconView.swift */; };
 /* End PBXBuildFile section */
 
@@ -113,6 +114,7 @@
 		FBC7333725E572A30048999C /* PlantIconPickerViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantIconPickerViewController+DataSource.swift"; sourceTree = "<group>"; };
 		FBC7333B25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantIconPickerViewController+Delegates.swift"; sourceTree = "<group>"; };
 		FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconSupplementaryView.swift; sourceTree = "<group>"; };
+		FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHeaderFooterView.swift; sourceTree = "<group>"; };
 		FBF8AC5125DD80AC00E7E8EB /* PlantIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -260,7 +262,6 @@
 				FB7B815E25BE2BE10053E543 /* PlantConfigurationViewController.swift */,
 				FBC7331C25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift */,
 				FBC7332025E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift */,
-				FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */,
 				FBC7331A25E2E0D70048999C /* Collection View Cells */,
 				FBC7332E25E404A40048999C /* PlantIconPicker */,
 				FB7B815325BE189E0053E543 /* Plant Type Configuration */,
@@ -300,9 +301,11 @@
 		FBC7331A25E2E0D70048999C /* Collection View Cells */ = {
 			isa = PBXGroup;
 			children = (
+				FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */,
 				FB0A9F3525DC5D7E0084AED8 /* TextFieldCell.swift */,
 				FBC7330225DDB4F00048999C /* PlantIconCell.swift */,
 				FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */,
+				FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */,
 			);
 			path = "Collection View Cells";
 			sourceTree = "<group>";
@@ -448,6 +451,7 @@
 				FB0A9F3E25DD766B0084AED8 /* PlantType.swift in Sources */,
 				FB7B815F25BE2BE10053E543 /* PlantConfigurationViewController.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
+				FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */,
 				FB7B819125C08F380053E543 /* CareInfoCell.swift in Sources */,
 				FB7B818225BF7F5E0053E543 /* CareInfoHeaderCell.swift in Sources */,
 				FB0A9F3625DC5D7E0084AED8 /* TextFieldCell.swift in Sources */,
