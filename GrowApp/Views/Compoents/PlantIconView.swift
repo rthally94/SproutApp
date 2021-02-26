@@ -13,20 +13,19 @@ class PlantIconView: UIView {
         didSet {
             guard let icon = icon, icon != oldValue else { return }
             switch icon {
-                case let .emoji(emoji, foregroundColor, backgroundColor):
+                case let .emoji(emoji, backgroundColor):
                     text = emoji
-                    tintColor = foregroundColor
-                    self.backgroundColor = backgroundColor
+                    self.backgroundColor = backgroundColor?.withAlphaComponent(0.5)
                     presentationMode = .padded(multiplier: 0.6, points: 0)
                 case let .text(text, foregroundColor, backgroundColor):
                     self.text = text
-                    tintColor = foregroundColor
-                    self.backgroundColor = backgroundColor
+                    tintColor = foregroundColor ?? backgroundColor?.withAlphaComponent(1.0)
+                    self.backgroundColor = backgroundColor?.withAlphaComponent(0.5)
                     presentationMode = .padded(multiplier: 0.6, points: 0)
                 case let .symbol(name, foregroundColor, backgroundColor):
                     self.image = UIImage(systemName: name)
-                    tintColor = foregroundColor
-                    self.backgroundColor = backgroundColor
+                    tintColor = foregroundColor ?? backgroundColor?.withAlphaComponent(1.0)
+                    self.backgroundColor = backgroundColor?.withAlphaComponent(0.5)
                     presentationMode = .padded(multiplier: 0.6, points: 0)
                 case let .image(image):
                     self.image = image

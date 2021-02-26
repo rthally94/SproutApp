@@ -75,6 +75,7 @@ extension TimelineViewController {
             let sortedKeys = self.data.keys.sorted(by: { $0.description < $1.description })
             if indexPath.section < sortedKeys.endIndex {
                 let task = sortedKeys[indexPath.section]
+                cell.tintColor = task.accentColor
                 cell.imageView.image = task.icon
                 cell.textLabel.text = task.description
             }

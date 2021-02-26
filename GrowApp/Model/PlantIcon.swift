@@ -10,7 +10,7 @@ import UIKit
 
 enum PlantIcon: Hashable {
     case image(UIImage)
-    case emoji(String, foregroundColor: UIColor?, backgroundColor: UIColor?)
+    case emoji(String, backgroundColor: UIColor?)
     case text(String, foregroundColor: UIColor?, backgroundColor: UIColor?)
     case symbol(name: String, foregroundColor: UIColor?, backgroundColor: UIColor?)
 }

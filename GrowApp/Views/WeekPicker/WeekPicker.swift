@@ -165,7 +165,9 @@ extension WeekPicker: UICollectionViewDataSource {
             // Configure background circle
             let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 32, weight: .bold)
             cell.imageView.image = UIImage(systemName: "circle.fill", withConfiguration: symbolConfiguration)
-            
+
+            cell.tintColor = .systemGray
+
             // Configure text label
             cell.textLabel.textColor = .systemGray6
         }

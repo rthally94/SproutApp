@@ -111,7 +111,7 @@ extension TimelineViewController: WeekPickerDelegate {
 extension TimelineViewController {
     private func makeLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection in
-            var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+            var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped )
             config.headerMode = .supplementary
             return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
         }

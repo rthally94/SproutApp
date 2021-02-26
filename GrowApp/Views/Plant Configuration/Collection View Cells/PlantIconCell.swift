@@ -26,11 +26,10 @@ class PlantIconCell: UICollectionViewCell {
                     content.text = text
                     content.foregroundColor = foregroundColor
                     content.backgroundColor = backgroundColor
-                case let .emoji(emoji, foregroundColor, backgroundColor):
+                case let .emoji(emoji, backgroundColor):
                     if let emoji = emoji.first {
                         content.text = String(emoji)
                     }
-                    content.foregroundColor = foregroundColor
                     content.backgroundColor = backgroundColor
                 case let .symbol(name, foregroundColor, backgroundColor):
                     content.image = UIImage(systemName: name)

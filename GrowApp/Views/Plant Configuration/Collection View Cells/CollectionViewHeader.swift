@@ -11,7 +11,7 @@ class CollectionViewHeader: UICollectionReusableView {
     lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .center
-        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .title3)
+        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 24, weight: .bold)
         let huggingPriority = imageView.contentHuggingPriority(for: .horizontal) + 1
         imageView.setContentHuggingPriority(huggingPriority, for: .horizontal)
         return imageView
@@ -19,7 +19,7 @@ class CollectionViewHeader: UICollectionReusableView {
 
     lazy var textLabel: UILabel = {
         let textLabel = UILabel()
-        textLabel.font = UIFont.preferredFont(forTextStyle: .title3)
+        textLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
         return textLabel
     }()
 
@@ -65,8 +65,8 @@ extension CollectionViewHeader {
             imageView.heightAnchor.constraint(equalTo: layoutMarginsGuide.heightAnchor),
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
 
-            textLabel.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
-            textLabel.heightAnchor.constraint(equalTo: layoutMarginsGuide.heightAnchor),
+            textLabel.firstBaselineAnchor.constraint(equalTo: imageView.firstBaselineAnchor),
+            textLabel.lastBaselineAnchor.constraint(equalTo: imageView.lastBaselineAnchor),
             textLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1.0),
             textLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
         ])
