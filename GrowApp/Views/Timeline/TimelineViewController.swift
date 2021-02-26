@@ -101,8 +101,8 @@ extension TimelineViewController: WeekPickerDelegate {
             selectedDate = date
             self.navigationItem.title = TimelineViewController.dateFormatter.string(from: selectedDate)
 
-            let plantsNeedingCare = model.getPlantsNeedingCare(on: selectedDate)
-            let snapshot = createSnapshot(for: plantsNeedingCare)
+            data = model.getPlantsNeedingCare(on: selectedDate)
+            let snapshot = createSnapshot(for: data)
             dataSource.apply(snapshot)
         }
     }
