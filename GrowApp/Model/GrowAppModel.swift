@@ -15,15 +15,9 @@ class GrowAppModel {
         
         // Configure preconfigured model
         for i in 0...4 {
-            let tasks = [
-                Task(name: "Never Task", iconImage: UIImage(systemName: "swift"), interval: .none, logs: []),
-                Task(name: "Daily Task", iconImage: UIImage(systemName: "swift"), interval: .daily(1), logs: []),
-                Task(name: "Weekly Task", iconImage: UIImage(systemName: "swift"), interval: .weekly([1, 3, 5]), logs: []),
-                Task(name: "Monthly Task", iconImage: UIImage(systemName: "swift"), interval: .monthly([10, 20]), logs: [])
-            ]
-
+            let tasks = Array(Task.allTasks[0..<i])
             let type = PlantType.allTypes.randomElement()!
-            let plant = Plant(name: "My Plant \(i)", type: type, icon: .symbol(name: "drop.fill", foregroundColor: UIColor.systemBlue, backgroundColor: UIColor.secondarySystemGroupedBackground), tasks: tasks)
+            let plant = Plant(name: "My Plant \(i)", type: type, icon: .symbol(name: "tortoise.fill", foregroundColor: UIColor.systemBlue, backgroundColor: UIColor.systemFill), tasks: tasks)
             
             let interval = (86_400*i) - 172_800
             let careDate = Date(timeIntervalSinceNow: Double(interval))
@@ -55,23 +49,13 @@ class GrowAppModel {
     }
     
     // Plant Care
-    func getPlantsNeedingCare(on date: Date) -> [Task: [Plant]] {
-        plants.sorted(by: {$0.name < $1.name}).reduce(into: [Task: [Plant]]() ) { dict, plant in
+    func getPlantsNeedingCare(on date: Date) -> [TaskType: [Plant]] {
+        plants.sorted(by: {$0.name < $1.name}).reduce(into: [TaskType: [Plant]]() ) { dict, plant in
             plant.tasks.forEach { task in
-                if Calendar.current.isDate(task.nextCareDate, inSameDayAs: date) {
-                    dict[task, default: []].append(plant)
+                if task.isDateInInterval(date) {
+                    dict[task.type, default: []].append(plant)
                 }
             }
         }
-
-//        plants.filter { plant in
-//            for task in plant.tasks {
-//                if Calendar.current.isDate(task.nextCareDate, inSameDayAs: date) == true {
-//                    return true
-//                }
-//            }
-//            
-//            return false
-//        }
     }
 }

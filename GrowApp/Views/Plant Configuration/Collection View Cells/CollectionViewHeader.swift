@@ -8,18 +8,18 @@
 import UIKit
 
 class CollectionViewHeader: UICollectionReusableView {
-    lazy var imageView: UIView = {
+    lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-
-        let compressionResistence = imageView.contentCompressionResistancePriority(for: .horizontal) - 1
-        imageView.setContentCompressionResistancePriority(compressionResistence, for: .horizontal)
+        imageView.contentMode = .center
+        imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .title3)
+        let huggingPriority = imageView.contentHuggingPriority(for: .horizontal) + 1
+        imageView.setContentHuggingPriority(huggingPriority, for: .horizontal)
         return imageView
     }()
 
     lazy var textLabel: UILabel = {
         let textLabel = UILabel()
-        textLabel.font = UIFont.preferredFont(forTextStyle: .headline)
+        textLabel.font = UIFont.preferredFont(forTextStyle: .title3)
         return textLabel
     }()
 
@@ -31,14 +31,6 @@ class CollectionViewHeader: UICollectionReusableView {
         let huggingPriority = accessoryButton.contentHuggingPriority(for: .horizontal) + 1
         accessoryButton.setContentHuggingPriority(huggingPriority, for: .horizontal)
         return accessoryButton
-    }()
-
-    private lazy var headerStack: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.alignment = .center
-        stack.distribution = .fillProportionally
-        return stack
     }()
 
     var onTap: (() -> Void)?
@@ -60,20 +52,23 @@ class CollectionViewHeader: UICollectionReusableView {
 
 extension CollectionViewHeader {
     func configureHiearchy() {
-        headerStack.addArrangedSubview(imageView)
-        headerStack.addArrangedSubview(textLabel)
-        headerStack.addArrangedSubview(accessoryButton)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 8, right: 0)
+        addSubview(imageView)
+        addSubview(textLabel)
 
-        headerStack.translatesAutoresizingMaskIntoConstraints = false
+        layoutMargins = UIEdgeInsets(top: 6, left: 0, bottom: 6, right: 0)
 
-        addSubview(headerStack)
         NSLayoutConstraint.activate([
-            headerStack.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            headerStack.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            headerStack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-            headerStack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
+            imageView.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
+            imageView.heightAnchor.constraint(equalTo: layoutMarginsGuide.heightAnchor),
+            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+
+            textLabel.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
+            textLabel.heightAnchor.constraint(equalTo: layoutMarginsGuide.heightAnchor),
+            textLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1.0),
+            textLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
         ])
     }
 }

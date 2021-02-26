@@ -154,7 +154,7 @@ extension PlantConfigurationViewController {
 
         let tasks: [Item] = plant.tasks.map {
             Item(
-                rowType: .list(image: $0.iconImage, text: $0.name, secondaryText: $0.interval.description),
+                rowType: .list(image: $0.type.icon, text: $0.type.description, secondaryText: $0.interval.description),
                 onTap: nil
             )
         }

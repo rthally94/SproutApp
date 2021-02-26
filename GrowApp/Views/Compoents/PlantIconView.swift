@@ -9,6 +9,32 @@ import UIKit
 import CoreGraphics
 
 class PlantIconView: UIView {
+    var icon: PlantIcon? {
+        didSet {
+            guard let icon = icon, icon != oldValue else { return }
+            switch icon {
+                case let .emoji(emoji, foregroundColor, backgroundColor):
+                    text = emoji
+                    tintColor = foregroundColor
+                    self.backgroundColor = backgroundColor
+                    presentationMode = .padded(multiplier: 0.6, points: 0)
+                case let .text(text, foregroundColor, backgroundColor):
+                    self.text = text
+                    tintColor = foregroundColor
+                    self.backgroundColor = backgroundColor
+                    presentationMode = .padded(multiplier: 0.6, points: 0)
+                case let .symbol(name, foregroundColor, backgroundColor):
+                    self.image = UIImage(systemName: name)
+                    tintColor = foregroundColor
+                    self.backgroundColor = backgroundColor
+                    presentationMode = .padded(multiplier: 0.6, points: 0)
+                case let .image(image):
+                    self.image = image
+                    presentationMode = .full
+            }
+        }
+    }
+
     var image: UIImage? {
         didSet {
             guard image != oldValue else { return }
@@ -71,8 +97,7 @@ class PlantIconView: UIView {
 
     private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-
+        imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()

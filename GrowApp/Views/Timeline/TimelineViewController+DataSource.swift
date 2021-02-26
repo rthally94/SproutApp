@@ -9,23 +9,37 @@ import UIKit
 
 extension TimelineViewController {
     func configureDataSource() {
+        let plantTaskCellRegistration = createPlantCellRegistration()
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             // TODO:- dequeue configured cells
-            return nil
+            return collectionView.dequeueConfiguredReusableCell(using: plantTaskCellRegistration, for: indexPath, item: item)
         }
 
         // TODO:- Supplemetary View Provider (Headers)
+        let taskHeader = createHeaderRegistration()
+        dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
+            switch elementKind {
+                case UICollectionView.elementKindSectionHeader:
+                    return collectionView.dequeueConfiguredReusableSupplementary(using: taskHeader, for: indexPath)
+                default:
+                    return nil
+            }
+        }
     }
 
-    func createSnapshot(for plants: [Task: [Plant]]) -> NSDiffableDataSourceSnapshot<Section, Item> {
+    func createSnapshot(for plants: [TaskType: [Plant]]) -> NSDiffableDataSourceSnapshot<Section, Item> {
         // Transform [Task: [Plant]] to [Section: [Item]]
         let data: [Section: [Item]] = plants.reduce(into: [Section: [Item]]() ) { dict, item in
-            let (task, plants) = item
-            let section = Section(careIcon: task.iconImage, taskName: task.name)
-            let items = plants.map { plant in
-                // TODO: - Add missing parameter: lastCareDate
+            let (taskType, plants) = item
+            let section = Section(careIcon: taskType.icon, taskName: taskType.description)
+            let items: [Item] = plants.compactMap { plant in
+                // TODO: - Change parameter from nextCareDate to lastCareDate
+                guard let task = plant.tasks.first(where: { $0.type == taskType }) else { return nil }
+                let lastCareDateString = task.interval.description
+
                 // TODO: - Add missing parameter: isComplete
-                Item(plantName: plant.name, lastCareDate: nil, plantIcon: plant.icon, isComplete: false)
+                let isComplete = Calendar.current.compare(task.nextCareDate, to: selectedDate, toGranularity: .day) == .orderedAscending
+                return Item(id: UUID(), plantName: plant.name, lastCareDate: lastCareDateString, plantIcon: plant.icon, isComplete: isComplete)
             }
 
             dict[section, default: []].append(contentsOf: items)
@@ -48,33 +62,22 @@ extension TimelineViewController {
 
     private func createPlantCellRegistration() -> UICollectionView.CellRegistration<TimelineCell, Item> {
         return UICollectionView.CellRegistration<TimelineCell, Item> { cell, indexPath, item in
-            // TODO:- Configure cell
+            cell.plantIconView.icon = item.plantIcon
+            cell.titleLabel.text = item.plantName
+            cell.subtitleLabel.text = item.lastCareDate
+            cell.todoButton.setImage(item.isComplete ? cell.completeSymbol : cell.incompleteSymbol, for: .normal)
         }
     }
 
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        1
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        plantsNeedingCare.count
-//    }
-
-
-
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TimelineCell.reuseIdentifier, for: indexPath) as? TimelineCell else { fatalError("Unable to dequeu Timeline Cell") }
-//
-//        if indexPath.item == 0 {
-//            cell.imageView.image = UIImage(systemName: "drop.fill")
-//        }
-//
-//        let plant = plantsNeedingCare[indexPath.item]
-//
-//        cell.titleLabel.text = plant.name
-//        cell.subtitleLabel.text = TimelineViewController.dateFormatter.string(from: Date())
-//        cell.cellBackground.backgroundColor = .systemGray6
-//
-//        return cell
-//    }
+    private func createHeaderRegistration() -> UICollectionView.SupplementaryRegistration<CollectionViewHeader> {
+        return UICollectionView.SupplementaryRegistration<CollectionViewHeader>(elementKind: UICollectionView.elementKindSectionHeader) { cell, elementKind, indexPath in
+            // TODO:- configure cell
+            let sortedKeys = self.data.keys.sorted(by: { $0.description < $1.description })
+            if indexPath.section < sortedKeys.endIndex {
+                let task = sortedKeys[indexPath.section]
+                cell.imageView.image = task.icon
+                cell.textLabel.text = task.description
+            }
+        }
+    }
 }

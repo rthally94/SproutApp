@@ -16,14 +16,15 @@ class TimelineViewController: UIViewController {
         
         return formatter
     }()
-    
+
+    #if DEBUG
     let model = GrowAppModel.preview
+    #else
+    let model = GrowAppModel.shared
+    #endif
+
     var selectedDate: Date = Date()
-    var plantsNeedingCare: [Task: [Plant]] = [:] {
-        didSet {
-            collectionView.reloadData()
-        }
-    }
+    var data: [TaskType: [Plant]] = [:]
     
     lazy var weekPicker: WeekPicker = {
         let weekPicker = WeekPicker(frame: .zero)
@@ -40,6 +41,7 @@ class TimelineViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
         collectionView.backgroundColor = .clear
         collectionView.dataSource = dataSource
+        collectionView.allowsSelection = false
         return collectionView
     }()
 
@@ -51,8 +53,9 @@ class TimelineViewController: UIViewController {
     }
 
     struct Item: Hashable {
+        let id: UUID
         let plantName: String
-        let lastCareDate: Date?
+        let lastCareDate: String?
         let plantIcon: PlantIcon?
         let isComplete: Bool
     }
@@ -60,7 +63,8 @@ class TimelineViewController: UIViewController {
     // MARK:- View Controller Lifecycle
     override func loadView() {
         super.loadView()
-
+        
+        configureDataSource()
         configureHiearchy()
     }
 
@@ -73,12 +77,14 @@ class TimelineViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        plantsNeedingCare = model.getPlantsNeedingCare(on: selectedDate)
+        data = model.getPlantsNeedingCare(on: selectedDate)
+        let snapshot = createSnapshot(for: data)
+        dataSource.apply(snapshot)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        weekPicker.selectDate(selectedDate, animated: false)
+        weekPicker.selectDate(selectedDate, animated: true)
     }
     
     // MARK:- Actions
@@ -94,8 +100,10 @@ extension TimelineViewController: WeekPickerDelegate {
         if date != selectedDate {
             selectedDate = date
             self.navigationItem.title = TimelineViewController.dateFormatter.string(from: selectedDate)
-            self.plantsNeedingCare = model.getPlantsNeedingCare(on: selectedDate)
-            self.collectionView.reloadData()
+
+            let plantsNeedingCare = model.getPlantsNeedingCare(on: selectedDate)
+            let snapshot = createSnapshot(for: plantsNeedingCare)
+            dataSource.apply(snapshot)
         }
     }
 }
@@ -103,16 +111,9 @@ extension TimelineViewController: WeekPickerDelegate {
 extension TimelineViewController {
     private func makeLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection in
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-            item.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 0, bottom: 6, trailing: 0)
-
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(100))
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-            let section = NSCollectionLayoutSection(group: group)
-            return section
+            var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+            config.headerMode = .supplementary
+            return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
         }
 
         return layout
@@ -134,7 +135,7 @@ extension TimelineViewController {
             collectionView.topAnchor.constraint(equalTo: weekPicker.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
 

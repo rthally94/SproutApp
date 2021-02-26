@@ -200,9 +200,8 @@
 		FB5F348325B4C29100CCE6BC /* Timeline */ = {
 			isa = PBXGroup;
 			children = (
+				FBC7335325E73FDC0048999C /* Collection View Cells */,
 				FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */,
-				FB5F348825B63E6900CCE6BC /* TimelineCell.swift */,
-				FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */,
 				FBC7334F25E708790048999C /* TimelineViewController+DataSource.swift */,
 			);
 			path = Timeline;
@@ -321,6 +320,15 @@
 				FBC7333B25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift */,
 			);
 			path = PlantIconPicker;
+			sourceTree = "<group>";
+		};
+		FBC7335325E73FDC0048999C /* Collection View Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FB5F348825B63E6900CCE6BC /* TimelineCell.swift */,
+				FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */,
+			);
+			path = "Collection View Cells";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
