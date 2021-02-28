@@ -23,7 +23,17 @@ class TimelineViewController: UIViewController {
     let model = GrowAppModel.shared
     #endif
 
-    var selectedDate: Date = Date()
+    var selectedDate: Date = Date() {
+        didSet {
+            self.navigationItem.title = TimelineViewController.dateFormatter.string(from: selectedDate)
+            weekPicker.selectDate(selectedDate, animated: true)
+
+            data = model.getPlantsNeedingCare(on: selectedDate)
+            let snapshot = createSnapshot(for: data)
+            dataSource.apply(snapshot)
+        }
+    }
+
     var data: [TaskType: [Plant]] = [:]
     
     lazy var weekPicker: WeekPicker = {
@@ -70,41 +80,29 @@ class TimelineViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         configureNavBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        data = model.getPlantsNeedingCare(on: selectedDate)
-        let snapshot = createSnapshot(for: data)
-        dataSource.apply(snapshot)
+        selectedDate = Date()
     }
-    
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        weekPicker.selectDate(selectedDate, animated: true)
+
+        weekPicker.selectDate(selectedDate, animated: false)
     }
     
     // MARK:- Actions
     @objc private func openCalendarPicker() {
         let vc = DatePickerCardViewController(nibName: nil, bundle: nil)
         vc.modalPresentationStyle = .automatic
+        vc.delegate = self
+        vc.selectedDate = selectedDate
         self.present(vc, animated: true)
-    }
-}
-
-extension TimelineViewController: WeekPickerDelegate {
-    func weekPicker(_ weekPicker: WeekPicker, didSelect date: Date) {
-        if date != selectedDate {
-            selectedDate = date
-            self.navigationItem.title = TimelineViewController.dateFormatter.string(from: selectedDate)
-
-            data = model.getPlantsNeedingCare(on: selectedDate)
-            let snapshot = createSnapshot(for: data)
-            dataSource.apply(snapshot)
-        }
     }
 }
 
@@ -151,5 +149,23 @@ extension TimelineViewController {
         navigationBar?.standardAppearance = navigationBarAppearence
 
         navigationBar?.isTranslucent = false
+    }
+
+    func selectDate(_ date: Date) {
+        if date != selectedDate {
+            selectedDate = date
+        }
+    }
+}
+
+extension TimelineViewController: WeekPickerDelegate {
+    func weekPicker(_ weekPicker: WeekPicker, didSelect date: Date) {
+        selectDate(date)
+    }
+}
+
+extension TimelineViewController: DatePickerDelegate {
+    func didSelect(date: Date) {
+        selectDate(date)
     }
 }
