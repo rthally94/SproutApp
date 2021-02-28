@@ -18,11 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
 
-        let vc = TimelineViewController()
-
-        let nav = UINavigationController(rootViewController: vc)
-
-        window.rootViewController = nav
+        window.rootViewController = MainViewController()
         window.rootViewController?.view.backgroundColor = .systemBackground
         self.window = window
         window.makeKeyAndVisible()
