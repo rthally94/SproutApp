@@ -191,7 +191,7 @@
 		FB5F348225B4C28300CCE6BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				FBC5D5FD25EB3BE4005BF6B1 /* Plant Groups */,
+				FBC5D61E25EC55B4005BF6B1 /* SubGroup */,
 				FB7B812425B9D4B80053E543 /* Compoents */,
 				FB7B815225BE188E0053E543 /* Plant Configuration */,
 				FB7B813025BA255A0053E543 /* WeekPicker */,
@@ -312,6 +312,14 @@
 				FBC5D60425EB4207005BF6B1 /* PlantCardCell.swift */,
 			);
 			path = "Plant Groups";
+			sourceTree = "<group>";
+		};
+		FBC5D61E25EC55B4005BF6B1 /* SubGroup */ = {
+			isa = PBXGroup;
+			children = (
+				FBC5D5FD25EB3BE4005BF6B1 /* Plant Groups */,
+			);
+			path = SubGroup;
 			sourceTree = "<group>";
 		};
 		FBC7331A25E2E0D70048999C /* Collection View Cells */ = {
