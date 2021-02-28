@@ -474,6 +474,8 @@
 				FBC7331D25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift in Sources */,
 				FB0A9F3E25DD766B0084AED8 /* PlantType.swift in Sources */,
 				FB7B815F25BE2BE10053E543 /* PlantConfigurationViewController.swift in Sources */,
+				FBC5D5FF25EB3C10005BF6B1 /* PlantGroupViewController.swift in Sources */,
+				FBC5D60525EB4207005BF6B1 /* PlantCardCell.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
 				FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */,
 				FB7B819125C08F380053E543 /* CareInfoCell.swift in Sources */,
