@@ -8,15 +8,23 @@
 import UIKit
 
 class MainViewController: UIViewController {
-    lazy var timelineVC: TimelineViewController = {
-        let vc = TimelineViewController(nibName: nil, bundle: nil)
+    lazy var timelineVC: some UIViewController = {
+        let vc = TimelineViewController(nibName: nil, bundle: nil).wrappedInNavigationController()
+        vc.tabBarItem = UITabBarItem(title: "Timeline", image: UIImage(systemName: "newspaper"), selectedImage: UIImage(systemName: "newspaper.fill"))
+        return vc
+    }()
+    
+    lazy var plantGroupVC: some UIViewController = {
+        let vc = PlantGroupViewController().wrappedInNavigationController()
+        vc.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
         return vc
     }()
     
     lazy var tabBarVC: UITabBarController = {
         let vc = UITabBarController(nibName: nil, bundle: nil)
         vc.setViewControllers([
-            timelineVC.wrappedInNavigationController(),
+            timelineVC,
+            plantGroupVC
         ], animated: false)
         return vc
     }()

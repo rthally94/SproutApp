@@ -55,11 +55,6 @@ class TimelineViewController: UIViewController {
         return collectionView
     }()
     
-    lazy var tabItem: UITabBarItem = {
-        let item = UITabBarItem(title: "Timeline", image: UIImage(systemName: "newspaper"), selectedImage: UIImage(systemName: "newspaper.fill"))
-        return item
-    }()
-
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
 
     struct Section: Hashable {
@@ -87,7 +82,6 @@ class TimelineViewController: UIViewController {
         super.viewDidLoad()
 
         configureNavBar()
-        tabBarItem = tabItem
     }
     
     override func viewWillAppear(_ animated: Bool) {
