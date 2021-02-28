@@ -189,6 +189,7 @@
 		FB5F348225B4C28300CCE6BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FBC5D61B25EC555E005BF6B1 /* All Plants */,
 				FBC5D60A25EC2BE0005BF6B1 /* MainViewController */,
 				FB7B812425B9D4B80053E543 /* Compoents */,
 				FB7B815225BE188E0053E543 /* Plant Configuration */,
@@ -309,6 +310,13 @@
 				FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */,
 			);
 			path = MainViewController;
+			sourceTree = "<group>";
+		};
+		FBC5D61B25EC555E005BF6B1 /* All Plants */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "All Plants";
 			sourceTree = "<group>";
 		};
 		FBC7331A25E2E0D70048999C /* Collection View Cells */ = {
@@ -474,8 +482,6 @@
 				FBC7331D25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift in Sources */,
 				FB0A9F3E25DD766B0084AED8 /* PlantType.swift in Sources */,
 				FB7B815F25BE2BE10053E543 /* PlantConfigurationViewController.swift in Sources */,
-				FBC5D5FF25EB3C10005BF6B1 /* PlantGroupViewController.swift in Sources */,
-				FBC5D60525EB4207005BF6B1 /* PlantCardCell.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
 				FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */,
 				FB7B819125C08F380053E543 /* CareInfoCell.swift in Sources */,
