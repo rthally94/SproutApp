@@ -17,7 +17,7 @@ class GrowAppModel {
         for i in 0...4 {
             let tasks = Array(Task.allTasks[0..<i])
             let type = PlantType.allTypes.randomElement()!
-            let plant = Plant(name: "My Plant \(i)", type: type, icon: .emoji("🐙", backgroundColor: .systemBlue), tasks: tasks)
+            let plant = Plant(name: "My Plant \(i)", type: type, icon: .image(UIImage(named: "SamplePlantImage")!), tasks: tasks)
 //            let plant = Plant(name: "My Plant \(i)", type: type, icon: .symbol(name: "tortoise.fill", foregroundColor: nil, backgroundColor: UIColor.systemBlue), tasks: tasks)
             
             let interval = (86_400*i) - 172_800

@@ -8,21 +8,20 @@
 import UIKit
 
 class PlantCardCell: UICollectionViewCell {
-    lazy var imageView: UIImageView = {
-        let view = UIImageView()
-        
+    lazy var iconView: PlantIconView = {
+        let view = PlantIconView()
         return view
     }()
     
     lazy var textLabel: UILabel = {
         let view = UILabel()
-        
+        view.font = UIFont.preferredFont(forTextStyle: .headline)
         return view
     }()
     
     lazy var secondaryTextLabel: UILabel = {
         let view = UILabel()
-        
+        view.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return view
     }()
     
@@ -32,6 +31,7 @@ class PlantCardCell: UICollectionViewCell {
         configureHiearchy()
         
         backgroundColor = .secondarySystemFill
+        layer.cornerRadius = 10
     }
     
     required init?(coder: NSCoder) {
@@ -41,25 +41,25 @@ class PlantCardCell: UICollectionViewCell {
 
 extension PlantCardCell {
     func configureHiearchy() {
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        iconView.translatesAutoresizingMaskIntoConstraints = false
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         secondaryTextLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        contentView.addSubview(imageView)
+        contentView.addSubview(iconView)
         contentView.addSubview(textLabel)
         contentView.addSubview(secondaryTextLabel)
         
         NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            imageView.centerXAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor),
-            imageView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor),
-            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
-            
-            textLabel.topAnchor.constraint(greaterThanOrEqualTo: imageView.bottomAnchor, constant: 6),
+            iconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            iconView.centerXAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor),
+            iconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor),
+            iconView.heightAnchor.constraint(equalTo: iconView.widthAnchor),
+//
+            textLabel.topAnchor.constraint(greaterThanOrEqualTo: contentView.layoutMarginsGuide.topAnchor),
             textLabel.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
             textLabel.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
             
-            secondaryTextLabel.topAnchor.constraint(lessThanOrEqualToSystemSpacingBelow: textLabel.bottomAnchor, multiplier: 1.0),
+            secondaryTextLabel.topAnchor.constraint(equalToSystemSpacingBelow: textLabel.bottomAnchor, multiplier: 0.5),
             secondaryTextLabel.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
             secondaryTextLabel.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
             secondaryTextLabel.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),

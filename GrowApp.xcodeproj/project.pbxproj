@@ -41,6 +41,7 @@
 		FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */; };
 		FBC5D62525EC5679005BF6B1 /* PlantCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D62325EC5679005BF6B1 /* PlantCardCell.swift */; };
 		FBC5D62625EC5679005BF6B1 /* PlantGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D62425EC5679005BF6B1 /* PlantGroupViewController.swift */; };
+		FBC5D62C25ED9B92005BF6B1 /* TimelineCellContent.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBC5D62B25ED9B92005BF6B1 /* TimelineCellContent.xib */; };
 		FBC7330325DDB4F00048999C /* PlantIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330225DDB4F00048999C /* PlantIconCell.swift */; };
 		FBC7330925DDD5BE0048999C /* PlantIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330825DDD5BE0048999C /* PlantIcon.swift */; };
 		FBC7330D25DEBACB0048999C /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330C25DEBACB0048999C /* Circle.swift */; };
@@ -108,6 +109,7 @@
 		FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		FBC5D62325EC5679005BF6B1 /* PlantCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlantCardCell.swift; path = "GrowApp/Views/SubGroup/Plant Groups/PlantCardCell.swift"; sourceTree = SOURCE_ROOT; };
 		FBC5D62425EC5679005BF6B1 /* PlantGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlantGroupViewController.swift; path = "GrowApp/Views/SubGroup/Plant Groups/PlantGroupViewController.swift"; sourceTree = SOURCE_ROOT; };
+		FBC5D62B25ED9B92005BF6B1 /* TimelineCellContent.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TimelineCellContent.xib; sourceTree = "<group>"; };
 		FBC7330225DDB4F00048999C /* PlantIconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconCell.swift; sourceTree = "<group>"; };
 		FBC7330825DDD5BE0048999C /* PlantIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIcon.swift; sourceTree = "<group>"; };
 		FBC7330C25DEBACB0048999C /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
@@ -193,9 +195,9 @@
 		FB5F348225B4C28300CCE6BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FB7B812425B9D4B80053E543 /* Compoents */,
 				FBC5D61B25EC555E005BF6B1 /* All Plants */,
 				FBC5D60A25EC2BE0005BF6B1 /* MainViewController */,
-				FB7B812425B9D4B80053E543 /* Compoents */,
 				FB7B815225BE188E0053E543 /* Plant Configuration */,
 				FB7B813025BA255A0053E543 /* WeekPicker */,
 				FB5F34A025B8FA0700CCE6BC /* BottomCard */,
@@ -352,6 +354,7 @@
 			children = (
 				FB5F348825B63E6900CCE6BC /* TimelineCell.swift */,
 				FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */,
+				FBC5D62B25ED9B92005BF6B1 /* TimelineCellContent.xib */,
 			);
 			path = "Collection View Cells";
 			sourceTree = "<group>";
@@ -438,6 +441,7 @@
 			files = (
 				FB21B70425B1E5CC00D02384 /* LaunchScreen.storyboard in Resources */,
 				FB21B70125B1E5CC00D02384 /* Assets.xcassets in Resources */,
+				FBC5D62C25ED9B92005BF6B1 /* TimelineCellContent.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

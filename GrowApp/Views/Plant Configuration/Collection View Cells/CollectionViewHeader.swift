@@ -12,14 +12,18 @@ class CollectionViewHeader: UICollectionReusableView {
         let imageView = UIImageView()
         imageView.contentMode = .center
         imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 24, weight: .bold)
+        imageView.isHidden = true
+        
         let huggingPriority = imageView.contentHuggingPriority(for: .horizontal) + 1
         imageView.setContentHuggingPriority(huggingPriority, for: .horizontal)
+        
         return imageView
     }()
 
     lazy var textLabel: UILabel = {
         let textLabel = UILabel()
         textLabel.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        textLabel.isHidden = true
         return textLabel
     }()
 
@@ -48,27 +52,43 @@ class CollectionViewHeader: UICollectionReusableView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func setImage(_ newImage: UIImage?) {
+        if newImage != imageView.image {
+            imageView.image = newImage
+            
+            imageView.isHidden = newImage == nil
+        }
+    }
+    
+    func setTitle(_ newTitle: String?) {
+        if newTitle != textLabel.text {
+            textLabel.text = newTitle
+            
+            textLabel.isHidden = newTitle == nil
+        }
+    }
 }
 
 extension CollectionViewHeader {
     func configureHiearchy() {
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        let stack = UIStackView(arrangedSubviews: [imageView, textLabel])
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fill
+        stack.spacing = 8
+        
+        stack.translatesAutoresizingMaskIntoConstraints = false
 
-        addSubview(imageView)
-        addSubview(textLabel)
+        addSubview(stack)
 
         layoutMargins = UIEdgeInsets(top: 6, left: 0, bottom: 6, right: 0)
 
         NSLayoutConstraint.activate([
-            imageView.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
-            imageView.heightAnchor.constraint(equalTo: layoutMarginsGuide.heightAnchor),
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-
-            textLabel.firstBaselineAnchor.constraint(equalTo: imageView.firstBaselineAnchor),
-            textLabel.lastBaselineAnchor.constraint(equalTo: imageView.lastBaselineAnchor),
-            textLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1.0),
-            textLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            stack.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            stack.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            stack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            stack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
         ])
     }
 }

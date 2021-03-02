@@ -14,7 +14,6 @@ protocol WeekPickerDelegate {
 class WeekPicker: UIView {
     private var pickerView: UICollectionView!
     private var pickerHeader: UIStackView!
-    private var currentDateLabel = UILabel(frame: .zero)
     
     var selectedWeekday: Int = Calendar.current.component(.weekday, from: Date())
     
@@ -75,11 +74,9 @@ class WeekPicker: UIView {
     private func configureHiearchy() {
         pickerHeader.translatesAutoresizingMaskIntoConstraints = false
         pickerView.translatesAutoresizingMaskIntoConstraints = false
-        currentDateLabel.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(pickerHeader)
         addSubview(pickerView)
-        addSubview(currentDateLabel)
         
         NSLayoutConstraint.activate([
             pickerHeader.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),

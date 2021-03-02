@@ -22,7 +22,7 @@ class Plant {
         self.id = id
         self.name = name
         self.type = type
-        self.icon = icon ?? .text(name, foregroundColor: .systemBlue, backgroundColor: .secondarySystemGroupedBackground)
+        self.icon = icon ?? .symbol(name: "leaf.fill", foregroundColor: nil, backgroundColor: .systemBlue)
         self.tasks = tasks
     }
 }

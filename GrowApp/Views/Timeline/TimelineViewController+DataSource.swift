@@ -62,10 +62,21 @@ extension TimelineViewController {
 
     private func createPlantCellRegistration() -> UICollectionView.CellRegistration<TimelineCell, Item> {
         return UICollectionView.CellRegistration<TimelineCell, Item> { cell, indexPath, item in
-            cell.plantIconView.icon = item.plantIcon
-            cell.titleLabel.text = item.plantName
-            cell.subtitleLabel.text = item.lastCareDate
-            cell.todoButton.setImage(item.isComplete ? cell.completeSymbol : cell.incompleteSymbol, for: .normal)
+            var config = cell.timelineConfiguration()
+            
+            if let icon = item.plantIcon {
+                config.plantIcon = icon
+            }
+            
+            config.plantName = item.plantName
+            
+            if let lastCareDate = item.lastCareDate {
+                config.plantDetail = lastCareDate
+            }
+            
+            config.isComplete = item.isComplete
+            
+            cell.contentConfiguration = config
         }
     }
 
@@ -76,8 +87,9 @@ extension TimelineViewController {
             if indexPath.section < sortedKeys.endIndex {
                 let task = sortedKeys[indexPath.section]
                 cell.tintColor = task.accentColor
-                cell.imageView.image = task.icon
-                cell.textLabel.text = task.description
+                
+                cell.setImage(task.icon)
+                cell.setTitle(task.description)
             }
         }
     }

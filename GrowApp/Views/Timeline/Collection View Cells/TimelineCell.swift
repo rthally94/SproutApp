@@ -8,88 +8,118 @@
 import UIKit
 
 class TimelineCell: UICollectionViewListCell {
-    static let reuseIdentifier = "TimelineCellReuseIdentifier"
+    func timelineConfiguration() -> TimelineCellContentConfiguration {
+        TimelineCellContentConfiguration(plantIcon: .symbol(name: "exclamation", foregroundColor: nil, backgroundColor: .systemGray), plantName: "Plant Name", plantDetail: "Plant Detail", isComplete: false)
+    }
+}
 
-    lazy var plantIconView: PlantIconView = {
-        let piv = PlantIconView()
-        piv.iconMode = .circle
-        let priority = piv.contentHuggingPriority(for: .horizontal) + 1
-        piv.setContentHuggingPriority(priority, for: .horizontal)
-        return piv
-    }()
+struct TimelineCellContentConfiguration: UIContentConfiguration, Hashable {
+    var plantIcon: PlantIcon
+    var plantName: String
+    var plantDetail: String
+    var isComplete: Bool
+    
+    func makeContentView() -> UIView & UIContentView {
+        return TimelineCellContentView(configuration: self)
+    }
+    
+    func updated(for state: UIConfigurationState) -> TimelineCellContentConfiguration {
+        return self
+    }
+}
 
+class TimelineCellContentView: UIView & UIContentView {
+    init(configuration: TimelineCellContentConfiguration) {
+        super.init(frame: .zero)
+        
+        setupInternalViews()
+        apply(configuration: configuration)
+    }
+    
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    lazy var plantIconView = PlantIconView()
+    
     lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         return titleLabel
     }()
-
+    
     lazy var subtitleLabel: UILabel = {
         let subtitleLabel = UILabel()
         subtitleLabel.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return subtitleLabel
     }()
-
+    
     lazy var textStack: UIStackView = {
         let textStack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
         textStack.alignment = .leading
         textStack.axis = .vertical
-        textStack.distribution = .fillEqually
+        textStack.distribution = .fill
         return textStack
     }()
-
+    
     let symbolConfiguration = UIImage.SymbolConfiguration(textStyle: .headline)
     lazy var incompleteSymbol = UIImage(systemName: "circle", withConfiguration: symbolConfiguration)
     lazy var completeSymbol = UIImage(systemName: "checkmark.circle.fill", withConfiguration: symbolConfiguration)
-
+    
     lazy var todoButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setImage(incompleteSymbol, for: .normal)
-
-        let priority = btn.contentHuggingPriority(for: .horizontal) + 1
-        btn.setContentHuggingPriority(priority, for: .horizontal)
         return btn
     }()
-
-    convenience init() {
-        self.init(frame: .zero)
-    }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-
-        configureHiearchy()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func configureHiearchy() {
+    func setupInternalViews() {
         plantIconView.translatesAutoresizingMaskIntoConstraints = false
         textStack.translatesAutoresizingMaskIntoConstraints = false
         todoButton.translatesAutoresizingMaskIntoConstraints = false
         
-        contentView.addSubview(plantIconView)
-        contentView.addSubview(textStack)
-        contentView.addSubview(todoButton)
+        addSubview(plantIconView)
+        addSubview(textStack)
+        addSubview(todoButton)
         
         NSLayoutConstraint.activate([
-            plantIconView.centerYAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerYAnchor),
-            plantIconView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
-            plantIconView.heightAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.heightAnchor),
-            plantIconView.widthAnchor.constraint(equalTo: plantIconView.heightAnchor),
-
-            textStack.leadingAnchor.constraint(equalToSystemSpacingAfter: plantIconView.trailingAnchor, multiplier: 1.0),
-            textStack.centerYAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerYAnchor),
-            textStack.heightAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.heightAnchor),
-
-            separatorLayoutGuide.leadingAnchor.constraint(equalTo: textStack.leadingAnchor),
-
-            todoButton.leadingAnchor.constraint(equalToSystemSpacingAfter: textStack.trailingAnchor, multiplier: 1.0),
-            todoButton.centerYAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerYAnchor),
-            todoButton.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor),
-            todoButton.heightAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.heightAnchor)
+            layoutMarginsGuide.heightAnchor.constraint(equalTo: plantIconView.heightAnchor),
+            
+            plantIconView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            plantIconView.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
+            plantIconView.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 1/6),
+            plantIconView.heightAnchor.constraint(equalTo: plantIconView.widthAnchor, multiplier: 1.0),
+            
+            textStack.leadingAnchor.constraint(equalToSystemSpacingAfter: plantIconView.trailingAnchor, multiplier: 2.0),
+            textStack.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
+            textStack.heightAnchor.constraint(equalTo: plantIconView.heightAnchor),
+            
+            todoButton.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
+            todoButton.heightAnchor.constraint(lessThanOrEqualTo: plantIconView.heightAnchor),
+            todoButton.leadingAnchor.constraint(greaterThanOrEqualToSystemSpacingAfter: textStack.trailingAnchor, multiplier: 2.0),
+            todoButton.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
+    }
+    
+    var configuration: UIContentConfiguration {
+        get { appliedConfiguration }
+        set {
+            guard let newConfig = newValue as? TimelineCellContentConfiguration else { return }
+            apply(configuration: newConfig)
+        }
+    }
+    
+    private var appliedConfiguration: TimelineCellContentConfiguration!
+    private func apply(configuration: TimelineCellContentConfiguration) {
+        guard appliedConfiguration != configuration else { return }
+        appliedConfiguration = configuration
+        
+        // Configure Views
+        plantIconView.setIcon(appliedConfiguration.plantIcon)
+        titleLabel.text = appliedConfiguration.plantName
+        subtitleLabel.text = appliedConfiguration.plantDetail
+        
+        let image = appliedConfiguration.isComplete ? completeSymbol : incompleteSymbol
+        todoButton.setImage(image, for: .normal)
     }
 }

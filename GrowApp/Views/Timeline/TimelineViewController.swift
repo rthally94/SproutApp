@@ -8,6 +8,15 @@
 import UIKit
 
 class TimelineViewController: UIViewController {
+    init(model: GrowAppModel) {
+        self.model = model
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         
@@ -17,23 +26,20 @@ class TimelineViewController: UIViewController {
         return formatter
     }()
 
-    #if DEBUG
-    let model = GrowAppModel.preview
-    #else
-    let model = GrowAppModel.shared
-    #endif
-
     var selectedDate: Date = Date() {
         didSet {
             self.navigationItem.title = TimelineViewController.dateFormatter.string(from: selectedDate)
             weekPicker.selectDate(selectedDate, animated: true)
 
-            data = model.getPlantsNeedingCare(on: selectedDate)
-            let snapshot = createSnapshot(for: data)
-            dataSource.apply(snapshot)
+            if let model = model {
+                data = model.getPlantsNeedingCare(on: selectedDate)
+                let snapshot = createSnapshot(for: data)
+                dataSource.apply(snapshot)
+            }
         }
     }
-
+    
+    var model: GrowAppModel?
     var data: [TaskType: [Plant]] = [:]
     
     lazy var weekPicker: WeekPicker = {
@@ -128,7 +134,7 @@ extension TimelineViewController {
             weekPicker.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             weekPicker.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             weekPicker.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            weekPicker.heightAnchor.constraint(equalTo: weekPicker.widthAnchor, multiplier: 1/7, constant: 36),
+            weekPicker.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor, multiplier: 1/7, constant: 36),
 
             collectionView.topAnchor.constraint(equalTo: weekPicker.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),

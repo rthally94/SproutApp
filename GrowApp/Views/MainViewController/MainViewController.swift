@@ -9,15 +9,24 @@ import UIKit
 
 class MainViewController: UIViewController {
     lazy var timelineVC: some UIViewController = {
-        let vc = TimelineViewController(nibName: nil, bundle: nil).wrappedInNavigationController()
+        let vc = TimelineViewController(model: model).wrappedInNavigationController()
         vc.tabBarItem = UITabBarItem(title: "Timeline", image: UIImage(systemName: "newspaper"), selectedImage: UIImage(systemName: "newspaper.fill"))
+        vc.tabBarItem.tag = 0
         return vc
     }()
     
     lazy var plantGroupVC: some UIViewController = {
-        let vc = PlantGroupViewController().wrappedInNavigationController()
-        vc.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
-        return vc
+        let vc = PlantGroupViewController(model: model)
+        let nav = vc.wrappedInNavigationController()
+        nav.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
+        nav.tabBarItem.tag = 1
+        return nav
+    }()
+    
+    lazy var plantConfigurationVC: some UIViewController = {
+        let vc = PlantConfigurationViewController()
+        
+        return vc.wrappedInNavigationController()
     }()
     
     lazy var tabBarVC: UITabBarController = {
@@ -28,6 +37,12 @@ class MainViewController: UIViewController {
         ], animated: false)
         return vc
     }()
+    
+    #if DEBUG
+    let model = GrowAppModel.preview
+    #else
+    let model = GrowAppModel.shared
+    #endif
     
     convenience init() {
         self.init(nibName: nil, bundle: nil)

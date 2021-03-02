@@ -12,9 +12,9 @@ class PlantConfigurationViewController: UIViewController {
         didSet {
             guard dataSource != nil else { return }
             if let strongPlant = plant {
-                dataSource.apply(createDataSource(from: strongPlant))
+                dataSource.apply(makeSnapshot(from: strongPlant))
             } else {
-                dataSource.apply(createDefaultDataSource())
+                dataSource.apply(makeDefaultSnapshot())
             }
         }
     }
