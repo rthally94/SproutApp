@@ -41,6 +41,10 @@ class GrowAppModel {
         return Array(plants)
     }
     
+    func getPlant(with id: UUID) -> Plant? {
+        plants.first(where: { $0.id == id })
+    }
+    
     func addPlant(_ newPlant: Plant) {
         plants.insert(newPlant)
     }

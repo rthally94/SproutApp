@@ -28,6 +28,7 @@ class PlantGroupViewController: UIViewController {
     }
     
     struct Item: Hashable {
+        let id: UUID
         let icon: PlantIcon
         let title: String
         let subtitle: String?
@@ -37,6 +38,7 @@ class PlantGroupViewController: UIViewController {
     lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
         cv.backgroundColor = .clear
+        cv.delegate = self
         return cv
     }()
     
@@ -62,7 +64,7 @@ class PlantGroupViewController: UIViewController {
             snapshot.appendSections([.plants])
             
             let items = plants.map { plant in
-                Item(icon: plant.icon, title: plant.name, subtitle: "\(plant.tasks.count) tasks")
+                Item(id: plant.id, icon: plant.icon, title: plant.name, subtitle: "\(plant.tasks.count) tasks")
             }
             snapshot.appendItems(items, toSection: .plants)
             
@@ -120,5 +122,15 @@ extension PlantGroupViewController {
         }
         
         return dataSource
+    }
+}
+
+extension PlantGroupViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let item = dataSource.itemIdentifier(for: indexPath), let plant = model?.getPlant(with: item.id) {
+            let vc = PlantDetailViewController()
+            vc.plant = plant
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 }

@@ -25,6 +25,7 @@
 		FB5F349725B79BEC00CCE6BC /* LargeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */; };
 		FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F349A25B8829300CCE6BC /* DatePickerCard.swift */; };
 		FB5F34A325B8FA3900CCE6BC /* SlideInPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F34A225B8FA3900CCE6BC /* SlideInPresentationManager.swift */; };
+		FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */; };
 		FB7490EB25B1E71200925C29 /* GrowAppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */; };
 		FB7490F725B1EB3B00925C29 /* PlantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490F625B1EB3B00925C29 /* PlantTests.swift */; };
 		FB7B812125B9D4AC0053E543 /* CapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */; };
@@ -32,16 +33,12 @@
 		FB7B813E25BA6CA50053E543 /* WeekPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B813D25BA6CA50053E543 /* WeekPickerCell.swift */; };
 		FB7B815B25BE19060053E543 /* OutlineImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B815A25BE19060053E543 /* OutlineImageCell.swift */; };
 		FB7B815F25BE2BE10053E543 /* PlantConfigurationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B815E25BE2BE10053E543 /* PlantConfigurationViewController.swift */; };
-		FB7B817625BF39880053E543 /* TextFieldTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B817525BF39880053E543 /* TextFieldTableViewCell.swift */; };
-		FB7B817A25BF47EC0053E543 /* ToggleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B817925BF47EC0053E543 /* ToggleTableViewCell.swift */; };
-		FB7B817E25BF58C20053E543 /* FormCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B817D25BF58C20053E543 /* FormCell.swift */; };
-		FB7B818225BF7F5E0053E543 /* CareInfoHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B818125BF7F5E0053E543 /* CareInfoHeaderCell.swift */; };
-		FB7B819125C08F380053E543 /* CareInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B819025C08F380053E543 /* CareInfoCell.swift */; };
 		FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */; };
 		FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */; };
 		FBC5D62525EC5679005BF6B1 /* PlantCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D62325EC5679005BF6B1 /* PlantCardCell.swift */; };
 		FBC5D62625EC5679005BF6B1 /* PlantGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D62425EC5679005BF6B1 /* PlantGroupViewController.swift */; };
 		FBC5D62C25ED9B92005BF6B1 /* TimelineCellContent.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBC5D62B25ED9B92005BF6B1 /* TimelineCellContent.xib */; };
+		FBC5D63825EEA269005BF6B1 /* PlantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */; };
 		FBC7330325DDB4F00048999C /* PlantIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330225DDB4F00048999C /* PlantIconCell.swift */; };
 		FBC7330925DDD5BE0048999C /* PlantIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330825DDD5BE0048999C /* PlantIcon.swift */; };
 		FBC7330D25DEBACB0048999C /* Circle.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330C25DEBACB0048999C /* Circle.swift */; };
@@ -91,6 +88,7 @@
 		FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeHeader.swift; sourceTree = "<group>"; };
 		FB5F349A25B8829300CCE6BC /* DatePickerCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCard.swift; sourceTree = "<group>"; };
 		FB5F34A225B8FA3900CCE6BC /* SlideInPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideInPresentationManager.swift; sourceTree = "<group>"; };
+		FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		FB7490E825B1E71200925C29 /* GrowAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowAppModelTests.swift; sourceTree = "<group>"; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -100,16 +98,12 @@
 		FB7B813D25BA6CA50053E543 /* WeekPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekPickerCell.swift; sourceTree = "<group>"; };
 		FB7B815A25BE19060053E543 /* OutlineImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineImageCell.swift; sourceTree = "<group>"; };
 		FB7B815E25BE2BE10053E543 /* PlantConfigurationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantConfigurationViewController.swift; sourceTree = "<group>"; };
-		FB7B817525BF39880053E543 /* TextFieldTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewCell.swift; sourceTree = "<group>"; };
-		FB7B817925BF47EC0053E543 /* ToggleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTableViewCell.swift; sourceTree = "<group>"; };
-		FB7B817D25BF58C20053E543 /* FormCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormCell.swift; sourceTree = "<group>"; };
-		FB7B818125BF7F5E0053E543 /* CareInfoHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoHeaderCell.swift; sourceTree = "<group>"; };
-		FB7B819025C08F380053E543 /* CareInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoCell.swift; sourceTree = "<group>"; };
 		FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCardViewController.swift; sourceTree = "<group>"; };
 		FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		FBC5D62325EC5679005BF6B1 /* PlantCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlantCardCell.swift; path = "GrowApp/Views/SubGroup/Plant Groups/PlantCardCell.swift"; sourceTree = SOURCE_ROOT; };
 		FBC5D62425EC5679005BF6B1 /* PlantGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlantGroupViewController.swift; path = "GrowApp/Views/SubGroup/Plant Groups/PlantGroupViewController.swift"; sourceTree = SOURCE_ROOT; };
 		FBC5D62B25ED9B92005BF6B1 /* TimelineCellContent.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TimelineCellContent.xib; sourceTree = "<group>"; };
+		FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailViewController.swift; sourceTree = "<group>"; };
 		FBC7330225DDB4F00048999C /* PlantIconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconCell.swift; sourceTree = "<group>"; };
 		FBC7330825DDD5BE0048999C /* PlantIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIcon.swift; sourceTree = "<group>"; };
 		FBC7330C25DEBACB0048999C /* Circle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Circle.swift; sourceTree = "<group>"; };
@@ -167,6 +161,7 @@
 		FB21B6F625B1E5CC00D02384 /* GrowApp */ = {
 			isa = PBXGroup;
 			children = (
+				FB6C45FA25EFE9F0009ED947 /* Extensions */,
 				FB5F348225B4C28300CCE6BC /* Views */,
 				FB21B70C25B1E5D900D02384 /* Model */,
 				FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */,
@@ -195,6 +190,7 @@
 		FB5F348225B4C28300CCE6BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FBC5D63625EEA255005BF6B1 /* Plant Detail */,
 				FB7B812425B9D4B80053E543 /* Compoents */,
 				FBC5D61B25EC555E005BF6B1 /* All Plants */,
 				FBC5D60A25EC2BE0005BF6B1 /* MainViewController */,
@@ -233,6 +229,14 @@
 			path = BottomSlidePresentation;
 			sourceTree = "<group>";
 		};
+		FB6C45FA25EFE9F0009ED947 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		FB7490E925B1E71200925C29 /* GrowAppTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -251,7 +255,6 @@
 				FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */,
 				FB5F348C25B6411F00CCE6BC /* DividerView.swift */,
 				FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */,
-				FB7B816A25BF187B0053E543 /* TableViewCells */,
 				FBC7330C25DEBACB0048999C /* Circle.swift */,
 				FBC7331025DECCC20048999C /* RoundedRect.swift */,
 				FBC7333325E478D20048999C /* CameraOverlayView.swift */,
@@ -289,18 +292,6 @@
 			path = "Plant Type Configuration";
 			sourceTree = "<group>";
 		};
-		FB7B816A25BF187B0053E543 /* TableViewCells */ = {
-			isa = PBXGroup;
-			children = (
-				FB7B817525BF39880053E543 /* TextFieldTableViewCell.swift */,
-				FB7B817925BF47EC0053E543 /* ToggleTableViewCell.swift */,
-				FB7B817D25BF58C20053E543 /* FormCell.swift */,
-				FB7B818125BF7F5E0053E543 /* CareInfoHeaderCell.swift */,
-				FB7B819025C08F380053E543 /* CareInfoCell.swift */,
-			);
-			path = TableViewCells;
-			sourceTree = "<group>";
-		};
 		FBB102FA25B9C790005C3C8E /* DatePickerCard */ = {
 			isa = PBXGroup;
 			children = (
@@ -325,6 +316,22 @@
 				FBC5D62425EC5679005BF6B1 /* PlantGroupViewController.swift */,
 			);
 			path = "All Plants";
+			sourceTree = "<group>";
+		};
+		FBC5D63625EEA255005BF6B1 /* Plant Detail */ = {
+			isa = PBXGroup;
+			children = (
+				FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */,
+				FBC5D63B25EEA4B6005BF6B1 /* CollectionViewCells */,
+			);
+			path = "Plant Detail";
+			sourceTree = "<group>";
+		};
+		FBC5D63B25EEA4B6005BF6B1 /* CollectionViewCells */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CollectionViewCells;
 			sourceTree = "<group>";
 		};
 		FBC7331A25E2E0D70048999C /* Collection View Cells */ = {
@@ -462,12 +469,11 @@
 				FB21B6FC25B1E5CC00D02384 /* ViewController.swift in Sources */,
 				FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */,
 				FBC7333425E478D20048999C /* CameraOverlayView.swift in Sources */,
-				FB7B817E25BF58C20053E543 /* FormCell.swift in Sources */,
 				FB5F348925B63E6900CCE6BC /* TimelineCell.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
-				FB7B817A25BF47EC0053E543 /* ToggleTableViewCell.swift in Sources */,
 				FB21B71225B1E61100D02384 /* Plant.swift in Sources */,
 				FB0A9F2B25DACF450084AED8 /* LogEntry.swift in Sources */,
+				FBC5D63825EEA269005BF6B1 /* PlantDetailViewController.swift in Sources */,
 				FB5F34A325B8FA3900CCE6BC /* SlideInPresentationManager.swift in Sources */,
 				FBC5D62625EC5679005BF6B1 /* PlantGroupViewController.swift in Sources */,
 				FB5F349725B79BEC00CCE6BC /* LargeHeader.swift in Sources */,
@@ -476,7 +482,7 @@
 				FBC7335025E708790048999C /* TimelineViewController+DataSource.swift in Sources */,
 				FBC7331125DECCC20048999C /* RoundedRect.swift in Sources */,
 				FBC7333C25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift in Sources */,
-				FB7B817625BF39880053E543 /* TextFieldTableViewCell.swift in Sources */,
+				FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */,
 				FB5F349125B7266A00CCE6BC /* RoundedRectContainer.swift in Sources */,
 				FBC7332125E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift in Sources */,
 				FBC7332925E307DF0048999C /* PlantTypeViewController.swift in Sources */,
@@ -496,8 +502,6 @@
 				FBC5D62525EC5679005BF6B1 /* PlantCardCell.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
 				FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */,
-				FB7B819125C08F380053E543 /* CareInfoCell.swift in Sources */,
-				FB7B818225BF7F5E0053E543 /* CareInfoHeaderCell.swift in Sources */,
 				FB0A9F3625DC5D7E0084AED8 /* TextFieldCell.swift in Sources */,
 				FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */,
 				FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */,

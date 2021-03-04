@@ -83,19 +83,19 @@ class TimelineCellContentView: UIView & UIContentView {
         addSubview(todoButton)
         
         NSLayoutConstraint.activate([
-            layoutMarginsGuide.heightAnchor.constraint(equalTo: plantIconView.heightAnchor),
+            layoutMarginsGuide.heightAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 1/6),
             
             plantIconView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            plantIconView.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
-            plantIconView.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 1/6),
-            plantIconView.heightAnchor.constraint(equalTo: plantIconView.widthAnchor, multiplier: 1.0),
+            plantIconView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            plantIconView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            plantIconView.widthAnchor.constraint(equalTo: plantIconView.heightAnchor),
             
             textStack.leadingAnchor.constraint(equalToSystemSpacingAfter: plantIconView.trailingAnchor, multiplier: 2.0),
-            textStack.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
-            textStack.heightAnchor.constraint(equalTo: plantIconView.heightAnchor),
+            textStack.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            textStack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             
             todoButton.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
-            todoButton.heightAnchor.constraint(lessThanOrEqualTo: plantIconView.heightAnchor),
+            todoButton.heightAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.heightAnchor),
             todoButton.leadingAnchor.constraint(greaterThanOrEqualToSystemSpacingAfter: textStack.trailingAnchor, multiplier: 2.0),
             todoButton.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])
