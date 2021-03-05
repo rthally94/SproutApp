@@ -146,8 +146,10 @@ extension PlantConfigurationViewController {
     private func configureHiearchy() {
         collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
         collectionView.delegate = self
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
+        collectionView.pinToBoundsOf(view)
     }
 }
 

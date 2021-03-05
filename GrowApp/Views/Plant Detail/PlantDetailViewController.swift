@@ -45,6 +45,16 @@ class PlantDetailViewController: UIViewController {
         return view
     }()
     
+    lazy var logCareButton: UIButton = {
+        let btn = CapsuleButton(type: .system, primaryAction: .init(title: "Log Care", image: UIImage(systemName: "heart.text.square.fill")) { [unowned self] _ in
+            print("🦖 Pressed")
+        })
+        
+        btn.backgroundColor = view.tintColor
+        
+        return btn
+    }()
+    
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, Item> = makeDataSource()
     
     override func loadView() {
@@ -95,13 +105,11 @@ extension PlantDetailViewController {
             Item(text: strongPlant.name, secondaryText: strongPlant.type.commonName, plantIcon: strongPlant.icon)
         ], toSection: .plantInfo)
         
-// TODO: Link to attributes of the plant
-        snapshot.appendItems([
-            Item(image: UIImage(systemName: "drop"), text: "Watering", secondaryText: "Top to Bottom"),
-            Item(image: UIImage(systemName: "cloud.sun"), text: "Light", secondaryText: "Partial Shade"),
-            Item(image: UIImage(systemName: "thermometer"), text: "Temperature", secondaryText: "10° - 17°"),
-            Item(image: UIImage(systemName: "drop"), text: "Humidity", secondaryText: "60%"),
-        ], toSection: .careInfo)
+        let items = strongPlant.type.careInfo.map { info in
+            Item(image: info.key.icon, text: info.key.description, secondaryText: info.value)
+        }
+        
+        snapshot.appendItems(items, toSection: .careInfo)
         return snapshot
     }
     
@@ -145,8 +153,17 @@ extension PlantDetailViewController {
 extension PlantDetailViewController {
     func configureHiearchy() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        logCareButton.translatesAutoresizingMaskIntoConstraints = false
+        
         view.addSubview(collectionView)
+        view.addSubview(logCareButton)
+        
         collectionView.pinToBoundsOf(view)
+        NSLayoutConstraint.activate([
+            logCareButton.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -16),
+            logCareButton.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
+            logCareButton.widthAnchor.constraint(lessThanOrEqualTo: view.layoutMarginsGuide.widthAnchor)
+        ])
     }
     
     func configureSubviews() {

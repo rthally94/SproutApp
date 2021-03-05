@@ -121,7 +121,8 @@ extension PlantIconPickerViewController {
         collectionView.delegate = self
 
         collectionView.backgroundColor = .systemGroupedBackground
-        collectionView.autoresizingMask = [.flexibleWidth , .flexibleHeight]
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
+        collectionView.pinToBoundsOf(view)
     }
 }

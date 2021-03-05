@@ -59,8 +59,10 @@ extension PlantTypeViewController {
         collectionView.dataSource = dataSource
         collectionView.delegate = self
 
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        collectionView.pinToBoundsOf(view)
     }
 
     internal func makeLayout() -> UICollectionViewLayout {

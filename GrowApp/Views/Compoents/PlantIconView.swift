@@ -10,7 +10,7 @@ import CoreGraphics
 
 class PlantIconView: UIView {
     var appliedIcon: PlantIcon?
-    var appliedScaleMode: ScaleMode?
+    var appliedScaleMode: ScaleMode? = .full
     
     enum CornerMode: Hashable {
         case circle
@@ -112,11 +112,11 @@ extension PlantIconView {
         
         addSubview(imageView)
         
-        let constraints = [
+        let constraints = fullConstraints + [
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
-        ] + fullConstraints
+        ]
         
         NSLayoutConstraint.activate(constraints)
     }

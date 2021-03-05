@@ -13,6 +13,11 @@ struct PlantType: Identifiable, Equatable, Hashable {
     var scientificName: String
     var commonName: String
 
+    var careInfo: [TaskType: String] = [
+        .watering: "Top to Bottom",
+        .fertilizing: "When Brown"
+    ]
+    
     static var previousChoices: Set<PlantType> = []
 }
 
@@ -37,3 +42,5 @@ extension PlantType {
         PlantType(scientificName: "Philodendron Scandens", commonName: "Philodendron"),
     ]
 }
+
+

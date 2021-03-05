@@ -28,6 +28,7 @@
 		FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */; };
 		FB6C460D25F11BA0009ED947 /* PlantHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C460C25F11BA0009ED947 /* PlantHeaderCell.swift */; };
 		FB6C461325F11BC4009ED947 /* CareInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461225F11BC4009ED947 /* CareInfoCell.swift */; };
+		FB6C461725F1975F009ED947 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461625F1975F009ED947 /* UIColor+Extension.swift */; };
 		FB7490EB25B1E71200925C29 /* GrowAppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */; };
 		FB7490F725B1EB3B00925C29 /* PlantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490F625B1EB3B00925C29 /* PlantTests.swift */; };
 		FB7B812125B9D4AC0053E543 /* CapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */; };
@@ -93,6 +94,7 @@
 		FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		FB6C460C25F11BA0009ED947 /* PlantHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantHeaderCell.swift; sourceTree = "<group>"; };
 		FB6C461225F11BC4009ED947 /* CareInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoCell.swift; sourceTree = "<group>"; };
+		FB6C461625F1975F009ED947 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		FB7490E825B1E71200925C29 /* GrowAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowAppModelTests.swift; sourceTree = "<group>"; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -237,6 +239,7 @@
 			isa = PBXGroup;
 			children = (
 				FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */,
+				FB6C461625F1975F009ED947 /* UIColor+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -497,6 +500,7 @@
 				FBC7331125DECCC20048999C /* RoundedRect.swift in Sources */,
 				FBC7333C25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift in Sources */,
 				FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */,
+				FB6C461725F1975F009ED947 /* UIColor+Extension.swift in Sources */,
 				FB5F349125B7266A00CCE6BC /* RoundedRectContainer.swift in Sources */,
 				FBC7332125E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift in Sources */,
 				FBC7332925E307DF0048999C /* PlantTypeViewController.swift in Sources */,
