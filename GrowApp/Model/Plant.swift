@@ -14,11 +14,11 @@ class Plant {
     var name: String
     var type: PlantType
     
-    var icon: PlantIcon
+    var icon: Icon
     
     var tasks: [Task]
     
-    internal init(id: UUID = UUID(), name: String, type: PlantType, icon: PlantIcon? = nil, tasks: [Task]) {
+    internal init(id: UUID = UUID(), name: String, type: PlantType, icon: Icon? = nil, tasks: [Task]) {
         self.id = id
         self.name = name
         self.type = type

@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PlantIconPickerDelegate {
-    func didChangeIcon(to icon: PlantIcon)
+    func didChangeIcon(to icon: Icon)
 }
 
 class PlantIconPickerViewController: UIViewController {
@@ -19,11 +19,11 @@ class PlantIconPickerViewController: UIViewController {
         }
     }
 
-    var oldIcon: PlantIcon?
+    var oldIcon: Icon?
 
     var delegate: PlantIconPickerDelegate?
 
-    func setPlantIcon(to icon: PlantIcon) {
+    func setPlantIcon(to icon: Icon) {
         if icon != plant?.icon {
             plant?.icon = icon
             delegate?.didChangeIcon(to: icon)
@@ -46,7 +46,7 @@ class PlantIconPickerViewController: UIViewController {
             hasher.combine(icon)
         }
 
-        var icon: PlantIcon
+        var icon: Icon
         var onTap: ( () -> Void )?
     }
 

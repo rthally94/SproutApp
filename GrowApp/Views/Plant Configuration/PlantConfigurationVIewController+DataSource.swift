@@ -108,7 +108,7 @@ extension PlantConfigurationViewController {
 
         snapshot.appendItems([
             Item(
-                rowType: .plantIcon(PlantIcon.symbol(name: "exclamationmark.triangle.fill", foregroundColor: nil, backgroundColor: .systemGray)),
+                rowType: .plantIcon(Icon.symbol(name: "exclamationmark.triangle.fill", foregroundColor: nil, backgroundColor: .systemGray)),
                 onTap: {
                     let vc = PlantIconPickerViewController(nibName: nil, bundle: nil)
                     vc.plant = self.plant

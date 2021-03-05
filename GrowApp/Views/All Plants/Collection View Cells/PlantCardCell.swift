@@ -8,8 +8,8 @@
 import UIKit
 
 class PlantCardCell: UICollectionViewCell {
-    lazy var iconView: PlantIconView = {
-        let view = PlantIconView()
+    lazy var iconView: IconView = {
+        let view = IconView()
         return view
     }()
     

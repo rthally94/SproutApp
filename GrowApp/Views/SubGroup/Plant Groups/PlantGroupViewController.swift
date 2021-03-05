@@ -29,7 +29,7 @@ class PlantGroupViewController: UIViewController {
     
     struct Item: Hashable {
         let id: UUID
-        let icon: PlantIcon
+        let icon: Icon
         let title: String
         let subtitle: String?
     }

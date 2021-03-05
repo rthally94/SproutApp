@@ -77,7 +77,7 @@ class PlantConfigurationViewController: UIViewController {
     }
 
     enum RowType: Hashable {
-        case plantIcon(PlantIcon)
+        case plantIcon(Icon)
         case list(image: UIImage?, text: String?, secondaryText: String?)
         case listValue(image: UIImage?, text: String?, secondaryText: String?)
         case textField(image: UIImage?, value: String?, placeholder: String?)
@@ -154,7 +154,7 @@ extension PlantConfigurationViewController {
 }
 
 extension PlantConfigurationViewController: PlantIconPickerDelegate {
-    func didChangeIcon(to icon: PlantIcon) {
+    func didChangeIcon(to icon: Icon) {
         if let strongPlant = plant {
             strongPlant.icon = icon
             plant = strongPlant

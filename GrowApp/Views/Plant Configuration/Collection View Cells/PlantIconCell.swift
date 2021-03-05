@@ -8,7 +8,7 @@
 import UIKit
 
 class PlantIconCell: UICollectionViewCell {
-    var icon: PlantIcon? {
+    var icon: Icon? {
         didSet {
             setNeedsUpdateConfiguration()
         }
@@ -24,7 +24,7 @@ class PlantIconCell: UICollectionViewCell {
 }
 
 struct PlantIconContentConfiguration: UIContentConfiguration, Hashable {
-    var icon: PlantIcon? = nil
+    var icon: Icon? = nil
     
     func makeContentView() -> UIView & UIContentView {
         return PlantIconContentView(configuration: self)
@@ -55,7 +55,7 @@ class PlantIconContentView: UIView & UIContentView {
         }
     }
     
-    private let plantIcon = PlantIconView()
+    private let plantIcon = IconView()
     
     func setupInternalViews() {
         addSubview(plantIcon)

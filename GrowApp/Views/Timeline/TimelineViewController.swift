@@ -72,7 +72,7 @@ class TimelineViewController: UIViewController {
         let id: UUID
         let plantName: String
         let lastCareDate: String?
-        let plantIcon: PlantIcon?
+        let plantIcon: Icon?
         let isComplete: Bool
     }
 

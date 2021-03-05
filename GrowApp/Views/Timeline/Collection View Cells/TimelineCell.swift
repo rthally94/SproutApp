@@ -14,7 +14,7 @@ class TimelineCell: UICollectionViewListCell {
 }
 
 struct TimelineCellContentConfiguration: UIContentConfiguration, Hashable {
-    var plantIcon: PlantIcon
+    var plantIcon: Icon
     var plantName: String
     var plantDetail: String
     var isComplete: Bool
@@ -41,7 +41,7 @@ class TimelineCellContentView: UIView & UIContentView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    lazy var plantIconView = PlantIconView()
+    lazy var plantIconView = IconView()
     
     lazy var titleLabel: UILabel = {
         let titleLabel = UILabel()
@@ -82,20 +82,33 @@ class TimelineCellContentView: UIView & UIContentView {
         addSubview(textStack)
         addSubview(todoButton)
         
+        let constraints = (
+            plantIconTop: plantIconView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            plantIconLeading: plantIconView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            plantIconHeight: plantIconView.heightAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.heightAnchor),
+            textStackTop: textStack.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            todoButtonHeight: todoButton.heightAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.heightAnchor)
+        )
+        
+        constraints.plantIconTop.priority = .required - 1
+        constraints.plantIconLeading.priority = .required - 1
+        constraints.plantIconHeight.priority = .required - 1
+        constraints.textStackTop.priority = .required - 1
+        constraints.todoButtonHeight.priority = .required - 1
+        
         NSLayoutConstraint.activate([
-            layoutMarginsGuide.heightAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 1/6),
-            
-            plantIconView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            plantIconView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
-            plantIconView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            plantIconView.widthAnchor.constraint(equalTo: plantIconView.heightAnchor),
+            constraints.plantIconTop,
+            constraints.plantIconLeading,
+            plantIconView.heightAnchor.constraint(equalToConstant: 60),
+            plantIconView.widthAnchor.constraint(equalToConstant: 60),
+            constraints.plantIconHeight,
             
             textStack.leadingAnchor.constraint(equalToSystemSpacingAfter: plantIconView.trailingAnchor, multiplier: 2.0),
-            textStack.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            constraints.textStackTop,
             textStack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             
             todoButton.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
-            todoButton.heightAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.heightAnchor),
+            constraints.todoButtonHeight,
             todoButton.leadingAnchor.constraint(greaterThanOrEqualToSystemSpacingAfter: textStack.trailingAnchor, multiplier: 2.0),
             todoButton.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
         ])

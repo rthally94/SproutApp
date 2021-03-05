@@ -36,7 +36,7 @@ class PlantDetailViewController: UIViewController {
         var image: UIImage?
         var text: String?
         var secondaryText: String?
-        var plantIcon: PlantIcon?
+        var plantIcon: Icon?
     }
     
     lazy var collectionView: UICollectionView = {
@@ -79,11 +79,11 @@ extension PlantDetailViewController {
                     let section = NSCollectionLayoutSection(group: group)
                     return section
                 case .careInfo:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1 / 2), heightDimension: .fractionalHeight(1.0))
+                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .fractionalHeight(1.0))
                     let item = NSCollectionLayoutItem(layoutSize: itemSize)
                     item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
                     
-                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
+                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(1/4 ))
                     let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 
                     let section = NSCollectionLayoutSection(group: group)
@@ -113,14 +113,14 @@ extension PlantDetailViewController {
         return snapshot
     }
     
-    func makeHeaderCellRegistration() -> UICollectionView.CellRegistration<PlantHeaderCell, Item> {
-        UICollectionView.CellRegistration<PlantHeaderCell, Item> { cell, _, item in
+    func makeHeaderCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
+        UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
             if let icon = item.plantIcon {
-                cell.plantIconView.setIcon(icon)
+                cell.iconView.setIcon(icon)
             }
             
-            cell.plantNameLabel.text = item.text
-            cell.plantTypeLabel.text = item.secondaryText
+            cell.titleLabel.text = item.text
+            cell.subtitleLabel.text = item.secondaryText
         }
     }
     
@@ -162,7 +162,7 @@ extension PlantDetailViewController {
         NSLayoutConstraint.activate([
             logCareButton.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -16),
             logCareButton.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
-            logCareButton.widthAnchor.constraint(lessThanOrEqualTo: view.layoutMarginsGuide.widthAnchor)
+            logCareButton.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor)
         ])
     }
     
@@ -171,5 +171,15 @@ extension PlantDetailViewController {
         
         let snapshot = makeSnapshot()
         dataSource.apply(snapshot)
+    }
+}
+
+extension PlantDetailViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let sectionKind = Section.allCases[indexPath.section]
+        
+        if sectionKind == .careInfo {
+            
+        }
     }
 }
