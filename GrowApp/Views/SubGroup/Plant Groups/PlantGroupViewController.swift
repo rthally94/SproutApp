@@ -51,6 +51,7 @@ class PlantGroupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Your Plants"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(showPlantConfiguration))
     }
     

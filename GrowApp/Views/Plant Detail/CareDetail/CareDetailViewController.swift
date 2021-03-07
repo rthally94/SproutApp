@@ -43,6 +43,12 @@ class CareDetailViewController: UIViewController {
         
         configureHiearchy()
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        title = "Care Details"
+    }
 }
 
 extension CareDetailViewController {

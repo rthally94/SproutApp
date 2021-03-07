@@ -63,6 +63,12 @@ class PlantDetailViewController: UIViewController {
         
         configureHiearchy()
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        title = "Plant Details"
+    }
 }
 
 extension PlantDetailViewController {
