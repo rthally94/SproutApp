@@ -21,8 +21,6 @@ extension UIColor {
         a.getHue(nil, saturation: nil, brightness: &L1, alpha: nil)
         b.getHue(nil, saturation: nil, brightness: &L2, alpha: nil)
         
-        print("L: ", L1, L2)
-        
         if L1 > L2 {
             return (L1 + 0.05) / (L2 + 0.05)
         } else {
@@ -35,8 +33,6 @@ extension UIColor {
         
         let lightContrast = UIColor.contrast(backgroundColor, UIColor.lightText)
         let darkContrast = UIColor.contrast(backgroundColor, UIColor.darkText)
-        
-        print("C: ", lightContrast, darkContrast)
         
         return lightContrast > darkContrast ? UIColor.lightText : UIColor.darkText
     }

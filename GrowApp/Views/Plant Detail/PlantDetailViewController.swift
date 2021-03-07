@@ -33,15 +33,16 @@ class PlantDetailViewController: UIViewController {
     }
     
     struct Item: Hashable {
-        var image: UIImage?
+        var id: UUID?
+        var icon: Icon?
         var text: String?
         var secondaryText: String?
-        var plantIcon: Icon?
     }
     
     lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
         view.backgroundColor = .systemBackground
+        view.delegate = self
         return view
     }()
     
@@ -102,11 +103,11 @@ extension PlantDetailViewController {
         
         snapshot.appendSections(Section.allCases)
         snapshot.appendItems([
-            Item(text: strongPlant.name, secondaryText: strongPlant.type.commonName, plantIcon: strongPlant.icon)
+            Item(icon: strongPlant.icon, text: strongPlant.name, secondaryText: strongPlant.type.commonName)
         ], toSection: .plantInfo)
         
-        let items = strongPlant.type.careInfo.map { info in
-            Item(image: info.key.icon, text: info.key.description, secondaryText: info.value)
+        let items = strongPlant.tasks.map { task in
+            Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: task.careInfo.description)
         }
         
         snapshot.appendItems(items, toSection: .careInfo)
@@ -115,8 +116,10 @@ extension PlantDetailViewController {
     
     func makeHeaderCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
         UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
-            if let icon = item.plantIcon {
-                cell.iconView.setIcon(icon)
+            if let icon = item.icon {
+                var config = cell.iconView.defaultConfiguration()
+                config.icon = icon
+                cell.iconView.iconViewConfiguration = config
             }
             
             cell.titleLabel.text = item.text
@@ -126,7 +129,12 @@ extension PlantDetailViewController {
     
     func makeCareInfoCellRegistration() -> UICollectionView.CellRegistration<CareInfoCell, Item> {
         UICollectionView.CellRegistration<CareInfoCell, Item> { cell, _, item in
-            cell.careTypeIconView.image = item.image
+            if case let .symbol(symbolName, _, _) = item.icon {
+                cell.careTypeIconView.image = UIImage(systemName: symbolName)
+            } else if case let .image(image) = item.icon {
+                cell.careTypeIconView.image = image
+            }
+            
             cell.careTypeLabel.text = item.text
             cell.careDetailLabel.text = item.secondaryText
         }
@@ -179,7 +187,10 @@ extension PlantDetailViewController: UICollectionViewDelegate {
         let sectionKind = Section.allCases[indexPath.section]
         
         if sectionKind == .careInfo {
-            
+            let vc = CareDetailViewController(nibName: nil, bundle: nil)
+            vc.plant = plant
+            vc.selectedTaskID = dataSource.itemIdentifier(for: indexPath)?.id
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

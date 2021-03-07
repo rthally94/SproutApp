@@ -30,6 +30,9 @@
 		FB6C461325F11BC4009ED947 /* CareInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461225F11BC4009ED947 /* CareInfoCell.swift */; };
 		FB6C461725F1975F009ED947 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461625F1975F009ED947 /* UIColor+Extension.swift */; };
 		FB6C461C25F1C332009ED947 /* CareDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461B25F1C332009ED947 /* CareDetailViewController.swift */; };
+		FB6C462D25F2FC8B009ED947 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C462C25F2FC8B009ED947 /* TaskType.swift */; };
+		FB6C463125F2FCAB009ED947 /* TaskInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C463025F2FCAB009ED947 /* TaskInterval.swift */; };
+		FB6C463725F2FD01009ED947 /* CareValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C463625F2FD01009ED947 /* CareValue.swift */; };
 		FB7490EB25B1E71200925C29 /* GrowAppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */; };
 		FB7490F725B1EB3B00925C29 /* PlantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490F625B1EB3B00925C29 /* PlantTests.swift */; };
 		FB7B812125B9D4AC0053E543 /* CapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */; };
@@ -97,6 +100,9 @@
 		FB6C461225F11BC4009ED947 /* CareInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoCell.swift; sourceTree = "<group>"; };
 		FB6C461625F1975F009ED947 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		FB6C461B25F1C332009ED947 /* CareDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareDetailViewController.swift; sourceTree = "<group>"; };
+		FB6C462C25F2FC8B009ED947 /* TaskType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
+		FB6C463025F2FCAB009ED947 /* TaskInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskInterval.swift; sourceTree = "<group>"; };
+		FB6C463625F2FD01009ED947 /* CareValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareValue.swift; sourceTree = "<group>"; };
 		FB7490E825B1E71200925C29 /* GrowAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowAppModelTests.swift; sourceTree = "<group>"; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -185,9 +191,9 @@
 		FB21B70C25B1E5D900D02384 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FB6C462925F2FC6F009ED947 /* Task */,
 				FB21B70E25B1E5F500D02384 /* GrowAppModel.swift */,
 				FB21B71125B1E61100D02384 /* Plant.swift */,
-				FB0A9F2625DACEA00084AED8 /* Task.swift */,
 				FB0A9F2A25DACF450084AED8 /* LogEntry.swift */,
 				FB0A9F3D25DD766B0084AED8 /* PlantType.swift */,
 				FBC7330825DDD5BE0048999C /* Icon.swift */,
@@ -262,6 +268,25 @@
 			path = CareDetail;
 			sourceTree = "<group>";
 		};
+		FB6C462925F2FC6F009ED947 /* Task */ = {
+			isa = PBXGroup;
+			children = (
+				FB0A9F2625DACEA00084AED8 /* Task.swift */,
+				FB6C462C25F2FC8B009ED947 /* TaskType.swift */,
+				FB6C463025F2FCAB009ED947 /* TaskInterval.swift */,
+				FB6C463625F2FD01009ED947 /* CareValue.swift */,
+			);
+			path = Task;
+			sourceTree = "<group>";
+		};
+		FB6C463A25F44329009ED947 /* IconView */ = {
+			isa = PBXGroup;
+			children = (
+				FBF8AC5125DD80AC00E7E8EB /* IconView.swift */,
+			);
+			path = IconView;
+			sourceTree = "<group>";
+		};
 		FB7490E925B1E71200925C29 /* GrowAppTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -275,7 +300,7 @@
 		FB7B812425B9D4B80053E543 /* Compoents */ = {
 			isa = PBXGroup;
 			children = (
-				FBF8AC5125DD80AC00E7E8EB /* IconView.swift */,
+				FB6C463A25F44329009ED947 /* IconView */,
 				FB7B815A25BE19060053E543 /* OutlineImageCell.swift */,
 				FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */,
 				FB5F348C25B6411F00CCE6BC /* DividerView.swift */,
@@ -516,6 +541,7 @@
 				FBC7332125E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift in Sources */,
 				FBC7332925E307DF0048999C /* PlantTypeViewController.swift in Sources */,
 				FB7B813E25BA6CA50053E543 /* WeekPickerCell.swift in Sources */,
+				FB6C463725F2FD01009ED947 /* CareValue.swift in Sources */,
 				FBC7330325DDB4F00048999C /* PlantIconCell.swift in Sources */,
 				FBF8AC5225DD80AC00E7E8EB /* IconView.swift in Sources */,
 				FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */,
@@ -536,10 +562,12 @@
 				FB0A9F3625DC5D7E0084AED8 /* TextFieldCell.swift in Sources */,
 				FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */,
 				FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */,
+				FB6C463125F2FCAB009ED947 /* TaskInterval.swift in Sources */,
 				FB6C461C25F1C332009ED947 /* CareDetailViewController.swift in Sources */,
 				FBC7333025E404CC0048999C /* PlantIconPickerViewController.swift in Sources */,
 				FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */,
 				FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */,
+				FB6C462D25F2FC8B009ED947 /* TaskType.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -53,8 +53,8 @@ class IconHeaderCell: UICollectionViewCell {
         contentView.addSubview(subtitleLabel)
         
         let constraints = (
-            iconViewTop: iconView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            iconViewWidth: iconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.5),
+            iconViewTop: iconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            iconViewWidth: iconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
             titleLabelWidth: titleLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.widthAnchor),
             subtitleLabelWidth: subtitleLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.widthAnchor)
         )

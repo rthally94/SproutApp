@@ -88,7 +88,12 @@ extension TimelineViewController {
                 let task = sortedKeys[indexPath.section]
                 cell.tintColor = task.accentColor
                 
-                cell.setImage(task.icon)
+                if case let .symbol(symbolName, _, _) = task.icon {
+                    cell.setImage(UIImage(systemName: symbolName))
+                } else if case let .image(image) = task.icon {
+                    cell.setImage(image)
+                }
+                
                 cell.setTitle(task.description)
             }
         }

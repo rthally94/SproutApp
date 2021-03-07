@@ -18,12 +18,20 @@ class Plant {
     
     var tasks: [Task]
     
-    internal init(id: UUID = UUID(), name: String, type: PlantType, icon: Icon? = nil, tasks: [Task]) {
+    internal init(id: UUID = UUID(), name: String, type: PlantType, icon: Icon? = nil, tasks: [Task], careInfo: [TaskType: String]? = nil) {
         self.id = id
         self.name = name
         self.type = type
         self.icon = icon ?? .symbol(name: "leaf.fill", foregroundColor: nil, backgroundColor: .systemBlue)
         self.tasks = tasks
+        
+        tasks.forEach { task in
+            if let info = careInfo?.first(where: { key, _ in
+                task.type == key
+            }) {
+                task.careInfo = .text(info.value)
+            }
+        }
     }
 }
 

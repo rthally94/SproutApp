@@ -11,6 +11,8 @@ class CareInfoCell: UICollectionViewCell {
     lazy var careTypeIconView: UIImageView = {
         let view = UIImageView(frame: .zero)
         view.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .headline)
+        let contentHuggingPriority = view.contentHuggingPriority(for: .horizontal) + 1
+        view.setContentHuggingPriority(contentHuggingPriority, for: .horizontal)
         return view
     }()
     
@@ -43,6 +45,7 @@ class CareInfoCell: UICollectionViewCell {
         headerStack.axis = .horizontal
         headerStack.distribution = .fill
         headerStack.alignment = .firstBaseline
+        headerStack.spacing = 8
         
         let contentStack = UIStackView(arrangedSubviews: [headerStack, careDetailLabel])
         contentStack.axis = .vertical

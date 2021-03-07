@@ -128,7 +128,10 @@ class TimelineCellContentView: UIView & UIContentView {
         appliedConfiguration = configuration
         
         // Configure Views
-        plantIconView.setIcon(appliedConfiguration.plantIcon)
+        var config = plantIconView.defaultConfiguration()
+        config.icon = configuration.plantIcon
+        plantIconView.iconViewConfiguration = config
+        
         titleLabel.text = appliedConfiguration.plantName
         subtitleLabel.text = appliedConfiguration.plantDetail
         

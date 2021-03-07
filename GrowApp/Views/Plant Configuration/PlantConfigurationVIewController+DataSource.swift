@@ -51,8 +51,12 @@ extension PlantConfigurationViewController {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
             var configuration = cell.defaultContentConfiguration()
 
-            if case let .list(image, text, secondaryText) = item.rowType {
-                configuration.image = image
+            if case let .list(icon, text, secondaryText) = item.rowType {
+                if case let .symbol(symbolName, _, _) = icon {
+                    configuration.image = UIImage(systemName: symbolName)
+                } else if case let .image(image) = icon {
+                    configuration.image = image
+                }
                 configuration.text = text
                 configuration.secondaryText = secondaryText
             }
@@ -176,7 +180,7 @@ extension PlantConfigurationViewController {
 
         let tasks: [Item] = plant.tasks.map {
             Item(
-                rowType: .list(image: $0.type.icon, text: $0.type.description, secondaryText: $0.interval.description),
+                rowType: .list(icon: $0.type.icon, text: $0.type.description, secondaryText: $0.interval.description),
                 onTap: nil
             )
         }

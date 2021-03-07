@@ -64,7 +64,7 @@ class TimelineViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
 
     struct Section: Hashable {
-        let careIcon: UIImage?
+        let careIcon: Icon?
         let taskName: String
     }
 

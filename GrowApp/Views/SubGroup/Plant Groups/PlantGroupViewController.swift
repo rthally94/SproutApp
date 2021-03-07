@@ -108,7 +108,11 @@ extension PlantGroupViewController {
 extension PlantGroupViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<PlantCardCell, Item> {
         return UICollectionView.CellRegistration<PlantCardCell, Item>() { cell, indexPath, item in
-            cell.iconView.setIcon(item.icon)
+            
+            var config = cell.iconView.defaultConfiguration()
+            config.icon = item.icon
+            cell.iconView.iconViewConfiguration = config
+            
             cell.textLabel.text = item.title
             cell.secondaryTextLabel.text = item.subtitle
         }

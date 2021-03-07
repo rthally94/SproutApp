@@ -75,7 +75,9 @@ class PlantIconContentView: UIView & UIContentView {
         
         // configure view
         if let icon = configuration.icon {
-            plantIcon.setIcon(icon)
+            var config = plantIcon.defaultConfiguration()
+            config.icon = icon
+            plantIcon.iconViewConfiguration = config
         }
     }
 }

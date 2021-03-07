@@ -78,7 +78,7 @@ class PlantConfigurationViewController: UIViewController {
 
     enum RowType: Hashable {
         case plantIcon(Icon)
-        case list(image: UIImage?, text: String?, secondaryText: String?)
+        case list(icon: Icon?, text: String?, secondaryText: String?)
         case listValue(image: UIImage?, text: String?, secondaryText: String?)
         case textField(image: UIImage?, value: String?, placeholder: String?)
     }
