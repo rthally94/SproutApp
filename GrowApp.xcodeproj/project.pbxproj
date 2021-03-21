@@ -18,6 +18,7 @@
 		FB21B70425B1E5CC00D02384 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB21B70225B1E5CC00D02384 /* LaunchScreen.storyboard */; };
 		FB21B70F25B1E5F500D02384 /* GrowAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B70E25B1E5F500D02384 /* GrowAppModel.swift */; };
 		FB21B71225B1E61100D02384 /* Plant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B71125B1E61100D02384 /* Plant.swift */; };
+		FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */; };
 		FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */; };
 		FB5F348925B63E6900CCE6BC /* TimelineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* TimelineCell.swift */; };
 		FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348C25B6411F00CCE6BC /* DividerView.swift */; };
@@ -33,6 +34,8 @@
 		FB6C462D25F2FC8B009ED947 /* TaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C462C25F2FC8B009ED947 /* TaskType.swift */; };
 		FB6C463125F2FCAB009ED947 /* TaskInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C463025F2FCAB009ED947 /* TaskInterval.swift */; };
 		FB6C463725F2FD01009ED947 /* CareValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C463625F2FD01009ED947 /* CareValue.swift */; };
+		FB6C464325F58E01009ED947 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C464225F58E01009ED947 /* ScheduleView.swift */; };
+		FB6C464B25F591FD009ED947 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C464A25F591FD009ED947 /* ScheduleViewController.swift */; };
 		FB7490EB25B1E71200925C29 /* GrowAppModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */; };
 		FB7490F725B1EB3B00925C29 /* PlantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490F625B1EB3B00925C29 /* PlantTests.swift */; };
 		FB7B812125B9D4AC0053E543 /* CapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */; };
@@ -88,6 +91,7 @@
 		FB21B70525B1E5CC00D02384 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB21B70E25B1E5F500D02384 /* GrowAppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowAppModel.swift; sourceTree = "<group>"; };
 		FB21B71125B1E61100D02384 /* Plant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plant.swift; sourceTree = "<group>"; };
+		FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIListContentConfiguration+Extension.swift"; sourceTree = "<group>"; };
 		FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		FB5F348825B63E6900CCE6BC /* TimelineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineCell.swift; sourceTree = "<group>"; };
 		FB5F348C25B6411F00CCE6BC /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
@@ -103,6 +107,8 @@
 		FB6C462C25F2FC8B009ED947 /* TaskType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskType.swift; sourceTree = "<group>"; };
 		FB6C463025F2FCAB009ED947 /* TaskInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskInterval.swift; sourceTree = "<group>"; };
 		FB6C463625F2FD01009ED947 /* CareValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareValue.swift; sourceTree = "<group>"; };
+		FB6C464225F58E01009ED947 /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
+		FB6C464A25F591FD009ED947 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		FB7490E825B1E71200925C29 /* GrowAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EA25B1E71200925C29 /* GrowAppModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowAppModelTests.swift; sourceTree = "<group>"; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -201,6 +207,31 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
+		FB24CEF826025D45002D14DF /* UICollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				FB24CEFE26027D87002D14DF /* Cells */,
+				FB24CEF926025D4C002D14DF /* HeaderFooter */,
+			);
+			path = UICollectionView;
+			sourceTree = "<group>";
+		};
+		FB24CEF926025D4C002D14DF /* HeaderFooter */ = {
+			isa = PBXGroup;
+			children = (
+				FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */,
+			);
+			path = HeaderFooter;
+			sourceTree = "<group>";
+		};
+		FB24CEFE26027D87002D14DF /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FB5F348825B63E6900CCE6BC /* TimelineCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		FB5F348225B4C28300CCE6BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -287,6 +318,15 @@
 			path = IconView;
 			sourceTree = "<group>";
 		};
+		FB6C464125F58DD3009ED947 /* ScheduleView */ = {
+			isa = PBXGroup;
+			children = (
+				FB6C464225F58E01009ED947 /* ScheduleView.swift */,
+				FB6C464A25F591FD009ED947 /* ScheduleViewController.swift */,
+			);
+			path = ScheduleView;
+			sourceTree = "<group>";
+		};
 		FB7490E925B1E71200925C29 /* GrowAppTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -300,6 +340,8 @@
 		FB7B812425B9D4B80053E543 /* Compoents */ = {
 			isa = PBXGroup;
 			children = (
+				FB24CEF826025D45002D14DF /* UICollectionView */,
+				FB6C464125F58DD3009ED947 /* ScheduleView */,
 				FB6C463A25F44329009ED947 /* IconView */,
 				FB7B815A25BE19060053E543 /* OutlineImageCell.swift */,
 				FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */,
@@ -412,7 +454,6 @@
 		FBC7335325E73FDC0048999C /* Collection View Cells */ = {
 			isa = PBXGroup;
 			children = (
-				FB5F348825B63E6900CCE6BC /* TimelineCell.swift */,
 				FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */,
 				FBC5D62B25ED9B92005BF6B1 /* TimelineCellContent.xib */,
 			);
@@ -558,8 +599,10 @@
 				FB7B815F25BE2BE10053E543 /* PlantConfigurationViewController.swift in Sources */,
 				FBC5D62525EC5679005BF6B1 /* PlantCardCell.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
+				FB6C464B25F591FD009ED947 /* ScheduleViewController.swift in Sources */,
 				FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */,
 				FB0A9F3625DC5D7E0084AED8 /* TextFieldCell.swift in Sources */,
+				FB6C464325F58E01009ED947 /* ScheduleView.swift in Sources */,
 				FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */,
 				FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */,
 				FB6C463125F2FCAB009ED947 /* TaskInterval.swift in Sources */,
@@ -568,6 +611,7 @@
 				FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */,
 				FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */,
 				FB6C462D25F2FC8B009ED947 /* TaskType.swift in Sources */,
+				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

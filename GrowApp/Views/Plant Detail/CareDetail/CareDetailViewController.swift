@@ -21,6 +21,7 @@ class CareDetailViewController: UIViewController {
     
     enum Section: Hashable, CaseIterable {
         case header
+        case schedule
     }
     
     struct Item: Hashable {
@@ -99,6 +100,13 @@ extension CareDetailViewController {
         snapshot.appendItems([
             Item(icon: selectedTask.type.icon, text: selectedTask.type.description, secondaryText: selectedTask.interval.description)
         ], toSection: .header)
+    
+        let image = selectedTask.interval == .none ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
+        let item = Item(image: image, text: selectedTask.interval.description, secondaryText: nil)
+        
+        snapshot.appendItems([
+            item
+        ], toSection: .schedule)
         
         return snapshot
     }
@@ -112,6 +120,8 @@ extension CareDetailViewController {
             switch sectionKind {
             case .header:
                 return collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item)
+            case .schedule:
+                return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
             }
         }
         

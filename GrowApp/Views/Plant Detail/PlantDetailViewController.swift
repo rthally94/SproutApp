@@ -8,6 +8,14 @@
 import UIKit
 
 class PlantDetailViewController: UIViewController {
+    static let careDateFormatter: RelativeDateTimeFormatter = {
+        let formatter = RelativeDateTimeFormatter()
+        formatter.dateTimeStyle = .named
+        formatter.formattingContext = .beginningOfSentence
+        formatter.unitsStyle = .full
+        return formatter
+    }()
+    
     var plant: Plant? {
         didSet {
             configureSubviews()
@@ -20,14 +28,16 @@ class PlantDetailViewController: UIViewController {
         
         func headerTitle() -> String? {
             switch self {
-                default: return nil
+            case .careInfo:
+                return "Care Info"
+            default: return nil
             }
         }
         
         func headerIcon() -> UIImage? {
             switch self {
-                default:
-                    return nil
+            default:
+                return nil
             }
         }
     }
@@ -73,28 +83,24 @@ class PlantDetailViewController: UIViewController {
 
 extension PlantDetailViewController {
     func makeLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, _ in
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let sectionKind = Section.allCases[sectionIndex]
             switch sectionKind {
-                case .plantInfo:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    
-                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
-                    let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-                    
-                    let section = NSCollectionLayoutSection(group: group)
-                    return section
-                case .careInfo:
-                    let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .fractionalHeight(1.0))
-                    let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                    item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
-                    
-                    let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(1/4 ))
-                    let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+            case .plantInfo:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 
-                    let section = NSCollectionLayoutSection(group: group)
-                    return section
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+                
+                let section = NSCollectionLayoutSection(group: group)
+                return section
+            case .careInfo:
+                var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+                config.headerMode = .supplementary
+                
+                let section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
+                return section
             }
         }
         
@@ -112,8 +118,16 @@ extension PlantDetailViewController {
             Item(icon: strongPlant.icon, text: strongPlant.name, secondaryText: strongPlant.type.commonName)
         ], toSection: .plantInfo)
         
-        let items = strongPlant.tasks.map { task in
-            Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: task.careInfo.description)
+        let items: [Item] = strongPlant.tasks.map { task in
+            let lastCareString: String
+            if let lastCareDate = task.lastCareDate {
+                lastCareString = "Last: " + PlantDetailViewController.careDateFormatter.localizedString(for: Date(), relativeTo: lastCareDate)
+            } else {
+                lastCareString = "Last: Never"
+            }
+            
+            let nextCareString = "Next: " + PlantDetailViewController.careDateFormatter.localizedString(for: task.nextCareDate, relativeTo: Date())
+            return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: lastCareString)
         }
         
         snapshot.appendItems(items, toSection: .careInfo)
@@ -133,16 +147,33 @@ extension PlantDetailViewController {
         }
     }
     
-    func makeCareInfoCellRegistration() -> UICollectionView.CellRegistration<CareInfoCell, Item> {
-        UICollectionView.CellRegistration<CareInfoCell, Item> { cell, _, item in
+    func makeCareInfoCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
+            var config = UIListContentConfiguration.subtitleCell()
+            
             if case let .symbol(symbolName, _, _) = item.icon {
-                cell.careTypeIconView.image = UIImage(systemName: symbolName)
+                config.image = UIImage(systemName: symbolName)
             } else if case let .image(image) = item.icon {
-                cell.careTypeIconView.image = image
+                config.image = image
             }
             
-            cell.careTypeLabel.text = item.text
-            cell.careDetailLabel.text = item.secondaryText
+            config.text = item.text
+            config.secondaryText = item.secondaryText
+            
+            cell.contentConfiguration = config
+        }
+    }
+    
+    func makeInsetGroupedSectionHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
+        UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { cell, elementKind, indexPath in
+            guard elementKind == UICollectionView.elementKindSectionHeader else { return }
+            var config = UIListContentConfiguration.largeGroupedHeader()
+            
+            let section = Section.allCases[indexPath.section]
+            config.text = section.headerTitle()?.capitalized
+            config.image = UIImage(systemName: "heart.fill")
+            
+            cell.contentConfiguration = config
         }
     }
     
@@ -153,10 +184,21 @@ extension PlantDetailViewController {
         let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             let sectionKind = Section.allCases[indexPath.section]
             switch sectionKind {
-                case .plantInfo:
-                    return collectionView.dequeueConfiguredReusableCell(using: headerCellRegistration, for: indexPath, item: item)
-                case .careInfo:
-                    return collectionView.dequeueConfiguredReusableCell(using: careInfoCellRegistration, for: indexPath, item: item)
+            case .plantInfo:
+                return collectionView.dequeueConfiguredReusableCell(using: headerCellRegistration, for: indexPath, item: item)
+            case .careInfo:
+                return collectionView.dequeueConfiguredReusableCell(using: careInfoCellRegistration, for: indexPath, item: item)
+            }
+        }
+        
+        let defaultHeaderRegistration = makeInsetGroupedSectionHeaderRegistration()
+        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
+            let sectionKind = Section.allCases[indexPath.section]
+            switch sectionKind {
+            case .careInfo:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: defaultHeaderRegistration, for: indexPath)
+            default:
+                return nil
             }
         }
         

@@ -61,27 +61,34 @@ extension Task {
         logs.append(log)
     }
 
+    var lastCareDate: Date? {
+        if let lastLog = logs.last {
+            return Calendar.current.startOfDay(for: lastLog.date)
+        } else {
+            return nil
+        }
+    }
+    
     var nextCareDate: Date {
-        // TODO: Implement using interval
-        guard let lastLog = logs.last else { return Date() }
+        guard let lastCareDate = lastCareDate else { return Date() }
 
         switch interval {
             case .none:
                 return Date()
             case let .daily(days):
-                return Calendar.current.date(byAdding: .day, value: days, to: lastLog.date) ?? Date()
+                return Calendar.current.date(byAdding: .day, value: days, to: lastCareDate) ?? Date()
             case let .weekly(weekdays):
-                let lastLogWeekday = Calendar.current.component(.weekday, from: lastLog.date)
+                let lastLogWeekday = Calendar.current.component(.weekday, from: lastCareDate)
                 let sortedWeekdays = weekdays.sorted()
                 let nextWeekday = sortedWeekdays.first(where: { $0 > lastLogWeekday }) ?? sortedWeekdays.first
                 let components = DateComponents(weekday: nextWeekday)
-                return Calendar.current.nextDate(after: lastLog.date, matching: components, matchingPolicy: .nextTime) ?? Date()
+                return Calendar.current.nextDate(after: lastCareDate, matching: components, matchingPolicy: .nextTime) ?? Date()
             case let .monthly(days):
-                let lastLogDay = Calendar.current.component(.day, from: lastLog.date)
+                let lastLogDay = Calendar.current.component(.day, from: lastCareDate)
                 let sortedDays = days.sorted()
                 let nextDay = sortedDays.first(where: {$0 > lastLogDay }) ?? sortedDays.first
                 let components = DateComponents(day: nextDay)
-                return Calendar.current.nextDate(after: lastLog.date, matching: components, matchingPolicy: .nextTime) ?? Date()
+                return Calendar.current.nextDate(after: lastCareDate, matching: components, matchingPolicy: .nextTime) ?? Date()
         }
     }
 

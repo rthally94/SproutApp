@@ -64,16 +64,12 @@ class TimelineViewController: UIViewController {
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
 
     struct Section: Hashable {
-        let careIcon: Icon?
-        let taskName: String
+        let taskType: TaskType
     }
 
     struct Item: Hashable {
-        let id: UUID
-        let plantName: String
-        let lastCareDate: String?
-        let plantIcon: Icon?
-        let isComplete: Bool
+        let plant: Plant
+        let task: Task
     }
 
     // MARK:- View Controller Lifecycle
