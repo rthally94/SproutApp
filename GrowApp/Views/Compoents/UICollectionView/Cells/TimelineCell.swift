@@ -63,7 +63,7 @@ class TimelinePlantListCell: GreenHouseListCell {
     private lazy var listContentView = UIListContentView(configuration: defaultListContentConfiguration())
     
     private lazy var plantIconView = IconView()
-    private var customViewConstraints: (plantIconLeading: NSLayoutConstraint, plantIconWidth: NSLayoutConstraint)?
+    private var customViewConstraints: (plantIconLeading: NSLayoutConstraint, plantIconWidth: NSLayoutConstraint, plantIconTop: NSLayoutConstraint)?
     
     private func setupViewsIfNeeded() {
         guard customViewConstraints == nil else { return }
@@ -76,14 +76,17 @@ class TimelinePlantListCell: GreenHouseListCell {
         
         let constraints = (
             plantIconLeading: plantIconView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
-            plantIconWidth: plantIconView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.2)
+            plantIconWidth: plantIconView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.125),
+            plantIconTop: plantIconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor)
         )
+        constraints.plantIconTop.priority-=1
         
         NSLayoutConstraint.activate([
             constraints.plantIconLeading,
             constraints.plantIconWidth,
             plantIconView.heightAnchor.constraint(equalTo: plantIconView.widthAnchor),
-            plantIconView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            constraints.plantIconTop,
+            plantIconView.centerYAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerYAnchor),
             
             listContentView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
             listContentView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
@@ -142,6 +145,7 @@ class TimelinePlantListCell: GreenHouseListCell {
         listContentView.configuration = content
         
         customViewConstraints?.plantIconLeading.constant = content.directionalLayoutMargins.trailing
+        customViewConstraints?.plantIconTop.constant = content.directionalLayoutMargins.top
         updateSeparatorConstraint()
     }
 }
