@@ -24,10 +24,13 @@ class PlantDetailViewController: UIViewController {
     
     enum Section: Hashable, CaseIterable {
         case plantInfo
+        case upNext
         case careInfo
         
         func headerTitle() -> String? {
             switch self {
+            case .upNext:
+                return "Up Next"
             case .careInfo:
                 return "Care Info"
             default: return nil
@@ -95,7 +98,7 @@ extension PlantDetailViewController {
                 
                 let section = NSCollectionLayoutSection(group: group)
                 return section
-            case .careInfo:
+            case .upNext, .careInfo:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
                 config.headerMode = .supplementary
                 
@@ -114,6 +117,13 @@ extension PlantDetailViewController {
         guard let strongPlant = plant else { return snapshot }
         
         snapshot.appendSections(Section.allCases)
+        
+        let nextTaskDate = strongPlant.getDateOfNextTask()
+        let nextTasks: [Item] = strongPlant.tasksNeedingCare(on: nextTaskDate).map { task in
+            Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: <#T##String?#>)
+        }
+        snapshot.appendItems(nextTasks, toSection: .upNext)
+        
         snapshot.appendItems([
             Item(icon: strongPlant.icon, text: strongPlant.name, secondaryText: strongPlant.type.commonName)
         ], toSection: .plantInfo)
@@ -126,7 +136,7 @@ extension PlantDetailViewController {
                 lastCareString = "Last: Never"
             }
             
-            let nextCareString = "Next: " + PlantDetailViewController.careDateFormatter.localizedString(for: task.nextCareDate, relativeTo: Date())
+//            let nextCareString = "Next: " + PlantDetailViewController.careDateFormatter.localizedString(for: task.nextCareDate, relativeTo: Date())
             return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: lastCareString)
         }
         
@@ -147,6 +157,21 @@ extension PlantDetailViewController {
         }
     }
     
+    func makeUpNextCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
+            var config = UIListContentConfiguration.subtitleCell()
+            
+            config.image = item.icon?.image
+            config.text = item.text
+            config.secondaryText = item.secondaryText
+            
+            cell.contentConfiguration = config
+            cell.accessories = [
+                .multiselect()
+            ]
+        }
+    }
+    
     func makeCareInfoCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
             var config = UIListContentConfiguration.subtitleCell()
@@ -161,6 +186,9 @@ extension PlantDetailViewController {
             config.secondaryText = item.secondaryText
             
             cell.contentConfiguration = config
+            cell.accessories = [
+                .disclosureIndicator()
+            ]
         }
     }
     
@@ -171,7 +199,6 @@ extension PlantDetailViewController {
             
             let section = Section.allCases[indexPath.section]
             config.text = section.headerTitle()?.capitalized
-            config.image = UIImage(systemName: "heart.fill")
             
             cell.contentConfiguration = config
         }
@@ -179,6 +206,7 @@ extension PlantDetailViewController {
     
     func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let headerCellRegistration = makeHeaderCellRegistration()
+        let upNextCellRegistration = makeUpNextCellRegistration()
         let careInfoCellRegistration = makeCareInfoCellRegistration()
         
         let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
@@ -186,6 +214,8 @@ extension PlantDetailViewController {
             switch sectionKind {
             case .plantInfo:
                 return collectionView.dequeueConfiguredReusableCell(using: headerCellRegistration, for: indexPath, item: item)
+            case .upNext:
+                return collectionView.dequeueConfiguredReusableCell(using: upNextCellRegistration, for: indexPath, item: item)
             case .careInfo:
                 return collectionView.dequeueConfiguredReusableCell(using: careInfoCellRegistration, for: indexPath, item: item)
             }

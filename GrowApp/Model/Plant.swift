@@ -46,6 +46,24 @@ extension Plant {
     }
 }
 
+extension Plant {
+    func getDateOfNextTask() -> Date {
+        var min: Date! = nil
+        for task in tasks {
+            let nextCareDate = task.nextCareDate
+            if min == nil || nextCareDate < min {
+                min = nextCareDate
+            }
+        }
+        
+        return min
+    }
+    
+    func tasksNeedingCare(on date: Date) -> [Task] {
+        tasks.filter { $0.isDateInInterval(date)}
+    }
+}
+
 extension Plant: Hashable, Equatable {
     static func == (lhs: Plant, rhs: Plant) -> Bool {
         lhs.id == rhs.id

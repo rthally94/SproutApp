@@ -56,10 +56,8 @@ class GrowAppModel {
     // Plant Care
     func getPlantsNeedingCare(on date: Date) -> [TaskType: [Plant]] {
         plants.sorted(by: {$0.name < $1.name}).reduce(into: [TaskType: [Plant]]() ) { dict, plant in
-            plant.tasks.forEach { task in
-                if task.isDateInInterval(date) {
-                    dict[task.type, default: []].append(plant)
-                }
+            plant.tasksNeedingCare(on: date).forEach { task in
+                dict[task.type, default: []].append(plant)
             }
         }
     }
