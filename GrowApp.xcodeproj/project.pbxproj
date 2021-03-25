@@ -19,7 +19,7 @@
 		FB21B70F25B1E5F500D02384 /* GrowAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B70E25B1E5F500D02384 /* GrowAppModel.swift */; };
 		FB21B71225B1E61100D02384 /* Plant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B71125B1E61100D02384 /* Plant.swift */; };
 		FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */; };
-		FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */; };
+		FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348425B4C2AD00CCE6BC /* TaskCalendarViewController.swift */; };
 		FB5F348925B63E6900CCE6BC /* TimelineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* TimelineCell.swift */; };
 		FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348C25B6411F00CCE6BC /* DividerView.swift */; };
 		FB5F349125B7266A00CCE6BC /* RoundedRectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */; };
@@ -60,7 +60,7 @@
 		FBC7333C25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333B25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift */; };
 		FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */; };
 		FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */; };
-		FBC7335025E708790048999C /* TimelineViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334F25E708790048999C /* TimelineViewController+DataSource.swift */; };
+		FBC7335025E708790048999C /* TaskCalendarViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334F25E708790048999C /* TaskCalendarViewController+DataSource.swift */; };
 		FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */; };
 		FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */; };
 		FBEB496C260CBED300F6060C /* PlantGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */; };
@@ -93,7 +93,7 @@
 		FB21B70E25B1E5F500D02384 /* GrowAppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GrowAppModel.swift; sourceTree = "<group>"; };
 		FB21B71125B1E61100D02384 /* Plant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plant.swift; sourceTree = "<group>"; };
 		FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIListContentConfiguration+Extension.swift"; sourceTree = "<group>"; };
-		FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
+		FB5F348425B4C2AD00CCE6BC /* TaskCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCalendarViewController.swift; sourceTree = "<group>"; };
 		FB5F348825B63E6900CCE6BC /* TimelineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineCell.swift; sourceTree = "<group>"; };
 		FB5F348C25B6411F00CCE6BC /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectContainer.swift; sourceTree = "<group>"; };
@@ -136,7 +136,7 @@
 		FBC7333B25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantIconPickerViewController+Delegates.swift"; sourceTree = "<group>"; };
 		FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconSupplementaryView.swift; sourceTree = "<group>"; };
 		FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHeaderFooterView.swift; sourceTree = "<group>"; };
-		FBC7334F25E708790048999C /* TimelineViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimelineViewController+DataSource.swift"; sourceTree = "<group>"; };
+		FBC7334F25E708790048999C /* TaskCalendarViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TaskCalendarViewController+DataSource.swift"; sourceTree = "<group>"; };
 		FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
 		FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICellAccessory+Extensions.swift"; sourceTree = "<group>"; };
 		FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlantGroupViewController.swift; path = "GrowApp/Features/All Plants/PlantGroupViewController.swift"; sourceTree = SOURCE_ROOT; };
@@ -251,8 +251,8 @@
 		FB5F348325B4C29100CCE6BC /* TaskCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				FB5F348425B4C2AD00CCE6BC /* TimelineViewController.swift */,
-				FBC7334F25E708790048999C /* TimelineViewController+DataSource.swift */,
+				FB5F348425B4C2AD00CCE6BC /* TaskCalendarViewController.swift */,
+				FBC7334F25E708790048999C /* TaskCalendarViewController+DataSource.swift */,
 			);
 			path = TaskCalendar;
 			sourceTree = "<group>";
@@ -575,7 +575,7 @@
 				FB5F349725B79BEC00CCE6BC /* LargeHeader.swift in Sources */,
 				FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */,
 				FB7B812125B9D4AC0053E543 /* CapsuleButton.swift in Sources */,
-				FBC7335025E708790048999C /* TimelineViewController+DataSource.swift in Sources */,
+				FBC7335025E708790048999C /* TaskCalendarViewController+DataSource.swift in Sources */,
 				FBC7331125DECCC20048999C /* RoundedRect.swift in Sources */,
 				FBC7333C25E572DA0048999C /* PlantIconPickerViewController+Delegates.swift in Sources */,
 				FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */,
@@ -616,7 +616,7 @@
 				FBEB496C260CBED300F6060C /* PlantGroupViewController.swift in Sources */,
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
-				FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */,
+				FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

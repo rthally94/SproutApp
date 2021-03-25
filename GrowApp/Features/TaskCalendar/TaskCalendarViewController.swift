@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TimelineViewController: UIViewController {
+class TaskCalendarViewController: UIViewController {
     init(model: GrowAppModel) {
         self.model = model
         super.init(nibName: nil, bundle: nil)
@@ -28,7 +28,7 @@ class TimelineViewController: UIViewController {
 
     var selectedDate: Date = Date() {
         didSet {
-            self.navigationItem.title = TimelineViewController.dateFormatter.string(from: selectedDate)
+            self.navigationItem.title = TaskCalendarViewController.dateFormatter.string(from: selectedDate)
             weekPicker.selectDate(selectedDate, animated: true)
 
             if let model = model {
@@ -108,7 +108,7 @@ class TimelineViewController: UIViewController {
     }
 }
 
-extension TimelineViewController {
+extension TaskCalendarViewController {
     private func makeLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex, layoutEnvironment) -> NSCollectionLayoutSection in
             var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped )
@@ -160,13 +160,13 @@ extension TimelineViewController {
     }
 }
 
-extension TimelineViewController: WeekPickerDelegate {
+extension TaskCalendarViewController: WeekPickerDelegate {
     func weekPicker(_ weekPicker: WeekPicker, didSelect date: Date) {
         selectDate(date)
     }
 }
 
-extension TimelineViewController: DatePickerDelegate {
+extension TaskCalendarViewController: DatePickerDelegate {
     func didSelect(date: Date) {
         selectDate(date)
     }

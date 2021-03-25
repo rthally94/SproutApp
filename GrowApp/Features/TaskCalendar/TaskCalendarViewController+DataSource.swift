@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension TimelineViewController {
+extension TaskCalendarViewController {
     func configureDataSource() {
         let plantTaskCellRegistration = createPlantCellRegistration()
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
