@@ -163,7 +163,7 @@ extension WeekPicker: UICollectionViewDataSource {
             let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 32, weight: .bold)
             cell.imageView.image = UIImage(systemName: "circle.fill", withConfiguration: symbolConfiguration)
 
-            cell.tintColor = .systemGray
+            cell.tintColor = .systemFill
 
             // Configure text label
             cell.textLabel.textColor = .systemGray6

@@ -8,6 +8,13 @@
 import UIKit
 
 class CareDetailViewController: UIViewController {
+    static let dateFormatter: DateFormatter = {
+       let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+    }()
+    
     var plant: Plant? {
         didSet {
             applySnapshotIfAble()
@@ -102,7 +109,7 @@ extension CareDetailViewController {
         ], toSection: .header)
     
         let image = selectedTask.interval == .none ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
-        let item = Item(image: image, text: selectedTask.interval.description, secondaryText: nil)
+        let item = Item(image: image, text: selectedTask.interval.description, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.startingDate))")
         
         snapshot.appendItems([
             item

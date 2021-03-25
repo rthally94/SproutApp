@@ -81,8 +81,8 @@ enum TaskInterval: CustomStringConvertible, Hashable {
         switch self {
         case .none:
             return frequency
-        case .daily:
-            return "\(frequency) on "
+        case let .daily(days):
+            return "Every \(days) days"
         case .weekly(let weekdays):
             let weekdayStrings: [String] = weekdays.sorted().compactMap {
                 let weekdayIndex = $0 - 1

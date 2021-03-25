@@ -64,6 +64,8 @@
 		FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */; };
 		FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */; };
 		FBC7335025E708790048999C /* TimelineViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334F25E708790048999C /* TimelineViewController+DataSource.swift */; };
+		FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */; };
+		FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */; };
 		FBF8AC5225DD80AC00E7E8EB /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF8AC5125DD80AC00E7E8EB /* IconView.swift */; };
 /* End PBXBuildFile section */
 
@@ -139,6 +141,8 @@
 		FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconSupplementaryView.swift; sourceTree = "<group>"; };
 		FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHeaderFooterView.swift; sourceTree = "<group>"; };
 		FBC7334F25E708790048999C /* TimelineViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimelineViewController+DataSource.swift"; sourceTree = "<group>"; };
+		FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
+		FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICellAccessory+Extensions.swift"; sourceTree = "<group>"; };
 		FBF8AC5125DD80AC00E7E8EB /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -203,6 +207,7 @@
 				FB0A9F2A25DACF450084AED8 /* LogEntry.swift */,
 				FB0A9F3D25DD766B0084AED8 /* PlantType.swift */,
 				FBC7330825DDD5BE0048999C /* Icon.swift */,
+				FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -235,15 +240,12 @@
 		FB5F348225B4C28300CCE6BC /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				FBC5D63625EEA255005BF6B1 /* Plant Detail */,
 				FB7B812425B9D4B80053E543 /* Compoents */,
-				FBC5D61B25EC555E005BF6B1 /* All Plants */,
 				FBC5D60A25EC2BE0005BF6B1 /* MainViewController */,
-				FB7B815225BE188E0053E543 /* Plant Configuration */,
-				FB7B813025BA255A0053E543 /* WeekPicker */,
-				FB5F34A025B8FA0700CCE6BC /* BottomCard */,
-				FBB102FA25B9C790005C3C8E /* DatePickerCard */,
 				FB5F348325B4C29100CCE6BC /* Timeline */,
+				FBC5D61B25EC555E005BF6B1 /* All Plants */,
+				FBC5D63625EEA255005BF6B1 /* Plant Detail */,
+				FB7B815225BE188E0053E543 /* Plant Configuration */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -279,6 +281,7 @@
 			children = (
 				FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */,
 				FB6C461625F1975F009ED947 /* UIColor+Extension.swift */,
+				FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -340,16 +343,15 @@
 		FB7B812425B9D4B80053E543 /* Compoents */ = {
 			isa = PBXGroup;
 			children = (
+				FB5F34A025B8FA0700CCE6BC /* BottomCard */,
+				FB7B813025BA255A0053E543 /* WeekPicker */,
 				FB24CEF826025D45002D14DF /* UICollectionView */,
+				FBB102FA25B9C790005C3C8E /* DatePickerCard */,
 				FB6C464125F58DD3009ED947 /* ScheduleView */,
 				FB6C463A25F44329009ED947 /* IconView */,
-				FB7B815A25BE19060053E543 /* OutlineImageCell.swift */,
-				FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */,
-				FB5F348C25B6411F00CCE6BC /* DividerView.swift */,
 				FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */,
-				FBC7330C25DEBACB0048999C /* Circle.swift */,
-				FBC7331025DECCC20048999C /* RoundedRect.swift */,
 				FBC7333325E478D20048999C /* CameraOverlayView.swift */,
+				FBEB495C260CBC2800F6060C /* Orphaned */,
 			);
 			path = Compoents;
 			sourceTree = "<group>";
@@ -458,6 +460,18 @@
 				FBC5D62B25ED9B92005BF6B1 /* TimelineCellContent.xib */,
 			);
 			path = "Collection View Cells";
+			sourceTree = "<group>";
+		};
+		FBEB495C260CBC2800F6060C /* Orphaned */ = {
+			isa = PBXGroup;
+			children = (
+				FB5F348C25B6411F00CCE6BC /* DividerView.swift */,
+				FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */,
+				FB7B815A25BE19060053E543 /* OutlineImageCell.swift */,
+				FBC7330C25DEBACB0048999C /* Circle.swift */,
+				FBC7331025DECCC20048999C /* RoundedRect.swift */,
+			);
+			path = Orphaned;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -570,6 +584,7 @@
 				FBC5D63825EEA269005BF6B1 /* PlantDetailViewController.swift in Sources */,
 				FB5F34A325B8FA3900CCE6BC /* SlideInPresentationManager.swift in Sources */,
 				FBC5D62625EC5679005BF6B1 /* PlantGroupViewController.swift in Sources */,
+				FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */,
 				FB5F349725B79BEC00CCE6BC /* LargeHeader.swift in Sources */,
 				FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */,
 				FB7B812125B9D4AC0053E543 /* CapsuleButton.swift in Sources */,
@@ -612,6 +627,7 @@
 				FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */,
 				FB6C462D25F2FC8B009ED947 /* TaskType.swift in Sources */,
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
+				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TimelineViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

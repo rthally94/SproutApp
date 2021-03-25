@@ -8,13 +8,7 @@
 import UIKit
 
 class PlantDetailViewController: UIViewController {
-    static let careDateFormatter: RelativeDateTimeFormatter = {
-        let formatter = RelativeDateTimeFormatter()
-        formatter.dateTimeStyle = .named
-        formatter.formattingContext = .beginningOfSentence
-        formatter.unitsStyle = .full
-        return formatter
-    }()
+    static let careDateFormatter = RelativeDateFormatter()
     
     var plant: Plant? {
         didSet {
@@ -33,7 +27,17 @@ class PlantDetailViewController: UIViewController {
                 return "Up Next"
             case .careInfo:
                 return "Care Info"
-            default: return nil
+            default:
+                return nil
+            }
+        }
+        
+        func headerSubtitle() -> String? {
+            switch self {
+            case .careInfo:
+                return ""
+            default:
+                return nil
             }
         }
         
@@ -54,19 +58,9 @@ class PlantDetailViewController: UIViewController {
     
     lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGroupedBackground
         view.delegate = self
         return view
-    }()
-    
-    lazy var logCareButton: UIButton = {
-        let btn = CapsuleButton(type: .system, primaryAction: .init(title: "Log Care", image: UIImage(systemName: "heart.text.square.fill")) { [unowned self] _ in
-            print("🦖 Pressed")
-        })
-        
-        btn.backgroundColor = view.tintColor
-        
-        return btn
     }()
     
     lazy var dataSource: UICollectionViewDiffableDataSource<Section, Item> = makeDataSource()
@@ -81,6 +75,16 @@ class PlantDetailViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Plant Details"
+    }
+}
+
+extension PlantDetailViewController {
+    func nextTaskDateStirng() -> String? {
+        if let plant = plant, let nextTaskDate = plant.getDateOfNextTask() {
+            return PlantDetailViewController.careDateFormatter.string(from: nextTaskDate)
+        } else {
+            return nil
+        }
     }
 }
 
@@ -118,26 +122,26 @@ extension PlantDetailViewController {
         
         snapshot.appendSections(Section.allCases)
         
-        let nextTaskDate = strongPlant.getDateOfNextTask()
-        let nextTasks: [Item] = strongPlant.tasksNeedingCare(on: nextTaskDate).map { task in
-            Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: <#T##String?#>)
-        }
-        snapshot.appendItems(nextTasks, toSection: .upNext)
-        
         snapshot.appendItems([
             Item(icon: strongPlant.icon, text: strongPlant.name, secondaryText: strongPlant.type.commonName)
         ], toSection: .plantInfo)
         
-        let items: [Item] = strongPlant.tasks.map { task in
-            let lastCareString: String
-            if let lastCareDate = task.lastCareDate {
-                lastCareString = "Last: " + PlantDetailViewController.careDateFormatter.localizedString(for: Date(), relativeTo: lastCareDate)
-            } else {
-                lastCareString = "Last: Never"
+        if let nextTaskDate = strongPlant.getDateOfNextTask() {
+            let nextTasks: [Item] = strongPlant.tasksNeedingCare(on: nextTaskDate).map { task in
+                let lastCareString: String
+                if let lastCareDate = task.lastCareDate {
+                    lastCareString = "Last: " + PlantDetailViewController.careDateFormatter.string(from: lastCareDate)
+                } else {
+                    lastCareString = "Last: Never"
+                }
+                return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: lastCareString)
             }
             
-//            let nextCareString = "Next: " + PlantDetailViewController.careDateFormatter.localizedString(for: task.nextCareDate, relativeTo: Date())
-            return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: lastCareString)
+            snapshot.appendItems(nextTasks, toSection: .upNext)
+        }
+        
+        let items: [Item] = strongPlant.tasks.map { task in
+            return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: task.interval.description)
         }
         
         snapshot.appendItems(items, toSection: .careInfo)
@@ -154,6 +158,7 @@ extension PlantDetailViewController {
             
             cell.titleLabel.text = item.text
             cell.subtitleLabel.text = item.secondaryText
+            cell.backgroundColor = .systemGroupedBackground
         }
     }
     
@@ -166,9 +171,8 @@ extension PlantDetailViewController {
             config.secondaryText = item.secondaryText
             
             cell.contentConfiguration = config
-            cell.accessories = [
-                .multiselect()
-            ]
+            
+            cell.accessories = [ .todoAccessory() ]
         }
     }
     
@@ -193,12 +197,15 @@ extension PlantDetailViewController {
     }
     
     func makeInsetGroupedSectionHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
-        UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { cell, elementKind, indexPath in
+        UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { [unowned self] cell, elementKind, indexPath in
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             var config = UIListContentConfiguration.largeGroupedHeader()
             
             let section = Section.allCases[indexPath.section]
             config.text = section.headerTitle()?.capitalized
+            if case .upNext = section {
+                config.secondaryText = self.nextTaskDateStirng()
+            }
             
             cell.contentConfiguration = config
         }
@@ -225,7 +232,7 @@ extension PlantDetailViewController {
         dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
             let sectionKind = Section.allCases[indexPath.section]
             switch sectionKind {
-            case .careInfo:
+            case .upNext, .careInfo:
                 return collectionView.dequeueConfiguredReusableSupplementary(using: defaultHeaderRegistration, for: indexPath)
             default:
                 return nil
@@ -239,17 +246,8 @@ extension PlantDetailViewController {
 extension PlantDetailViewController {
     func configureHiearchy() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        logCareButton.translatesAutoresizingMaskIntoConstraints = false
-        
         view.addSubview(collectionView)
-        view.addSubview(logCareButton)
-        
         collectionView.pinToBoundsOf(view)
-        NSLayoutConstraint.activate([
-            logCareButton.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -16),
-            logCareButton.centerXAnchor.constraint(equalTo: view.layoutMarginsGuide.centerXAnchor),
-            logCareButton.widthAnchor.constraint(equalTo: view.layoutMarginsGuide.widthAnchor)
-        ])
     }
     
     func configureSubviews() {

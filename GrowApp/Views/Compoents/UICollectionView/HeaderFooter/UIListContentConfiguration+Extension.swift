@@ -10,13 +10,17 @@ import UIKit
 extension UIListContentConfiguration {
     static func largeGroupedHeader() -> UIListContentConfiguration {
         var config = UIListContentConfiguration.groupedHeader()
-        config.textProperties.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+        config.textProperties.font = UIFont.preferredFont(forTextStyle: .headline)
         config.textProperties.color = .label
         config.textProperties.transform = .capitalized
         
-        config.imageProperties.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
-        
+        config.imageProperties.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .headline)
         config.imageToTextPadding = 5
+        
+        config.axesPreservingSuperviewLayoutMargins = .vertical
+        config.directionalLayoutMargins.leading = 0
+        
+        config.prefersSideBySideTextAndSecondaryText = true
         return config
     }
 }

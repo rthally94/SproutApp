@@ -12,14 +12,13 @@ class IconHeaderCell: UICollectionViewCell {
     
     lazy var titleLabel: UILabel = {
         let view = UILabel()
-        view.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        view.font = UIFont.preferredFont(forTextStyle: .title2)
         return view
     }()
     
     lazy var subtitleLabel: UILabel = {
         let view = UILabel()
-        view.font = UIFont.preferredFont(forTextStyle: .headline)
-        view.tintColor = view.tintColor.withAlphaComponent(0.7)
+        view.font = UIFont.preferredFont(forTextStyle: .subheadline)
         return view
     }()
     
@@ -54,7 +53,7 @@ class IconHeaderCell: UICollectionViewCell {
         
         let constraints = (
             iconViewTop: iconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            iconViewWidth: iconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.4),
+            iconViewWidth: iconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.3),
             titleLabelWidth: titleLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.widthAnchor),
             subtitleLabelWidth: subtitleLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.widthAnchor)
         )
@@ -70,11 +69,11 @@ class IconHeaderCell: UICollectionViewCell {
             iconView.centerXAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor),
             constraints.iconViewWidth,
             
-            titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: iconView.bottomAnchor, multiplier: 2.0),
+            titleLabel.topAnchor.constraint(equalToSystemSpacingBelow: iconView.bottomAnchor, multiplier: 1.0),
             constraints.titleLabelWidth,
             titleLabel.centerXAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor),
 
-            subtitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 1.0),
+            subtitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 0.5),
             constraints.subtitleLabelWidth,
             subtitleLabel.centerXAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor),
             subtitleLabel.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor)

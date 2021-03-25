@@ -63,7 +63,7 @@ class TimelinePlantListCell: GreenHouseListCell {
     private lazy var listContentView = UIListContentView(configuration: defaultListContentConfiguration())
     
     private lazy var plantIconView = IconView()
-    private var customViewConstraints: (plantIconLeading: NSLayoutConstraint, plantIconWidth: NSLayoutConstraint, plantIconTop: NSLayoutConstraint)?
+    private var customViewConstraints: (plantIconLeading: NSLayoutConstraint, plantIconWidth: NSLayoutConstraint, plantIconTop: NSLayoutConstraint, plantIconHeight: NSLayoutConstraint)?
     
     private func setupViewsIfNeeded() {
         guard customViewConstraints == nil else { return }
@@ -76,24 +76,28 @@ class TimelinePlantListCell: GreenHouseListCell {
         
         let constraints = (
             plantIconLeading: plantIconView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
-            plantIconWidth: plantIconView.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.125),
-            plantIconTop: plantIconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor)
+            plantIconWidth: plantIconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.125),
+            plantIconTop: plantIconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            plantIconHeight: plantIconView.heightAnchor.constraint(equalTo: plantIconView.widthAnchor)
         )
+        
         constraints.plantIconTop.priority-=1
+        constraints.plantIconLeading.priority-=1
+        constraints.plantIconWidth.priority-=1
+        constraints.plantIconHeight.priority-=1
         
         NSLayoutConstraint.activate([
             constraints.plantIconLeading,
             constraints.plantIconWidth,
-            plantIconView.heightAnchor.constraint(equalTo: plantIconView.widthAnchor),
+            constraints.plantIconHeight,
             constraints.plantIconTop,
             plantIconView.centerYAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerYAnchor),
             
-            listContentView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            listContentView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
+            listContentView.topAnchor.constraint(equalTo: plantIconView.topAnchor),
+            listContentView.bottomAnchor.constraint(equalTo: plantIconView.bottomAnchor),
             listContentView.leadingAnchor.constraint(equalToSystemSpacingAfter: plantIconView.trailingAnchor, multiplier: 1.0),
             listContentView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
         ])
-        
         customViewConstraints = constraints
     }
     

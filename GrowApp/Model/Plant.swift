@@ -47,16 +47,15 @@ extension Plant {
 }
 
 extension Plant {
-    func getDateOfNextTask() -> Date {
-        var min: Date! = nil
-        for task in tasks {
-            let nextCareDate = task.nextCareDate
-            if min == nil || nextCareDate < min {
-                min = nextCareDate
+    func getDateOfNextTask() -> Date? {
+        let temp: [Date] = tasks.compactMap { task in
+            if let lastCareDate = task.lastCareDate {
+                return task.nextCareDate(after: lastCareDate)
+            } else {
+                return nil
             }
         }
-        
-        return min
+        return temp.sorted().first
     }
     
     func tasksNeedingCare(on date: Date) -> [Task] {

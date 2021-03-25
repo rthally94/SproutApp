@@ -56,29 +56,12 @@ extension TimelineViewController {
 
     private func createPlantCellRegistration() -> UICollectionView.CellRegistration<TimelinePlantListCell, Item> {
         return UICollectionView.CellRegistration<TimelinePlantListCell, Item> { cell, _, item in
+            cell.accessories = [
+                .disclosureIndicator()
+            ]
             cell.updateWith(task: item.task, plant: item.plant)
         }
     }
-    
-//    private func createPlantCellRegistration() -> UICollectionView.CellRegistration<TimelineCell, Item> {
-//        return UICollectionView.CellRegistration<TimelineCell, Item> { cell, _, item in
-//            var config = cell.timelineConfiguration()
-//
-//            if let icon = item.plantIcon {
-//                config.plantIcon = icon
-//            }
-//
-//            config.plantName = item.plantName
-//
-//            if let lastCareDate = item.lastCareDate {
-//                config.plantDetail = lastCareDate
-//            }
-//
-//            config.isComplete = item.isComplete
-//
-//            cell.contentConfiguration = config
-//        }
-//    }
 
     private func createHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
         return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { cell, _, indexPath in
