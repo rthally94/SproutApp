@@ -18,6 +18,7 @@ class PlantDetailViewController: UIViewController {
     
     enum Section: Hashable, CaseIterable {
         case plantInfo
+        case summary
         case upNext
         case careInfo
         
@@ -101,6 +102,18 @@ extension PlantDetailViewController {
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0)
+                return section
+            case .summary:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1.0))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0)
+                
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 20)
                 return section
             case .upNext, .careInfo:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -125,6 +138,14 @@ extension PlantDetailViewController {
         snapshot.appendItems([
             Item(icon: strongPlant.icon, text: strongPlant.name, secondaryText: strongPlant.type.commonName)
         ], toSection: .plantInfo)
+        
+        let tasksToday = plant?.todaysTasks()
+        let lateTasks = plant?.lateTasks()
+        
+        snapshot.appendItems([
+            Item(icon: .symbol(name: "calendar.badge.clock", foregroundColor: .systemGreen, backgroundColor: .systemFill), text: "Today", secondaryText: "\(tasksToday?.count ?? 0) tasks"),
+            Item(icon: .symbol(name: "exclamationmark.circle", foregroundColor: .systemYellow , backgroundColor: .systemFill), text: "Late", secondaryText: "\(lateTasks?.count ?? 0) tasks")
+        ], toSection: .summary)
         
         if let nextTaskDate = strongPlant.getDateOfNextTask() {
             let nextTasks: [Item] = strongPlant.tasksNeedingCare(on: nextTaskDate).map { task in
@@ -159,6 +180,24 @@ extension PlantDetailViewController {
             cell.titleLabel.text = item.text
             cell.subtitleLabel.text = item.secondaryText
             cell.backgroundColor = .systemGroupedBackground
+        }
+    }
+    
+    func makeSummaryCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
+            var config = UIListContentConfiguration.statisticCell()
+            
+            config.image = item.icon?.image
+            config.text = item.text
+            config.secondaryText = item.secondaryText
+            
+            config.imageProperties.tintColor = item.icon?.foregroundColor
+            config.secondaryTextProperties.color = item.icon?.foregroundColor ?? config.textProperties.color
+            
+            cell.contentConfiguration = config
+            
+            cell.layer.cornerRadius = 10
+            cell.clipsToBounds = true
         }
     }
     
@@ -213,6 +252,7 @@ extension PlantDetailViewController {
     
     func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let headerCellRegistration = makeHeaderCellRegistration()
+        let summaryCellRegistration = makeSummaryCellRegistration()
         let upNextCellRegistration = makeUpNextCellRegistration()
         let careInfoCellRegistration = makeCareInfoCellRegistration()
         
@@ -221,6 +261,8 @@ extension PlantDetailViewController {
             switch sectionKind {
             case .plantInfo:
                 return collectionView.dequeueConfiguredReusableCell(using: headerCellRegistration, for: indexPath, item: item)
+            case .summary:
+                return collectionView.dequeueConfiguredReusableCell(using: summaryCellRegistration, for: indexPath, item: item)
             case .upNext:
                 return collectionView.dequeueConfiguredReusableCell(using: upNextCellRegistration, for: indexPath, item: item)
             case .careInfo:
@@ -259,6 +301,16 @@ extension PlantDetailViewController {
 }
 
 extension PlantDetailViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        let sectionKind = Section.allCases[indexPath.section]
+        switch sectionKind {
+        case .careInfo:
+            return true
+        default:
+             return false
+        }
+    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let sectionKind = Section.allCases[indexPath.section]
         

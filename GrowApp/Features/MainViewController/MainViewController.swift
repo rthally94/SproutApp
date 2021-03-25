@@ -10,7 +10,7 @@ import UIKit
 class MainViewController: UIViewController {
     lazy var timelineVC: some UIViewController = {
         let vc = TaskCalendarViewController(model: model).wrappedInNavigationController()
-        vc.tabBarItem = UITabBarItem(title: "Timeline", image: UIImage(systemName: "newspaper"), selectedImage: UIImage(systemName: "newspaper.fill"))
+        vc.tabBarItem = UITabBarItem(title: "Calendar", image: UIImage(systemName: "calendar"), selectedImage: UIImage(systemName: "calendar"))
         vc.tabBarItem.tag = 0
         return vc
     }()

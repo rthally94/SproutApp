@@ -113,8 +113,8 @@ class IconView: UIView {
     
     private var appliedBounds: CGRect?
     
-    private lazy var fullConstraint = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1.0)
-    private lazy var scaledConstraint = imageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.6)
+    private lazy var fullConstraint = imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0)
+    private lazy var scaledConstraint = imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.6)
         
     lazy var imageView = UIImageView()
     
@@ -139,10 +139,10 @@ class IconView: UIView {
         addSubview(imageView)
         
         NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor),
+            fullConstraint,
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
             imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            fullConstraint
         ])
     }
     

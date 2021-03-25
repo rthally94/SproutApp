@@ -54,10 +54,10 @@ extension TaskCalendarViewController {
         return snapshot
     }
 
-    private func createPlantCellRegistration() -> UICollectionView.CellRegistration<TimelinePlantListCell, Item> {
-        return UICollectionView.CellRegistration<TimelinePlantListCell, Item> { cell, _, item in
+    private func createPlantCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
+        return UICollectionView.CellRegistration<TaskCalendarListCell, Item> { cell, _, item in
             cell.accessories = [
-                .disclosureIndicator()
+                .todoAccessory()
             ]
             cell.updateWith(task: item.task, plant: item.plant)
         }

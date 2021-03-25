@@ -7,7 +7,7 @@
 
 import UIKit
 
-fileprivate extension UIConfigurationStateCustomKey {
+private extension UIConfigurationStateCustomKey {
     static let plant = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseListCell.plant")
     static let task = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseListCell.task")
 }
@@ -25,8 +25,8 @@ private extension UICellConfigurationState {
 }
 
 class GreenHouseListCell: UICollectionViewListCell {
-    private var plant: Plant? = nil
-    private var task: Task? = nil
+    private var plant: Plant?
+    private var task: Task?
     
     func updateWith(task newTask: Task, plant newPlant: Plant) {
         updateWithTask(newTask)
@@ -47,12 +47,12 @@ class GreenHouseListCell: UICollectionViewListCell {
     
     override var configurationState: UICellConfigurationState {
         var state = super.configurationState
-        state.plant = self.plant
+        state.plant = plant
         return state
     }
 }
 
-class TimelinePlantListCell: GreenHouseListCell {
+class TaskCalendarListCell: GreenHouseListCell {
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         
@@ -63,7 +63,7 @@ class TimelinePlantListCell: GreenHouseListCell {
     private lazy var listContentView = UIListContentView(configuration: defaultListContentConfiguration())
     
     private lazy var plantIconView = IconView()
-    private var customViewConstraints: (plantIconLeading: NSLayoutConstraint, plantIconWidth: NSLayoutConstraint, plantIconTop: NSLayoutConstraint, plantIconHeight: NSLayoutConstraint)?
+    private var customViewConstraints: (plantIconLeading: NSLayoutConstraint, plantIconWidth: NSLayoutConstraint, plantIconHeight: NSLayoutConstraint, listContentTop: NSLayoutConstraint)?
     
     private func setupViewsIfNeeded() {
         guard customViewConstraints == nil else { return }
@@ -76,27 +76,26 @@ class TimelinePlantListCell: GreenHouseListCell {
         
         let constraints = (
             plantIconLeading: plantIconView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
-            plantIconWidth: plantIconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.125),
-            plantIconTop: plantIconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            plantIconHeight: plantIconView.heightAnchor.constraint(equalTo: plantIconView.widthAnchor)
+            plantIconWidth: plantIconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.15),
+            plantIconHeight: plantIconView.heightAnchor.constraint(equalTo: contentView.layoutMarginsGuide.heightAnchor),
+            listContentTop: listContentView.topAnchor.constraint(equalTo: plantIconView.topAnchor)
         )
         
-        constraints.plantIconTop.priority-=1
         constraints.plantIconLeading.priority-=1
-        constraints.plantIconWidth.priority-=1
         constraints.plantIconHeight.priority-=1
+        constraints.plantIconWidth.priority-=1
+        constraints.listContentTop.priority-=1
         
         NSLayoutConstraint.activate([
             constraints.plantIconLeading,
-            constraints.plantIconWidth,
             constraints.plantIconHeight,
-            constraints.plantIconTop,
+            constraints.plantIconWidth,
             plantIconView.centerYAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerYAnchor),
             
-            listContentView.topAnchor.constraint(equalTo: plantIconView.topAnchor),
+            constraints.listContentTop,
             listContentView.bottomAnchor.constraint(equalTo: plantIconView.bottomAnchor),
-            listContentView.leadingAnchor.constraint(equalToSystemSpacingAfter: plantIconView.trailingAnchor, multiplier: 1.0),
-            listContentView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
+            listContentView.leadingAnchor.constraint(equalTo: plantIconView.trailingAnchor),
+            listContentView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
         ])
         customViewConstraints = constraints
     }
@@ -122,7 +121,7 @@ class TimelinePlantListCell: GreenHouseListCell {
             // Configure for both present
             content.text = plant.name.capitalized
             if let lastCareDate = task.lastCareDate {
-                content.secondaryText = "Last: " + TimelinePlantListCell.dateFormatter.string(from: lastCareDate)
+                content.secondaryText = "Last: " + TaskCalendarListCell.dateFormatter.string(from: lastCareDate)
             } else {
                 content.secondaryText = "Last: Never"
             }
@@ -137,7 +136,7 @@ class TimelinePlantListCell: GreenHouseListCell {
             // Configure for just the task
             content.text = task.type.description
             if let lastCareDate = task.lastCareDate {
-                content.secondaryText = "Last: " + TimelinePlantListCell.dateFormatter.string(from: lastCareDate)
+                content.secondaryText = "Last: " + TaskCalendarListCell.dateFormatter.string(from: lastCareDate)
             } else {
                 content.secondaryText = "Last: Never"
             }
@@ -148,8 +147,6 @@ class TimelinePlantListCell: GreenHouseListCell {
         content.axesPreservingSuperviewLayoutMargins = []
         listContentView.configuration = content
         
-        customViewConstraints?.plantIconLeading.constant = content.directionalLayoutMargins.trailing
-        customViewConstraints?.plantIconTop.constant = content.directionalLayoutMargins.top
         updateSeparatorConstraint()
     }
 }

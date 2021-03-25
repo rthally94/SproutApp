@@ -64,7 +64,7 @@ class PlantGroupViewController: UIViewController {
             var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
             snapshot.appendSections([.plants])
             
-            let items = plants.map { plant in
+            let items = plants.sorted(by: { $0.creationDate < $1.creationDate }).map { plant in
                 Item(id: plant.id, icon: plant.icon, title: plant.name, subtitle: "\(plant.tasks.count) tasks")
             }
             snapshot.appendItems(items, toSection: .plants)

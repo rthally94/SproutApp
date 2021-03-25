@@ -19,4 +19,13 @@ enum Icon: Hashable {
             return UIImage(systemName: name)?.withTintColor(foregroundColor ?? .label)
         }
     }
+    
+    var foregroundColor: UIColor? {
+        switch self {
+        case .symbol(_, let foregroundColor, _):
+            return foregroundColor
+        default:
+            return nil
+        }
+    }
 }

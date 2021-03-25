@@ -21,8 +21,12 @@ class CapsuleButton: UIButton {
             
             imageView?.preferredSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .headline)
             titleLabel?.font = UIFont.preferredFont(forTextStyle: .headline)
-            tintColor = UIColor.labelColor(against: backgroundColor)
-                
+            
+            if backgroundColor == nil {
+                backgroundColor = .systemGreen
+            }
+            
+            tintColor = UIColor.labelColor(against: backgroundColor).withAlphaComponent(0.8)
             configured = true
         }
     }
