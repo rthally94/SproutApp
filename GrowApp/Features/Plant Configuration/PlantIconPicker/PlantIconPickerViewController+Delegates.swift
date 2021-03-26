@@ -37,7 +37,7 @@ extension PlantIconPickerViewController: UIImagePickerControllerDelegate, UINavi
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.editedImage] as? UIImage else { return }
-        setPlantIcon(to: Icon.image(image))
+        icon = Icon.image(image)
 
         dismiss(animated: true)
     }

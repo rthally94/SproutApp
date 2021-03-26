@@ -111,8 +111,7 @@ extension PlantConfigurationViewController {
             Item(
                 rowType: .plantIcon(plant.icon),
                 onTap: {
-                    let vc = PlantIconPickerViewController(nibName: nil, bundle: nil)
-                    vc.plant = plant
+                    let vc = PlantIconPickerViewController(plant: plant)
                     vc.delegate = self
                     let nav = UINavigationController(rootViewController: vc)
                     self.navigateTo(nav, modal: true)

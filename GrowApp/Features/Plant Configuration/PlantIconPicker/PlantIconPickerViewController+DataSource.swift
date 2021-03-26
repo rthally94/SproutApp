@@ -21,15 +21,15 @@ extension PlantIconPickerViewController {
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
 
-        dataSource.apply(createDefaultSnapshot())
+        dataSource.apply(createSnapshot())
     }
 
-    func createDefaultSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
+    func createSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
         snapshot.appendSections([.currentImage, .recommended])
         snapshot.appendItems([
-            Item(icon: plant!.icon)
+            Item(icon: icon)
         ], toSection: .currentImage)
 
         snapshot.appendItems([

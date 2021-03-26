@@ -12,23 +12,29 @@ protocol PlantIconPickerDelegate {
 }
 
 class PlantIconPickerViewController: UIViewController {
-
-    var plant: Plant? {
-        didSet {
-            oldIcon = plant?.icon
+    internal var icon: Icon {
+        get {
+            currentIcon
+        }
+        set {
+            if newValue != currentIcon {
+                currentIcon = newValue
+                dataSource.apply(createSnapshot())
+            }
         }
     }
-
-    var oldIcon: Icon?
-
+    
+    private var currentIcon: Icon
     var delegate: PlantIconPickerDelegate?
 
-    func setPlantIcon(to icon: Icon) {
-        if icon != plant?.icon {
-            plant?.icon = icon
-            delegate?.didChangeIcon(to: icon)
-            dataSource.apply(createDefaultSnapshot())
-        }
+    init(plant: Plant) {
+        currentIcon = plant.icon
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     enum Section: Hashable, CaseIterable {
@@ -72,14 +78,11 @@ class PlantIconPickerViewController: UIViewController {
     }
 
     @objc private func dismissPicker() {
-        if let oldIcon = oldIcon {
-            setPlantIcon(to: oldIcon)
-        }
-        
         dismiss(animated: true)
     }
 
     @objc private func saveAndDismiss() {
+        delegate?.didChangeIcon(to: icon)
         dismiss(animated: true)
     }
 }
