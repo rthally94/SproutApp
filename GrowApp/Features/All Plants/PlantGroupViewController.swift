@@ -8,15 +8,11 @@
 import UIKit
 
 class PlantGroupViewController: UIViewController {
-    var model: GrowAppModel?
+    var model: GrowAppModel
     
-    convenience init(model: GrowAppModel) {
-        self.init(nibName: nil, bundle: nil)
+    init(model: GrowAppModel) {
         self.model = model
-    }
-    
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -58,19 +54,17 @@ class PlantGroupViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let model = model {
-            let plants = model.getPlants()
-            
-            var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-            snapshot.appendSections([.plants])
-            
-            let items = plants.sorted(by: { $0.creationDate < $1.creationDate }).map { plant in
-                Item(id: plant.id, icon: plant.icon, title: plant.name, subtitle: "\(plant.tasks.count) tasks")
-            }
-            snapshot.appendItems(items, toSection: .plants)
-            
-            dataSource.apply(snapshot)
+        let plants = model.getPlants()
+        
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.plants])
+        
+        let items = plants.sorted(by: { $0.creationDate < $1.creationDate }).map { plant in
+            Item(id: plant.id, icon: plant.icon, title: plant.name, subtitle: "\(plant.tasks.count) tasks")
         }
+        snapshot.appendItems(items, toSection: .plants)
+        
+        dataSource.apply(snapshot)
     }
     
     func configureHiearchy() {
@@ -86,8 +80,7 @@ class PlantGroupViewController: UIViewController {
     }
     
     @objc func showPlantConfiguration() {
-        let vc = PlantConfigurationViewController()
-        vc.plant = Plant(name: "", type: PlantType.allTypes.first!, tasks: [])
+        let vc = PlantConfigurationViewController(model: model)
         present(vc.wrappedInNavigationController(), animated: true)
     }
 }
@@ -132,8 +125,8 @@ extension PlantGroupViewController {
 
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let item = dataSource.itemIdentifier(for: indexPath), let plant = model?.getPlant(with: item.id) {
-            let vc = PlantDetailViewController()
+        if let item = dataSource.itemIdentifier(for: indexPath), let plant = model.getPlant(with: item.id) {
+            let vc = PlantDetailViewController(model: model)
             vc.plant = plant
             navigationController?.pushViewController(vc, animated: true)
         }

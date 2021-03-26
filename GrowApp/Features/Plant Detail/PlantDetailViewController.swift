@@ -9,11 +9,20 @@ import UIKit
 
 class PlantDetailViewController: UIViewController {
     static let careDateFormatter = RelativeDateFormatter()
-    
+    var model: GrowAppModel
     var plant: Plant? {
         didSet {
             configureSubviews()
         }
+    }
+    
+    init(model: GrowAppModel) {
+        self.model = model
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     enum Section: Hashable, CaseIterable {
@@ -82,8 +91,7 @@ class PlantDetailViewController: UIViewController {
     //MARK: Actions
     @objc private func editPlant() {
         guard let plant = plant else { return }
-        let vc = PlantConfigurationViewController()
-        vc.plant = plant
+        let vc = PlantConfigurationViewController(plant: plant, model: model)
         present(vc.wrappedInNavigationController(), animated: true)
     }
 }

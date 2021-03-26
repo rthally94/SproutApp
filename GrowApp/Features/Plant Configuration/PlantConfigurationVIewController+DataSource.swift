@@ -22,8 +22,8 @@ extension PlantConfigurationViewController {
             if case let .textField(_, value, placeholder) = item.rowType {
                 cell.placeholder = placeholder
                 cell.value = value
-                cell.onChange = { newValue in
-                    print(newValue)
+                cell.onChange = { [weak self] newValue in
+                    self?._plant.name = newValue
                 }
             }
         }
@@ -112,7 +112,7 @@ extension PlantConfigurationViewController {
                 rowType: .plantIcon(Icon.symbol(name: "exclamationmark.triangle.fill", foregroundColor: nil, backgroundColor: .systemGray)),
                 onTap: {
                     let vc = PlantIconPickerViewController(nibName: nil, bundle: nil)
-                    vc.plant = self.plant
+                    vc.plant = self._plant
                     vc.delegate = self
                     let nav = UINavigationController(rootViewController: vc)
                     self.navigateTo(nav, modal: true)
@@ -165,7 +165,7 @@ extension PlantConfigurationViewController {
                 onTap: nil
             ),
             Item(
-                rowType: .listValue(image: nil, text: "Plant Type", secondaryText: plant.type.scientificName),
+                rowType: .listValue(image: nil, text: "Plant Type", secondaryText: plant.type.commonName),
                 onTap: {
                     let vc = PlantTypeViewController(nibName: nil, bundle: nil)
                     vc.selectedPlantType = plant.type
@@ -225,11 +225,7 @@ extension PlantConfigurationViewController {
         // initial data
         let snapshot: NSDiffableDataSourceSnapshot<Section, Item>
 
-        if let plant = plant {
-            snapshot = makeSnapshot(from: plant)
-        } else {
-            snapshot = makeDefaultSnapshot()
-        }
+        snapshot = makeSnapshot(from: _plant)
 
         dataSource.apply(snapshot, animatingDifferences: false)
     }
