@@ -56,7 +56,6 @@ extension PlantTypeViewController {
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: makeLayout())
 
         configureDataSource()
-        collectionView.dataSource = dataSource
         collectionView.delegate = self
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -66,7 +65,7 @@ extension PlantTypeViewController {
     }
 
     internal func makeLayout() -> UICollectionViewLayout {
-        var config = UICollectionLayoutListConfiguration(appearance: .grouped)
+        var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         config.headerMode = .supplementary
 
         return UICollectionViewCompositionalLayout.list(using: config)
@@ -82,11 +81,8 @@ extension PlantTypeViewController {
             configuration.secondaryText = item.scientificName
 
             if item.isSelected {
-                let checkmarkImage = UIImage(systemName: "checkmark.circle")
-                let accessoryView = UIImageView(image: checkmarkImage)
-                let checkmarkAccessory = UICellAccessory.customView(configuration: .init(customView: accessoryView, placement: .trailing(displayed: .always, at: {_ in 0})))
                 cell.accessories = [
-                    checkmarkAccessory
+                    .checkmark()
                 ]
             } else {
                 cell.accessories = []
@@ -96,12 +92,12 @@ extension PlantTypeViewController {
         }
     }
 
-    func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<CollectionViewHeader> {
-        return UICollectionView.SupplementaryRegistration<CollectionViewHeader>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
-
+    func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
+        return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
             let section = Section.allCases[indexPath.section]
-
-            supplementaryView.textLabel.text = section.description
+            var config = UIListContentConfiguration.largeGroupedHeader()
+            config.text = section.description
+            supplementaryView.contentConfiguration = config
         }
     }
 

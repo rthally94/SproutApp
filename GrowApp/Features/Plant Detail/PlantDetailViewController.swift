@@ -76,6 +76,15 @@ class PlantDetailViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Plant Details"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPlant))
+    }
+    
+    //MARK: Actions
+    @objc private func editPlant() {
+        guard let plant = plant else { return }
+        let vc = PlantConfigurationViewController()
+        vc.plant = plant
+        present(vc.wrappedInNavigationController(), animated: true)
     }
 }
 
@@ -135,10 +144,12 @@ extension PlantDetailViewController {
         
         snapshot.appendSections(Section.allCases)
         
+        // Plant Info Header
         snapshot.appendItems([
             Item(icon: strongPlant.icon, text: strongPlant.name, secondaryText: strongPlant.type.commonName)
         ], toSection: .plantInfo)
         
+        // Plant Care Summary
         let tasksToday = plant?.todaysTasks()
         let lateTasks = plant?.lateTasks()
         
@@ -147,20 +158,20 @@ extension PlantDetailViewController {
             Item(icon: .symbol(name: "exclamationmark.circle", foregroundColor: .systemYellow , backgroundColor: .systemFill), text: "Late", secondaryText: "\(lateTasks?.count ?? 0) tasks")
         ], toSection: .summary)
         
-        if let nextTaskDate = strongPlant.getDateOfNextTask() {
-            let nextTasks: [Item] = strongPlant.tasksNeedingCare(on: nextTaskDate).map { task in
-                let lastCareString: String
-                if let lastCareDate = task.lastCareDate {
-                    lastCareString = "Last: " + PlantDetailViewController.careDateFormatter.string(from: lastCareDate)
-                } else {
-                    lastCareString = "Last: Never"
-                }
-                return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: lastCareString)
+        // Up Next
+        let nextTasks: [Item] = strongPlant.nextTasks().map { task in
+            let lastCareString: String
+            if let lastCareDate = task.lastCareDate {
+                lastCareString = "Last: " + PlantDetailViewController.careDateFormatter.string(from: lastCareDate)
+            } else {
+                lastCareString = "Last: Never"
             }
-            
-            snapshot.appendItems(nextTasks, toSection: .upNext)
+            return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: lastCareString)
         }
         
+        snapshot.appendItems(nextTasks, toSection: .upNext)
+        
+        // All Tasks
         let items: [Item] = strongPlant.tasks.map { task in
             return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: task.interval.description)
         }

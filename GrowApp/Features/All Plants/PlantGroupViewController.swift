@@ -52,7 +52,7 @@ class PlantGroupViewController: UIViewController {
         super.viewDidLoad()
         
         title = "Your Plants"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(showPlantConfiguration))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showPlantConfiguration))
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -87,7 +87,7 @@ class PlantGroupViewController: UIViewController {
     
     @objc func showPlantConfiguration() {
         let vc = PlantConfigurationViewController()
-        
+        vc.plant = Plant(name: "", type: PlantType.allTypes.first!, tasks: [])
         present(vc.wrappedInNavigationController(), animated: true)
     }
 }

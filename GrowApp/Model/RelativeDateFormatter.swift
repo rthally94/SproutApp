@@ -25,11 +25,11 @@ class RelativeDateFormatter: Formatter {
     }()
     
     func string(from date: Date) -> String {
-        let interval = Calendar.current.dateComponents([.day], from: date, to: Date()).day!
+        let interval = Calendar.current.dateComponents([.day], from: Date(), to: date).day!
         if interval >= -1 && interval <= 1 {
             return RelativeDateFormatter.dateFormatter.string(from: date)
         } else {
-            return RelativeDateFormatter.relativeDateTimeFormatter.localizedString(for: Date(), relativeTo: date)
+            return RelativeDateFormatter.relativeDateTimeFormatter.localizedString(for: date, relativeTo: Date())
         }
     }
 }

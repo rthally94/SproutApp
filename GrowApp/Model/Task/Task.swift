@@ -58,7 +58,7 @@ extension Task {
 }
 
 extension Task {
-    
+    //MARK: Actions
     func logCompletedCare(on date: Date) {
         logCare(as: .complete, on: date)
     }
@@ -72,6 +72,10 @@ extension Task {
         logs.append(log)
     }
 
+}
+
+extension Task {
+    //MARK: Convenence Methods
     var lastCareDate: Date? {
         if let lastLog = logs.last {
             return Calendar.current.startOfDay(for: lastLog.date)
@@ -199,6 +203,14 @@ extension Task {
             case let .monthly(days):
                 let inputDay = Calendar.current.component(.day, from: date)
                 return days.contains(inputDay)
+        }
+    }
+    
+    func isLate() -> Bool {
+        if let lastCareDate = lastCareDate, let nextCareDate = nextCareDate(after: lastCareDate), nextCareDate < Calendar.current.startOfDay(for: Date()) {
+            return true
+        } else {
+            return false
         }
     }
 }

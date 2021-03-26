@@ -67,8 +67,7 @@ extension Plant {
     
     func todaysTasks() -> [Task] {
         tasks.compactMap { task in
-            if let lastCareDate = task.lastCareDate, let nextCareDate = task.nextCareDate(after: lastCareDate), nextCareDate < Calendar.current.startOfDay(for: Date()) {
-                // Late Tasks
+            if task.isLate() {
                 return task
             } else if task.isDateInInterval(Date()) {
                 // Today's Tasks
@@ -81,11 +80,27 @@ extension Plant {
     
     func lateTasks() -> [Task] {
         tasks.compactMap { task in
-            if let lastCareDate = task.lastCareDate, let nextCareDate = task.nextCareDate(after: lastCareDate), nextCareDate < Calendar.current.startOfDay(for: Date()) {
+            if task.isLate() {
                 return task
             } else {
                 return nil
             }
+        }
+    }
+    
+    func nextTasks() -> [Task] {
+        let late = Set(lateTasks())
+        let today = Set(todaysTasks())
+        
+        if !late.isEmpty || !today.isEmpty {
+            let filteredLate = late.subtracting(today)
+            let filteredLateSorted = filteredLate.sorted(by: { $0.type.description < $1.type.description })
+            let todaySorted = today.sorted(by: { $0.type.description < $1.type.description })
+            return filteredLateSorted + todaySorted
+        } else if let nextTaskDate = getDateOfNextTask() {
+            return tasksNeedingCare(on: nextTaskDate)
+        } else {
+            return []
         }
     }
 }

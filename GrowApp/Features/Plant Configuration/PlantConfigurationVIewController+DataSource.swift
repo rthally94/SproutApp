@@ -69,17 +69,14 @@ extension PlantConfigurationViewController {
         }
     }
 
-    func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<CollectionViewHeader> {
-        return UICollectionView.SupplementaryRegistration<CollectionViewHeader>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
-
+    func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
+        return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
+            var config = UIListContentConfiguration.largeGroupedHeader()
             let section = Section.allCases[indexPath.section]
 
-            supplementaryView.setTitle(section.description)
-
-            if section == .care {
-                supplementaryView.accessoryButton.setImage(UIImage(systemName: "plus"), for: .normal)
-                supplementaryView.onTap = { print("🍻") }
-            }
+            config.text = section.description
+            
+            supplementaryView.contentConfiguration = config
         }
     }
 

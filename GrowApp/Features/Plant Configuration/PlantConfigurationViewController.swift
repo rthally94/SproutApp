@@ -8,17 +8,33 @@
 import UIKit
 
 class PlantConfigurationViewController: UIViewController {
-    var plant: Plant? = nil {
+    var model: GrowAppModel
+    private var _plantIsEditing = false
+    private var _plant: Plant {
         didSet {
             guard dataSource != nil else { return }
-            if let strongPlant = plant {
-                dataSource.apply(makeSnapshot(from: strongPlant))
-            } else {
-                dataSource.apply(makeDefaultSnapshot())
-            }
+            dataSource.apply(makeSnapshot(from: _plant))
         }
     }
-
+    
+    init(model: GrowAppModel) {
+        self.model = model
+        super.init(nibName: nil, bundle: nil)
+        
+        self._plant = Plant(name: "", type: PlantType.allTypes[0], tasks: [])
+        _plantIsEditing = false
+    }
+    
+    init(plant: Plant, model: GrowAppModel) {
+        self.model = model
+        _plant = plant
+        _plantIsEditing = true
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // Data Source View Models
     enum Section: Hashable, CaseIterable, CustomStringConvertible {
         case image
@@ -107,16 +123,20 @@ class PlantConfigurationViewController: UIViewController {
             collectionView.deselectItem(at: selectedIndex, animated: false)
         }
     }
+    
+    @objc private func applyChanges() {
+        
+    }
+    
+    @objc private func discardChanges() {
+        
+    }
 }
 
 extension PlantConfigurationViewController {
     private func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout() { sectionIndex, layoutEnvironment in
             let sectionInfo = Section.allCases[sectionIndex]
-
-            var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-            config.headerMode = sectionInfo.headerMode
-            config.footerMode = sectionInfo.footerMode
 
             switch sectionInfo {
                 case .image:
@@ -136,6 +156,10 @@ extension PlantConfigurationViewController {
                     section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0 )
                     return section
                 default:
+                    var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+                    config.headerMode = sectionInfo.headerMode
+                    config.footerMode = sectionInfo.footerMode
+                    
                     return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
             }
         }
