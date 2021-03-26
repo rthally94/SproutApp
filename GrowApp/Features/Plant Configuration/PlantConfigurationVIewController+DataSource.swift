@@ -102,47 +102,7 @@ extension PlantConfigurationViewController {
 
 // MARK: - DataSource Configuration
 extension PlantConfigurationViewController {
-    func makeDefaultSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-
-        snapshot.appendSections(Section.allCases)
-
-        snapshot.appendItems([
-            Item(
-                rowType: .plantIcon(Icon.symbol(name: "exclamationmark.triangle.fill", foregroundColor: nil, backgroundColor: .systemGray)),
-                onTap: {
-                    let vc = PlantIconPickerViewController(nibName: nil, bundle: nil)
-                    vc.plant = self._plant
-                    vc.delegate = self
-                    let nav = UINavigationController(rootViewController: vc)
-                    self.navigateTo(nav, modal: true)
-                })
-        ], toSection: .image)
-
-        snapshot.appendItems([
-            Item(
-                rowType: .textField(image: UIImage(systemName: "leaf.fill"), value: nil, placeholder: "Plant Name"),
-                onTap: nil
-            ),
-            Item(
-                rowType: .listValue(image: nil, text: "Plant Type", secondaryText: nil),
-                onTap: {
-                    let vc = PlantTypeViewController(nibName: nil, bundle: nil)
-                    vc.selectedPlantType = nil
-                    vc.delegate = self
-                    self.navigateTo(vc)
-                }
-            )
-        ], toSection: .plantInfo)
-
-        let tasks: [Item] = []
-            
-        snapshot.appendItems(tasks, toSection: .care)
-
-        return snapshot
-    }
-
-    func makeSnapshot(from plant: Plant) -> NSDiffableDataSourceSnapshot<Section, Item> {
+     func makeSnapshot(from plant: Plant) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
         snapshot.appendSections(Section.allCases)

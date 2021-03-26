@@ -130,7 +130,7 @@ extension PlantDetailViewController {
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 10, bottom: 0, trailing: 20)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 20)
                 return section
             case .upNext, .careInfo:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -161,9 +161,12 @@ extension PlantDetailViewController {
         let tasksToday = plant?.todaysTasks()
         let lateTasks = plant?.lateTasks()
         
+        let todayColor = tasksToday?.isEmpty ?? true ? UIColor.systemGreen.withAlphaComponent(0.5) : UIColor.systemGreen
+        let lateColor = lateTasks?.isEmpty ?? true ? UIColor.systemYellow.withAlphaComponent(0.5) : UIColor.yellow
+        
         snapshot.appendItems([
-            Item(icon: .symbol(name: "calendar.badge.clock", foregroundColor: .systemGreen, backgroundColor: .systemFill), text: "Today", secondaryText: "\(tasksToday?.count ?? 0) tasks"),
-            Item(icon: .symbol(name: "exclamationmark.circle", foregroundColor: .systemYellow , backgroundColor: .systemFill), text: "Late", secondaryText: "\(lateTasks?.count ?? 0) tasks")
+            Item(icon: .symbol(name: "calendar.badge.clock", foregroundColor: todayColor, backgroundColor: .systemFill), text: "Today", secondaryText: "\(tasksToday?.count ?? 0) tasks"),
+            Item(icon: .symbol(name: "exclamationmark.circle", foregroundColor: lateColor , backgroundColor: .systemFill), text: "Late", secondaryText: "\(lateTasks?.count ?? 0) tasks")
         ], toSection: .summary)
         
         // Up Next
@@ -215,6 +218,7 @@ extension PlantDetailViewController {
             
             cell.contentConfiguration = config
             
+            cell.contentView.backgroundColor = .secondarySystemGroupedBackground
             cell.layer.cornerRadius = 10
             cell.clipsToBounds = true
         }
