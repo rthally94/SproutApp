@@ -34,19 +34,19 @@ extension PlantIconPickerViewController {
 
         snapshot.appendItems([
             Item(
-                icon: .symbol(name: "camera", foregroundColor: .systemBlue, backgroundColor: .secondarySystemGroupedBackground),
+                icon: .symbol(name: "camera", tintColor: .systemBlue),
                 onTap: {
                     self.showImagePicker(preferredType: .camera)
                 }
             ),
             Item(
-                icon: .symbol(name: "photo.on.rectangle", foregroundColor: .systemBlue, backgroundColor: .secondarySystemGroupedBackground),
+                icon: .symbol(name: "photo.on.rectangle", tintColor: .systemBlue),
                 onTap: {
                     self.showImagePicker(preferredType: .photoLibrary)
                 }
             ),
-            Item(icon: .symbol(name: "face.smiling", foregroundColor: .systemBlue, backgroundColor: .secondarySystemGroupedBackground)),
-            Item(icon: .symbol(name: "pencil", foregroundColor: .systemBlue, backgroundColor: .secondarySystemGroupedBackground)),
+            Item(icon: .symbol(name: "face.smiling", tintColor: .systemBlue)),
+            Item(icon: .symbol(name: "pencil", tintColor: .systemBlue)),
         ], toSection: .recommended)
 
         return snapshot

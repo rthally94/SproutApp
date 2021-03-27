@@ -52,7 +52,7 @@ extension PlantConfigurationViewController {
             var configuration = cell.defaultContentConfiguration()
 
             if case let .list(icon, text, secondaryText) = item.rowType {
-                if case let .symbol(symbolName, _, _) = icon {
+                if case let .symbol(symbolName, _) = icon {
                     configuration.image = UIImage(systemName: symbolName)
                 } else if case let .image(image) = icon {
                     configuration.image = image

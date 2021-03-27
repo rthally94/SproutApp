@@ -24,7 +24,7 @@ class Plant {
         self.creationDate = creationDate
         self.name = name
         self.type = type
-        self.icon = icon ?? .symbol(name: "leaf.fill", foregroundColor: nil, backgroundColor: .systemBlue)
+        self.icon = icon ?? .symbol(name: "leaf.fill", tintColor: .systemBlue)
         self.tasks = tasks
         
         tasks.forEach { task in

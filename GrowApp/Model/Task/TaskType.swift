@@ -19,15 +19,15 @@ enum TaskType: String, Hashable, CaseIterable, CustomStringConvertible {
 
     var icon: Icon? {
         switch self {
-        case .watering: return .symbol(name: "drop.fill", foregroundColor: nil, backgroundColor: .systemBlue)
-        case .pruning: return .symbol(name: "scissors", foregroundColor: nil, backgroundColor: .systemGreen)
-        case .fertilizing: return .symbol(name: "leaf.fill", foregroundColor: nil, backgroundColor: .systemOrange)
-        case .potting: return .symbol(name: "rectangle.roundedbottom.fill", foregroundColor: nil, backgroundColor: .systemRed)
+        case .watering: return .symbol(name: "drop.fill", tintColor: UIColor(named: "ghBlue"))
+        case .pruning: return .symbol(name: "scissors", tintColor: UIColor(named: "ghGreen"))
+        case .fertilizing: return .symbol(name: "leaf.fill", tintColor: UIColor(named: "ghOrange"))
+        case .potting: return .symbol(name: "rectangle.roundedbottom.fill", tintColor: UIColor(named: "ghRed"))
         }
     }
 
     var accentColor: UIColor? {
-        if let icon = self.icon, case let .symbol(_, _, color) = icon {
+        if let icon = self.icon, case let .symbol(_, color) = icon {
             return color
         } else {
             return nil

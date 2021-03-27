@@ -9,21 +9,21 @@ import UIKit
 
 enum Icon: Hashable {
     case image(UIImage?)
-    case symbol(name: String, foregroundColor: UIColor?, backgroundColor: UIColor?)
+    case symbol(name: String, tintColor: UIColor?)
     
     var image: UIImage? {
         switch self {
         case let .image(image):
             return image
-        case let .symbol(name, foregroundColor, _):
-            return UIImage(systemName: name)?.withTintColor(foregroundColor ?? .label)
+        case let .symbol(name, tintColor):
+            return UIImage(systemName: name)?.withTintColor(tintColor ?? .label)
         }
     }
     
-    var foregroundColor: UIColor? {
+    var tintColor: UIColor? {
         switch self {
-        case .symbol(_, let foregroundColor, _):
-            return foregroundColor
+        case .symbol(_, let tintColor):
+            return tintColor
         default:
             return nil
         }

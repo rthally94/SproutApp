@@ -11,7 +11,7 @@ class RelativeDateFormatter: Formatter {
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeStyle = .none
-        formatter.dateStyle = .full
+        formatter.dateStyle = .medium
         formatter.doesRelativeDateFormatting = true
         return formatter
     }()
@@ -25,11 +25,12 @@ class RelativeDateFormatter: Formatter {
     }()
     
     func string(from date: Date) -> String {
-        let interval = Calendar.current.dateComponents([.day], from: Date(), to: date).day!
+        let today = Calendar.current.startOfDay(for: Date())
+        let interval = Calendar.current.dateComponents([.day], from: today, to: date).day!
         if interval >= -1 && interval <= 1 {
             return RelativeDateFormatter.dateFormatter.string(from: date)
         } else {
-            return RelativeDateFormatter.relativeDateTimeFormatter.localizedString(for: date, relativeTo: Date())
+            return RelativeDateFormatter.relativeDateTimeFormatter.localizedString(for: date, relativeTo: today)
         }
     }
 }

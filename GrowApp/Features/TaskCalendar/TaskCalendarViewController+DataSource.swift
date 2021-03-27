@@ -73,7 +73,7 @@ extension TaskCalendarViewController {
                 config.textProperties.color = task.accentColor ?? .label
                 config.imageProperties.tintColor = task.accentColor
 
-                if case let .symbol(symbolName, _, _) = task.icon {
+                if case let .symbol(symbolName, _) = task.icon {
                     config.image = UIImage(systemName: symbolName)
                 } else if case let .image(image) = task.icon {
                     config.image = image

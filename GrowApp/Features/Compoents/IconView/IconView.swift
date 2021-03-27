@@ -45,7 +45,7 @@ struct IconConfiguration: Hashable {
     
     var symbolImage: UIImage? {
         switch icon {
-        case let .symbol(symbolName, _, _):
+        case let .symbol(symbolName, _):
             return UIImage(systemName: symbolName)
         default:
             return nil
@@ -53,24 +53,13 @@ struct IconConfiguration: Hashable {
     }
     
     var iconColor: UIColor {
-        return UIColor.labelColor(against: backgroundColor)
+        return UIColor.labelColor(against: tintColor)
     }
     
     var tintColor: UIColor? {
         switch icon {
-        case let .symbol(_, foregroundColor, _) where foregroundColor != nil:
-            return foregroundColor
-        case let .symbol(_, _, backgroundColor):
-            return backgroundColor
-        default:
-            return nil
-        }
-    }
-    
-    var backgroundColor: UIColor? {
-        switch icon {
-        case let .symbol(_, _, backgroundColor):
-            return backgroundColor
+        case let .symbol(_, tintColor):
+            return tintColor
         default:
             return nil
         }
@@ -78,7 +67,7 @@ struct IconConfiguration: Hashable {
     
     var gradientBackground: CAGradientLayer {
         let gradient = CAGradientLayer()
-        let color = backgroundColor ?? .gray
+        let color = tintColor ?? .gray
         gradient.colors = [color.cgColor, color.cgColor]
         return gradient
     }
@@ -86,7 +75,7 @@ struct IconConfiguration: Hashable {
 
 class IconView: UIView {
     func defaultConfiguration() -> IconConfiguration {
-        let icon: Icon = .symbol(name: "exclamationmark.triangle", foregroundColor: nil, backgroundColor: .systemGray)
+        let icon: Icon = .symbol(name: "exclamationmark.triangle", tintColor: .systemGray)
         return IconConfiguration(icon: icon, cornerMode: .circle)
     }
     

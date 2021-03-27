@@ -165,8 +165,8 @@ extension PlantDetailViewController {
         let lateColor = lateTasks?.isEmpty ?? true ? UIColor.systemYellow.withAlphaComponent(0.5) : UIColor.yellow
         
         snapshot.appendItems([
-            Item(icon: .symbol(name: "calendar.badge.clock", foregroundColor: todayColor, backgroundColor: .systemFill), text: "Today", secondaryText: "\(tasksToday?.count ?? 0) tasks"),
-            Item(icon: .symbol(name: "exclamationmark.circle", foregroundColor: lateColor , backgroundColor: .systemFill), text: "Late", secondaryText: "\(lateTasks?.count ?? 0) tasks")
+            Item(icon: .symbol(name: "calendar.badge.clock", tintColor: todayColor), text: "Today", secondaryText: "\(tasksToday?.count ?? 0) tasks"),
+            Item(icon: .symbol(name: "exclamationmark.circle", tintColor: lateColor), text: "Late", secondaryText: "\(lateTasks?.count ?? 0) tasks")
         ], toSection: .summary)
         
         // Up Next
@@ -213,8 +213,8 @@ extension PlantDetailViewController {
             config.text = item.text
             config.secondaryText = item.secondaryText
             
-            config.imageProperties.tintColor = item.icon?.foregroundColor
-            config.secondaryTextProperties.color = item.icon?.foregroundColor ?? config.textProperties.color
+            config.imageProperties.tintColor = item.icon?.tintColor
+            config.secondaryTextProperties.color = item.icon?.tintColor ?? config.textProperties.color
             
             cell.contentConfiguration = config
             
@@ -229,6 +229,8 @@ extension PlantDetailViewController {
             var config = UIListContentConfiguration.subtitleCell()
             
             config.image = item.icon?.image
+            config.imageProperties.tintColor = item.icon?.tintColor
+            
             config.text = item.text
             config.secondaryText = item.secondaryText
             
@@ -242,8 +244,9 @@ extension PlantDetailViewController {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
             var config = UIListContentConfiguration.subtitleCell()
             
-            if case let .symbol(symbolName, _, _) = item.icon {
+            if case let .symbol(symbolName, tintColor) = item.icon {
                 config.image = UIImage(systemName: symbolName)
+                config.imageProperties.tintColor = tintColor
             } else if case let .image(image) = item.icon {
                 config.image = image
             }
