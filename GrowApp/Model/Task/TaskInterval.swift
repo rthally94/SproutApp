@@ -27,25 +27,25 @@ enum TaskInterval: CustomStringConvertible, Hashable {
     var frequency: String {
         switch self {
         case .none:
-            return "Never"
+            return "never"
         case .daily:
-            return "Daily"
+            return "every day"
         case .weekly:
-            return "Weekly"
+            return "every week"
         case .monthly:
-            return "Monthly"
+            return "every month"
         }
     }
     
-    var value: String {
+    var value: String? {
         switch self {
         case .none:
-            return "Never"
+            return "no interval"
         case let .daily(interval):
             if interval > 1 {
-                return "\(interval) days"
+                return "every \(interval) days"
             } else {
-                return "Every day"
+                return nil
             }
         case let .weekly(weekdays):
             let weekdayStrings: [String] = weekdays.sorted().compactMap {
@@ -57,11 +57,7 @@ enum TaskInterval: CustomStringConvertible, Hashable {
                 }
             }
             
-            if let weekdayList = TaskInterval.listFormatter.string(from: weekdayStrings) {
-                return weekdayList
-            } else {
-                return "Every Week"
-            }
+            return weekdayStrings.joined(separator: ", ")
             
         case let .monthly(days):
             let dayStrings: [String] = days.sorted().compactMap {
@@ -69,45 +65,30 @@ enum TaskInterval: CustomStringConvertible, Hashable {
                 return TaskInterval.ordinalNumberFormatter.string(from: number)
             }
             
-            if let dayList = TaskInterval.listFormatter.string(from: dayStrings) {
-                return dayList
-            } else {
-                return "Ever Month"
-            }
+            return dayStrings.joined(separator: ", ")
         }
     }
     
     var description: String {
+        let valueString = value?.sentenceCase()
+        let frequencyString = frequency.sentenceCase()
+        
         switch self {
         case .none:
-            return frequency
-        case let .daily(days):
-            return "Every \(days) days"
-        case .weekly(let weekdays):
-            let weekdayStrings: [String] = weekdays.sorted().compactMap {
-                let weekdayIndex = $0 - 1
-                if weekdayIndex >= Calendar.current.shortWeekdaySymbols.startIndex && weekdayIndex < Calendar.current.shortWeekdaySymbols.endIndex {
-                    return Calendar.current.shortWeekdaySymbols[weekdayIndex]
-                } else {
-                    return nil
-                }
-            }
-            
-            if let weekdayList = TaskInterval.listFormatter.string(from: weekdayStrings) {
-                return "Every Week on \(weekdayList)"
+            return valueString ?? frequencyString
+        case .daily:
+            return valueString ?? frequencyString
+        case .weekly:
+            if let weekdayString = valueString {
+                return "\(frequencyString) • \(weekdayString)"
             } else {
-                return "Every Week"
+                return frequencyString
             }
-        case .monthly(let days):
-            let dayStrings: [String] = days.sorted().compactMap {
-                let number = NSNumber(value: $0)
-                return TaskInterval.ordinalNumberFormatter.string(from: number)
-            }
-            
-            if let dayList = TaskInterval.listFormatter.string(from: dayStrings) {
-                return "Every Month on the \(dayList)"
+        case .monthly:
+            if let dayString = valueString {
+                return "\(frequencyString) • \(dayString)"
             } else {
-                return "Ever Month"
+                return frequencyString
             }
         }
     }
