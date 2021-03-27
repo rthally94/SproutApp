@@ -65,12 +65,16 @@ struct IconConfiguration: Hashable {
         }
     }
     
+    var iconColor: UIColor {
+        return UIColor.labelColor(against: backgroundColor)
+    }
+    
     var tintColor: UIColor? {
         switch icon {
         case let .symbol(_, foregroundColor, _) where foregroundColor != nil:
             return foregroundColor
         case let .symbol(_, _, backgroundColor):
-            return backgroundColor?.withAlphaComponent(1.0)
+            return backgroundColor
         default:
             return nil
         }
@@ -79,10 +83,17 @@ struct IconConfiguration: Hashable {
     var backgroundColor: UIColor? {
         switch icon {
         case let .symbol(_, _, backgroundColor):
-            return backgroundColor?.withAlphaComponent(0.5)
+            return backgroundColor
         default:
             return nil
         }
+    }
+    
+    var gradientBackground: CAGradientLayer {
+        let gradient = CAGradientLayer()
+        let color = UIColor.systemBlue
+        gradient.colors = [color.cgColor, color.withAlphaComponent(0.5).cgColor]
+        return gradient
     }
     
     func imageInsets(rect: CGRect) -> UIEdgeInsets {
@@ -166,8 +177,10 @@ class IconView: UIView {
         }
         
         // Colors
-        tintColor = config.tintColor
-        backgroundColor = config.backgroundColor
+        tintColor = config.iconColor
+        let gradient = config.gradientBackground
+        gradient.frame = layer.bounds
+        layer.insertSublayer(gradient, at: 0)
         
         appliedIconConfiguration = config
         appliedBounds = bounds

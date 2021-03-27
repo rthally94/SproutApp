@@ -42,7 +42,7 @@ class PlantConfigurationViewController: UIViewController {
             switch self {
             case .image: return "Image"
             case .plantInfo: return "General Information"
-            case .care: return "Care Reminders"
+            case .care: return "Care Details"
             }
         }
         
@@ -113,7 +113,7 @@ class PlantConfigurationViewController: UIViewController {
         configureDataSource()
         
         title = _plantIsEditing ? "Edit Plant" : "New Plant"
-        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .close, target: self, action: #selector(discardChanges))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(discardChanges))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(applyChanges))
     }
     

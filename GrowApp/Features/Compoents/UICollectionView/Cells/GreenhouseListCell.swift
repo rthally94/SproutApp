@@ -53,7 +53,7 @@ class GreenHouseListCell: UICollectionViewListCell {
 }
 
 class TaskCalendarListCell: GreenHouseListCell {
-    static let dateFormatter: DateFormatter = {
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         
         return formatter
@@ -63,6 +63,7 @@ class TaskCalendarListCell: GreenHouseListCell {
     private lazy var listContentView = UIListContentView(configuration: defaultListContentConfiguration())
     
     private lazy var plantIconView = IconView()
+    
     private var customViewConstraints: (plantIconLeading: NSLayoutConstraint, plantIconWidth: NSLayoutConstraint, plantIconHeight: NSLayoutConstraint, listContentTop: NSLayoutConstraint)?
     
     private func setupViewsIfNeeded() {
@@ -71,6 +72,7 @@ class TaskCalendarListCell: GreenHouseListCell {
         
         contentView.addSubview(listContentView)
         contentView.addSubview(plantIconView)
+        
         listContentView.translatesAutoresizingMaskIntoConstraints = false
         plantIconView.translatesAutoresizingMaskIntoConstraints = false
         

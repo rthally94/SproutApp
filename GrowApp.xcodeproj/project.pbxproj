@@ -20,7 +20,7 @@
 		FB21B71225B1E61100D02384 /* Plant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B71125B1E61100D02384 /* Plant.swift */; };
 		FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */; };
 		FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348425B4C2AD00CCE6BC /* TaskCalendarViewController.swift */; };
-		FB5F348925B63E6900CCE6BC /* TimelineCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* TimelineCell.swift */; };
+		FB5F348925B63E6900CCE6BC /* GreenhouseListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */; };
 		FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348C25B6411F00CCE6BC /* DividerView.swift */; };
 		FB5F349125B7266A00CCE6BC /* RoundedRectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */; };
 		FB5F349725B79BEC00CCE6BC /* LargeHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */; };
@@ -94,7 +94,7 @@
 		FB21B71125B1E61100D02384 /* Plant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plant.swift; sourceTree = "<group>"; };
 		FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIListContentConfiguration+Extension.swift"; sourceTree = "<group>"; };
 		FB5F348425B4C2AD00CCE6BC /* TaskCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCalendarViewController.swift; sourceTree = "<group>"; };
-		FB5F348825B63E6900CCE6BC /* TimelineCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineCell.swift; sourceTree = "<group>"; };
+		FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenhouseListCell.swift; sourceTree = "<group>"; };
 		FB5F348C25B6411F00CCE6BC /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectContainer.swift; sourceTree = "<group>"; };
 		FB5F349625B79BEC00CCE6BC /* LargeHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeHeader.swift; sourceTree = "<group>"; };
@@ -230,7 +230,7 @@
 		FB24CEFE26027D87002D14DF /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				FB5F348825B63E6900CCE6BC /* TimelineCell.swift */,
+				FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -565,7 +565,7 @@
 				FB21B6FC25B1E5CC00D02384 /* ViewController.swift in Sources */,
 				FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */,
 				FBC7333425E478D20048999C /* CameraOverlayView.swift in Sources */,
-				FB5F348925B63E6900CCE6BC /* TimelineCell.swift in Sources */,
+				FB5F348925B63E6900CCE6BC /* GreenhouseListCell.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
 				FB21B71225B1E61100D02384 /* Plant.swift in Sources */,
 				FB0A9F2B25DACF450084AED8 /* LogEntry.swift in Sources */,

@@ -63,6 +63,8 @@ extension PlantConfigurationViewController {
 
             if item.onTap != nil {
                 cell.accessories = [.disclosureIndicator()]
+            } else if Section.allCases[indexPath.section] == .care {
+                cell.accessories = [ .label(text: "Weekly", displayed: .whenNotEditing, options: .init(isHidden: false)), .disclosureIndicator() ]
             }
 
             cell.contentConfiguration = configuration
@@ -136,7 +138,7 @@ extension PlantConfigurationViewController {
 
         let tasks: [Item] = plant.tasks.map {
             Item(
-                rowType: .list(icon: $0.type.icon, text: $0.type.description, secondaryText: $0.interval.description),
+                rowType: .list(icon: $0.type.icon, text: $0.type.description, secondaryText: $0.careInfo.description),
                 onTap: nil
             )
         }
