@@ -23,15 +23,6 @@ struct IconConfiguration: Hashable {
     var icon: Icon?
     var cornerMode: CornerStyle?
     
-    var scaleMode: ScaleMode {
-        switch icon {
-        case .symbol:
-            return .padded(multiplier: 0.6, points: 0)
-        default:
-            return .full
-        }
-    }
-    
     func cornerRadius(rect: CGRect) -> CGFloat {
         switch cornerMode {
         case .circle:
@@ -45,8 +36,6 @@ struct IconConfiguration: Hashable {
     
     var image: UIImage? {
         switch icon {
-        case let .symbol(symbolName, _, _):
-            return UIImage(systemName: symbolName)
         case let .image(image):
             return image
         default:
@@ -54,14 +43,12 @@ struct IconConfiguration: Hashable {
         }
     }
     
-    var imageContentMode: UIView.ContentMode {
+    var symbolImage: UIImage? {
         switch icon {
-        case .symbol:
-            return .scaleAspectFit
-        case .image:
-            return .scaleAspectFill
+        case let .symbol(symbolName, _, _):
+            return UIImage(systemName: symbolName)
         default:
-            return .center
+            return nil
         }
     }
     
@@ -95,18 +82,6 @@ struct IconConfiguration: Hashable {
         gradient.colors = [color.cgColor, color.cgColor]
         return gradient
     }
-    
-    func imageInsets(rect: CGRect) -> UIEdgeInsets {
-        switch scaleMode {
-        case let .padded(multiplier, _):
-            let widthInset = (rect.width * multiplier) / 2
-            let heightInset = (rect.height * multiplier) / 2
-            return UIEdgeInsets(top: -heightInset, left: -widthInset, bottom: -heightInset, right: -widthInset)
-        default:
-            return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-            
-        }
-    }
 }
 
 class IconView: UIView {
@@ -124,10 +99,13 @@ class IconView: UIView {
     
     private var appliedBounds: CGRect?
     
-    private lazy var fullConstraint = imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0)
-    private lazy var scaledConstraint = imageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.6)
-        
-    lazy var imageView = UIImageView()
+    private lazy var imageIconView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        return imageView
+    }()
+    
+    private lazy var symbolIconView = SymbolIconView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -141,19 +119,29 @@ class IconView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-            
+        
         configureView()
     }
     
     func configureHiearchy() {
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(imageView)
+        symbolIconView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(symbolIconView)
         
         NSLayoutConstraint.activate([
-            fullConstraint,
-            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor),
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            symbolIconView.widthAnchor.constraint(equalTo: widthAnchor),
+            symbolIconView.heightAnchor.constraint(equalTo: symbolIconView.widthAnchor),
+            symbolIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            symbolIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
+        ])
+        
+        imageIconView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(imageIconView)
+        
+        NSLayoutConstraint.activate([
+            imageIconView.widthAnchor.constraint(equalTo: widthAnchor),
+            imageIconView.heightAnchor.constraint(equalTo: imageIconView.widthAnchor),
+            imageIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
     }
     
@@ -166,21 +154,14 @@ class IconView: UIView {
         clipsToBounds = true
         
         // Configure Icon
-        imageView.contentMode = config.imageContentMode
-        imageView.image = config.image
-        if case .padded = config.scaleMode {
-            fullConstraint.isActive = false
-            scaledConstraint.isActive = true
-        } else {
-            scaledConstraint.isActive = false
-            fullConstraint.isActive = true
-        }
+        imageIconView.image = config.image
+        symbolIconView.image = config.symbolImage
         
         // Colors
-        tintColor = config.iconColor
+        symbolIconView.tintColor = config.iconColor
         let gradient = config.gradientBackground
         gradient.frame = layer.bounds
-        layer.insertSublayer(gradient, at: 0)
+        symbolIconView.layer.insertSublayer(gradient, at: 0)
         
         appliedIconConfiguration = config
         appliedBounds = bounds

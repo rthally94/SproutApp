@@ -35,7 +35,9 @@ class SymbolIconView: UIView {
     private var appliedBounds: CGRect? = nil
     private func configureHiearchyIfNeeded() {
         if bounds != appliedBounds {
-            layoutMargins = .init(top: bounds.height*0.6, left: bounds.width*0.6, bottom: bounds.height*0.6, right: bounds.width*0.6)
+            let widthInset = (bounds.width * 0.4) / 2
+            let heightInset = (bounds.height * 0.4) / 2
+            layoutMargins = .init(top: heightInset, left: widthInset, bottom: heightInset, right: widthInset)
             
             imageView.translatesAutoresizingMaskIntoConstraints = false
             addSubview(imageView)

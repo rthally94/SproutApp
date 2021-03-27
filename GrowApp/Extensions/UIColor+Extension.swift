@@ -43,7 +43,11 @@ extension UIColor {
         let lightContrast = UIColor.contrast(backgroundColor, UIColor.lightText)
         let darkContrast = UIColor.contrast(backgroundColor, UIColor.darkText)
         
-        return lightContrast > darkContrast ? UIColor.lightText : UIColor.darkText
+        if lightContrast > 3 || lightContrast > darkContrast {
+            return UIColor.white
+        } else {
+            return UIColor.darkText
+        }
     }
 }
  
