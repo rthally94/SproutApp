@@ -91,8 +91,8 @@ struct IconConfiguration: Hashable {
     
     var gradientBackground: CAGradientLayer {
         let gradient = CAGradientLayer()
-        let color = UIColor.systemBlue
-        gradient.colors = [color.cgColor, color.withAlphaComponent(0.5).cgColor]
+        let color = backgroundColor ?? .gray
+        gradient.colors = [color.cgColor, color.cgColor]
         return gradient
     }
     

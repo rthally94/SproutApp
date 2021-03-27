@@ -25,9 +25,15 @@ extension UIColor {
     }
     
     static func luminance(_ color: UIColor) -> CGFloat {
-        var components: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat) = (red: 0, green: 0, blue: 0, alpha: 0)
+        typealias colorComponents = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
+        var components: colorComponents = (red: 0, green: 0, blue: 0, alpha: 0)
         color.getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
-        let luma = ((0.299 * components.red) + (0.587 * components.green) + (0.114 * components.blue)) / 255
+        
+        components.red = components.red <= 0.03928 ? components.red/12.92 : pow((components.red+0.055)/1.055, 2.4)
+        components.green = components.green <= 0.03928 ? components.green/12.92 : pow((components.green+0.055)/1.055, 2.4)
+        components.blue = components.blue <= 0.03928 ? components.blue/12.92 : pow((components.blue+0.055)/1.055, 2.4)
+        
+        let luma = ((0.2126 * components.red) + (0.7152 * components.green) + (0.0722 * components.blue))
         return luma
     }
     
