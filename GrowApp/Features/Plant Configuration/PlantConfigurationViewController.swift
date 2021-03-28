@@ -162,7 +162,7 @@ extension PlantConfigurationViewController {
             switch sectionInfo {
             case .image:
                 let badgeAnchor = NSCollectionLayoutAnchor(edges: [.bottom], fractionalOffset: CGPoint(x: 1.1, y: 0))
-                let badgeSize = NSCollectionLayoutSize(widthDimension: .absolute(44), heightDimension: .absolute(44))
+                let badgeSize = NSCollectionLayoutSize(widthDimension: .estimated(44), heightDimension: .estimated(44))
                 
                 let badge = NSCollectionLayoutSupplementaryItem(layoutSize: badgeSize, elementKind: PlantIconSupplementaryView.badgeElementKind, containerAnchor: badgeAnchor)
                 

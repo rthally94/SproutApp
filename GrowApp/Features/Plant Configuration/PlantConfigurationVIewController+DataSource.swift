@@ -87,7 +87,8 @@ extension PlantConfigurationViewController {
             guard let itemIdentifier: Item = self.dataSource.itemIdentifier(for: indexPath) else { return }
 
             if case .plantIcon(_) = itemIdentifier.rowType {
-                supplementaryView.imageView.image = UIImage(systemName: "pencil.circle.fill")
+                supplementaryView.image = UIImage(systemName: "pencil")
+                supplementaryView.tapAction = itemIdentifier.onTap
             }
         }
     }
