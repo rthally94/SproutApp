@@ -58,6 +58,25 @@ extension Plant {
                 return nil
             }
         }
+        
+        let today = Calendar.current.startOfDay(for: Date())
+        let firstDate = temp.sorted().first
+        
+        if let firstDate = firstDate, firstDate < today {
+            return today
+        } else {
+            return firstDate
+        }
+    }
+    
+    func getOptimalDateOfNextTask() -> Date? {
+        let temp: [Date] = tasks.compactMap { task in
+            if let lastCareDate = task.lastCareDate {
+                return task.nextCareDate(after: lastCareDate)
+            } else {
+                return nil
+            }
+        }
         return temp.sorted().first
     }
     
@@ -97,7 +116,7 @@ extension Plant {
             let filteredLateSorted = filteredLate.sorted(by: { $0.type.description < $1.type.description })
             let todaySorted = today.sorted(by: { $0.type.description < $1.type.description })
             return filteredLateSorted + todaySorted
-        } else if let nextTaskDate = getDateOfNextTask() {
+        } else if let nextTaskDate = getOptimalDateOfNextTask() {
             return tasksNeedingCare(on: nextTaskDate)
         } else {
             return []

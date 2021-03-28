@@ -9,6 +9,8 @@ import UIKit
 
 class PlantConfigurationViewController: UIViewController {
     var model: GrowAppModel
+    var onSave: (() -> Void)?
+    
     private var _plantIsEditing = false
     internal var _plant: Plant
     
@@ -136,6 +138,8 @@ class PlantConfigurationViewController: UIViewController {
         } else {
             model.addPlant(_plant)
         }
+        
+        onSave?()
         
         dismiss(animated: true)
     }

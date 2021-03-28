@@ -8,6 +8,14 @@
 import UIKit
 
 class PlantDetailViewController: UIViewController {
+    static let dateComponentsFormatter: DateComponentsFormatter = {
+       let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.month, .weekOfMonth, .day]
+        formatter.maximumUnitCount = 1
+        formatter.formattingContext = .beginningOfSentence
+        formatter.unitsStyle = .full
+        return formatter
+    }()
     static let careDateFormatter = RelativeDateFormatter()
     var model: GrowAppModel
     var plant: Plant? {
@@ -92,6 +100,8 @@ class PlantDetailViewController: UIViewController {
     @objc private func editPlant() {
         guard let plant = plant else { return }
         let vc = PlantConfigurationViewController(plant: plant, model: model)
+        vc.onSave = configureSubviews
+        
         present(vc.wrappedInNavigationController(), animated: true)
     }
 }
@@ -172,10 +182,12 @@ extension PlantDetailViewController {
         // Up Next
         let nextTasks: [Item] = strongPlant.nextTasks().map { task in
             let lastCareString: String
-            if let lastCareDate = task.lastCareDate {
-                lastCareString = "Last: " + PlantDetailViewController.careDateFormatter.string(from: lastCareDate)
+            if task.isLate() {
+                guard let lastDate = task.lastCareDate, let expectedDate = task.nextCareDate(after: lastDate) else { fatalError("Unable to calculate days late but task was flagged as late.")}
+                let daysLateComponents = Calendar.current.dateComponents([.day, .month], from: expectedDate, to: Calendar.current.startOfDay(for: Date()))
+                lastCareString = "\(PlantDetailViewController.dateComponentsFormatter.string(from: daysLateComponents) ?? "Not") late"
             } else {
-                lastCareString = "Last: Never"
+                lastCareString = ""
             }
             return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: lastCareString)
         }
