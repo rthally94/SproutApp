@@ -16,13 +16,16 @@ class GrowAppModel {
         // Configure preconfigured model
         for i in 0...4 {
             let tasks = Array(Task.allTasks[0..<i])
-            let type = PlantType.allTypes.randomElement()!
+            let type = PlantType.allTypes[i%PlantType.allTypes.count]
             let plant = Plant(name: "My Plant \(i)", type: type, icon: .image(UIImage(named: "SamplePlantImage")!), tasks: tasks)
-//            let plant = Plant(name: "My Plant \(i)", type: type, icon: .symbol(name: "tortoise.fill", foregroundColor: nil, backgroundColor: UIColor.systemBlue), tasks: tasks)
             
-            let interval = (86_400*i) - 172_800
-            let careDate = Date(timeIntervalSinceNow: Double(interval))
-            plant.tasks.first?.logCompletedCare(on: careDate)
+            if let task = tasks.first {
+                plant.tasks[0].startingDate = Date().addingTimeInterval(-86400 * 7)
+                let logOnInterval = task.previousCareDate(before: Date())!
+                let logOffInterval = logOnInterval.addingTimeInterval(-86400)
+                let careDate = i%2 == 0 ? logOnInterval : logOffInterval
+                plant.tasks[0].logCompletedCare(on: careDate)
+            }
             
             model.addPlant(plant)
         }
@@ -41,6 +44,10 @@ class GrowAppModel {
         return Array(plants)
     }
     
+    func getPlant(with id: UUID) -> Plant? {
+        plants.first(where: { $0.id == id })
+    }
+    
     func addPlant(_ newPlant: Plant) {
         plants.insert(newPlant)
     }
@@ -52,10 +59,8 @@ class GrowAppModel {
     // Plant Care
     func getPlantsNeedingCare(on date: Date) -> [TaskType: [Plant]] {
         plants.sorted(by: {$0.name < $1.name}).reduce(into: [TaskType: [Plant]]() ) { dict, plant in
-            plant.tasks.forEach { task in
-                if task.isDateInInterval(date) {
-                    dict[task.type, default: []].append(plant)
-                }
+            plant.tasksNeedingCare(on: date).forEach { task in
+                dict[task.type, default: []].append(plant)
             }
         }
     }
