@@ -54,17 +54,7 @@ class PlantGroupViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        let plants = model.getPlants()
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.plants])
-        
-        let items = plants.sorted(by: { $0.creationDate < $1.creationDate }).map { plant in
-            Item(id: plant.id, icon: plant.icon, title: plant.name, subtitle: "\(plant.tasks.count) tasks")
-        }
-        snapshot.appendItems(items, toSection: .plants)
-        
-        dataSource.apply(snapshot)
+        reloadDataSource()
     }
     
     func configureHiearchy() {
@@ -81,6 +71,7 @@ class PlantGroupViewController: UIViewController {
     
     @objc func showPlantConfiguration() {
         let vc = PlantConfigurationViewController(model: model)
+        vc.onSave = reloadDataSource
         present(vc.wrappedInNavigationController(), animated: true)
     }
 }
@@ -120,6 +111,24 @@ extension PlantGroupViewController {
         }
         
         return dataSource
+    }
+    
+    func makeSnapshot(with plants: [Plant]) -> NSDiffableDataSourceSnapshot<Section, Item> {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.plants])
+        
+        let items = plants.sorted(by: { $0.creationDate < $1.creationDate }).map { plant in
+            Item(id: plant.id, icon: plant.icon, title: plant.name, subtitle: "\(plant.tasks.count) tasks")
+        }
+        snapshot.appendItems(items, toSection: .plants)
+        
+        return snapshot
+    }
+    
+    private func reloadDataSource() {
+        let plants = model.getPlants()
+        let snapshot = makeSnapshot(with: plants)
+        dataSource.apply(snapshot)
     }
 }
 
