@@ -6,6 +6,12 @@
 //
 
 import UIKit
+enum TaskStatus: Int {
+    case unscheduled
+    case needsCare
+    case complete
+}
+
 
 class Task: Hashable {
     static func == (lhs: Task, rhs: Task) -> Bool {
@@ -211,6 +217,16 @@ extension Task {
             return true
         } else {
             return false
+        }
+    }
+    
+    func currentStatus() -> TaskStatus {
+        if let lastCareDate = lastCareDate, Calendar.current.isDateInToday(lastCareDate) {
+            return .complete
+        } else if interval == .none {
+            return .unscheduled
+        } else {
+            return .needsCare
         }
     }
 }

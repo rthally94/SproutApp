@@ -31,11 +31,7 @@ class TaskCalendarViewController: UIViewController {
             self.navigationItem.title = TaskCalendarViewController.dateFormatter.string(from: selectedDate)
             weekPicker.selectDate(selectedDate, animated: true)
 
-            if let model = model {
-                data = model.getPlantsNeedingCare(on: selectedDate)
-                let snapshot = createSnapshot(for: data)
-                dataSource.apply(snapshot)
-            }
+            reloadView()
         }
     }
     

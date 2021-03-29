@@ -40,6 +40,12 @@ class Plant {
 // MARK: - Intents
 
 extension Plant {
+    func logCare(forTaskWithID id: UUID) {
+        if let task = tasks.first(where: { $0.id == id}) {
+            logCare(for: task)
+        }
+    }
+    
     func logCare(for task: Task) {
         logCare(for: task, on: Date())
     }
@@ -128,6 +134,10 @@ extension Plant: Hashable, Equatable {
     static func == (lhs: Plant, rhs: Plant) -> Bool {
         lhs.id == rhs.id
             && lhs.creationDate == rhs.creationDate
+            && lhs.name == rhs.name
+            && lhs.type == rhs.type
+            && lhs.icon == rhs.icon
+            && lhs.tasks == rhs.tasks
     }
     
     func hash(into hasher: inout Hasher) {

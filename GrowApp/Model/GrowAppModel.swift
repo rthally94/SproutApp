@@ -17,7 +17,11 @@ class GrowAppModel {
         for i in 0...4 {
             let tasks = Array(Task.allTasks[0..<i])
             let type = PlantType.allTypes[i%PlantType.allTypes.count]
-            let plant = Plant(name: "My Plant \(i)", type: type, icon: .image(UIImage(named: "SamplePlantImage")!), tasks: tasks)
+            let plant = model.plantStore.createPlant()
+            plant.name = "My Plant \(i)"
+            plant.type = type
+            plant.icon = .image(UIImage(named: "SamplePlantImage")!)
+            plant.tasks = tasks
             
             if let task = tasks.first {
                 plant.tasks[0].startingDate = Date().addingTimeInterval(-86400 * 7)
@@ -26,8 +30,6 @@ class GrowAppModel {
                 let careDate = i%2 == 0 ? logOnInterval : logOffInterval
                 plant.tasks[0].logCompletedCare(on: careDate)
             }
-            
-            model.addPlant(plant)
         }
         
         return model
@@ -35,30 +37,30 @@ class GrowAppModel {
     
     private init() {}
     
-    private var plants = Set<Plant>()
+    var plantStore = PlantStore()
     
     // MARK:- Intents
     
     // All Plants
     func getPlants() -> [Plant] {
-        return Array(plants)
+        plantStore.allPlants()
     }
     
     func getPlant(with id: UUID) -> Plant? {
-        plants.first(where: { $0.id == id })
+        plantStore.plant(withID: id.uuidString)
     }
     
-    func addPlant(_ newPlant: Plant) {
-        plants.insert(newPlant)
+    func addPlant() {
+        plantStore.createPlant()
     }
     
     func deletePlant(_ plant: Plant) {
-        plants.remove(plant)
+        plantStore.deletePlant(withID: plant.id.uuidString)
     }
     
     // Plant Care
     func getPlantsNeedingCare(on date: Date) -> [TaskType: [Plant]] {
-        plants.sorted(by: {$0.name < $1.name}).reduce(into: [TaskType: [Plant]]() ) { dict, plant in
+        plantStore.allPlants().sorted(by: {$0.name < $1.name}).reduce(into: [TaskType: [Plant]]() ) { dict, plant in
             plant.tasksNeedingCare(on: date).forEach { task in
                 dict[task.type, default: []].append(plant)
             }

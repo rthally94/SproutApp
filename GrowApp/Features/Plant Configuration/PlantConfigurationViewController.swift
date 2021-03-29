@@ -14,17 +14,38 @@ class PlantConfigurationViewController: UIViewController {
     private var _plantIsEditing = false
     internal var _plant: Plant
     
+    
+    /// Configures the plant configurator for creating a new plant
+    /// - Parameter model: The application model
     init(model: GrowAppModel) {
         self.model = model
-        self._plant = Plant(name: "", type: PlantType.allTypes[0], tasks: [])
+        
+        // 1. Create a new plant in the model
+        let newPlant = self.model.plantStore.createPlant()
+        newPlant.name = ""
+        newPlant.type = PlantType.allTypes[0]
+        
+        // 2. Store the plant as a deep copy
+        _plant = Plant(id: newPlant.id, name: newPlant.name, type: newPlant.type, tasks: newPlant.tasks)
+        
+        // 3. Set flag as false for new plant
         _plantIsEditing = false
         
         super.init(nibName: nil, bundle: nil)
     }
     
+    
+    /// Configures the plant configurator for editing an existing plant
+    /// - Parameters:
+    ///   - plant: The plant to edit
+    ///   - model: The application model
     init(plant: Plant, model: GrowAppModel) {
         self.model = model
+        
+        // 1. Store the plant as a deep copy
         _plant = Plant(id: plant.id, creationDate: plant.creationDate, name: plant.name, type: plant.type, icon: plant.icon, tasks: plant.tasks, careInfo: nil)
+        
+        // 2. Set flag as true for edting plant
         _plantIsEditing = true
         
         super.init(nibName: nil, bundle: nil)
@@ -35,7 +56,7 @@ class PlantConfigurationViewController: UIViewController {
     }
     
     // Data Source View Models
-    enum Section: Hashable, CaseIterable, CustomStringConvertible {
+    internal enum Section: Hashable, CaseIterable, CustomStringConvertible {
         case image
         case plantInfo
         case care
@@ -78,7 +99,7 @@ class PlantConfigurationViewController: UIViewController {
         }
     }
     
-    struct Item: Hashable {
+    internal struct Item: Hashable {
         static func == (lhs: PlantConfigurationViewController.Item, rhs: PlantConfigurationViewController.Item) -> Bool {
             lhs.rowType == rhs.rowType
         }
@@ -91,15 +112,15 @@ class PlantConfigurationViewController: UIViewController {
         let onTap: (() -> Void)?
     }
     
-    enum RowType: Hashable {
+    internal enum RowType: Hashable {
         case plantIcon(Icon)
         case list(icon: Icon?, text: String?, secondaryText: String?)
         case listValue(image: UIImage?, text: String?, secondaryText: String?)
         case textField(image: UIImage?, value: String?, placeholder: String?)
     }
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>! = nil
-    var collectionView: UICollectionView! = nil
+    internal var dataSource: UICollectionViewDiffableDataSource<Section, Item>! = nil
+    internal var collectionView: UICollectionView! = nil
     internal var selectedIndexPath: IndexPath?
     
     override func loadView() {
@@ -128,23 +149,30 @@ class PlantConfigurationViewController: UIViewController {
     }
     
     @objc private func applyChanges() {
-        if _plantIsEditing {
-            if let plantToUpdate = model.getPlants().first(where: { $0 == _plant }) {
-                plantToUpdate.name = _plant.name
-                plantToUpdate.type = _plant.type
-                plantToUpdate.icon = _plant.icon
-                plantToUpdate.tasks = _plant.tasks
-            }
-        } else {
-            model.addPlant(_plant)
+        // 1. Check for changes
+        let modelPlant = model.getPlant(with: _plant.id)
+        if let modelPlant = modelPlant, modelPlant != _plant {
+            // 2. Apply internal plant's values to model
+            modelPlant.name = _plant.name
+            modelPlant.type = _plant.type
+            modelPlant.icon = _plant.icon
+            modelPlant.tasks = _plant.tasks
+            
+            // 3. Callback to trigger view updates
+            onSave?()
         }
-        
-        onSave?()
-        
+
+        // 3. dismiss
         dismiss(animated: true)
     }
     
     @objc private func discardChanges() {
+        // 1. Check for changes
+        if !_plantIsEditing {
+            // 2. Remove plant from model
+            model.deletePlant(_plant)
+        }
+        
         dismiss(animated: true)
     }
     

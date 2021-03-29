@@ -8,12 +8,10 @@
 import UIKit
 
 extension UICellAccessory {
-    static func todoAccessory() -> UICellAccessory {
+    static func todoAccessory(actionHandler: @escaping UIActionHandler) -> UICellAccessory {
         let placement = UICellAccessory.Placement.trailing(displayed: .whenNotEditing)
         
-        let todoAction: UIAction = .init(image: UIImage(systemName: "circle"), handler: { _ in
-            print("🦋")
-        })
+        let todoAction: UIAction = .init(image: UIImage(systemName: "circle"), handler: actionHandler)
         let todoButton = UIButton(type: .system, primaryAction: todoAction)
         
         let configuration = UICellAccessory.CustomViewConfiguration(customView: todoButton, placement: placement)

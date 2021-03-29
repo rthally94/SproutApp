@@ -237,7 +237,7 @@ extension PlantDetailViewController {
     }
     
     func makeUpNextCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> {[weak self] cell, _, item in
             var config = UIListContentConfiguration.subtitleCell()
             
             config.image = item.icon?.image
@@ -248,7 +248,16 @@ extension PlantDetailViewController {
             
             cell.contentConfiguration = config
             
-            cell.accessories = [ .todoAccessory() ]
+            if let task = self?.plant?.tasks.first(where: {$0.id == item.id}), task.currentStatus() == .complete {
+                cell.accessories = [ .checkmark() ]
+            } else {
+                let actionHandler: UIActionHandler = {[weak self] _ in
+                    guard let self = self, let itemID = item.id else { return }
+                    self.plant?.logCare(forTaskWithID: itemID)
+                    self.configureSubviews()
+                }
+                cell.accessories = [ .todoAccessory(actionHandler: actionHandler) ]
+            }
         }
     }
     

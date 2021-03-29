@@ -53,12 +53,33 @@ extension TaskCalendarViewController {
 
         return snapshot
     }
+    
+    func reloadView() {
+        if let model = model {
+            data = model.getPlantsNeedingCare(on: selectedDate)
+            let snapshot = createSnapshot(for: data)
+            dataSource.apply(snapshot)
+        }
+    }
 
     private func createPlantCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
         return UICollectionView.CellRegistration<TaskCalendarListCell, Item> { cell, _, item in
-            cell.accessories = [
-                .todoAccessory()
-            ]
+            if item.task.currentStatus() == .complete {
+                cell.accessories = [.checkmark()]
+            } else {
+                let actionHander: UIActionHandler = {[weak self] _ in
+                    guard let self = self else { return }
+                    let plant = item.plant
+                    let task = item.task
+                    
+                    plant.logCare(for: task)
+                    self.reloadView()
+                }
+                cell.accessories = [
+                    .todoAccessory(actionHandler: actionHander)
+                ]
+            }
+            
             cell.updateWith(task: item.task, plant: item.plant)
         }
     }
