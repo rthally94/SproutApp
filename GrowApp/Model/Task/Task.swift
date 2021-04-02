@@ -13,22 +13,14 @@ enum TaskStatus: Int {
 }
 
 
-class Task: Hashable {
-    static func == (lhs: Task, rhs: Task) -> Bool {
-        lhs.id == rhs.id
-            && lhs.type == rhs.type
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-        hasher.combine(type)
-    }
-
-    var id: UUID
+struct Task: Equatable, Hashable {
+    typealias IDType = String
+    
+    var id: IDType
     var type: TaskType
-    var careInfo: CareValue<AnyHashable>
     
     var interval: TaskInterval
+    weak var plant: Plant?
     
     private var _startingDate: Date = Date()
     var startingDate: Date {
@@ -42,10 +34,13 @@ class Task: Hashable {
     
     var logs: [LogEntry]
     
-    internal init(id: UUID = UUID(), type: TaskType, careInfo: CareValue<AnyHashable>, interval: TaskInterval = .none, startingOn startingDate: Date = Date(), logs: [LogEntry]) {
+    init(type: TaskType, interval: TaskInterval, startingDate: Date) {
+        self.init(id: UUID().uuidString, type: type, interval: interval, startingDate: startingDate, logs: [])
+    }
+    
+    init(id: IDType, type: TaskType, interval: TaskInterval, startingDate: Date, logs: [LogEntry]) {
         self.id = id
         self.type = type
-        self.careInfo = careInfo
         self.interval = interval
         self.logs = logs
         self.startingDate = startingDate
@@ -55,25 +50,25 @@ class Task: Hashable {
 extension Task {
     static var allTasks: [Task] {
         [
-            Task(type: .watering, careInfo: .text("Top to Bottom"), interval: .weekly([2,4,6]), logs: []),
-            Task(type: .pruning, careInfo: .text("When Brown"), interval: .daily(15), logs: []),
-            Task(type: .fertilizing, careInfo: .text("As Needed"), interval: .monthly([25]), logs: []),
-            Task(type: .potting, careInfo: .text("When Out-grown"), interval: .monthly([25]), logs: [])
+            Task(type: .watering, interval: .weekly([2,4,6]), startingDate: Date()),
+            Task(type: .pruning, interval: .daily(15), startingDate: Date()),
+            Task(type: .fertilizing, interval: .monthly([25]), startingDate: Date()),
+            Task(type: .potting, interval: .monthly([25]), startingDate: Date())
         ]
     }
 }
 
 extension Task {
     //MARK: Actions
-    func logCompletedCare(on date: Date) {
+    mutating func logCompletedCare(on date: Date) {
         logCare(as: .complete, on: date)
     }
     
-    func logSkippedCare(on date: Date) {
+    mutating func logSkippedCare(on date: Date) {
         logCare(as: .skipped, on: date)
     }
     
-    func logCare(as state: LogState, on date: Date) {
+    mutating func logCare(as state: LogState, on date: Date) {
         let log = LogEntry(id: UUID(), task: self, state: state, date: date)
         logs.append(log)
     }

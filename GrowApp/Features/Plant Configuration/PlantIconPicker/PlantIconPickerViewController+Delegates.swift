@@ -9,9 +9,9 @@ import UIKit
 
 extension PlantIconPickerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let item = dataSource.itemIdentifier(for: indexPath) {
-            item.onTap?()
-        }
+//        if let item = dataSource.itemIdentifier(for: indexPath) {
+//            item.onTap?()
+//        }
     }
 }
 
@@ -37,7 +37,7 @@ extension PlantIconPickerViewController: UIImagePickerControllerDelegate, UINavi
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.editedImage] as? UIImage else { return }
-        icon = Icon.image(image)
+        icon?.image = image
 
         dismiss(animated: true)
     }

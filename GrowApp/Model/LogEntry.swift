@@ -22,7 +22,7 @@ class LogEntry: Hashable {
     }
 
     var id: UUID
-    weak var task: Task?
+    var task: Task?
     var state: LogState
     var date: Date
     

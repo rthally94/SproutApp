@@ -8,7 +8,7 @@
 import UIKit
 
 class PlantIconCell: UICollectionViewCell {
-    var icon: Icon? {
+    var icon: GHIcon? {
         didSet {
             setNeedsUpdateConfiguration()
         }
@@ -24,7 +24,7 @@ class PlantIconCell: UICollectionViewCell {
 }
 
 struct PlantIconContentConfiguration: UIContentConfiguration, Hashable {
-    var icon: Icon? = nil
+    var icon: GHIcon? = nil
     
     func makeContentView() -> UIView & UIContentView {
         return PlantIconContentView(configuration: self)

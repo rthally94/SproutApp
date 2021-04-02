@@ -8,11 +8,11 @@
 import UIKit
 
 protocol PlantIconPickerDelegate {
-    func didChangeIcon(to icon: Icon)
+    func didChangeIcon(to icon: GHIcon?)
 }
 
 class PlantIconPickerViewController: UIViewController {
-    internal var icon: Icon {
+    internal var icon: GHIcon? {
         get {
             currentIcon
         }
@@ -24,10 +24,10 @@ class PlantIconPickerViewController: UIViewController {
         }
     }
     
-    private var currentIcon: Icon
+    private var currentIcon: GHIcon?
     var delegate: PlantIconPickerDelegate?
 
-    init(plant: Plant) {
+    init(plant: GHPlant) {
         currentIcon = plant.icon
         
         super.init(nibName: nil, bundle: nil)
@@ -44,16 +44,21 @@ class PlantIconPickerViewController: UIViewController {
     }
 
     struct Item: Hashable {
-        static func == (lhs: PlantIconPickerViewController.Item, rhs: PlantIconPickerViewController.Item) -> Bool {
-            lhs.icon == rhs.icon
+        var icon: GHIcon?
+        var image: UIImage?
+        var tintColor: UIColor?
+        
+        init(icon: GHIcon?) {
+            self.icon = icon
+            self.image = nil
+            self.tintColor = nil
         }
-
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(icon)
+        
+        init(image: UIImage?, tintColor: UIColor?) {
+            self.icon = nil
+            self.image = image
+            self.tintColor = tintColor
         }
-
-        var icon: Icon
-        var onTap: ( () -> Void )?
     }
 
     var collectionView: UICollectionView! = nil

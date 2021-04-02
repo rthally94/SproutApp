@@ -10,7 +10,7 @@ import UIKit
 extension PlantIconPickerViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<PlantIconCell, Item> {
         return UICollectionView.CellRegistration<PlantIconCell, Item>() { cell, indexPath, item in
-            cell.icon = item.icon
+//            cell.icon = item.icon
         }
     }
 
@@ -34,19 +34,27 @@ extension PlantIconPickerViewController {
 
         snapshot.appendItems([
             Item(
-                icon: .symbol(name: "camera", tintColor: .systemBlue),
-                onTap: {
-                    self.showImagePicker(preferredType: .camera)
-                }
+                image: UIImage(systemName: "camera"),
+                tintColor: .systemBlue
+//                onTap: {
+//                    self.showImagePicker(preferredType: .camera)
+//                }
             ),
             Item(
-                icon: .symbol(name: "photo.on.rectangle", tintColor: .systemBlue),
-                onTap: {
-                    self.showImagePicker(preferredType: .photoLibrary)
-                }
+                image: UIImage(systemName: "photo.on.rectangle"),
+                tintColor: .systemBlue
+//                onTap: {
+//                    self.showImagePicker(preferredType: .photoLibrary)
+//                }
             ),
-            Item(icon: .symbol(name: "face.smiling", tintColor: .systemBlue)),
-            Item(icon: .symbol(name: "pencil", tintColor: .systemBlue)),
+            Item(
+                image: UIImage(systemName: "face.smiling"),
+                tintColor: .systemBlue
+            ),
+            Item(
+                image: UIImage(systemName: "pencil"),
+                tintColor: .systemBlue
+            ),
         ], toSection: .recommended)
 
         return snapshot

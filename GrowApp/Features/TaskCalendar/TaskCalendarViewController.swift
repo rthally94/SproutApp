@@ -5,18 +5,11 @@
 //  Created by Ryan Thally on 1/17/21.
 //
 
+import Combine
+import CoreData
 import UIKit
 
 class TaskCalendarViewController: UIViewController {
-    init(model: GrowAppModel) {
-        self.model = model
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         
@@ -30,13 +23,15 @@ class TaskCalendarViewController: UIViewController {
         didSet {
             self.navigationItem.title = TaskCalendarViewController.dateFormatter.string(from: selectedDate)
             weekPicker.selectDate(selectedDate, animated: true)
-
-            reloadView()
         }
     }
     
-    var model: GrowAppModel?
+    var model: GreenHouseAppModel?
+    let taskCalendarProvider: TaskCalendarProvider
     var data: [TaskType: [Plant]] = [:]
+    
+    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    var cancellables = Set<AnyCancellable>()
     
     lazy var weekPicker: WeekPicker = {
         let weekPicker = WeekPicker(frame: .zero)
@@ -56,29 +51,39 @@ class TaskCalendarViewController: UIViewController {
         collectionView.allowsSelection = false
         return collectionView
     }()
+
+    typealias Section = String
+    typealias Item = NSManagedObjectID
+
+    init(storageProvider: StorageProvider, model: GreenHouseAppModel) {
+        self.taskCalendarProvider = TaskCalendarProvider(storageProvider: storageProvider)
+        self.model = model
+        super.init(nibName: nil, bundle: nil)
+    }
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-
-    struct Section: Hashable {
-        let taskType: TaskType
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
-
-    struct Item: Hashable {
-        let plant: Plant
-        let task: Task
-    }
-
+    
     // MARK:- View Controller Lifecycle
     override func loadView() {
         super.loadView()
         
-        configureDataSource()
         configureHiearchy()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        dataSource = makeDataSource()
+        taskCalendarProvider.$snapshot
+            .sink(receiveValue: { [weak self] snapshot in
+                if let snapshot = snapshot {
+                    self?.dataSource.apply(snapshot)
+                }
+            })
+            .store(in: &cancellables)
+        
         configureNavBar()
     }
     

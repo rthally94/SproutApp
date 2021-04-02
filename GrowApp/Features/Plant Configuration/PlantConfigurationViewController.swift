@@ -5,28 +5,31 @@
 //  Created by Ryan Thally on 1/24/21.
 //
 
+import CoreData
 import UIKit
 
 class PlantConfigurationViewController: UIViewController {
-    var model: GrowAppModel
-    var onSave: (() -> Void)?
+    var model: GreenHouseAppModel
+    var viewContext: NSManagedObjectContext
     
     private var _plantIsEditing = false
-    internal var _plant: Plant
+    internal var _plant: GHPlant
     
     
     /// Configures the plant configurator for creating a new plant
     /// - Parameter model: The application model
-    init(model: GrowAppModel) {
+    init(storageProvider: StorageProvider, model: GreenHouseAppModel) {
+        viewContext = storageProvider.persistentContainer.viewContext.makeEditingContext()
         self.model = model
+    
         
         // 1. Create a new plant in the model
-        let newPlant = self.model.plantStore.createPlant()
+        let newPlant = GHPlant(context: viewContext)
         newPlant.name = ""
-        newPlant.type = PlantType.allTypes[0]
+        newPlant.type = PlantType.allTypes[0].scientificName
         
         // 2. Store the plant as a deep copy
-        _plant = Plant(id: newPlant.id, name: newPlant.name, type: newPlant.type, tasks: newPlant.tasks)
+        _plant = newPlant
         
         // 3. Set flag as false for new plant
         _plantIsEditing = false
@@ -39,11 +42,12 @@ class PlantConfigurationViewController: UIViewController {
     /// - Parameters:
     ///   - plant: The plant to edit
     ///   - model: The application model
-    init(plant: Plant, model: GrowAppModel) {
+    init(plant: GHPlant, storageProvider: StorageProvider, model: GreenHouseAppModel) {
+        viewContext = storageProvider.persistentContainer.viewContext.makeEditingContext()
         self.model = model
         
         // 1. Store the plant as a deep copy
-        _plant = Plant(id: plant.id, creationDate: plant.creationDate, name: plant.name, type: plant.type, icon: plant.icon, tasks: plant.tasks, careInfo: nil)
+        _plant = viewContext.object(with: plant.objectID) as! GHPlant
         
         // 2. Set flag as true for edting plant
         _plantIsEditing = true
@@ -100,21 +104,12 @@ class PlantConfigurationViewController: UIViewController {
     }
     
     internal struct Item: Hashable {
-        static func == (lhs: PlantConfigurationViewController.Item, rhs: PlantConfigurationViewController.Item) -> Bool {
-            lhs.rowType == rhs.rowType
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(rowType)
-        }
-        
         let rowType: RowType
-        let onTap: (() -> Void)?
     }
     
     internal enum RowType: Hashable {
-        case plantIcon(Icon)
-        case list(icon: Icon?, text: String?, secondaryText: String?)
+        case plantIcon(GHIcon?)
+        case list(icon: GHIcon?, text: String?, secondaryText: String?)
         case listValue(image: UIImage?, text: String?, secondaryText: String?)
         case textField(image: UIImage?, value: String?, placeholder: String?)
     }
@@ -150,16 +145,9 @@ class PlantConfigurationViewController: UIViewController {
     
     @objc private func applyChanges() {
         // 1. Check for changes
-        let modelPlant = model.getPlant(with: _plant.id)
-        if let modelPlant = modelPlant, modelPlant != _plant {
-            // 2. Apply internal plant's values to model
-            modelPlant.name = _plant.name
-            modelPlant.type = _plant.type
-            modelPlant.icon = _plant.icon
-            modelPlant.tasks = _plant.tasks
-            
-            // 3. Callback to trigger view updates
-            onSave?()
+        if viewContext.hasChanges {
+            // 2. Apply changes to main context
+            try? viewContext.save()
         }
 
         // 3. dismiss
@@ -167,12 +155,6 @@ class PlantConfigurationViewController: UIViewController {
     }
     
     @objc private func discardChanges() {
-        // 1. Check for changes
-        if !_plantIsEditing {
-            // 2. Remove plant from model
-            model.deletePlant(_plant)
-        }
-        
         dismiss(animated: true)
     }
     
@@ -227,20 +209,14 @@ extension PlantConfigurationViewController {
 }
 
 extension PlantConfigurationViewController: PlantIconPickerDelegate {
-    func didChangeIcon(to icon: Icon) {
-        if _plant.icon != icon {
-            _plant.icon = icon
-            updateViews()
-        }
+    func didChangeIcon(to icon: GHIcon?) {
+        updateViews()
     }
 }
 
 extension PlantConfigurationViewController: PlantTypePickerDelegate {
     func plantTypePicker(didSelectType type: PlantType) {
-        if _plant.type != type {
-            _plant.type = type
-            updateViews()
-        }
+        updateViews()
     }
 }
 

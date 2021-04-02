@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="GHIcon" representedClassName="GHIcon" syncable="YES" codeGenerationType="class">
+        <attribute name="image" optional="YES" attributeType="Transformable" valueTransformerName="UIImageValueTransformer"/>
+        <attribute name="symbolName" optional="YES" attributeType="String"/>
+        <attribute name="tintColor" optional="YES" attributeType="String"/>
+        <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="icon" inverseEntity="GHPlant"/>
+        <relationship name="taskType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="icon" inverseEntity="GHTaskType"/>
+    </entity>
+    <entity name="GHPlant" representedClassName="GHPlant" syncable="YES" codeGenerationType="class">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="type" optional="YES" attributeType="String"/>
+        <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHIcon" inverseName="plant" inverseEntity="GHIcon"/>
+        <relationship name="tasks_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GHTask" inverseName="plant" inverseEntity="GHTask"/>
+    </entity>
+    <entity name="GHTask" representedClassName="GHTask" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastLogDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="tasks" inverseEntity="GHTaskType"/>
+        <relationship name="interval" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHTaskInterval" inverseName="task" inverseEntity="GHTaskInterval"/>
+        <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="tasks_" inverseEntity="GHPlant"/>
+    </entity>
+    <entity name="GHTaskInterval" representedClassName="GHTaskInterval" syncable="YES" codeGenerationType="class">
+        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="values" optional="YES" attributeType="Transformable" customClassName="[Int]"/>
+        <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTask" inverseName="interval" inverseEntity="GHTask"/>
+    </entity>
+    <entity name="GHTaskType" representedClassName="GHTaskType" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHIcon" inverseName="taskType" inverseEntity="GHIcon"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GHTask" inverseName="category" inverseEntity="GHTask"/>
+    </entity>
+    <elements>
+        <element name="GHPlant" positionX="-63" positionY="-18" width="128" height="119"/>
+        <element name="GHTask" positionX="-54" positionY="18" width="128" height="14"/>
+        <element name="GHIcon" positionX="-36" positionY="36" width="128" height="104"/>
+        <element name="GHTaskInterval" positionX="-27" positionY="63" width="128" height="89"/>
+        <element name="GHTaskType" positionX="-18" positionY="99" width="128" height="74"/>
+    </elements>
+</model>

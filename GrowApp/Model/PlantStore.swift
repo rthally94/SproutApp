@@ -7,35 +7,55 @@
 
 import Foundation
 
-class PlantStore {
-    private var plants: [Plant] = []
+protocol PlantStore {
+    var plants: [Plant] { get }
+    
+    func addPlant(_ newPlant: Plant)
+    @discardableResult func removePlant(_ plant: Plant) -> Plant?
+    @discardableResult func removePlant(withID id: Plant.IDType) -> Plant?
+    @discardableResult func replacePlant(_ plant: Plant, withPlant newPlant: Plant) -> Plant?
+    @discardableResult func replacePlant(withID id: Plant.IDType, withPlant newPlant: Plant) -> Plant?
 }
 
-extension PlantStore {
-    // Lookup
-    func allPlants() -> [Plant] {
-        return plants
-    }
+class MemoryPlantStore: PlantStore {
+    var plants: [Plant] = []
     
-    func plant(withID id: String) -> Plant? {
-        return plants.first(where: {$0.id.uuidString == id})
-    }
-    
-    // Create
-    @discardableResult func createPlant() -> Plant {
-        let newPlant = Plant(name: "New Plant", type: .init(scientificName: "New", commonName: "Plant"), tasks: [])
-        plants.append(newPlant)
-        return newPlant
-    }
-    
-    // Delete
-    @discardableResult func deletePlant(withID id: String) -> Plant? {
-        if let indexToDelete = plants.firstIndex(where: {$0.id.uuidString == id}) {
-            let plantToDelete = plants[indexToDelete]
-            plants.remove(at: indexToDelete)
-            return plantToDelete
+    func addPlant(_ newPlant: Plant) {
+        if !plants.contains(newPlant) {
+            plants.append(newPlant)
         }
-        
-        return nil
+    }
+    
+    func removePlant(_ plant: Plant) -> Plant? {
+        if let indexToRemove = plants.firstIndex(of: plant) {
+            return plants.remove(at: indexToRemove)
+        } else {
+            return nil
+        }
+    }
+    
+    func removePlant(withID id: Plant.IDType) -> Plant? {
+        if let plant = plants.first(where: {$0.id == id}) {
+            return removePlant(plant)
+        } else {
+            return nil
+        }
+    }
+    
+    func replacePlant(_ plant: Plant, withPlant newPlant: Plant) -> Plant? {
+        if let indexToReplace = plants.firstIndex(of: plant) {
+            plants[indexToReplace] = newPlant
+            return newPlant
+        } else {
+            return nil
+        }
+    }
+    
+    func replacePlant(withID id: Plant.IDType, withPlant newPlant: Plant) -> Plant? {
+        if let plantToReplace = plants.first(where: {$0.id == id}) {
+            return replacePlant(plantToReplace, withPlant: newPlant)
+        } else {
+            return nil
+        }
     }
 }

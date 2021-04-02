@@ -11,9 +11,9 @@ import UIKit
 extension PlantConfigurationViewController {
     func createPlantIconCellRegistration() -> UICollectionView.CellRegistration<PlantIconCell, Item> {
         return UICollectionView.CellRegistration<PlantIconCell, Item> { (cell, indexPath, item) in
-            if case let .plantIcon(icon) = item.rowType {
-                cell.icon = icon
-            }
+//            if case let .plantIcon(icon) = item.rowType {
+//                cell.icon = icon
+//            }
         }
     }
 
@@ -39,9 +39,9 @@ extension PlantConfigurationViewController {
                 configuration.secondaryText = secondaryText
             }
 
-            if item.onTap != nil {
-                cell.accessories = [.disclosureIndicator()]
-            }
+//            if item.onTap != nil {
+//                cell.accessories = [.disclosureIndicator()]
+//            }
             
             cell.contentConfiguration = configuration
         }
@@ -52,20 +52,16 @@ extension PlantConfigurationViewController {
             var configuration = cell.defaultContentConfiguration()
 
             if case let .list(icon, text, secondaryText) = item.rowType {
-                if case let .symbol(symbolName, _) = icon {
-                    configuration.image = UIImage(systemName: symbolName)
-                } else if case let .image(image) = icon {
-                    configuration.image = image
-                }
+                configuration.image = icon?.uiimage
                 configuration.text = text
                 configuration.secondaryText = secondaryText
             }
 
-            if item.onTap != nil {
-                cell.accessories = [.disclosureIndicator()]
-            } else if Section.allCases[indexPath.section] == .care {
-                cell.accessories = [ .label(text: "Weekly", displayed: .whenNotEditing, options: .init(isHidden: false)), .disclosureIndicator() ]
-            }
+//            if item.onTap != nil {
+//                cell.accessories = [.disclosureIndicator()]
+//            } else if Section.allCases[indexPath.section] == .care {
+//                cell.accessories = [ .label(text: "Weekly", displayed: .whenNotEditing, options: .init(isHidden: false)), .disclosureIndicator() ]
+//            }
 
             cell.contentConfiguration = configuration
         }
@@ -88,7 +84,7 @@ extension PlantConfigurationViewController {
 
             if case .plantIcon(_) = itemIdentifier.rowType {
                 supplementaryView.image = UIImage(systemName: "pencil")
-                supplementaryView.tapAction = itemIdentifier.onTap
+//                supplementaryView.tapAction = itemIdentifier.onTap
             }
         }
     }
@@ -105,42 +101,43 @@ extension PlantConfigurationViewController {
 
 // MARK: - DataSource Configuration
 extension PlantConfigurationViewController {
-     func makeSnapshot(from plant: Plant) -> NSDiffableDataSourceSnapshot<Section, Item> {
+     func makeSnapshot(from plant: GHPlant) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
         snapshot.appendSections(Section.allCases)
 
         snapshot.appendItems([
             Item(
-                rowType: .plantIcon(plant.icon),
-                onTap: {
-                    let vc = PlantIconPickerViewController(plant: plant)
-                    vc.delegate = self
-                    let nav = UINavigationController(rootViewController: vc)
-                    self.navigateTo(nav, modal: true)
-                })
+                rowType: .plantIcon(plant.icon)
+//                onTap: {
+//                    let vc = PlantIconPickerViewController(plant: plant)
+//                    vc.delegate = self
+//                    let nav = UINavigationController(rootViewController: vc)
+//                    self.navigateTo(nav, modal: true)
+//                }
+            )
         ], toSection: .image)
 
         snapshot.appendItems([
             Item(
-                rowType: .textField(image: UIImage(systemName: "leaf.fill"), value: plant.name, placeholder: "Plant Name"),
-                onTap: nil
+                rowType: .textField(image: UIImage(systemName: "leaf.fill"), value: plant.name, placeholder: "Plant Name")
+//                onTap: nil
             ),
             Item(
-                rowType: .listValue(image: nil, text: "Plant Type", secondaryText: plant.type.commonName),
-                onTap: {
-                    let vc = PlantTypeViewController(nibName: nil, bundle: nil)
-                    vc.selectedPlantType = plant.type
-                    vc.delegate = self
-                    self.navigateTo(vc)
-                }
+                rowType: .listValue(image: nil, text: "Plant Type", secondaryText: plant.type)
+//                onTap: {
+//                    let vc = PlantTypeViewController(nibName: nil, bundle: nil)
+//                    vc.selectedPlantType = plant.type
+//                    vc.delegate = self
+//                    self.navigateTo(vc)
+//                }
             )
         ], toSection: .plantInfo)
 
         let tasks: [Item] = plant.tasks.map {
             Item(
-                rowType: .list(icon: $0.type.icon, text: $0.type.description, secondaryText: $0.careInfo.description),
-                onTap: nil
+                rowType: .list(icon: $0.category?.icon, text: $0.category?.description, secondaryText: $0.interval?.description)
+//                onTap: nil
             )
         }
         snapshot.appendItems(tasks, toSection: .care)

@@ -20,7 +20,8 @@ class CareDetailViewController: UIViewController {
             applySnapshotIfAble()
         }
     }
-    var selectedTaskID: UUID? {
+    
+    var selectedTask: GHTask? {
         didSet {
             applySnapshotIfAble()
         }
@@ -32,10 +33,28 @@ class CareDetailViewController: UIViewController {
     }
     
     struct Item: Hashable {
+        var icon: GHIcon?
         var image: UIImage?
-        var icon: Icon?
+        var tintColor: UIColor?
+        
         var text: String?
         var secondaryText: String?
+        
+        init(icon: GHIcon?, text: String?, secondaryText: String?) {
+            self.icon = icon
+            self.image = nil
+            self.tintColor = nil
+            self.text = text
+            self.secondaryText = secondaryText
+        }
+        
+        init(image: UIImage?, tintColor: UIColor?, text: String?, secondaryText: String?) {
+            self.icon = nil
+            self.image = image
+            self.tintColor = tintColor
+            self.text = text
+            self.secondaryText = secondaryText
+        }
     }
     
     lazy var collectionView: UICollectionView = {
@@ -92,7 +111,7 @@ extension CareDetailViewController {
 
 extension CareDetailViewController {
     func applySnapshotIfAble() {
-        guard plant != nil && selectedTaskID != nil else { return }
+        guard plant != nil && selectedTask != nil else { return }
         let snapshot = makeSnapshot()
         dataSource.apply(snapshot)
     }
@@ -100,20 +119,19 @@ extension CareDetailViewController {
     func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
-        guard let strongPlant = plant, let selectedTask = strongPlant.tasks.first(where: { $0.id == selectedTaskID }) else { return snapshot }
+        if let selectedTask = selectedTask {
+            snapshot.appendSections(Section.allCases)
+            snapshot.appendItems([
+                Item(icon: selectedTask.category?.icon, text: selectedTask.category?.description, secondaryText: selectedTask.interval?.description)
+            ], toSection: .header)
         
-        
-        snapshot.appendSections(Section.allCases)
-        snapshot.appendItems([
-            Item(icon: selectedTask.type.icon, text: selectedTask.type.description, secondaryText: selectedTask.interval.description)
-        ], toSection: .header)
-    
-        let image = selectedTask.interval == .none ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
-        let item = Item(image: image, text: selectedTask.interval.description, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.startingDate))")
-        
-        snapshot.appendItems([
-            item
-        ], toSection: .schedule)
+            let image = Int(selectedTask.interval?.type ?? 0) == GHTaskIntervalType.none.rawValue ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
+            let item = Item(image: image, tintColor: .systemBlue, text: nil, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.interval?.startDate ?? Date()))")
+            
+            snapshot.appendItems([
+                item
+            ], toSection: .schedule)
+        }
         
         return snapshot
     }

@@ -8,9 +8,9 @@
 import UIKit
 
 extension TaskCalendarViewController {
-    func configureDataSource() {
+    func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let plantTaskCellRegistration = createPlantCellRegistration()
-        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
+        let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             collectionView.dequeueConfiguredReusableCell(using: plantTaskCellRegistration, for: indexPath, item: item)
         }
 
@@ -24,63 +24,31 @@ extension TaskCalendarViewController {
                     return nil
             }
         }
-    }
-
-    func createSnapshot(for plants: [TaskType: [Plant]]) -> NSDiffableDataSourceSnapshot<Section, Item> {
-        // Transform [Task: [Plant]] to [Section: [Item]]
-        let data: [Section: [Item]] = plants.reduce(into: [Section: [Item]]()) { dict, item in
-            let (taskType, plants) = item
-            let section = Section(taskType: taskType)
-            let items: [Item] = plants.compactMap { plant in
-                guard let task = plant.tasks.first(where: { $0.type == taskType }) else { return nil }
-                return Item(plant: plant, task: task)
-            }
-
-            dict[section, default: []].append(contentsOf: items)
-        }
-
-        // Create the snapshot
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-
-        // Apply the sections
-        let sections = data.keys.sorted(by: { $0.taskType.description < $1.taskType.description })
-        snapshot.appendSections(sections)
-
-        // Apply the plants to each section
-        data.forEach { section, items in
-            snapshot.appendItems(items, toSection: section)
-        }
-
-        return snapshot
-    }
-    
-    func reloadView() {
-        if let model = model {
-            data = model.getPlantsNeedingCare(on: selectedDate)
-            let snapshot = createSnapshot(for: data)
-            dataSource.apply(snapshot)
-        }
+        
+        return dataSource
     }
 
     private func createPlantCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
-        return UICollectionView.CellRegistration<TaskCalendarListCell, Item> { cell, _, item in
-            if item.task.currentStatus() == .complete {
-                cell.accessories = [.checkmark()]
-            } else {
-                let actionHander: UIActionHandler = {[weak self] _ in
-                    guard let self = self else { return }
-                    let plant = item.plant
-                    let task = item.task
-                    
-                    plant.logCare(for: task)
-                    self.reloadView()
-                }
-                cell.accessories = [
-                    .todoAccessory(actionHandler: actionHander)
-                ]
-            }
+        return UICollectionView.CellRegistration<TaskCalendarListCell, Item> {cell, indexPath, item in
+//            guard let task = self?.taskCalendarProvider.object(at: indexPath) else { return }
             
-            cell.updateWith(task: item.task, plant: item.plant)
+//            if item.task.currentStatus() == .complete {
+//                cell.accessories = [.checkmark()]
+//            } else {
+//                let actionHander: UIActionHandler = {[weak self] _ in
+//                    guard let self = self else { return }
+//                    let plant = item.plant
+//                    let task = item.task
+//
+//                    plant.logCare(for: task)
+//                    self.reloadView()
+//                }
+//                cell.accessories = [
+//                    .todoAccessory(actionHandler: actionHander)
+//                ]
+//            }
+//
+//            cell.updateWith(task: item.task, plant: item.plant)
         }
     }
 

@@ -8,50 +8,64 @@
 import Foundation
 import UIKit
 
-class Plant {
-    var id: UUID
+class Plant: NSObject, NSCopying {
+    typealias IDType = String
+    
+    var id: IDType
     let creationDate: Date
     
     var name: String
-    var type: PlantType
+    var type: PlantType?
     
     var icon: Icon
     
     var tasks: [Task]
     
-    internal init(id: UUID = UUID(), creationDate: Date = Date(), name: String, type: PlantType, icon: Icon? = nil, tasks: [Task], careInfo: [TaskType: String]? = nil) {
+    convenience init(name: String, icon: Icon, type: PlantType?, tasks: [Task]) {
+        self.init(id: UUID().uuidString, creationDate: Date(), name: name, type: type, icon: icon, tasks: tasks)
+    }
+    
+    init(id: String, creationDate: Date, name: String, type: PlantType?, icon: Icon, tasks: [Task]) {
         self.id = id
         self.creationDate = creationDate
         self.name = name
         self.type = type
-        self.icon = icon ?? .symbol(name: "leaf.fill", tintColor: .systemBlue)
+        self.icon = icon
         self.tasks = tasks
-        
-        tasks.forEach { task in
-            if let info = careInfo?.first(where: { key, _ in
-                task.type == key
-            }) {
-                task.careInfo = .text(info.value)
-            }
+    }
+    
+    func copy(with zone: NSZone? = nil) -> Any {
+        return Plant(id: self.id, creationDate: self.creationDate, name: self.name, type: self.type, icon: self.icon, tasks: self.tasks)
+    }
+}
+
+// TaskStore CRUD
+extension Plant {
+    @discardableResult func createTask() -> Task {
+        let newTask = Task(type: .watering, interval: .none, startingDate: Date())
+        tasks.append(newTask)
+        return newTask
+    }
+    
+    @discardableResult func removeTask(_ taskToRemove: Task) -> Task? {
+        if let indexToRemove = tasks.firstIndex(of: taskToRemove) {
+            return tasks.remove(at: indexToRemove)
         }
+        
+        return nil
     }
 }
 
 // MARK: - Intents
-
 extension Plant {
-    func logCare(forTaskWithID id: UUID) {
-        if let task = tasks.first(where: { $0.id == id}) {
-            logCare(for: task)
-        }
-    }
-    
     func logCare(for task: Task) {
         logCare(for: task, on: Date())
     }
     
     func logCare(for task: Task, on date: Date) {
-        task.logCompletedCare(on: date)
+        if let taskIndex = tasks.firstIndex(of: task) {
+            tasks[taskIndex].logCompletedCare(on: date)
+        }
     }
 }
 
@@ -127,21 +141,5 @@ extension Plant {
         } else {
             return []
         }
-    }
-}
-
-extension Plant: Hashable, Equatable {
-    static func == (lhs: Plant, rhs: Plant) -> Bool {
-        lhs.id == rhs.id
-            && lhs.creationDate == rhs.creationDate
-            && lhs.name == rhs.name
-            && lhs.type == rhs.type
-            && lhs.icon == rhs.icon
-            && lhs.tasks == rhs.tasks
-    }
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-        hasher.combine(creationDate)
     }
 }

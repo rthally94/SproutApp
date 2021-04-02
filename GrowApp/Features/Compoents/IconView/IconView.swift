@@ -14,13 +14,8 @@ enum CornerStyle: Hashable {
     case none
 }
 
-enum ScaleMode: Hashable {
-    case padded(multiplier: CGFloat, points: CGFloat)
-    case full
-}
-
 struct IconConfiguration: Hashable {
-    var icon: Icon?
+    var icon: GHIcon?
     var cornerMode: CornerStyle?
     
     func cornerRadius(rect: CGRect) -> CGFloat {
@@ -35,21 +30,13 @@ struct IconConfiguration: Hashable {
     }
     
     var image: UIImage? {
-        switch icon {
-        case let .image(image):
+        if let image = icon?.image as? UIImage {
             return image
-        default:
-            return nil
+        } else if let symbolName = icon?.symbolName, let image = UIImage(systemName: symbolName) {
+            return image
         }
-    }
-    
-    var symbolImage: UIImage? {
-        switch icon {
-        case let .symbol(symbolName, _):
-            return UIImage(systemName: symbolName)
-        default:
-            return nil
-        }
+        
+        return nil
     }
     
     var iconColor: UIColor {
@@ -57,12 +44,11 @@ struct IconConfiguration: Hashable {
     }
     
     var tintColor: UIColor? {
-        switch icon {
-        case let .symbol(_, tintColor):
-            return tintColor
-        default:
-            return nil
+        if let hexColor = icon?.tintColor, let color = UIColor(hex: hexColor) {
+            return color
         }
+        
+        return nil
     }
     
     var gradientBackground: CAGradientLayer {
@@ -75,8 +61,7 @@ struct IconConfiguration: Hashable {
 
 class IconView: UIView {
     func defaultConfiguration() -> IconConfiguration {
-        let icon: Icon = .symbol(name: "exclamationmark.triangle", tintColor: .systemGray)
-        return IconConfiguration(icon: icon, cornerMode: .circle)
+        return IconConfiguration(cornerMode: .circle)
     }
     
     private var appliedIconConfiguration: IconConfiguration?
@@ -143,8 +128,11 @@ class IconView: UIView {
         clipsToBounds = true
         
         // Configure Icon
-        imageIconView.image = config.image
-        symbolIconView.image = config.symbolImage
+        if config.icon?.image != nil {
+            imageIconView.image = config.image
+        } else if config.icon?.symbolName != nil {
+            symbolIconView.image = config.image
+        }
         
         // Colors
         symbolIconView.tintColor = config.iconColor
