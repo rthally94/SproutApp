@@ -73,7 +73,7 @@ class PlantGroupViewController: UIViewController {
     }
     
     @objc func showPlantConfiguration() {
-        let vc = PlantConfigurationViewController(storageProvider: storageProvider, model: model)
+        let vc = PlantConfigurationViewController(storageProvider: storageProvider)
         present(vc.wrappedInNavigationController(), animated: true)
     }
 }
@@ -121,7 +121,7 @@ extension PlantGroupViewController {
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = plantsProvider.object(at: indexPath)
-        let vc = PlantDetailViewController(plant: item, storageProvider: storageProvider, model: model)
+        let vc = PlantDetailViewController(plant: item, storageProvider: storageProvider)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

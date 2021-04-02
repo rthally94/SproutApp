@@ -24,7 +24,7 @@ class MainViewController: UIViewController {
     }()
     
     lazy var plantConfigurationVC: some UIViewController = {
-        let vc = PlantConfigurationViewController(storageProvider: storageProvider, model: model)
+        let vc = PlantConfigurationViewController(storageProvider: storageProvider)
         return vc.wrappedInNavigationController()
     }()
     

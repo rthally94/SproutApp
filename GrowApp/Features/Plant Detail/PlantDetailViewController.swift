@@ -18,15 +18,13 @@ class PlantDetailViewController: UIViewController {
     }()
     static let careDateFormatter = RelativeDateFormatter()
     
-    var model: GreenHouseAppModel
     var storageProvider: StorageProvider
     
     var plant: GHPlant
     
-    init(plant: GHPlant, storageProvider: StorageProvider, model: GreenHouseAppModel) {
+    init(plant: GHPlant, storageProvider: StorageProvider) {
         self.plant = plant
         self.storageProvider = storageProvider
-        self.model = model
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -103,7 +101,7 @@ class PlantDetailViewController: UIViewController {
         return view
     }()
     
-    lazy var dataSource: UICollectionViewDiffableDataSource<Section, Item> = makeDataSource()
+    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
     override func loadView() {
         super.loadView()
@@ -114,13 +112,16 @@ class PlantDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dataSource = makeDataSource()
+        reloadUI()
+        
         title = "Plant Details"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPlant))
     }
     
     //MARK: Actions
     @objc private func editPlant() {
-        let vc = PlantConfigurationViewController(plant: plant, storageProvider: storageProvider, model: model)
+        let vc = PlantConfigurationViewController(plant: plant, storageProvider: storageProvider)
 //        vc.onSave = configureSubviews
         
         present(vc.wrappedInNavigationController(), animated: true)
@@ -367,7 +368,7 @@ extension PlantDetailViewController {
         collectionView.pinToBoundsOf(view)
     }
     
-    func configureSubviews() {
+    func reloadUI() {
         let snapshot = makeSnapshot()
         dataSource.apply(snapshot)
     }

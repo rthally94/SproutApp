@@ -15,6 +15,8 @@ class StorageProvider {
         ValueTransformer.setValueTransformer(UIImageTransformer(), forName: NSValueTransformerName("UIImageValueTransformer"))
         persistentContainer = NSPersistentContainer(name: "GreenHouseDataModel")
         
+        persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+        
         persistentContainer.loadPersistentStores(completionHandler: { description, error in
             if let error = error {
                 fatalError("Core Data store failed to load with error: \(error)")

@@ -9,7 +9,6 @@ import CoreData
 import UIKit
 
 class PlantConfigurationViewController: UIViewController {
-    var model: GreenHouseAppModel
     var viewContext: NSManagedObjectContext
     
     private var _plantIsEditing = false
@@ -18,10 +17,8 @@ class PlantConfigurationViewController: UIViewController {
     
     /// Configures the plant configurator for creating a new plant
     /// - Parameter model: The application model
-    init(storageProvider: StorageProvider, model: GreenHouseAppModel) {
+    init(storageProvider: StorageProvider) {
         viewContext = storageProvider.persistentContainer.viewContext.makeEditingContext()
-        self.model = model
-    
         
         // 1. Create a new plant in the model
         let newPlant = GHPlant(context: viewContext)
@@ -42,9 +39,8 @@ class PlantConfigurationViewController: UIViewController {
     /// - Parameters:
     ///   - plant: The plant to edit
     ///   - model: The application model
-    init(plant: GHPlant, storageProvider: StorageProvider, model: GreenHouseAppModel) {
+    init(plant: GHPlant, storageProvider: StorageProvider) {
         viewContext = storageProvider.persistentContainer.viewContext.makeEditingContext()
-        self.model = model
         
         // 1. Store the plant as a deep copy
         _plant = viewContext.object(with: plant.objectID) as! GHPlant
