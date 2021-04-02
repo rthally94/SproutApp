@@ -22,5 +22,21 @@ class StorageProvider {
                 fatalError("Core Data store failed to load with error: \(error)")
             }
         })
+        
+        let request: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlantType.plantCount, ascending: true)]
+        if let types = try? persistentContainer.viewContext.fetch(request), types.isEmpty {
+            loadPlantTypes()
+        }
+    }
+    
+    func loadPlantTypes() {
+        PlantType.allTypes.forEach { type in
+            let newType = GHPlantType(context: persistentContainer.viewContext)
+            newType.scientificName = type.scientificName
+            newType.commonName = type.commonName
+        }
+        
+        try? persistentContainer.viewContext.save()
     }
 }

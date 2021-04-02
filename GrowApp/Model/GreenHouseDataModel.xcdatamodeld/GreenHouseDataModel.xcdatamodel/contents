@@ -11,9 +11,15 @@
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="type" optional="YES" attributeType="String"/>
         <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHIcon" inverseName="plant" inverseEntity="GHIcon"/>
         <relationship name="tasks_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GHTask" inverseName="plant" inverseEntity="GHTask"/>
+        <relationship name="type" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlantType" inverseName="plants" inverseEntity="GHPlantType"/>
+    </entity>
+    <entity name="GHPlantType" representedClassName="GHPlantType" syncable="YES" codeGenerationType="class">
+        <attribute name="commonName" optional="YES" attributeType="String"/>
+        <attribute name="plantCount" attributeType="Integer 16" derived="YES" derivationExpression="plants.@count" usesScalarValueType="YES"/>
+        <attribute name="scientificName" optional="YES" attributeType="String"/>
+        <relationship name="plants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="type" inverseEntity="GHPlant"/>
     </entity>
     <entity name="GHTask" representedClassName="GHTask" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
@@ -39,5 +45,6 @@
         <element name="GHIcon" positionX="-36" positionY="36" width="128" height="104"/>
         <element name="GHTaskInterval" positionX="-27" positionY="63" width="128" height="89"/>
         <element name="GHTaskType" positionX="-18" positionY="99" width="128" height="74"/>
+        <element name="GHPlantType" positionX="0" positionY="108" width="128" height="89"/>
     </elements>
 </model>

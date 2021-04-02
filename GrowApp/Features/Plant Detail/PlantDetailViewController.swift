@@ -8,6 +8,7 @@
 import UIKit
 
 class PlantDetailViewController: UIViewController {
+    // MARK: - Properties
     static let dateComponentsFormatter: DateComponentsFormatter = {
        let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.month, .weekOfMonth, .day]
@@ -21,6 +22,7 @@ class PlantDetailViewController: UIViewController {
     var storageProvider: StorageProvider
     
     var plant: GHPlant
+    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
     init(plant: GHPlant, storageProvider: StorageProvider) {
         self.plant = plant
@@ -100,8 +102,13 @@ class PlantDetailViewController: UIViewController {
         view.delegate = self
         return view
     }()
+    lazy var plantEditor: PlantConfigurationViewController = {
+        let vc = PlantConfigurationViewController(plant: plant, storageProvider: storageProvider)
+        vc.delegate = self
+        return vc
+    }()
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    // MARK: - View Life Cycle
     
     override func loadView() {
         super.loadView()
@@ -113,18 +120,22 @@ class PlantDetailViewController: UIViewController {
         super.viewDidLoad()
         
         dataSource = makeDataSource()
-        reloadUI()
+        updateUI()
         
         title = "Plant Details"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPlant))
     }
     
-    //MARK: Actions
+    //MARK: - Actions
     @objc private func editPlant() {
-        let vc = PlantConfigurationViewController(plant: plant, storageProvider: storageProvider)
-//        vc.onSave = configureSubviews
-        
-        present(vc.wrappedInNavigationController(), animated: true)
+        present(plantEditor.wrappedInNavigationController(), animated: true)
+    }
+}
+
+extension PlantDetailViewController: PlantConfigurationDelegate {
+    func didUpdatePlant() {
+        self.plant = plantEditor.editingPlant
+        updateUI()
     }
 }
 
@@ -192,7 +203,7 @@ extension PlantDetailViewController {
         
         // Plant Info Header
         snapshot.appendItems([
-            Item(icon: plant.icon, text: plant.name, secondaryText: plant.type)
+            Item(icon: plant.icon, text: plant.name, secondaryText: plant.type?.commonName)
         ], toSection: .plantInfo)
         
         // Plant Care Summary
@@ -368,7 +379,7 @@ extension PlantDetailViewController {
         collectionView.pinToBoundsOf(view)
     }
     
-    func reloadUI() {
+    func updateUI() {
         let snapshot = makeSnapshot()
         dataSource.apply(snapshot)
     }

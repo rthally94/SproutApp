@@ -5,62 +5,64 @@
 //  Created by Ryan Thally on 2/21/21.
 //
 
+import Combine
 import UIKit
 
-protocol PlantTypePickerDelegate {
-    func plantTypePicker(didSelectType type: PlantType)
-}
+class PlantTypePickerViewController: UIViewController {
+    typealias Section = PlantTypesProvider.Section
+    typealias Item = PlantTypesProvider.Item
 
-class PlantTypeViewController: UIViewController {
-    var selectedPlantType: PlantType? = nil {
-        didSet {
-            guard dataSource != nil else { return }
-            applySnapshot()
-        }
-    }
-
-    var plantTypes: [PlantType] = PlantType.allTypes
-
-    var collectionView: UICollectionView! = nil
+    weak var delegate: PlantTypePickerDelegate?
+    var selectedType: GHPlantType?
+    
+    var storageProvider: StorageProvider
+    var plantTypesProvider: PlantTypesProvider
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    var delegate: PlantTypePickerDelegate? = nil
+    var cancellables = Set<AnyCancellable>()
 
-    enum Section: Hashable, CaseIterable, CustomStringConvertible {
-        case recent
-        case allPlants
-
-        var description: String {
-            switch self {
-                case .recent: return "Recent Plants"
-                case .allPlants: return "All Plants"
-            }
-        }
+    init(plant: GHPlant, storageProvider: StorageProvider) {
+        selectedType = plant.type
+        self.storageProvider = storageProvider
+        self.plantTypesProvider = PlantTypesProvider(storageProvider: storageProvider)
+        super.init(nibName: nil, bundle: nil)
     }
-
-    struct Item: Hashable {
-        var id: UUID
-        var scientificName: String
-        var commonName: String?
-        var isSelected: Bool
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
+    
+    var collectionView: UICollectionView! = nil
 
     override func loadView() {
         super.loadView()
 
         configureHiearchy()
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        dataSource = makeDataSource()
+        
+        plantTypesProvider.$snapshot
+            .sink(receiveValue: { snapshot in
+                if let snapshot = snapshot {
+                    self.dataSource.apply(snapshot)
+                }
+            })
+            .store(in: &cancellables)
+        
+        title = "Plant Types"
+    }
 }
 
-extension PlantTypeViewController {
+extension PlantTypePickerViewController {
     func configureHiearchy() {
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: makeLayout())
-
-        configureDataSource()
         collectionView.delegate = self
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
-        
         collectionView.pinToBoundsOf(view)
     }
 
@@ -72,15 +74,16 @@ extension PlantTypeViewController {
     }
 }
 
-extension PlantTypeViewController {
+extension PlantTypePickerViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        return UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
+        return UICollectionView.CellRegistration<UICollectionViewListCell, Item> {[weak self] cell, indexPath, item in
+            guard let type = self?.plantTypesProvider.object(withID: item.id) else { return }
             var configuration = cell.defaultContentConfiguration()
 
-            configuration.text = item.commonName
-            configuration.secondaryText = item.scientificName
-
-            if item.isSelected {
+            configuration.text = type.commonName
+            configuration.secondaryText = type.scientificName
+            
+            if type == self?.selectedType {
                 cell.accessories = [
                     .checkmark()
                 ]
@@ -101,10 +104,10 @@ extension PlantTypeViewController {
         }
     }
 
-    func configureDataSource() {
+    func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let cellRegistration = makeCellRegistration()
 
-        dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
+        let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
 
@@ -118,32 +121,20 @@ extension PlantTypeViewController {
                     return nil
             }
         }
-
-        // Apply Initial Snapshot
-        applySnapshot()
-    }
-
-    func applySnapshot() {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item >()
-
-        snapshot.appendSections([Section.allPlants])
-
-        let items = plantTypes.sorted(by: {$0.commonName < $1.commonName}).map { type in
-            return Item(id: type.id, scientificName: type.scientificName, commonName: type.commonName, isSelected: type == selectedPlantType)
-        }
-
-        snapshot.appendItems(items, toSection: .allPlants)
-
-        dataSource.apply(snapshot)
+        
+        return dataSource
     }
 }
 
-extension PlantTypeViewController: UICollectionViewDelegate {
+extension PlantTypePickerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = dataSource.itemIdentifier(for: indexPath)
-        selectedPlantType = plantTypes.first(where: { $0.id == item?.id })
-
-        guard let selected = selectedPlantType else { return }
-        delegate?.plantTypePicker(didSelectType: selected)
+        if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
+            selectedType = plantTypesProvider.object(withID: selectedItem.id)
+            
+            plantTypesProvider.selectItem(selectedItem)
+            delegate?.selectedTypeDidChange()
+            
+            collectionView.deselectItem(at: indexPath, animated: false)
+        }
     }
 }

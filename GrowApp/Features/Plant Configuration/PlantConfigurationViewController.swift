@@ -5,50 +5,49 @@
 //  Created by Ryan Thally on 1/24/21.
 //
 
+import Combine
 import CoreData
 import UIKit
 
 class PlantConfigurationViewController: UIViewController {
-    var viewContext: NSManagedObjectContext
+    // MARK: - Properties
+    var storageProvider: StorageProvider
+    weak var delegate: PlantConfigurationDelegate?
     
-    private var _plantIsEditing = false
-    internal var _plant: GHPlant
+    internal var dataSource: UICollectionViewDiffableDataSource<Section, Item>! = nil
     
+    internal var editingPlant: GHPlant
+    internal var selectedIndexPath: IndexPath?
     
     /// Configures the plant configurator for creating a new plant
     /// - Parameter model: The application model
     init(storageProvider: StorageProvider) {
-        viewContext = storageProvider.persistentContainer.viewContext.makeEditingContext()
+        self.storageProvider = storageProvider
         
         // 1. Create a new plant in the model
-        let newPlant = GHPlant(context: viewContext)
-        newPlant.name = ""
-        newPlant.type = PlantType.allTypes[0].scientificName
+        let newPlant = GHPlant(context: storageProvider.persistentContainer.viewContext)
         
         // 2. Store the plant as a deep copy
-        _plant = newPlant
-        
-        // 3. Set flag as false for new plant
-        _plantIsEditing = false
+        editingPlant = newPlant
         
         super.init(nibName: nil, bundle: nil)
+        
+        title = "New Plant"
     }
-    
     
     /// Configures the plant configurator for editing an existing plant
     /// - Parameters:
     ///   - plant: The plant to edit
     ///   - model: The application model
     init(plant: GHPlant, storageProvider: StorageProvider) {
-        viewContext = storageProvider.persistentContainer.viewContext.makeEditingContext()
+        self.storageProvider = storageProvider
         
-        // 1. Store the plant as a deep copy
-        _plant = viewContext.object(with: plant.objectID) as! GHPlant
-        
-        // 2. Set flag as true for edting plant
-        _plantIsEditing = true
+        // 1. Store the plant
+        editingPlant = plant
         
         super.init(nibName: nil, bundle: nil)
+        
+        title = "Edit Plant"
     }
     
     required init?(coder: NSCoder) {
@@ -101,6 +100,25 @@ class PlantConfigurationViewController: UIViewController {
     
     internal struct Item: Hashable {
         let rowType: RowType
+        var action: (() -> Void)?
+        
+        init(rowType: RowType) {
+            self.rowType = rowType
+            self.action = nil
+        }
+        
+        init(rowType: RowType, action: (() -> Void)?) {
+            self.rowType = rowType
+            self.action = action
+        }
+        
+        static func == (lhs: PlantConfigurationViewController.Item, rhs: PlantConfigurationViewController.Item) -> Bool {
+            lhs.rowType == rhs.rowType
+        }
+        
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(rowType)
+        }
     }
     
     internal enum RowType: Hashable {
@@ -110,9 +128,21 @@ class PlantConfigurationViewController: UIViewController {
         case textField(image: UIImage?, value: String?, placeholder: String?)
     }
     
-    internal var dataSource: UICollectionViewDiffableDataSource<Section, Item>! = nil
     internal var collectionView: UICollectionView! = nil
-    internal var selectedIndexPath: IndexPath?
+    
+    internal lazy var plantIconPicker: PlantIconPickerViewController = {
+       let vc = PlantIconPickerViewController(plant: editingPlant)
+        vc.delegate = self
+        return vc
+    }()
+    
+    internal lazy var plantTypePicker: PlantTypePickerViewController = {
+        let vc = PlantTypePickerViewController(plant: editingPlant, storageProvider: storageProvider)
+        vc.delegate = self
+        return vc
+    }()
+    
+    // MARK: - View Life Cycle
     
     override func loadView() {
         super.loadView()
@@ -126,7 +156,6 @@ class PlantConfigurationViewController: UIViewController {
         collectionView.backgroundColor = .systemGroupedBackground
         configureDataSource()
         
-        title = _plantIsEditing ? "Edit Plant" : "New Plant"
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(discardChanges))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(applyChanges))
     }
@@ -139,11 +168,18 @@ class PlantConfigurationViewController: UIViewController {
         }
     }
     
+    private func updateUI() {
+        guard dataSource != nil else { return }
+        dataSource.apply(makeSnapshot(from: editingPlant))
+    }
+    
+    // MARK: - Actions
     @objc private func applyChanges() {
         // 1. Check for changes
-        if viewContext.hasChanges {
+        if storageProvider.persistentContainer.viewContext.hasChanges {
             // 2. Apply changes to main context
-            try? viewContext.save()
+            try? storageProvider.persistentContainer.viewContext.save()
+            delegate?.didUpdatePlant()
         }
 
         // 3. dismiss
@@ -152,11 +188,6 @@ class PlantConfigurationViewController: UIViewController {
     
     @objc private func discardChanges() {
         dismiss(animated: true)
-    }
-    
-    private func updateViews() {
-        guard dataSource != nil else { return }
-        dataSource.apply(makeSnapshot(from: _plant))
     }
 }
 
@@ -205,14 +236,15 @@ extension PlantConfigurationViewController {
 }
 
 extension PlantConfigurationViewController: PlantIconPickerDelegate {
-    func didChangeIcon(to icon: GHIcon?) {
-        updateViews()
+    func selectedIconDidChange(to icon: GHIcon?) {
+        editingPlant.icon = plantIconPicker.icon
+        updateUI()
     }
 }
 
 extension PlantConfigurationViewController: PlantTypePickerDelegate {
-    func plantTypePicker(didSelectType type: PlantType) {
-        updateViews()
+    func selectedTypeDidChange() {
+        editingPlant.type = plantTypePicker.selectedType
+        updateUI()
     }
 }
-

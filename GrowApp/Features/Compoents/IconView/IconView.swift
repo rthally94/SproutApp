@@ -34,26 +34,26 @@ struct IconConfiguration: Hashable {
             return image
         } else if let symbolName = icon?.symbolName, let image = UIImage(systemName: symbolName) {
             return image
+        } else {
+            return UIImage(systemName: "photo.on.rectangle.angled")
         }
-        
-        return nil
     }
     
     var iconColor: UIColor {
         return UIColor.labelColor(against: tintColor)
     }
     
-    var tintColor: UIColor? {
+    var tintColor: UIColor {
         if let hexColor = icon?.tintColor, let color = UIColor(hex: hexColor) {
             return color
+        } else {
+            return .gray
         }
-        
-        return nil
     }
     
     var gradientBackground: CAGradientLayer {
         let gradient = CAGradientLayer()
-        let color = tintColor ?? .gray
+        let color = tintColor
         gradient.colors = [color.cgColor, color.cgColor]
         return gradient
     }
@@ -131,6 +131,8 @@ class IconView: UIView {
         if config.icon?.image != nil {
             imageIconView.image = config.image
         } else if config.icon?.symbolName != nil {
+            symbolIconView.image = config.image
+        } else {
             symbolIconView.image = config.image
         }
         

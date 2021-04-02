@@ -48,7 +48,6 @@ extension PlantsProvider: NSFetchedResultsControllerDelegate {
         }
         
         newSnapshot.reloadItems(idsToReload)
-        
         self.snapshot = newSnapshot
     }
 }

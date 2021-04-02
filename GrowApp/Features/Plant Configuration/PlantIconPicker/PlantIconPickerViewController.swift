@@ -8,7 +8,7 @@
 import UIKit
 
 protocol PlantIconPickerDelegate {
-    func didChangeIcon(to icon: GHIcon?)
+    func selectedIconDidChange(to icon: GHIcon?)
 }
 
 class PlantIconPickerViewController: UIViewController {
@@ -87,7 +87,7 @@ class PlantIconPickerViewController: UIViewController {
     }
 
     @objc private func saveAndDismiss() {
-        delegate?.didChangeIcon(to: icon)
+        delegate?.selectedIconDidChange(to: icon)
         dismiss(animated: true)
     }
 }

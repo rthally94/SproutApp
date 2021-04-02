@@ -55,15 +55,19 @@ class PlantIconSupplementaryView: UICollectionReusableView {
         
         let length = min(frame.width, frame.height)
         let inset = length / 4
-        let radius: CGFloat = (length / 2) + inset / 2
         
-        layer.cornerRadius = radius
         buttonView.contentEdgeInsets = .init(top: inset, left: inset, bottom: inset, right: inset)
         clipsToBounds = true
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        layer.cornerRadius = min(bounds.height, bounds.width) / 2
     }
 
 
