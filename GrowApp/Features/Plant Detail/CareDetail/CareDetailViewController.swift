@@ -157,7 +157,8 @@ extension CareDetailViewController {
         UICollectionView.CellRegistration<IconHeaderCell, Item>() { cell, indexPath, item in
             if let icon = item.icon {
                 var config = cell.iconView.defaultConfiguration()
-                config.icon = icon
+                config.image = icon.uiimage
+                config.tintColor = icon.uicolor
                 cell.iconView.iconViewConfiguration = config
             }
             

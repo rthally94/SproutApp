@@ -130,8 +130,8 @@ class PlantConfigurationViewController: UIViewController {
     
     internal var collectionView: UICollectionView! = nil
     
-    internal lazy var plantIconPicker: PlantIconPickerViewController = {
-       let vc = PlantIconPickerViewController(plant: editingPlant)
+    internal lazy var plantIconPicker: PlantIconPickerController = {
+       let vc = PlantIconPickerController(plant: editingPlant, storageProvider: storageProvider)
         vc.delegate = self
         return vc
     }()
@@ -178,8 +178,8 @@ class PlantConfigurationViewController: UIViewController {
         // 1. Check for changes
         if storageProvider.persistentContainer.viewContext.hasChanges {
             // 2. Apply changes to main context
-            try? storageProvider.persistentContainer.viewContext.save()
-            delegate?.didUpdatePlant()
+            storageProvider.saveContext()
+            delegate?.plantEditor(self, didUpdatePlant: editingPlant)
         }
 
         // 3. dismiss
@@ -187,6 +187,7 @@ class PlantConfigurationViewController: UIViewController {
     }
     
     @objc private func discardChanges() {
+        delegate?.plantEditorDidCancel(self)
         dismiss(animated: true)
     }
 }
@@ -235,9 +236,9 @@ extension PlantConfigurationViewController {
     }
 }
 
-extension PlantConfigurationViewController: PlantIconPickerDelegate {
-    func selectedIconDidChange(to icon: GHIcon?) {
-        editingPlant.icon = plantIconPicker.icon
+extension PlantConfigurationViewController: PlantIconPickerControllerDelegate {
+    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: GHIcon) {
+        editingPlant.icon = picker.icon
         updateUI()
     }
 }

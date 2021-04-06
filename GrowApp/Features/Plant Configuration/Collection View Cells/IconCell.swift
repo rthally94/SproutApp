@@ -7,36 +7,27 @@
 
 import UIKit
 
-class PlantIconCell: UICollectionViewCell {
-    var icon: GHIcon? {
-        didSet {
-            setNeedsUpdateConfiguration()
-        }
-    }
-    
-    override func updateConfiguration(using state: UICellConfigurationState) {
-        var content = PlantIconContentConfiguration().updated(for: state)
-        
-        content.icon = icon
-        
-        contentConfiguration = content
+class IconCell: UICollectionViewCell {
+    func defaultConfigurtion() -> IconCellContentConfiguration {
+        IconCellContentConfiguration()
     }
 }
 
-struct PlantIconContentConfiguration: UIContentConfiguration, Hashable {
-    var icon: GHIcon? = nil
+struct IconCellContentConfiguration: UIContentConfiguration, Hashable {
+    var image: UIImage?
+    var tintColor: UIColor?
     
     func makeContentView() -> UIView & UIContentView {
-        return PlantIconContentView(configuration: self)
+        return IconCellContentView(configuration: self)
     }
     
-    func updated(for state: UIConfigurationState) -> PlantIconContentConfiguration {
+    func updated(for state: UIConfigurationState) -> IconCellContentConfiguration {
         return self
     }
 }
 
-class PlantIconContentView: UIView & UIContentView {
-    init(configuration: PlantIconContentConfiguration) {
+class IconCellContentView: UIView & UIContentView {
+    init(configuration: IconCellContentConfiguration) {
         super.init(frame: .zero)
         
         self.configuration = configuration
@@ -50,7 +41,7 @@ class PlantIconContentView: UIView & UIContentView {
     var configuration: UIContentConfiguration {
         get { appliedContentConfiguration }
         set {
-            guard let newConfig = newValue as? PlantIconContentConfiguration else { return }
+            guard let newConfig = newValue as? IconCellContentConfiguration else { return }
             apply(configuration: newConfig)
         }
     }
@@ -68,16 +59,15 @@ class PlantIconContentView: UIView & UIContentView {
         ])
     }
     
-    private var appliedContentConfiguration: PlantIconContentConfiguration!
-    private func apply(configuration: PlantIconContentConfiguration) {
+    private var appliedContentConfiguration: IconCellContentConfiguration!
+    private func apply(configuration: IconCellContentConfiguration) {
         guard appliedContentConfiguration != configuration else { return }
         appliedContentConfiguration = configuration
         
         // configure view
-        if let icon = configuration.icon {
-            var config = plantIcon.defaultConfiguration()
-            config.icon = icon
-            plantIcon.iconViewConfiguration = config
-        }
+        var config = plantIcon.defaultConfiguration()
+        config.image = appliedContentConfiguration.image
+        config.tintColor = appliedContentConfiguration.tintColor
+        plantIcon.iconViewConfiguration = config
     }
 }

@@ -109,7 +109,12 @@ class TaskCalendarListCell: GreenHouseListCell {
             } else {
                 content.secondaryText = "Last: Never"
             }
-            plantIconView.iconViewConfiguration = .init(icon: task.category?.icon, cornerMode: CornerStyle.none)
+            
+            var iconConfig = plantIconView.defaultConfiguration()
+            iconConfig.image = task.category?.icon?.uiimage
+            iconConfig.tintColor = task.category?.icon?.uicolor
+            iconConfig.cornerStyle = .none
+            plantIconView.iconViewConfiguration = iconConfig
         }
         
         content.image = nil

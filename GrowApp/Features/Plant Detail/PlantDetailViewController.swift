@@ -133,9 +133,10 @@ class PlantDetailViewController: UIViewController {
 }
 
 extension PlantDetailViewController: PlantConfigurationDelegate {
-    func didUpdatePlant() {
-        self.plant = plantEditor.editingPlant
+    func plantEditor(_ editor: PlantConfigurationViewController, didUpdatePlant plant: GHPlant) {
+        self.plant = plant
         updateUI()
+        try? storageProvider.persistentContainer.viewContext.save()
     }
 }
 
@@ -251,7 +252,8 @@ extension PlantDetailViewController {
         UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
             if let icon = item.icon {
                 var config = cell.iconView.defaultConfiguration()
-                config.icon = icon
+                config.image = icon.uiimage
+                config.tintColor = icon.uicolor
                 cell.iconView.iconViewConfiguration = config
             }
             

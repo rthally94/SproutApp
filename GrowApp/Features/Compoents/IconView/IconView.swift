@@ -8,18 +8,34 @@
 import UIKit
 import CoreGraphics
 
-enum CornerStyle: Hashable {
-    case circle
-    case roundedRect
-    case none
-}
-
 struct IconConfiguration: Hashable {
-    var icon: GHIcon?
-    var cornerMode: CornerStyle?
+    private static let placeholderImage = UIImage(systemName: "photo.on.rectangle.angled")!
+    private static let placeholderColor = UIColor.systemGray
+    
+    private var backingImage: UIImage?
+    var image: UIImage? {
+        get {
+            return backingImage ?? IconConfiguration.placeholderImage
+        }
+        set {
+            backingImage = newValue
+        }
+    }
+    
+    private var backingTintColor: UIColor?
+    var tintColor: UIColor? {
+        get {
+            backingTintColor ?? IconConfiguration.placeholderColor
+        }
+        set {
+            backingTintColor = newValue
+        }
+    }
+    
+    var cornerStyle: IconView.CornerStyle = .circle
     
     func cornerRadius(rect: CGRect) -> CGFloat {
-        switch cornerMode {
+        switch cornerStyle {
         case .circle:
             return min(rect.width, rect.height) / 2
         case .roundedRect:
@@ -29,39 +45,28 @@ struct IconConfiguration: Hashable {
         }
     }
     
-    var image: UIImage? {
-        if let image = icon?.image as? UIImage {
-            return image
-        } else if let symbolName = icon?.symbolName, let image = UIImage(systemName: symbolName) {
-            return image
-        } else {
-            return UIImage(systemName: "photo.on.rectangle.angled")
-        }
-    }
-    
     var iconColor: UIColor {
         return UIColor.labelColor(against: tintColor)
     }
     
-    var tintColor: UIColor {
-        if let hexColor = icon?.tintColor, let color = UIColor(hex: hexColor) {
-            return color
-        } else {
-            return .gray
-        }
-    }
-    
     var gradientBackground: CAGradientLayer {
         let gradient = CAGradientLayer()
-        let color = tintColor
-        gradient.colors = [color.cgColor, color.cgColor]
+        if let color = tintColor {
+            gradient.colors = [color.cgColor, color.cgColor]
+        }
         return gradient
     }
 }
 
 class IconView: UIView {
+    enum CornerStyle: Hashable {
+        case circle
+        case roundedRect
+        case none
+    }
+    
     func defaultConfiguration() -> IconConfiguration {
-        return IconConfiguration(cornerMode: .circle)
+        return IconConfiguration()
     }
     
     private var appliedIconConfiguration: IconConfiguration?
@@ -128,19 +133,17 @@ class IconView: UIView {
         clipsToBounds = true
         
         // Configure Icon
-        if config.icon?.image != nil {
+        if let image = config.image, !image.isSymbolImage {
+            // Apply image parameters
             imageIconView.image = config.image
-        } else if config.icon?.symbolName != nil {
-            symbolIconView.image = config.image
         } else {
+            // Apply SF Symbol parameters
             symbolIconView.image = config.image
+            symbolIconView.tintColor = config.iconColor
+            let gradient = config.gradientBackground
+            gradient.frame = layer.bounds
+            symbolIconView.layer.insertSublayer(gradient, at: 0)
         }
-        
-        // Colors
-        symbolIconView.tintColor = config.iconColor
-        let gradient = config.gradientBackground
-        gradient.frame = layer.bounds
-        symbolIconView.layer.insertSublayer(gradient, at: 0)
         
         appliedIconConfiguration = config
         appliedBounds = bounds

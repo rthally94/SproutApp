@@ -7,56 +7,61 @@
 
 import UIKit
 
-extension PlantIconPickerViewController {
-    func makeCellRegistration() -> UICollectionView.CellRegistration<PlantIconCell, Item> {
-        return UICollectionView.CellRegistration<PlantIconCell, Item>() { cell, indexPath, item in
-//            cell.icon = item.icon
+extension PlantIconPickerController {
+    func makeCellRegistration() -> UICollectionView.CellRegistration<IconCell, Item> {
+        return UICollectionView.CellRegistration<IconCell, Item>() { cell, indexPath, item in
+            var config = cell.defaultConfigurtion()
+            config.image = item.image
+            config.tintColor = item.tintColor
+            cell.contentConfiguration = config
         }
     }
-
+    
     func configureDataSource() {
         let cellRegistration = makeCellRegistration()
-
+        
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
-
-        dataSource.apply(createSnapshot())
+        
+        dataSource.apply(makeSnapshot())
     }
-
-    func createSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
+    
+    func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-
+        
         snapshot.appendSections([.currentImage, .recommended])
         snapshot.appendItems([
             Item(icon: icon)
         ], toSection: .currentImage)
-
+        
         snapshot.appendItems([
             Item(
                 image: UIImage(systemName: "camera"),
                 tintColor: .systemBlue
-//                onTap: {
-//                    self.showImagePicker(preferredType: .camera)
-//                }
-            ),
+            ) {
+                self.showImagePicker(preferredType: .camera)
+            },
             Item(
                 image: UIImage(systemName: "photo.on.rectangle"),
                 tintColor: .systemBlue
-//                onTap: {
-//                    self.showImagePicker(preferredType: .photoLibrary)
-//                }
-            ),
+            ) {
+                self.showImagePicker(preferredType: .photoLibrary)
+            },
             Item(
                 image: UIImage(systemName: "face.smiling"),
                 tintColor: .systemBlue
-            ),
+            ) {
+                print("🙈")
+            },
             Item(
                 image: UIImage(systemName: "pencil"),
                 tintColor: .systemBlue
-            ),
+            ) {
+                print("🙉")
+            },
         ], toSection: .recommended)
-
+        
         return snapshot
     }
 }

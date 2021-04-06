@@ -8,5 +8,11 @@
 import Foundation
 
 protocol PlantConfigurationDelegate: class {
-    func didUpdatePlant()
+    func plantEditor(_ editor: PlantConfigurationViewController, didUpdatePlant plant: GHPlant)
+    func plantEditorDidCancel(_ editor: PlantConfigurationViewController)
+}
+
+extension PlantConfigurationDelegate {
+    func plantEditor(_ editor: PlantConfigurationViewController, didUpdatePlant plant: GHPlant) { }
+    func plantEditorDidCancel(_ editor: PlantConfigurationViewController) { }
 }

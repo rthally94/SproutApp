@@ -9,10 +9,13 @@ import UIKit
 
 // MARK: - Cell Registrations
 extension PlantConfigurationViewController {
-    func createPlantIconCellRegistration() -> UICollectionView.CellRegistration<PlantIconCell, Item> {
-        return UICollectionView.CellRegistration<PlantIconCell, Item> { (cell, indexPath, item) in
+    func createPlantIconCellRegistration() -> UICollectionView.CellRegistration<IconCell, Item> {
+        return UICollectionView.CellRegistration<IconCell, Item> { (cell, indexPath, item) in
             if case let .plantIcon(icon) = item.rowType {
-                cell.icon = icon
+                var config = cell.defaultConfigurtion()
+                config.image = icon?.uiimage
+                config.tintColor = icon?.uicolor
+                cell.contentConfiguration = config
             }
         }
     }
@@ -109,7 +112,7 @@ extension PlantConfigurationViewController {
             Item(
                 rowType: .plantIcon(plant.icon),
                 action: {
-                    let vc = PlantIconPickerViewController(plant: plant)
+                    let vc = PlantIconPickerController(plant: plant, storageProvider: self.storageProvider)
                     vc.delegate = self
                     let nav = UINavigationController(rootViewController: vc)
                     self.navigateTo(nav, modal: true)
