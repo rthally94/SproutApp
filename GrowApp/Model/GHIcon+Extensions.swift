@@ -8,21 +8,23 @@
 import UIKit
 
 extension GHIcon {
-    var uicolor: UIColor? {
-        if let hexColor = tintColor {
+    var color: UIColor? {
+        if let hexColor = hexColor {
             return UIColor(hex: hexColor)
         }
         
         return nil
     }
     
-    var uiimage: UIImage? {
-        if let image = image as? UIImage {
-            return image
-        } else if let symbolName = symbolName, let symbol = UIImage(systemName: symbolName) {
-            return symbol
-        } else {
-            return nil
+    var image: UIImage? {
+        get {
+            if let imageData = imageData {
+                return UIImage(data: imageData)
+            } else if let symbolName = symbolName, let symbol = UIImage(systemName: symbolName) {
+                return symbol
+            } else {
+                return nil
+            }
         }
     }
 }

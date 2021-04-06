@@ -49,7 +49,7 @@ class PlantIconPickerController: UIViewController {
         var action: (() -> Void)?
         
         init(icon: GHIcon?, action: (() -> Void)? = nil) {
-            self.init(image: icon?.uiimage, tintColor: icon?.uicolor, action: action)
+            self.init(image: icon?.image, tintColor: icon?.color, action: action)
         }
         
         init(image: UIImage?, tintColor: UIColor?, action: (() -> Void)? = nil) {

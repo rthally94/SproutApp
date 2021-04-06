@@ -45,9 +45,8 @@ extension PlantIconPickerController: UIImagePickerControllerDelegate, UINavigati
             icon = GHIcon(context: storageProvider.persistentContainer.viewContext)
         }
         
-        icon?.image = image
+        icon?.imageData = image.pngData()
         updateUI(animated: false)
-        
         
         dismiss(animated: true)
     }

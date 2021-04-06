@@ -111,8 +111,8 @@ class TaskCalendarListCell: GreenHouseListCell {
             }
             
             var iconConfig = plantIconView.defaultConfiguration()
-            iconConfig.image = task.category?.icon?.uiimage
-            iconConfig.tintColor = task.category?.icon?.uicolor
+            iconConfig.image = task.category?.icon?.image
+            iconConfig.tintColor = task.category?.icon?.color
             iconConfig.cornerStyle = .none
             plantIconView.iconViewConfiguration = iconConfig
         }

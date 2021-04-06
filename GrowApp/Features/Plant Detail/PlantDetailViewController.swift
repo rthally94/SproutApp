@@ -132,11 +132,11 @@ class PlantDetailViewController: UIViewController {
     }
 }
 
-extension PlantDetailViewController: PlantConfigurationDelegate {
+extension PlantDetailViewController: PlantEditorDelegate {
     func plantEditor(_ editor: PlantConfigurationViewController, didUpdatePlant plant: GHPlant) {
         self.plant = plant
         updateUI()
-        try? storageProvider.persistentContainer.viewContext.save()
+        storageProvider.saveContext()
     }
 }
 
@@ -252,8 +252,8 @@ extension PlantDetailViewController {
         UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
             if let icon = item.icon {
                 var config = cell.iconView.defaultConfiguration()
-                config.image = icon.uiimage
-                config.tintColor = icon.uicolor
+                config.image = icon.image
+                config.tintColor = icon.color
                 cell.iconView.iconViewConfiguration = config
             }
             
@@ -286,8 +286,8 @@ extension PlantDetailViewController {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> {cell, _, item in
             var config = UIListContentConfiguration.subtitleCell()
             
-            config.image = item.icon?.uiimage
-            config.imageProperties.tintColor = item.icon?.uicolor
+            config.image = item.icon?.image
+            config.imageProperties.tintColor = item.icon?.color
             
             config.text = item.text
             config.secondaryText = item.secondaryText

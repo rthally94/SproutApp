@@ -13,8 +13,8 @@ extension PlantConfigurationViewController {
         return UICollectionView.CellRegistration<IconCell, Item> { (cell, indexPath, item) in
             if case let .plantIcon(icon) = item.rowType {
                 var config = cell.defaultConfigurtion()
-                config.image = icon?.uiimage
-                config.tintColor = icon?.uicolor
+                config.image = icon?.image
+                config.tintColor = icon?.color
                 cell.contentConfiguration = config
             }
         }
@@ -55,7 +55,7 @@ extension PlantConfigurationViewController {
             var configuration = cell.defaultContentConfiguration()
 
             if case let .list(icon, text, secondaryText) = item.rowType {
-                configuration.image = icon?.uiimage
+                configuration.image = icon?.image
                 configuration.text = text
                 configuration.secondaryText = secondaryText
             }

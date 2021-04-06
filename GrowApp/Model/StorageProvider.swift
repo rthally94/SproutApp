@@ -15,14 +15,13 @@ class StorageProvider {
         ValueTransformer.setValueTransformer(UIImageTransformer(), forName: NSValueTransformerName("UIImageValueTransformer"))
         persistentContainer = NSPersistentContainer(name: "GreenHouseDataModel")
         
-        persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
-        
         persistentContainer.loadPersistentStores(completionHandler: { description, error in
             if let error = error {
                 fatalError("Core Data store failed to load with error: \(error)")
             }
         })
         
+        persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         let request: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlantType.plantCount, ascending: true)]
         if let types = try? persistentContainer.viewContext.fetch(request), types.isEmpty {

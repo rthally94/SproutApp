@@ -7,7 +7,18 @@
 
 import UIKit
 
-class UIImageTransformer: ValueTransformer {
+final class UIImageTransformer: NSSecureUnarchiveFromDataTransformer {
+    static let name = NSValueTransformerName(rawValue: String(describing: UIImageTransformer.self))
+    
+    override static var allowedTopLevelClasses: [AnyClass] {
+        [UIImage.self]
+    }
+    
+    public static func register() {
+        let transformer = UIImageTransformer()
+        ValueTransformer.setValueTransformer(transformer, forName: name)
+    }
+    
     override func transformedValue(_ value: Any?) -> Any? {
         guard let image = value as? UIImage else { return nil }
         

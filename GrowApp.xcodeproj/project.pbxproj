@@ -51,7 +51,6 @@
 		FB7ED51D2615FF3C008FD1BE /* GHTask+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED51C2615FF3C008FD1BE /* GHTask+Extensions.swift */; };
 		FB7ED5212615FFD3008FD1BE /* GHTaskIntervalWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5202615FFD3008FD1BE /* GHTaskIntervalWrapper.swift */; };
 		FB7ED52B26164290008FD1BE /* PlantsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED52A26164290008FD1BE /* PlantsProvider.swift */; };
-		FB7ED53126166787008FD1BE /* NSManagedObjectContext+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED53026166787008FD1BE /* NSManagedObjectContext+Extension.swift */; };
 		FB7ED536261671EB008FD1BE /* PlantDetailItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED535261671EB008FD1BE /* PlantDetailItems.swift */; };
 		FB7ED53A26167484008FD1BE /* GHPlant+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED53926167484008FD1BE /* GHPlant+Extensions.swift */; };
 		FB7ED5422616A235008FD1BE /* GHIcon+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5412616A235008FD1BE /* GHIcon+Extensions.swift */; };
@@ -82,7 +81,7 @@
 		FBEB496C260CBED300F6060C /* PlantGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */; };
 		FBEB4972260CBEF800F6060C /* PlantCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4971260CBEF800F6060C /* PlantCardCell.swift */; };
 		FBF8AC5225DD80AC00E7E8EB /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF8AC5125DD80AC00E7E8EB /* IconView.swift */; };
-		FBFAECB92617D93300F0C67D /* PlantConfigurationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFAECB82617D93300F0C67D /* PlantConfigurationDelegate.swift */; };
+		FBFAECB92617D93300F0C67D /* PlantEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFAECB82617D93300F0C67D /* PlantEditorDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,7 +143,6 @@
 		FB7ED51C2615FF3C008FD1BE /* GHTask+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GHTask+Extensions.swift"; sourceTree = "<group>"; };
 		FB7ED5202615FFD3008FD1BE /* GHTaskIntervalWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHTaskIntervalWrapper.swift; sourceTree = "<group>"; };
 		FB7ED52A26164290008FD1BE /* PlantsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantsProvider.swift; sourceTree = "<group>"; };
-		FB7ED53026166787008FD1BE /* NSManagedObjectContext+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extension.swift"; sourceTree = "<group>"; };
 		FB7ED535261671EB008FD1BE /* PlantDetailItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailItems.swift; sourceTree = "<group>"; };
 		FB7ED53926167484008FD1BE /* GHPlant+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GHPlant+Extensions.swift"; sourceTree = "<group>"; };
 		FB7ED5412616A235008FD1BE /* GHIcon+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GHIcon+Extensions.swift"; sourceTree = "<group>"; };
@@ -175,7 +173,7 @@
 		FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlantGroupViewController.swift; path = "GrowApp/Features/All Plants/PlantGroupViewController.swift"; sourceTree = SOURCE_ROOT; };
 		FBEB4971260CBEF800F6060C /* PlantCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantCardCell.swift; sourceTree = "<group>"; };
 		FBF8AC5125DD80AC00E7E8EB /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
-		FBFAECB82617D93300F0C67D /* PlantConfigurationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantConfigurationDelegate.swift; sourceTree = "<group>"; };
+		FBFAECB82617D93300F0C67D /* PlantEditorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantEditorDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -329,7 +327,6 @@
 				FB6C461625F1975F009ED947 /* UIColor+Extension.swift */,
 				FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */,
 				FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */,
-				FB7ED53026166787008FD1BE /* NSManagedObjectContext+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -419,7 +416,7 @@
 				FB7B815E25BE2BE10053E543 /* PlantConfigurationViewController.swift */,
 				FBC7331C25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift */,
 				FBC7332025E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift */,
-				FBFAECB82617D93300F0C67D /* PlantConfigurationDelegate.swift */,
+				FBFAECB82617D93300F0C67D /* PlantEditorDelegate.swift */,
 				FBC7331A25E2E0D70048999C /* Collection View Cells */,
 				FBC7332E25E404A40048999C /* PlantIconPicker */,
 				FB7B815325BE189E0053E543 /* Plant Type Configuration */,
@@ -696,8 +693,7 @@
 				FB7ED51D2615FF3C008FD1BE /* GHTask+Extensions.swift in Sources */,
 				FBEB496C260CBED300F6060C /* PlantGroupViewController.swift in Sources */,
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
-				FBFAECB92617D93300F0C67D /* PlantConfigurationDelegate.swift in Sources */,
-				FB7ED53126166787008FD1BE /* NSManagedObjectContext+Extension.swift in Sources */,
+				FBFAECB92617D93300F0C67D /* PlantEditorDelegate.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */,
 				FB7ED5212615FFD3008FD1BE /* GHTaskIntervalWrapper.swift in Sources */,

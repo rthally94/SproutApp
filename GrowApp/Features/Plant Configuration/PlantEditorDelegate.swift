@@ -7,12 +7,12 @@
 
 import Foundation
 
-protocol PlantConfigurationDelegate: class {
+protocol PlantEditorDelegate: class {
     func plantEditor(_ editor: PlantConfigurationViewController, didUpdatePlant plant: GHPlant)
     func plantEditorDidCancel(_ editor: PlantConfigurationViewController)
 }
 
-extension PlantConfigurationDelegate {
+extension PlantEditorDelegate {
     func plantEditor(_ editor: PlantConfigurationViewController, didUpdatePlant plant: GHPlant) { }
     func plantEditorDidCancel(_ editor: PlantConfigurationViewController) { }
 }

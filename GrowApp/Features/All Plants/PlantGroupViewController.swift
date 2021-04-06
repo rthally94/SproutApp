@@ -97,7 +97,7 @@ extension PlantGroupViewController {
         return UICollectionView.CellRegistration<PlantCardCell, Item>() {[weak self] cell, indexPath, item in
             guard let plant = self?.plantsProvider.object(at: indexPath) else { return }
             var config = cell.iconView.defaultConfiguration()
-            config.image = plant.icon?.uiimage
+            config.image = plant.icon?.image
             cell.iconView.iconViewConfiguration = config
             
             cell.textLabel.text = plant.name

@@ -9,7 +9,10 @@ import UIKit
 
 class IconCell: UICollectionViewCell {
     func defaultConfigurtion() -> IconCellContentConfiguration {
-        IconCellContentConfiguration()
+        var config = IconCellContentConfiguration()
+        config.tintColor = .systemBlue
+        config.image = nil
+        return config
     }
 }
 

@@ -12,7 +12,7 @@ import UIKit
 class PlantConfigurationViewController: UIViewController {
     // MARK: - Properties
     var storageProvider: StorageProvider
-    weak var delegate: PlantConfigurationDelegate?
+    weak var delegate: PlantEditorDelegate?
     
     internal var dataSource: UICollectionViewDiffableDataSource<Section, Item>! = nil
     
@@ -175,14 +175,7 @@ class PlantConfigurationViewController: UIViewController {
     
     // MARK: - Actions
     @objc private func applyChanges() {
-        // 1. Check for changes
-        if storageProvider.persistentContainer.viewContext.hasChanges {
-            // 2. Apply changes to main context
-            storageProvider.saveContext()
-            delegate?.plantEditor(self, didUpdatePlant: editingPlant)
-        }
-
-        // 3. dismiss
+        delegate?.plantEditor(self, didUpdatePlant: editingPlant)
         dismiss(animated: true)
     }
     
