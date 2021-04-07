@@ -11,7 +11,7 @@ import UIKit
 class PlantTypesProvider: NSObject {    
     let storage: StorageProvider
     
-    private var allTypes = [GHPlantType]()
+    private var allTypes: [NSManagedObjectID: GHPlantType] = [:]
     private var selectedItem: Item?
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     
@@ -27,26 +27,36 @@ class PlantTypesProvider: NSObject {
         }
     }
 
-    struct Item: Hashable {
-        var id: NSManagedObjectID
-        var isSelected: Bool
-    }
+    typealias Item = NSManagedObjectID
     
     init(storageProvider: StorageProvider) {
         self.storage = storageProvider
         
         super.init()
         
+        // Fetch plant types
         let allTypesRequest: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
         allTypesRequest.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlantType.commonName, ascending: true)]
-        allTypes = (try? storageProvider.persistentContainer.viewContext.fetch(allTypesRequest)) ?? []
+        let types = (try? storageProvider.persistentContainer.viewContext.fetch(allTypesRequest)) ?? []
+        allTypes = types.reduce(into: [NSManagedObjectID: GHPlantType]()) { dict, type in
+            dict[type.objectID] = type
+        }
         
+        // Make Snapshot
         var newSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         newSnapshot.appendSections([.allPlants])
-        let allItems = allTypes.map { type in
-            Item(id: type.objectID, isSelected: false)
-        }
-        newSnapshot.appendItems(allItems)
+        
+        let items = allTypes.sorted(by: { lhs, rhs in
+            if let lName = lhs.value.commonName, let rName = rhs.value.commonName {
+                return lName < rName
+            } else if lhs.value.commonName != nil {
+                return true
+            } else {
+                return false
+            }
+        }).map { $0.key }
+        
+        newSnapshot.appendItems(items)
         snapshot = newSnapshot
     }
     
@@ -54,10 +64,9 @@ class PlantTypesProvider: NSObject {
         storage.persistentContainer.viewContext.object(with: id) as! GHPlantType
     }
     
-    func selectItem(_ item: Item) {
-        let idsToReload = [item, selectedItem].compactMap { $0 }
-        
-        snapshot?.reloadItems(idsToReload)
-        selectedItem = item
+    func reloadItems(_ items: [Item]) {
+        var newSnapshot = snapshot
+        newSnapshot?.reloadItems(items)
+        snapshot = newSnapshot
     }
 }

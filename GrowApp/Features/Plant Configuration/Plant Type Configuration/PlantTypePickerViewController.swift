@@ -9,20 +9,27 @@ import Combine
 import UIKit
 
 class PlantTypePickerViewController: UIViewController {
+    // MARK: - Properties
     typealias Section = PlantTypesProvider.Section
     typealias Item = PlantTypesProvider.Item
 
-    weak var delegate: PlantTypePickerDelegate?
     var selectedType: GHPlantType?
-    
-    var storageProvider: StorageProvider
     var plantTypesProvider: PlantTypesProvider
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    var cancellables = Set<AnyCancellable>()
+    weak var delegate: PlantTypePickerDelegate?
+    
+    private var collectionView: UICollectionView! = nil
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var cancellables = Set<AnyCancellable>()
 
+    // MARK: - Initializers
     init(plant: GHPlant, storageProvider: StorageProvider) {
-        selectedType = plant.type
-        self.storageProvider = storageProvider
+        self.selectedType = plant.type
+        self.plantTypesProvider = PlantTypesProvider(storageProvider: storageProvider)
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    init(type: GHPlantType?, storageProvider: StorageProvider) {
+        self.selectedType = type
         self.plantTypesProvider = PlantTypesProvider(storageProvider: storageProvider)
         super.init(nibName: nil, bundle: nil)
     }
@@ -30,9 +37,8 @@ class PlantTypePickerViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    var collectionView: UICollectionView! = nil
 
+    // MARK: - View Life Cycle
     override func loadView() {
         super.loadView()
 
@@ -77,13 +83,13 @@ extension PlantTypePickerViewController {
 extension PlantTypePickerViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Item> {[weak self] cell, indexPath, item in
-            guard let type = self?.plantTypesProvider.object(withID: item.id) else { return }
+            guard let type = self?.plantTypesProvider.object(withID: item) else { return }
             var configuration = cell.defaultContentConfiguration()
 
             configuration.text = type.commonName
             configuration.secondaryText = type.scientificName
             
-            if type == self?.selectedType {
+            if self?.selectedType == type {
                 cell.accessories = [
                     .checkmark()
                 ]
@@ -128,13 +134,16 @@ extension PlantTypePickerViewController {
 
 extension PlantTypePickerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let selectedItem = dataSource.itemIdentifier(for: indexPath) {
-            selectedType = plantTypesProvider.object(withID: selectedItem.id)
+        if let newItem = dataSource.itemIdentifier(for: indexPath) {
+            let oldItem = selectedType?.objectID
+            let newType = plantTypesProvider.object(withID: newItem)
+            selectedType = newType
             
-            plantTypesProvider.selectItem(selectedItem)
-            delegate?.selectedTypeDidChange()
-            
+            let idsToReload = [oldItem, newItem].compactMap { $0 }
+            plantTypesProvider.reloadItems(idsToReload)
             collectionView.deselectItem(at: indexPath, animated: false)
+            
+            delegate?.plantTypePicker(self, didSelectType: newType)
         }
     }
 }

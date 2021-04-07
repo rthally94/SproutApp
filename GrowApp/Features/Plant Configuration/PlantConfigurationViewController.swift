@@ -19,6 +19,8 @@ class PlantConfigurationViewController: UIViewController {
     internal var editingPlant: GHPlant
     internal var selectedIndexPath: IndexPath?
     
+    // MARK: - Initializers
+    
     /// Configures the plant configurator for creating a new plant
     /// - Parameter model: The application model
     init(storageProvider: StorageProvider) {
@@ -237,8 +239,8 @@ extension PlantConfigurationViewController: PlantIconPickerControllerDelegate {
 }
 
 extension PlantConfigurationViewController: PlantTypePickerDelegate {
-    func selectedTypeDidChange() {
-        editingPlant.type = plantTypePicker.selectedType
+    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType) {
+        editingPlant.type = plantType
         updateUI()
     }
 }
