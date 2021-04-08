@@ -5,6 +5,7 @@
 //  Created by Ryan Thally on 3/2/21.
 //
 
+import CoreData
 import UIKit
 
 class PlantDetailViewController: UIViewController {
@@ -19,14 +20,14 @@ class PlantDetailViewController: UIViewController {
     }()
     static let careDateFormatter = RelativeDateFormatter()
     
-    var storageProvider: StorageProvider
+    let viewContext: NSManagedObjectContext
     
     var plant: GHPlant
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
-    init(plant: GHPlant, storageProvider: StorageProvider) {
-        self.plant = plant
-        self.storageProvider = storageProvider
+    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
+        self.plant = viewContext.object(with: plant.objectID) as! GHPlant
+        self.viewContext = viewContext
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -102,8 +103,12 @@ class PlantDetailViewController: UIViewController {
         view.delegate = self
         return view
     }()
-    lazy var plantEditor: PlantConfigurationViewController = {
-        let vc = PlantConfigurationViewController(plant: plant, storageProvider: storageProvider)
+    
+    lazy var plantEditor: PlantEditorControllerController = {
+        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        editingContext.parent = viewContext
+        
+        let vc = PlantEditorControllerController(plant: plant, viewContext: editingContext)
         vc.delegate = self
         return vc
     }()
@@ -133,10 +138,15 @@ class PlantDetailViewController: UIViewController {
 }
 
 extension PlantDetailViewController: PlantEditorDelegate {
-    func plantEditor(_ editor: PlantConfigurationViewController, didUpdatePlant plant: GHPlant) {
+    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
         self.plant = plant
         updateUI()
-        storageProvider.saveContext()
+        
+        do {
+            try viewContext.save()
+        } catch {
+            viewContext.rollback()
+        }
     }
 }
 

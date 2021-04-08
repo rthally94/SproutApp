@@ -107,20 +107,22 @@ class IconView: UIView {
         addSubview(symbolIconView)
         
         NSLayoutConstraint.activate([
-            symbolIconView.widthAnchor.constraint(equalTo: widthAnchor),
-            symbolIconView.heightAnchor.constraint(equalTo: symbolIconView.widthAnchor),
             symbolIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
             symbolIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            symbolIconView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor),
+            symbolIconView.heightAnchor.constraint(lessThanOrEqualTo: heightAnchor),
+            symbolIconView.heightAnchor.constraint(equalTo: symbolIconView.widthAnchor),
         ])
         
         imageIconView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(imageIconView)
         
         NSLayoutConstraint.activate([
-            imageIconView.widthAnchor.constraint(equalTo: widthAnchor),
-            imageIconView.heightAnchor.constraint(equalTo: imageIconView.widthAnchor),
             imageIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
             imageIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            imageIconView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor),
+            imageIconView.heightAnchor.constraint(lessThanOrEqualTo: heightAnchor),
+            imageIconView.heightAnchor.constraint(equalTo: imageIconView.widthAnchor),
         ])
     }
     

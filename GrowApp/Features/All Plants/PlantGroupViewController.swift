@@ -10,11 +10,12 @@ import CoreData
 import UIKit
 
 class PlantGroupViewController: UIViewController {
+    // MARK: - Properties
     typealias Section = PlantsProvider.Section
     typealias Item = PlantsProvider.Item
     
     var model: GreenHouseAppModel
-    let storageProvider: StorageProvider
+    let viewContext: NSManagedObjectContext
     let plantsProvider: PlantsProvider
     
     var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
@@ -27,9 +28,10 @@ class PlantGroupViewController: UIViewController {
         return cv
     }()
     
-    init(storageProvider: StorageProvider, model: GreenHouseAppModel) {
-        self.storageProvider = storageProvider
-        self.plantsProvider = PlantsProvider(storageProvider: storageProvider)
+    // MARK: - Initializers
+    init(viewContext: NSManagedObjectContext, model: GreenHouseAppModel) {
+        self.viewContext = viewContext
+        self.plantsProvider = PlantsProvider(managedObjectContext: viewContext)
         self.model = model
         super.init(nibName: nil, bundle: nil)
     }
@@ -38,6 +40,7 @@ class PlantGroupViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - View Life Cycle
     override func loadView() {
         super.loadView()
         
@@ -57,7 +60,7 @@ class PlantGroupViewController: UIViewController {
             .store(in: &cancellables)
         
         title = "Your Plants"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showPlantConfiguration))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPlant))
     }
     
     func configureHiearchy() {
@@ -72,22 +75,44 @@ class PlantGroupViewController: UIViewController {
         ])
     }
     
-    @objc func showPlantConfiguration() {
-        let vc = PlantConfigurationViewController(storageProvider: storageProvider)
+    @objc func addNewPlant() {
+        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        editingContext.parent = viewContext
+        
+        // 1. Create a new plant in the model
+        let newPlant = GHPlant(context: editingContext)
+        let wateringTask = GHTask(context: editingContext)
+        wateringTask.id = UUID()
+        wateringTask.category = GHTaskType.wateringTaskType(context: editingContext)
+        newPlant.addToTasks_(wateringTask)
+        
+        let vc = PlantEditorControllerController(plant: newPlant, viewContext: editingContext)
+        vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
+    }
+}
+
+extension PlantGroupViewController: PlantEditorDelegate {
+    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
+        do {
+            try viewContext.save()
+        } catch {
+            viewContext.rollback()
+        }
     }
 }
 
 extension PlantGroupViewController {
     func makeLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/3), heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .estimated(200))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = .init(top: 16, leading: 16, bottom: 0, trailing: 16)
+        
         return UICollectionViewCompositionalLayout(section: section)
     }
 }
@@ -101,9 +126,6 @@ extension PlantGroupViewController {
             cell.iconView.iconViewConfiguration = config
             
             cell.textLabel.text = plant.name
-            
-            let taskCount = plant.tasks.count
-            cell.secondaryTextLabel.text = "\(taskCount) tasks"
         }
     }
     
@@ -121,7 +143,7 @@ extension PlantGroupViewController {
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = plantsProvider.object(at: indexPath)
-        let vc = PlantDetailViewController(plant: item, storageProvider: storageProvider)
+        let vc = PlantDetailViewController(plant: item, viewContext: viewContext)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -9,13 +9,13 @@ import UIKit
 import CoreData
 
 class TaskCalendarProvider: NSObject {
-    let storage: StorageProvider
+    let moc: NSManagedObjectContext
     fileprivate let fetchedResultsController: NSFetchedResultsController<GHTask>
     
     @Published var snapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>?
     
-    init(storageProvider: StorageProvider) {
-        self.storage = storageProvider
+    init(managedObjectContext: NSManagedObjectContext) {
+        self.moc = managedObjectContext
         
         let request: NSFetchRequest<GHTask> = GHTask.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \GHTask.plant?.name, ascending: true)]
@@ -25,7 +25,7 @@ class TaskCalendarProvider: NSObject {
         print(intervalPredicate.predicateFormat)
         request.predicate = NSPredicate(format: "SUBQUERY(interval, $x, \(intervalPredicate.predicateFormat)).@count > 0")
         
-        self.fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: storageProvider.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        self.fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         
         super.init()
         

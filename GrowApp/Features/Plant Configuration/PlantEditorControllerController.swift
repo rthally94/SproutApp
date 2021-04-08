@@ -11,7 +11,7 @@ import UIKit
 
 class PlantEditorControllerController: UIViewController {
     // MARK: - Properties
-    var storageProvider: StorageProvider
+    var viewContext: NSManagedObjectContext
     weak var delegate: PlantEditorDelegate?
     
     internal var dataSource: UICollectionViewDiffableDataSource<Section, Item>! = nil
@@ -21,34 +21,15 @@ class PlantEditorControllerController: UIViewController {
     
     // MARK: - Initializers
     
-    /// Configures the plant configurator for creating a new plant
-    /// - Parameter model: The application model
-    init(storageProvider: StorageProvider) {
-        self.storageProvider = storageProvider
-        
-        // 1. Create a new plant in the model
-        let newPlant = GHPlant(context: storageProvider.persistentContainer.viewContext)
-        let wateringTask = GHTask(context: storageProvider.persistentContainer.viewContext)
-        wateringTask.category = GHTaskType.wateringTaskType(context: storageProvider.persistentContainer.viewContext)
-        newPlant.addToTasks_(wateringTask)
-        
-        // 2. Store the plant as a deep copy
-        editingPlant = newPlant
-        
-        super.init(nibName: nil, bundle: nil)
-        
-        title = "New Plant"
-    }
-    
     /// Configures the plant configurator for editing an existing plant
     /// - Parameters:
     ///   - plant: The plant to edit
     ///   - model: The application model
-    init(plant: GHPlant, storageProvider: StorageProvider) {
-        self.storageProvider = storageProvider
+    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
+        self.viewContext = viewContext
         
         // 1. Store the plant
-        editingPlant = plant
+        editingPlant = viewContext.object(with: plant.objectID) as! GHPlant
         
         super.init(nibName: nil, bundle: nil)
         
@@ -64,12 +45,14 @@ class PlantEditorControllerController: UIViewController {
         case image
         case plantInfo
         case care
+        case actions
         
         var description: String {
             switch self {
             case .image: return "Image"
             case .plantInfo: return "General Information"
             case .care: return "Care Details"
+            case .actions: return "Plant Actions"
             }
         }
         
@@ -131,18 +114,19 @@ class PlantEditorControllerController: UIViewController {
         case list(icon: GHIcon?, text: String?, secondaryText: String?)
         case listValue(image: UIImage?, text: String?, secondaryText: String?)
         case textField(image: UIImage?, value: String?, placeholder: String?)
+        case button(image: UIImage?, text: String?, tintColor: UIColor = .label)
     }
     
     internal var collectionView: UICollectionView! = nil
     
     internal lazy var plantIconPicker: PlantIconPickerController = {
-       let vc = PlantIconPickerController(plant: editingPlant, storageProvider: storageProvider)
+        let vc = PlantIconPickerController(plant: editingPlant, viewContext: viewContext)
         vc.delegate = self
         return vc
     }()
     
     internal lazy var plantTypePicker: PlantTypePickerViewController = {
-        let vc = PlantTypePickerViewController(plant: editingPlant, storageProvider: storageProvider)
+        let vc = PlantTypePickerViewController(plant: editingPlant, viewContext: viewContext)
         vc.delegate = self
         return vc
     }()
@@ -180,11 +164,18 @@ class PlantEditorControllerController: UIViewController {
     
     // MARK: - Actions
     @objc private func applyChanges() {
+        do {
+            try viewContext.save()
+        } catch {
+            viewContext.rollback()
+        }
+        
         delegate?.plantEditor(self, didUpdatePlant: editingPlant)
         dismiss(animated: true)
     }
     
     @objc private func discardChanges() {
+        viewContext.rollback()
         delegate?.plantEditorDidCancel(self)
         dismiss(animated: true)
     }

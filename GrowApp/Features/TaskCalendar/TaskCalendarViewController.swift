@@ -26,7 +26,6 @@ class TaskCalendarViewController: UIViewController {
         }
     }
     
-    var model: GreenHouseAppModel?
     let taskCalendarProvider: TaskCalendarProvider
     var data: [TaskType: [Plant]] = [:]
     
@@ -55,9 +54,8 @@ class TaskCalendarViewController: UIViewController {
     typealias Section = String
     typealias Item = NSManagedObjectID
 
-    init(storageProvider: StorageProvider, model: GreenHouseAppModel) {
-        self.taskCalendarProvider = TaskCalendarProvider(storageProvider: storageProvider)
-        self.model = model
+    init(viewContext: NSManagedObjectContext) {
+        self.taskCalendarProvider = TaskCalendarProvider(managedObjectContext: viewContext)
         super.init(nibName: nil, bundle: nil)
     }
     

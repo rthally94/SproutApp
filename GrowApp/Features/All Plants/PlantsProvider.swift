@@ -12,18 +12,18 @@ class PlantsProvider: NSObject {
     typealias Section = Int
     typealias Item = NSManagedObjectID
     
-    let storage: StorageProvider
+    let moc: NSManagedObjectContext
     fileprivate let fetchedResultsController: NSFetchedResultsController<GHPlant>
     
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     
-    init(storageProvider: StorageProvider) {
-        self.storage = storageProvider
+    init(managedObjectContext: NSManagedObjectContext) {
+        self.moc = managedObjectContext
         
         let request: NSFetchRequest<GHPlant> = GHPlant.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlant.name, ascending: true)]
         
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: storageProvider.persistentContainer.viewContext, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         
         super.init()
         

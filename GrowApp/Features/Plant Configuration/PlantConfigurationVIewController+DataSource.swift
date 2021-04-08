@@ -8,7 +8,7 @@
 import UIKit
 
 // MARK: - Cell Registrations
-extension PlantConfigurationViewController {
+extension PlantEditorControllerController {
     func createPlantIconCellRegistration() -> UICollectionView.CellRegistration<IconCell, Item> {
         return UICollectionView.CellRegistration<IconCell, Item> { (cell, indexPath, item) in
             if case let .plantIcon(icon) = item.rowType {
@@ -23,11 +23,14 @@ extension PlantConfigurationViewController {
     func createPlantNameCellRegistration() -> UICollectionView.CellRegistration<TextFieldCell, Item> {
         return UICollectionView.CellRegistration<TextFieldCell, Item> { (cell, IndexPath, item) in
             if case let .textField(_, value, placeholder) = item.rowType {
-                cell.placeholder = placeholder
-                cell.value = value
-                cell.onChange = { [weak self] newValue in
+                var config = cell.defaultTextFieldConfiguration()
+                config.placeholder = placeholder
+                config.value = value
+                config.autocapitalizationType = .words
+                config.onChange = { [weak self] newValue in
                     self?.editingPlant.name = newValue
                 }
+                cell.contentConfiguration = config
             }
         }
     }
@@ -69,6 +72,12 @@ extension PlantConfigurationViewController {
             cell.contentConfiguration = configuration
         }
     }
+    
+    func createButtonListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewCell, Item> {
+        return UICollectionView.CellRegistration<UICollectionViewCell, Item> { cell, indexPath, item in
+            
+        }
+    }
 
     func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
         return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
@@ -103,7 +112,7 @@ extension PlantConfigurationViewController {
 }
 
 // MARK: - DataSource Configuration
-extension PlantConfigurationViewController {
+extension PlantEditorControllerController {
      func makeSnapshot(from plant: GHPlant) -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections(Section.allCases)
@@ -111,8 +120,9 @@ extension PlantConfigurationViewController {
         snapshot.appendItems([
             Item(
                 rowType: .plantIcon(plant.icon),
-                action: {
-                    let vc = PlantIconPickerController(plant: plant, storageProvider: self.storageProvider)
+                action: { [weak self] in
+                    guard let self = self else { return }
+                    let vc = PlantIconPickerController(plant: plant, viewContext: self.viewContext)
                     vc.delegate = self
                     let nav = UINavigationController(rootViewController: vc)
                     self.navigateTo(nav, modal: true)
@@ -137,11 +147,13 @@ extension PlantConfigurationViewController {
         // Plant Tasks
         let tasks: [Item] = plant.tasks.map {
             Item(
-                rowType: .list(icon: $0.category?.icon, text: $0.category?.description, secondaryText: $0.interval?.description)
+                rowType: .list(icon: $0.category?.icon, text: $0.category?.name, secondaryText: $0.interval?.intervalText())
             )
         }
         snapshot.appendItems(tasks, toSection: .care)
-
+        
+        let deleteItem = Item(rowType: .button(image: UIImage(systemName: "trash.fill"), text: "Delete Plant", tintColor: UIColor.systemRed))
+        snapshot.appendItems([deleteItem], toSection: .actions)
         return snapshot
     }
 
@@ -150,6 +162,7 @@ extension PlantConfigurationViewController {
         let plantNameCellRegistration = createPlantNameCellRegistration()
         let valueCellResistration = createValueCellRegistration()
         let defaultRegistration = createDefaultListCellRegistration()
+        let buttonCellRegistration = createButtonListCellRegistration()
 
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, item: Item) -> UICollectionViewCell? in
@@ -162,6 +175,8 @@ extension PlantConfigurationViewController {
                     return collectionView.dequeueConfiguredReusableCell(using: plantIconRegistration, for: indexPath, item: item)
                 case .textField:
                     return collectionView.dequeueConfiguredReusableCell(using: plantNameCellRegistration, for: indexPath, item: item)
+                case .button:
+                    return collectionView.dequeueConfiguredReusableCell(using: buttonCellRegistration, for: indexPath, item: item)
             }
         }
 

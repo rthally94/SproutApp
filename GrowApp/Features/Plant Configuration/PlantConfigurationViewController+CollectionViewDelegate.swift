@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension PlantConfigurationViewController: UICollectionViewDelegate {
+extension PlantEditorControllerController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let item = dataSource.itemIdentifier(for: indexPath)
         return item?.action != nil

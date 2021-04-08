@@ -6,6 +6,7 @@
 //
 
 import Combine
+import CoreData
 import UIKit
 
 class PlantTypePickerViewController: UIViewController {
@@ -22,15 +23,15 @@ class PlantTypePickerViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Initializers
-    init(plant: GHPlant, storageProvider: StorageProvider) {
+    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
         self.selectedType = plant.type
-        self.plantTypesProvider = PlantTypesProvider(storageProvider: storageProvider)
+        self.plantTypesProvider = PlantTypesProvider(managedObjectContext: viewContext)
         super.init(nibName: nil, bundle: nil)
     }
     
-    init(type: GHPlantType?, storageProvider: StorageProvider) {
+    init(type: GHPlantType?, viewContext: NSManagedObjectContext) {
         self.selectedType = type
-        self.plantTypesProvider = PlantTypesProvider(storageProvider: storageProvider)
+        self.plantTypesProvider = PlantTypesProvider(managedObjectContext: viewContext)
         super.init(nibName: nil, bundle: nil)
     }
     

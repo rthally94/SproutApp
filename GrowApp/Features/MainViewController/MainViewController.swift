@@ -5,29 +5,25 @@
 //  Created by Ryan Thally on 2/28/21.
 //
 
+import CoreData
 import UIKit
 
 class MainViewController: UIViewController {
     lazy var timelineVC: some UIViewController = {
-        let vc = TaskCalendarViewController(storageProvider: storageProvider, model: model).wrappedInNavigationController()
+        let vc = TaskCalendarViewController(viewContext: viewContext).wrappedInNavigationController()
         vc.tabBarItem = UITabBarItem(title: "Calendar", image: UIImage(systemName: "calendar"), selectedImage: UIImage(systemName: "calendar"))
         vc.tabBarItem.tag = 0
         return vc
     }()
     
     lazy var plantGroupVC: some UIViewController = {
-        let vc = PlantGroupViewController(storageProvider: storageProvider, model: model)
+        let vc = PlantGroupViewController(viewContext: viewContext, model: model)
         let nav = vc.wrappedInNavigationController()
         nav.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
         nav.tabBarItem.tag = 1
         return nav
     }()
-    
-    lazy var plantConfigurationVC: some UIViewController = {
-        let vc = PlantConfigurationViewController(storageProvider: storageProvider)
-        return vc.wrappedInNavigationController()
-    }()
-    
+        
     lazy var tabBarVC: UITabBarController = {
         let vc = UITabBarController(nibName: nil, bundle: nil)
         vc.setViewControllers([
@@ -37,15 +33,15 @@ class MainViewController: UIViewController {
         return vc
     }()
     
-    var storageProvider: StorageProvider
+    var viewContext: NSManagedObjectContext
     #if DEBUG
     let model = GreenHouseAppModel.preview
     #else
     let model = GrowAppModel.shared
     #endif
     
-    init(storageProvider: StorageProvider) {
-        self.storageProvider = storageProvider
+    init(viewContext: NSManagedObjectContext) {
+        self.viewContext = viewContext
      
         super.init(nibName: nil, bundle: nil)
         

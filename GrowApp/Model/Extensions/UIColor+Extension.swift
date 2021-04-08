@@ -46,6 +46,13 @@ extension UIColor {
         
         return nil
     }
+    public func hexString() -> String {
+        typealias ColorComponents = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
+        var components: ColorComponents = (red: 0, green: 0, blue: 0, alpha: 1)
+        getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
+        
+        return String(format: "#%02X%02X%02X%02X", Int(components.red * 255), Int(components.green * 255), Int(components.blue * 255), Int(components.alpha * 255))
+    }
     
     /// Calculates the contrast ratio using "relative luminance".
     /// - Parameters:
@@ -63,8 +70,8 @@ extension UIColor {
     }
     
     static func luminance(_ color: UIColor) -> CGFloat {
-        typealias colorComponents = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
-        var components: colorComponents = (red: 0, green: 0, blue: 0, alpha: 0)
+        typealias ColorComponents = (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)
+        var components: ColorComponents = (red: 0, green: 0, blue: 0, alpha: 0)
         color.getRed(&components.red, green: &components.green, blue: &components.blue, alpha: &components.alpha)
         
         components.red = components.red <= 0.03928 ? components.red/12.92 : pow((components.red+0.055)/1.055, 2.4)

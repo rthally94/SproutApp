@@ -8,47 +8,19 @@
 import UIKit
 
 class TextFieldCell: UICollectionViewListCell {
-    var value: String? {
-        didSet {
-            setNeedsUpdateConfiguration()
-        }
-    }
-
-    var placeholder: String? {
-        didSet {
-            setNeedsUpdateConfiguration()
-        }
-    }
-
-    var onChange: ((String) -> Void)? {
-        didSet {
-            setNeedsUpdateConfiguration()
-        }
-    }
-
-    override func updateConfiguration(using state: UICellConfigurationState) {
-        var content = TextFieldContentConfiguration().updated(for: state)
-        content.placeholder = placeholder
-        content.value = value
-        content.onChange = onChange
-        contentConfiguration = content
-
+    func defaultTextFieldConfiguration() -> TextFieldContentConfiguration {
+        var config = TextFieldContentConfiguration()
+        config.placeholder = "Enter Text"
+        config.value = ""
+        config.autocapitalizationType = .none
+        return config
     }
 }
 
 struct TextFieldContentConfiguration: UIContentConfiguration, Hashable {
-    static func == (lhs: TextFieldContentConfiguration, rhs: TextFieldContentConfiguration) -> Bool {
-        return lhs.value == rhs.value
-            && lhs.placeholder == rhs.placeholder
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(value)
-        hasher.combine(placeholder)
-    }
-
     var value: String? = nil
     var placeholder: String? = nil
+    var autocapitalizationType: UITextAutocapitalizationType = .none
     var onChange: ((String) -> Void)?
 
     func makeContentView() -> UIView & UIContentView {
@@ -58,9 +30,22 @@ struct TextFieldContentConfiguration: UIContentConfiguration, Hashable {
     func updated(for state: UIConfigurationState) -> TextFieldContentConfiguration {
         return self
     }
+    
+    static func == (lhs: TextFieldContentConfiguration, rhs: TextFieldContentConfiguration) -> Bool {
+        return lhs.value == rhs.value
+            && lhs.placeholder == rhs.placeholder
+            && lhs.autocapitalizationType == rhs.autocapitalizationType
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(value)
+        hasher.combine(placeholder)
+        hasher.combine(autocapitalizationType)
+    }
 }
 
 class TextFieldContentView: UIView & UIContentView {
+    // MARK: - Initializers
     init(configuration: TextFieldContentConfiguration) {
         super.init(frame: .zero)
         setupInternalViews()
@@ -101,6 +86,7 @@ class TextFieldContentView: UIView & UIContentView {
         // configure view
         textField.placeholder = configuration.placeholder
         textField.text = configuration.value
+        textField.autocapitalizationType = configuration.autocapitalizationType
     }
 }
 

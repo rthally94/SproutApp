@@ -42,7 +42,7 @@ extension PlantIconPickerController: UIImagePickerControllerDelegate, UINavigati
         guard let image = info[.editedImage] as? UIImage else { return }
         
         if icon == nil {
-            icon = GHIcon(context: storageProvider.persistentContainer.viewContext)
+            icon = GHIcon(context: viewContext)
         }
         
         icon?.imageData = image.pngData()

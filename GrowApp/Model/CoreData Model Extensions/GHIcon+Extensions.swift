@@ -9,11 +9,16 @@ import UIKit
 
 extension GHIcon {
     var color: UIColor? {
-        if let hexColor = hexColor {
-            return UIColor(hex: hexColor)
+        get {
+            if let hexColor = hexColor {
+                return UIColor(hex: hexColor)
+            }
+            
+            return nil
         }
-        
-        return nil
+        set {
+            hexColor = newValue?.hexString()
+        }
     }
     
     var image: UIImage? {

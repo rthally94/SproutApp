@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 
 class PlantTypesProvider: NSObject {    
-    let storage: StorageProvider
+    let moc: NSManagedObjectContext
     
     private var allTypes: [NSManagedObjectID: GHPlantType] = [:]
     private var selectedItem: Item?
@@ -29,15 +29,15 @@ class PlantTypesProvider: NSObject {
 
     typealias Item = NSManagedObjectID
     
-    init(storageProvider: StorageProvider) {
-        self.storage = storageProvider
+    init(managedObjectContext: NSManagedObjectContext) {
+        self.moc = managedObjectContext
         
         super.init()
         
         // Fetch plant types
         let allTypesRequest: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
         allTypesRequest.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlantType.commonName, ascending: true)]
-        let types = (try? storageProvider.persistentContainer.viewContext.fetch(allTypesRequest)) ?? []
+        let types = (try? moc.fetch(allTypesRequest)) ?? []
         allTypes = types.reduce(into: [NSManagedObjectID: GHPlantType]()) { dict, type in
             dict[type.objectID] = type
         }
@@ -61,7 +61,7 @@ class PlantTypesProvider: NSObject {
     }
     
     func object(withID id: NSManagedObjectID) -> GHPlantType {
-        storage.persistentContainer.viewContext.object(with: id) as! GHPlantType
+        moc.object(with: id) as! GHPlantType
     }
     
     func reloadItems(_ items: [Item]) {

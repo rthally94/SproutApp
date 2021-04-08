@@ -5,6 +5,7 @@
 //  Created by Ryan Thally on 2/22/21.
 //
 
+import CoreData
 import UIKit
 
 class PlantIconPickerController: UIViewController {
@@ -24,11 +25,11 @@ class PlantIconPickerController: UIViewController {
     
     private var currentIcon: GHIcon?
     var delegate: PlantIconPickerControllerDelegate?
-    var storageProvider: StorageProvider
+    let viewContext: NSManagedObjectContext
     
-    init(plant: GHPlant, storageProvider: StorageProvider) {
+    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
         currentIcon = plant.icon
-        self.storageProvider = storageProvider
+        self.viewContext = viewContext
         
         super.init(nibName: nil, bundle: nil)
     }
