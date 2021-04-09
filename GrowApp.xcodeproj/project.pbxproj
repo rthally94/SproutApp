@@ -31,6 +31,7 @@
 		FB6661AC261DF19E00DC8B04 /* GHTaskInterval+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661AB261DF19E00DC8B04 /* GHTaskInterval+Extensions.swift */; };
 		FB6661B2261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661B1261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift */; };
 		FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661B5261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift */; };
+		FB6661BB261FD09800DC8B04 /* TaskEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661BA261FD09800DC8B04 /* TaskEditorController.swift */; };
 		FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */; };
 		FB6C460D25F11BA0009ED947 /* IconHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C460C25F11BA0009ED947 /* IconHeaderCell.swift */; };
 		FB6C461325F11BC4009ED947 /* CareInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461225F11BC4009ED947 /* CareInfoCell.swift */; };
@@ -125,6 +126,7 @@
 		FB6661AB261DF19E00DC8B04 /* GHTaskInterval+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GHTaskInterval+Extensions.swift"; sourceTree = "<group>"; };
 		FB6661B1261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPersistentContainer+Extensions.swift"; sourceTree = "<group>"; };
 		FB6661B5261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
+		FB6661BA261FD09800DC8B04 /* TaskEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorController.swift; sourceTree = "<group>"; };
 		FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		FB6C460C25F11BA0009ED947 /* IconHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconHeaderCell.swift; sourceTree = "<group>"; };
 		FB6C461225F11BC4009ED947 /* CareInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoCell.swift; sourceTree = "<group>"; };
@@ -341,6 +343,7 @@
 		FB6661B9261FD00500DC8B04 /* TaskIntervalEditor */ = {
 			isa = PBXGroup;
 			children = (
+				FB6661BA261FD09800DC8B04 /* TaskEditorController.swift */,
 			);
 			path = TaskIntervalEditor;
 			sourceTree = "<group>";
@@ -708,6 +711,7 @@
 				FB7B815F25BE2BE10053E543 /* PlantEditorControllerController.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
 				FB6C464B25F591FD009ED947 /* ScheduleViewController.swift in Sources */,
+				FB6661BB261FD09800DC8B04 /* TaskEditorController.swift in Sources */,
 				FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */,
 				FB0A9F3625DC5D7E0084AED8 /* TextFieldCell.swift in Sources */,
 				FB6C464325F58E01009ED947 /* ScheduleView.swift in Sources */,
