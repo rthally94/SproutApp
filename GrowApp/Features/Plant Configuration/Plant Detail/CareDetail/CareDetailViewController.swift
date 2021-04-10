@@ -122,7 +122,7 @@ extension CareDetailViewController {
         if let selectedTask = selectedTask {
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems([
-                Item(icon: selectedTask.category?.icon, text: selectedTask.category?.description, secondaryText: selectedTask.interval?.description)
+                Item(icon: selectedTask.taskType?.icon, text: selectedTask.taskType?.description, secondaryText: selectedTask.interval?.description)
             ], toSection: .header)
         
             let image = Int(selectedTask.interval?.type ?? 0) == GHTaskIntervalType.none.rawValue ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")

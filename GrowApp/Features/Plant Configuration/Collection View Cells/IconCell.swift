@@ -57,8 +57,8 @@ class IconCellContentView: UIView & UIContentView {
         NSLayoutConstraint.activate([
             plantIcon.centerXAnchor.constraint(equalTo: centerXAnchor),
             plantIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-            plantIcon.widthAnchor.constraint(equalTo: heightAnchor),
-            plantIcon.heightAnchor.constraint(equalTo: heightAnchor)
+            plantIcon.heightAnchor.constraint(equalTo: heightAnchor),
+            plantIcon.widthAnchor.constraint(equalTo: plantIcon.heightAnchor),
         ])
     }
     

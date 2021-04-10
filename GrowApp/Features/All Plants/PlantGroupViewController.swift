@@ -83,7 +83,7 @@ class PlantGroupViewController: UIViewController {
         let newPlant = GHPlant(context: editingContext)
         let wateringTask = GHTask(context: editingContext)
         wateringTask.id = UUID()
-        wateringTask.category = GHTaskType.wateringTaskType(context: editingContext)
+        wateringTask.taskType = GHTaskType.wateringTaskType(context: editingContext)
         newPlant.addToTasks_(wateringTask)
         
         let vc = PlantEditorControllerController(plant: newPlant, viewContext: editingContext)

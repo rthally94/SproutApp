@@ -244,14 +244,14 @@ extension PlantDetailViewController {
             } else {
                 lastCareString = ""
             }
-            return Item(icon: task.category?.icon, text: task.category?.name, secondaryText: lastCareString)
+            return Item(icon: task.taskType?.icon, text: task.taskType?.name, secondaryText: lastCareString)
         }
         
         snapshot.appendItems(nextTasks, toSection: .upNext)
         
         // All Tasks
         let items: [Item] = plant.tasks.compactMap { task in
-            return Item(icon: task.category?.icon, text: task.category?.name, secondaryText: nil)
+            return Item(icon: task.taskType?.icon, text: task.taskType?.name, secondaryText: nil)
         }
         
         snapshot.appendItems(items, toSection: .careInfo)

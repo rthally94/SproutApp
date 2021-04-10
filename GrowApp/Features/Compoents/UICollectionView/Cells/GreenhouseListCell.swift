@@ -35,12 +35,7 @@ class GreenHouseListCell: UICollectionViewListCell {
 }
 
 class TaskCalendarListCell: GreenHouseListCell {
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        
-        return formatter
-    }()
-    
+    private let dateFormatter = Utility.dateFormatter
     private func defaultListContentConfiguration() -> UIListContentConfiguration { return .subtitleCell() }
     private lazy var listContentView = UIListContentView(configuration: defaultListContentConfiguration())
     
@@ -50,8 +45,6 @@ class TaskCalendarListCell: GreenHouseListCell {
     
     private func setupViewsIfNeeded() {
         guard customViewConstraints == nil else { return }
-        plantIconView.translatesAutoresizingMaskIntoConstraints = false
-        
         contentView.addSubview(listContentView)
         contentView.addSubview(plantIconView)
         
@@ -103,16 +96,16 @@ class TaskCalendarListCell: GreenHouseListCell {
         
         if let task = state.task {
             // Configure for just the task
-            content.text = task.category?.name
+            content.text = task.taskType?.name
             if let lastLogDate = task.lastLogDate {
-                content.secondaryText = "Last: " + TaskCalendarListCell.dateFormatter.string(from: lastLogDate)
+                content.secondaryText = "Last: " + dateFormatter.string(from: lastLogDate)
             } else {
                 content.secondaryText = "Last: Never"
             }
             
             var iconConfig = plantIconView.defaultConfiguration()
-            iconConfig.image = task.category?.icon?.image
-            iconConfig.tintColor = task.category?.icon?.color
+            iconConfig.image = task.taskType?.icon?.image
+            iconConfig.tintColor = task.taskType?.icon?.color
             iconConfig.cornerStyle = .none
             plantIconView.iconViewConfiguration = iconConfig
         }

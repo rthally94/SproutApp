@@ -24,9 +24,9 @@
     <entity name="GHTask" representedClassName="GHTask" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="lastLogDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="category" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="tasks" inverseEntity="GHTaskType"/>
         <relationship name="interval" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHTaskInterval" inverseName="task" inverseEntity="GHTaskInterval"/>
         <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="tasks_" inverseEntity="GHPlant"/>
+        <relationship name="taskType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="tasks" inverseEntity="GHTaskType"/>
     </entity>
     <entity name="GHTaskInterval" representedClassName="GHTaskInterval" syncable="YES" codeGenerationType="class">
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -37,13 +37,13 @@
     <entity name="GHTaskType" representedClassName="GHTaskType" syncable="YES" codeGenerationType="class">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHIcon" inverseName="taskType" inverseEntity="GHIcon"/>
-        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GHTask" inverseName="category" inverseEntity="GHTask"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GHTask" inverseName="taskType" inverseEntity="GHTask"/>
     </entity>
     <elements>
         <element name="GHIcon" positionX="-36" positionY="36" width="128" height="104"/>
         <element name="GHPlant" positionX="-63" positionY="-18" width="128" height="119"/>
         <element name="GHPlantType" positionX="0" positionY="108" width="128" height="89"/>
-        <element name="GHTask" positionX="-54" positionY="18" width="128" height="14"/>
+        <element name="GHTask" positionX="-54" positionY="18" width="128" height="104"/>
         <element name="GHTaskInterval" positionX="-27" positionY="63" width="128" height="89"/>
         <element name="GHTaskType" positionX="-18" positionY="99" width="128" height="74"/>
     </elements>

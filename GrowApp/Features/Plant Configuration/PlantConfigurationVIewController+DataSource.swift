@@ -27,8 +27,8 @@ extension PlantEditorControllerController {
                 config.placeholder = placeholder
                 config.value = value
                 config.autocapitalizationType = .words
-                config.onChange = { [weak self] newValue in
-                    self?.editingPlant.name = newValue
+                config.onChange = { [unowned self] newValue in
+                    self.editingPlant.name = newValue
                 }
                 cell.contentConfiguration = config
             }
@@ -120,8 +120,7 @@ extension PlantEditorControllerController {
         snapshot.appendItems([
             Item(
                 rowType: .plantIcon(plant.icon),
-                action: { [weak self] in
-                    guard let self = self else { return }
+                action: { [unowned self] in
                     let vc = PlantIconPickerController(plant: plant, viewContext: self.viewContext)
                     vc.delegate = self
                     let nav = UINavigationController(rootViewController: vc)
@@ -137,17 +136,18 @@ extension PlantEditorControllerController {
             ),
             Item(
                 rowType: .listValue(image: nil, text: "Plant Type", secondaryText: plant.type?.commonName ?? "Choose Type"),
-                action: { [weak self] in
-                    guard let self = self else { return }
+                action: { [unowned self] in
                     self.navigateTo(self.plantTypePicker)
                 }
             )
         ], toSection: .plantInfo)
         
         // Plant Tasks
-        let tasks: [Item] = plant.tasks.map {
+        let tasks: [Item] = plant.tasks.compactMap { [unowned self] task in
             Item(
-                rowType: .list(icon: $0.category?.icon, text: $0.category?.name, secondaryText: $0.interval?.intervalText())
+                rowType: .list(icon: task.taskType?.icon, text: task.taskType?.name, secondaryText: task.interval?.intervalText()), action: { [unowned self] in
+                    self.showTaskEditor(for: task)
+                }
             )
         }
         snapshot.appendItems(tasks, toSection: .care)

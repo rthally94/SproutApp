@@ -179,6 +179,12 @@ class PlantEditorControllerController: UIViewController {
         delegate?.plantEditorDidCancel(self)
         dismiss(animated: true)
     }
+    
+    internal func showTaskEditor(for task: GHTask) {
+        let vc = TaskEditorController(task: task, viewContext: viewContext)
+//        vc.delegate = self
+        navigateTo(vc)
+    }
 }
 
 extension PlantEditorControllerController {
@@ -193,11 +199,11 @@ extension PlantEditorControllerController {
                 
                 let badge = NSCollectionLayoutSupplementaryItem(layoutSize: badgeSize, elementKind: PlantIconSupplementaryView.badgeElementKind, containerAnchor: badgeAnchor)
                 
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize, supplementaryItems: [badge])
                 item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
                 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(150))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.3))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
                 
                 let section = NSCollectionLayoutSection(group: group)
