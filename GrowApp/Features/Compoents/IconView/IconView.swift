@@ -104,26 +104,15 @@ class IconView: UIView {
     
     func configureHiearchy() {
         symbolIconView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(symbolIconView)
-        
-        NSLayoutConstraint.activate([
-            symbolIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            symbolIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            symbolIconView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor),
-            symbolIconView.heightAnchor.constraint(lessThanOrEqualTo: heightAnchor),
-            symbolIconView.heightAnchor.constraint(equalTo: symbolIconView.widthAnchor),
-        ])
-        
         imageIconView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(symbolIconView)
         addSubview(imageIconView)
-        
-        NSLayoutConstraint.activate([
-            imageIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            imageIconView.widthAnchor.constraint(lessThanOrEqualTo: widthAnchor),
-            imageIconView.heightAnchor.constraint(lessThanOrEqualTo: heightAnchor),
-            imageIconView.heightAnchor.constraint(equalTo: imageIconView.widthAnchor),
-        ])
+
+        symbolIconView.pinToBoundsOf(self)
+        imageIconView.pinToBoundsOf(self)
+
+        let aspectConstraint = widthAnchor.constraint(equalTo: heightAnchor)
+        aspectConstraint.isActive = true
     }
     
     private func configureView() {
@@ -138,6 +127,8 @@ class IconView: UIView {
         if let image = config.image, !image.isSymbolImage {
             // Apply image parameters
             imageIconView.image = config.image
+            imageIconView.isHidden = false
+            symbolIconView.isHidden = true
         } else {
             // Apply SF Symbol parameters
             symbolIconView.image = config.image
@@ -145,6 +136,8 @@ class IconView: UIView {
             let gradient = config.gradientBackground
             gradient.frame = layer.bounds
             symbolIconView.layer.insertSublayer(gradient, at: 0)
+            imageIconView.isHidden = true
+            symbolIconView.isHidden = false
         }
         
         appliedIconConfiguration = config
