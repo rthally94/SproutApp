@@ -49,7 +49,7 @@ class DatePickerListCell: GreenHouseDatePickerListCell {
     
     lazy var datePicker = UIDatePicker(frame: .zero)
     
-    private var customViewConstraints: (datePickerLeading: NSLayoutConstraint, datePickerTop: NSLayoutConstraint, datePickerCenterY: NSLayoutConstraint, datePickerCenterX: NSLayoutConstraint)?
+    private var customViewConstraints: (datePickerLeading: NSLayoutConstraint, datePickerTop: NSLayoutConstraint, datePickerBottom: NSLayoutConstraint, datePickerCenterX: NSLayoutConstraint)?
     
     private func setupViewsIfNeeded() {
         guard customViewConstraints == nil else { return }
@@ -58,16 +58,18 @@ class DatePickerListCell: GreenHouseDatePickerListCell {
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = (
-            datePickerLeading: datePicker.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.layoutMarginsGuide.leadingAnchor),
-            datePickerTop: datePicker.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            datePickerCenterY: datePicker.centerYAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerYAnchor),
-            datePickerCenterX: datePicker.centerXAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor)
+            datePickerLeading: datePicker.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor),
+            datePickerTop: datePicker.topAnchor.constraint(equalTo: contentView.topAnchor),
+            datePickerBottom: datePicker.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            datePickerCenterX: datePicker.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         )
         
+        constraints.datePickerBottom.priority-=1
+        
         NSLayoutConstraint.activate([
-            constraints.datePickerLeading,
             constraints.datePickerTop,
-            constraints.datePickerCenterY,
+            constraints.datePickerBottom,
+            constraints.datePickerLeading,
             constraints.datePickerCenterX,
         ])
         

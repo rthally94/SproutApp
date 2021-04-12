@@ -18,4 +18,17 @@ extension UICellAccessory {
         let todoAccessory = UICellAccessory.customView(configuration: configuration)
         return todoAccessory
     }
+    
+    static func toggleAccessory(isOn: Bool, action: UIAction?) -> UICellAccessory {
+        let placement = UICellAccessory.Placement.trailing(displayed: .always)
+        let toggle = UISwitch(frame: .zero, primaryAction: action)
+        
+        if toggle.isOn != isOn {
+            toggle.isOn = isOn
+        }
+        
+        let configuration = UICellAccessory.CustomViewConfiguration(customView: toggle, placement: placement)
+        let toggleAccessory = UICellAccessory.customView(configuration: configuration)
+        return toggleAccessory
+    }
 }
