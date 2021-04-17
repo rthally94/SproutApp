@@ -10,15 +10,8 @@ import UIKit
 
 class PlantDetailViewController: UIViewController {
     // MARK: - Properties
-    static let dateComponentsFormatter: DateComponentsFormatter = {
-       let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.month, .weekOfMonth, .day]
-        formatter.maximumUnitCount = 1
-        formatter.formattingContext = .beginningOfSentence
-        formatter.unitsStyle = .full
-        return formatter
-    }()
-    static let careDateFormatter = RelativeDateFormatter()
+    let dateComponentsFormatter = Utility.dateComponentsFormatter
+    let careDateFormatter = Utility.relativeDateFormatter
     
     let viewContext: NSManagedObjectContext
     
@@ -37,8 +30,8 @@ class PlantDetailViewController: UIViewController {
     }
     
     enum Section: Hashable, CaseIterable {
-        case plantInfo
-        case summary
+        case plantIcon, plantHeader
+        case taskSummary
         case upNext
         case careInfo
         
@@ -69,42 +62,115 @@ class PlantDetailViewController: UIViewController {
             }
         }
     }
-    
+
     struct Item: Hashable {
-        let icon: GHIcon?
-        let image: UIImage?
-        let tintColor: UIColor?
-        let text: String?
-        let secondaryText: String?
-        let isComplete: Bool
-        
-        init(image: UIImage?, tintColor: UIColor?, text: String?, secondaryText: String?) {
-            self.icon = nil
+        typealias Icon = GHIcon
+
+        enum RowType: Hashable {
+            case value1, value2, subtitle
+            case compactCard
+            case button
+            case icon, header
+            case statistic
+            case todo
+        }
+
+        var id: UUID
+        var rowType: RowType
+
+        var text: String?
+        var secondaryText: String?
+        var tertiaryText: String?
+        var image: UIImage?
+        var icon: Icon?
+        var isOn: Bool
+        var tintColor: UIColor?
+
+
+        /// Memberwise Initialzier. Not all properties are used in every row type.
+        /// - Parameters:
+        ///   - id: Unique Identifier of the item
+        ///   - rowType: Visual representation of the row
+        ///   - text: Primary Text
+        ///   - secondaryText: Secondary Text
+        ///   - tertiaryText: Tertiary Text
+        ///   - image: Image to display
+        ///   - icon: Icon to display
+        ///   - isOn: Flag to represent the state of a switch with an on/off state
+        init(id: UUID = UUID(), rowType: RowType, text: String? = nil, secondaryText: String? = nil, tertiaryText: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isOn: Bool = false, tintColor: UIColor? = .systemBlue) {
+            self.id = id
+            self.rowType = rowType
+            self.text = text
+            self.secondaryText = text
+            self.tertiaryText = tertiaryText
             self.image = image
-            self.tintColor = tintColor
-            self.text = text
-            self.secondaryText = secondaryText
-            self.isComplete = false
-        }
-        
-        init(icon: GHIcon?, text: String?, secondaryText: String?, isComplete: Bool = false) {
             self.icon = icon
-            self.image = nil
-            self.tintColor = nil
-            self.text = text
-            self.secondaryText = secondaryText
-            self.isComplete = isComplete
+            self.isOn = isOn
+            self.tintColor = tintColor
         }
+
+        /// Initializer for a UICollectionViewListCell
+        /// - Parameters:
+        ///   - id: Unique identifier for the item
+        ///   - text: The primary text
+        ///   - secondaryText: The secondary text
+        ///   - image: The image to display
+        init(id: UUID = UUID(), rowType: RowType = .value1, text: String? = nil, secondaryText: String? = nil, image: UIImage? = nil) {
+            self.init(id: id, rowType: rowType, text: text, secondaryText: secondaryText, image: image)
+        }
+
+        /// Initialzier for the Plant Icon
+        /// - Parameters:
+        ///   - id: Unique identifier for the item
+        ///   - icon: The icon
+        init(id: UUID = UUID(), icon: Icon?) {
+            self.init(id: id, rowType: .icon, icon: icon)
+        }
+
+        /// Initializer for the plant header
+        /// - Parameters:
+        ///   - id: Unique identifier for the item
+        ///   - title: The title
+        ///   - subtitle: The subtitle
+        init(id: UUID = UUID(), title: String?, subtitle: String?) {
+            self.init(id: id, rowType: .header, text: title, secondaryText: subtitle)
+        }
+
+        /// Initializer for the statistic cell
+        /// - Parameters:
+        ///   - id: Unique identifier for the item
+        ///   - title: The title
+        ///   - value: The value
+        ///   - unit: The unit
+        ///   - icon: The icon
+        ///   - tintColor: Primary tint color of the item
+        init(id: UUID = UUID(), title: String?, value: String?, unit: String? = nil, image: UIImage? = nil, icon: Icon? = nil, tintColor: UIColor? = nil) {
+            self.init(id: id, rowType: .statistic, text: title, secondaryText: value, tertiaryText: unit, image: image, icon: icon, tintColor: tintColor)
+        }
+
+        /// Initializer for a todo cell
+        /// - Parameters:
+        ///   - id: Unique identifier for the item
+        ///   - title: The title
+        ///   - subtitle: The subtitle
+        ///   - image: The image
+        ///   - icon: The icon
+        ///   - taskState: Flag to represent the state of a switch with an on/off state
+        ///   - tintColor: Primary tint color of the item
+        init(id: UUID = UUID(), title: String?, subtitle: String?, image: UIImage? = nil, icon: Icon? = nil, taskState: Bool, tintColor: UIColor? = nil) {
+            self.init(id: id, rowType: .todo, text: title, secondaryText: subtitle, image: image, icon: icon, isOn: taskState, tintColor: tintColor)
+        }
+
     }
     
-    lazy var collectionView: UICollectionView = {
+    private lazy var collectionView: UICollectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
         view.backgroundColor = .systemGroupedBackground
         view.delegate = self
         return view
     }()
     
-    lazy var plantEditor: PlantEditorControllerController = {
+    private lazy var plantEditor: PlantEditorControllerController = {
         let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         editingContext.parent = viewContext
         
@@ -150,7 +216,7 @@ extension PlantDetailViewController: PlantEditorDelegate {
     }
 }
 
-extension PlantDetailViewController {
+private extension PlantDetailViewController {
     func nextTaskDateString() -> String? {
         let nextTasks: [(task: GHTask, date: Date)] = plant.tasks.compactMap { task in
             if let nextDate = task.nextCareDate(after: Calendar.current.startOfDay(for: Date())) {
@@ -161,19 +227,19 @@ extension PlantDetailViewController {
         }
         
         if let nextTask = nextTasks.min(by: { $0.date < $1.date }) {
-            return PlantDetailViewController.careDateFormatter.string(from: nextTask.date)
+            return careDateFormatter.string(from: nextTask.date)
         } else {
             return nil
         }
     }
 }
 
-extension PlantDetailViewController {
+private extension PlantDetailViewController {
     func makeLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let sectionKind = Section.allCases[sectionIndex]
             switch sectionKind {
-            case .plantInfo:
+            case .plantIcon, .plantHeader:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 
@@ -183,7 +249,7 @@ extension PlantDetailViewController {
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0)
                 return section
-            case .summary:
+            case .taskSummary:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0)
@@ -207,15 +273,19 @@ extension PlantDetailViewController {
     }
 }
 
-extension PlantDetailViewController {
+private extension PlantDetailViewController {
     func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         snapshot.appendSections(Section.allCases)
         
         // Plant Info Header
         snapshot.appendItems([
-            Item(icon: plant.icon, text: plant.name, secondaryText: plant.type?.commonName)
-        ], toSection: .plantInfo)
+            Item(icon: plant.icon)
+        ], toSection: .plantIcon)
+
+        snapshot.appendItems([
+            Item(title: plant.name?.capitalized, subtitle: plant.type?.commonName?.capitalized)
+        ], toSection: .plantHeader)
         
         // Plant Care Summary
         let tasksToday: Set<GHTask> = plant.tasks.filter { task in
@@ -229,9 +299,9 @@ extension PlantDetailViewController {
         let lateColor = lateTasks.isEmpty ? UIColor.systemYellow.withAlphaComponent(0.5) : UIColor.yellow
         
         snapshot.appendItems([
-            Item(image: UIImage(systemName: "calendar.badge.clock"), tintColor: todayColor, text: "Today", secondaryText: "\(tasksToday.count) tasks"),
-            Item(image: UIImage(systemName: "exclamationmark.circle"), tintColor: lateColor, text: "Late", secondaryText: "\(lateTasks.count) tasks")
-        ], toSection: .summary)
+            Item(title: "Today", value: "\(tasksToday.count)", unit: "\(tasksToday.count == 1 ? "task" : "tasks")", image: UIImage(systemName: "calendar.badge.clock"), tintColor: todayColor),
+            Item(title: "Late", value: "\(tasksToday.count)", unit: "\(lateTasks.count == 1 ? "task" : "tasks")", image: UIImage(systemName: "exclamationmark.circle"), tintColor: lateColor)
+        ], toSection: .taskSummary)
         
         // Up Next
         let next = lateTasks.union(tasksToday)
@@ -240,60 +310,60 @@ extension PlantDetailViewController {
             if task.isLate() {
                 guard let lastDate = task.lastCareDate, let expectedDate = task.nextCareDate(after: lastDate) else { fatalError("Unable to calculate days late but task was flagged as late.")}
                 let daysLateComponents = Calendar.current.dateComponents([.day, .month], from: expectedDate, to: Calendar.current.startOfDay(for: Date()))
-                lastCareString = "\(PlantDetailViewController.dateComponentsFormatter.string(from: daysLateComponents) ?? "Not") late"
+                lastCareString = "\(dateComponentsFormatter.string(from: daysLateComponents) ?? "Not") late"
             } else {
                 lastCareString = ""
             }
-            return Item(icon: task.taskType?.icon, text: task.taskType?.name, secondaryText: lastCareString)
+            return Item(title: task.taskType?.name, subtitle: lastCareString, icon: task.taskType?.icon, taskState: false)
         }
         
         snapshot.appendItems(nextTasks, toSection: .upNext)
         
         // All Tasks
         let items: [Item] = plant.tasks.compactMap { task in
-            return Item(icon: task.taskType?.icon, text: task.taskType?.name, secondaryText: nil)
+            return Item(rowType: .compactCard, text: task.taskType?.name, secondaryText: task.interval?.intervalText(), icon: task.taskType?.icon)
         }
         
         snapshot.appendItems(items, toSection: .careInfo)
         return snapshot
     }
     
-    func makeHeaderCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
+    func makeIconCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
         UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
             if let icon = item.icon {
                 var config = cell.iconView.defaultConfiguration()
                 config.image = icon.image
                 config.tintColor = icon.color
-                cell.iconView.iconViewConfiguration = config
+                cell.iconView.configuration = config
             }
-            
-            cell.titleLabel.text = item.text
-            cell.subtitleLabel.text = item.secondaryText
+
             cell.backgroundColor = .systemGroupedBackground
         }
     }
-    
-    func makeSummaryCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
-            var config = UIListContentConfiguration.statisticCell()
-            
-            config.image = item.image
-            config.text = item.text
-            config.secondaryText = item.secondaryText
-            
-            config.imageProperties.tintColor = item.tintColor
-            config.secondaryTextProperties.color = item.tintColor ?? config.textProperties.color
-            
-            cell.contentConfiguration = config
-            
+
+    func makeHeaderCellRegistration() -> UICollectionView.CellRegistration<HeaderCell, Item> {
+        UICollectionView.CellRegistration<HeaderCell, Item> { cell, indexPath, item in
+            cell.titleLabel.text = item.text
+            cell.subtitleLabel.text = item.secondaryText
+        }
+    }
+
+    func makeStatisticCellRegistration() -> UICollectionView.CellRegistration<StatisticCell, Item> {
+        UICollectionView.CellRegistration<StatisticCell, Item> { cell, indexPath, item in
+            cell.image = item.image
+            cell.title = item.text
+            cell.value = item.secondaryText
+            cell.unit = item.tertiaryText
+            cell.tintColor = item.tintColor
+
             cell.contentView.backgroundColor = .secondarySystemGroupedBackground
             cell.layer.cornerRadius = 10
             cell.clipsToBounds = true
         }
     }
     
-    func makeUpNextCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> {cell, _, item in
+    func makeTodoCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> {cell, indexPath, item in
             var config = UIListContentConfiguration.subtitleCell()
             
             config.image = item.icon?.image
@@ -304,21 +374,20 @@ extension PlantDetailViewController {
             
             cell.contentConfiguration = config
             
-//            if let task = self?.plant?.tasks.first(where: {$0.id == item.task?.id}), task.currentStatus() == .complete {
-//                cell.accessories = [ .checkmark() ]
-//            } else {
-//                let actionHandler: UIActionHandler = {[weak self] _ in
-//                    guard let self = self, let task = item.task else { return }
-//                    self.plant?.logCare(for: task)
-//                    self.configureSubviews()
-//                }
-//                cell.accessories = [ .todoAccessory(actionHandler: actionHandler) ]
-//            }
+            if item.isOn {
+                cell.accessories = [ .checkmark() ]
+            } else {
+                let actionHandler: UIActionHandler = {[weak self] _ in
+                    guard let self = self else { return }
+                    print("👍")
+                }
+                cell.accessories = [ .todoAccessory(actionHandler: actionHandler) ]
+            }
         }
     }
     
     func makeCareInfoCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
             var config = UIListContentConfiguration.subtitleCell()
             
             config.image = item.image
@@ -350,17 +419,20 @@ extension PlantDetailViewController {
     }
     
     func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
+        let iconRegistration = makeIconCellRegistration()
         let headerCellRegistration = makeHeaderCellRegistration()
-        let summaryCellRegistration = makeSummaryCellRegistration()
-        let upNextCellRegistration = makeUpNextCellRegistration()
+        let summaryCellRegistration = makeStatisticCellRegistration()
+        let upNextCellRegistration = makeTodoCellRegistration()
         let careInfoCellRegistration = makeCareInfoCellRegistration()
         
         let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             let sectionKind = Section.allCases[indexPath.section]
             switch sectionKind {
-            case .plantInfo:
+            case .plantIcon:
+                return collectionView.dequeueConfiguredReusableCell(using: iconRegistration, for: indexPath, item: item)
+            case .plantHeader:
                 return collectionView.dequeueConfiguredReusableCell(using: headerCellRegistration, for: indexPath, item: item)
-            case .summary:
+            case .taskSummary:
                 return collectionView.dequeueConfiguredReusableCell(using: summaryCellRegistration, for: indexPath, item: item)
             case .upNext:
                 return collectionView.dequeueConfiguredReusableCell(using: upNextCellRegistration, for: indexPath, item: item)

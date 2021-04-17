@@ -11,24 +11,25 @@ import CoreGraphics
 struct IconConfiguration: Hashable {
     private static let placeholderImage = UIImage(systemName: "photo.on.rectangle.angled")!
     private static let placeholderColor = UIColor.systemGray
-    
-    private var backingImage: UIImage?
+
+    private var _image: UIImage?
     var image: UIImage? {
         get {
-            return backingImage ?? IconConfiguration.placeholderImage
+            return _image ?? IconConfiguration.placeholderImage
         }
         set {
-            backingImage = newValue
+            _image = newValue
         }
     }
-    
-    private var backingTintColor: UIColor?
+
+    private var _tintColor: UIColor?
     var tintColor: UIColor? {
         get {
-            backingTintColor ?? IconConfiguration.placeholderColor
+            _tintColor ?? IconConfiguration.placeholderColor
         }
+
         set {
-            backingTintColor = newValue
+            _tintColor = newValue
         }
     }
     
@@ -70,7 +71,7 @@ class IconView: UIView {
     }
     
     private var appliedIconConfiguration: IconConfiguration?
-    var iconViewConfiguration: IconConfiguration? {
+    var configuration: IconConfiguration? {
         didSet {
             setNeedsLayout()
         }
@@ -116,8 +117,8 @@ class IconView: UIView {
     }
     
     private func configureView() {
-        guard iconViewConfiguration != appliedIconConfiguration || bounds != appliedBounds else { return }
-        let config = iconViewConfiguration ?? defaultConfiguration()
+        guard configuration != appliedIconConfiguration || bounds != appliedBounds else { return }
+        let config = configuration ?? defaultConfiguration()
         
         // Configure CornerStyle
         layer.cornerRadius = config.cornerRadius(rect: bounds)

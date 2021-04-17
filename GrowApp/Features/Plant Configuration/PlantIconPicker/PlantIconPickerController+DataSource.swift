@@ -8,11 +8,11 @@
 import UIKit
 
 extension PlantIconPickerController {
-    func makeCellRegistration() -> UICollectionView.CellRegistration<IconCell, Item> {
-        return UICollectionView.CellRegistration<IconCell, Item>() { cell, indexPath, item in
-            var config = cell.defaultConfigurtion()
+    func makeCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, Item>() { cell, indexPath, item in
+            var config = cell.defaultContentConfiguration()
             config.image = item.image
-            config.tintColor = item.tintColor
+            config.imageProperties.tintColor = item.tintColor
             cell.contentConfiguration = config
         }
     }

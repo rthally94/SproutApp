@@ -85,8 +85,9 @@ class PlantEditorControllerController: UIViewController {
             footerTitle == nil ? .none : .supplementary
         }
     }
-    
-    internal struct Item: Hashable {
+
+    typealias Item = AnyHashable
+    internal struct ConfigItem: Hashable {
         let rowType: RowType
         var action: (() -> Void)?
         
@@ -100,7 +101,7 @@ class PlantEditorControllerController: UIViewController {
             self.action = action
         }
         
-        static func == (lhs: PlantEditorControllerController.Item, rhs: PlantEditorControllerController.Item) -> Bool {
+        static func == (lhs: PlantEditorControllerController.ConfigItem, rhs: PlantEditorControllerController.ConfigItem) -> Bool {
             lhs.rowType == rhs.rowType
         }
         

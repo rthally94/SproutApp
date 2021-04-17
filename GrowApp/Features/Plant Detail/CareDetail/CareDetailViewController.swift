@@ -31,8 +31,9 @@ class CareDetailViewController: UIViewController {
         case header
         case schedule
     }
-    
-    struct Item: Hashable {
+
+    typealias Item = AnyHashable
+    struct DetailItem: Hashable {
         var icon: GHIcon?
         var image: UIImage?
         var tintColor: UIColor?
@@ -119,14 +120,14 @@ extension CareDetailViewController {
     func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
-        if let selectedTask = selectedTask {
+        if let selectedTask = selectedTask, let icon = selectedTask.taskType?.icon {
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems([
-                Item(icon: selectedTask.taskType?.icon, text: selectedTask.taskType?.description, secondaryText: selectedTask.interval?.description)
+                icon
             ], toSection: .header)
         
             let image = Int(selectedTask.interval?.type ?? 0) == GHTaskIntervalType.none.rawValue ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
-            let item = Item(image: image, tintColor: .systemBlue, text: nil, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.interval?.startDate ?? Date()))")
+            let item = DetailItem(image: image, tintColor: .systemBlue, text: nil, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.interval?.startDate ?? Date()))")
             
             snapshot.appendItems([
                 item
@@ -138,37 +139,37 @@ extension CareDetailViewController {
     
     func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let cellRegistration  = makeCellRegistration()
-        let headerRegistration = makeHeaderCellRegistration()
+        let headerRegistration = IconHeaderCell.cellRegistration()
         
         let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             let sectionKind = Section.allCases[indexPath.section]
             switch sectionKind {
             case .header:
-                return collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item)
+                return collectionView.dequeueConfiguredReusableCell(using: headerRegistration, for: indexPath, item: item as? IconHeaderCell.Configuration)
             case .schedule:
-                return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
+                return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item as? DetailItem)
             }
         }
         
         return dataSource
     }
     
-    func makeHeaderCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
-        UICollectionView.CellRegistration<IconHeaderCell, Item>() { cell, indexPath, item in
-            if let icon = item.icon {
-                var config = cell.iconView.defaultConfiguration()
-                config.image = icon.image
-                config.tintColor = icon.color
-                cell.iconView.iconViewConfiguration = config
-            }
-            
-            cell.titleLabel.text = item.text
-            cell.subtitleLabel.text = item.secondaryText
-        }
-    }
+//    func makeHeaderCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, IconHeaderCell.Configuration> {
+//        UICollectionView.CellRegistration<IconHeaderCell, IconHeader>() { cell, indexPath, item in
+//            if let icon = item.icon {
+//                var config = cell.iconView.defaultConfiguration()
+//                config.image = icon.image
+//                config.tintColor = icon.color
+//                cell.iconView.iconViewConfiguration = config
+//            }
+//
+//            cell.titleLabel.text = item.text
+//            cell.subtitleLabel.text = item.secondaryText
+//        }
+//    }
     
-    func makeCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item>() { cell, indexPath, item in
+    func makeCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, DetailItem> {
+        UICollectionView.CellRegistration<UICollectionViewListCell, DetailItem>() { cell, indexPath, item in
             var config = cell.defaultContentConfiguration()
             config.text = item.text
             config.secondaryText = item.secondaryText

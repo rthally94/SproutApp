@@ -9,13 +9,13 @@ import UIKit
 
 extension PlantEditorControllerController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let item = dataSource.itemIdentifier(for: indexPath)
-        return item?.action != nil
+        guard let item = dataSource.itemIdentifier(for: indexPath) as? ConfigItem else { return false }
+        return item.action != nil
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = dataSource.itemIdentifier(for: indexPath)
-        if let action = item?.action {
+        guard let item = dataSource.itemIdentifier(for: indexPath) as? ConfigItem else { return }
+        if let action = item.action {
             selectedIndexPath = indexPath
 
             action()

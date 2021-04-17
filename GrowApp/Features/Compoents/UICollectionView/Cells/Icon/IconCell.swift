@@ -9,16 +9,12 @@ import UIKit
 
 class IconCell: UICollectionViewCell {
     func defaultConfigurtion() -> IconCellContentConfiguration {
-        var config = IconCellContentConfiguration()
-        config.tintColor = .systemBlue
-        config.image = nil
-        return config
+        return  IconCellContentConfiguration()
     }
 }
 
 struct IconCellContentConfiguration: UIContentConfiguration, Hashable {
-    var image: UIImage?
-    var tintColor: UIColor?
+    var icon: GHIcon?
     
     func makeContentView() -> UIView & UIContentView {
         return IconCellContentView(configuration: self)
@@ -69,8 +65,7 @@ class IconCellContentView: UIView & UIContentView {
         
         // configure view
         var config = plantIcon.defaultConfiguration()
-        config.image = appliedContentConfiguration.image
-        config.tintColor = appliedContentConfiguration.tintColor
-        plantIcon.iconViewConfiguration = config
+        config.icon = appliedContentConfiguration.icon
+        plantIcon.configuration = config
     }
 }
