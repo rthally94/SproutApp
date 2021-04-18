@@ -41,6 +41,7 @@ class IconHeaderCell: UICollectionViewCell {
             iconView.heightAnchor.constraint(equalTo: iconView.widthAnchor),
             iconView.centerXAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor),
             constraints.iconViewWidth,
+            iconView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor)
         ])
         
         customViewConstraints = constraints

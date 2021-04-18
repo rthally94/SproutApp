@@ -65,7 +65,8 @@ class IconCellContentView: UIView & UIContentView {
         
         // configure view
         var config = plantIcon.defaultConfiguration()
-        config.icon = appliedContentConfiguration.icon
+        config.image = appliedContentConfiguration.icon?.image
+        config.tintColor = appliedContentConfiguration.icon?.color
         plantIcon.configuration = config
     }
 }

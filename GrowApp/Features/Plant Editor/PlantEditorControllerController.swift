@@ -86,8 +86,7 @@ class PlantEditorControllerController: UIViewController {
         }
     }
 
-    typealias Item = AnyHashable
-    internal struct ConfigItem: Hashable {
+    internal struct Item: Hashable {
         let rowType: RowType
         var action: (() -> Void)?
         
@@ -101,7 +100,7 @@ class PlantEditorControllerController: UIViewController {
             self.action = action
         }
         
-        static func == (lhs: PlantEditorControllerController.ConfigItem, rhs: PlantEditorControllerController.ConfigItem) -> Bool {
+        static func == (lhs: PlantEditorControllerController.Item, rhs: PlantEditorControllerController.Item) -> Bool {
             lhs.rowType == rhs.rowType
         }
         

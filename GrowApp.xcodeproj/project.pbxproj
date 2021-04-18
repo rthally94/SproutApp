@@ -69,6 +69,8 @@
 		FB7ED54826177FE4008FD1BE /* PlantTypesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED54726177FE4008FD1BE /* PlantTypesProvider.swift */; };
 		FB7ED54E2617B8F4008FD1BE /* PlantTypePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED54D2617B8F4008FD1BE /* PlantTypePickerDelegate.swift */; };
 		FB8E0D40262B324400F0FA09 /* StatisticCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */; };
+		FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */; };
+		FB8E0D4A262B75B200F0FA09 /* CompactCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */; };
 		FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */; };
 		FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */; };
 		FBC5D63825EEA269005BF6B1 /* PlantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */; };
@@ -178,6 +180,8 @@
 		FB7ED54726177FE4008FD1BE /* PlantTypesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTypesProvider.swift; sourceTree = "<group>"; };
 		FB7ED54D2617B8F4008FD1BE /* PlantTypePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTypePickerDelegate.swift; sourceTree = "<group>"; };
 		FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticCell.swift; sourceTree = "<group>"; };
+		FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticCollectionView.swift; sourceTree = "<group>"; };
+		FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCardCell.swift; sourceTree = "<group>"; };
 		FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCardViewController.swift; sourceTree = "<group>"; };
 		FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailViewController.swift; sourceTree = "<group>"; };
@@ -249,6 +253,7 @@
 		FB21B6F625B1E5CC00D02384 /* GrowApp */ = {
 			isa = PBXGroup;
 			children = (
+				FB8E0D43262B5AF600F0FA09 /* StaticCollectionView */,
 				FB5F348225B4C28300CCE6BC /* Features */,
 				FB21B70C25B1E5D900D02384 /* Model */,
 				FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */,
@@ -301,17 +306,9 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		FB597EA92623919100AB477B /* PlantEditorFlow */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = PlantEditorFlow;
-			sourceTree = "<group>";
-		};
 		FB597ED82625CF7100AB477B /* Icon */ = {
 			isa = PBXGroup;
 			children = (
-				FBC7330225DDB4F00048999C /* IconCell.swift */,
 			);
 			path = Icon;
 			sourceTree = "<group>";
@@ -324,7 +321,7 @@
 				FB5F348325B4C29100CCE6BC /* TaskCalendar */,
 				FBC5D61B25EC555E005BF6B1 /* All Plants */,
 				FBC5D63625EEA255005BF6B1 /* Plant Detail */,
-				FB7B815225BE188E0053E543 /* Plant Configuration */,
+				FB7B815225BE188E0053E543 /* Plant Editor */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -513,10 +510,9 @@
 			path = WeekPicker;
 			sourceTree = "<group>";
 		};
-		FB7B815225BE188E0053E543 /* Plant Configuration */ = {
+		FB7B815225BE188E0053E543 /* Plant Editor */ = {
 			isa = PBXGroup;
 			children = (
-				FB597EA92623919100AB477B /* PlantEditorFlow */,
 				FB7B815E25BE2BE10053E543 /* PlantEditorControllerController.swift */,
 				FBC7331C25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift */,
 				FBC7332025E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift */,
@@ -526,7 +522,7 @@
 				FB7B815325BE189E0053E543 /* Plant Type Configuration */,
 				FB6661B9261FD00500DC8B04 /* TaskEditor */,
 			);
-			path = "Plant Configuration";
+			path = "Plant Editor";
 			sourceTree = "<group>";
 		};
 		FB7B815325BE189E0053E543 /* Plant Type Configuration */ = {
@@ -546,6 +542,26 @@
 				FB0A9F3D25DD766B0084AED8 /* PlantType.swift */,
 			);
 			path = Plant;
+			sourceTree = "<group>";
+		};
+		FB8E0D43262B5AF600F0FA09 /* StaticCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				FB8E0D48262B75A100F0FA09 /* Cells */,
+				FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */,
+			);
+			path = StaticCollectionView;
+			sourceTree = "<group>";
+		};
+		FB8E0D48262B75A100F0FA09 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FB6C460C25F11BA0009ED947 /* IconHeaderCell.swift */,
+				FBC7330225DDB4F00048999C /* IconCell.swift */,
+				FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */,
+				FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		FBB102FA25B9C790005C3C8E /* DatePickerCard */ = {
@@ -589,10 +605,8 @@
 		FBC5D63B25EEA4B6005BF6B1 /* CollectionViewCells */ = {
 			isa = PBXGroup;
 			children = (
-				FB6C460C25F11BA0009ED947 /* IconHeaderCell.swift */,
 				FB6C461225F11BC4009ED947 /* CareInfoCell.swift */,
 				FBD549AA262B224600640A8F /* HeaderCell.swift */,
-				FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */,
 			);
 			path = CollectionViewCells;
 			sourceTree = "<group>";
@@ -791,6 +805,7 @@
 				FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */,
 				FB7ED536261671EB008FD1BE /* PlantDetailItems.swift in Sources */,
 				FB76D33C262A576500D00036 /* SproutIconView.swift in Sources */,
+				FB8E0D4A262B75B200F0FA09 /* CompactCardCell.swift in Sources */,
 				FBD5499E262B19F900640A8F /* SproutTaskCompactCardView.swift in Sources */,
 				FBC7330D25DEBACB0048999C /* Circle.swift in Sources */,
 				FB7ED5132614F5AC008FD1BE /* TaskCalendarProvider.swift in Sources */,
@@ -825,6 +840,7 @@
 				FB6661A1261DEB9900DC8B04 /* GHTaskType+Extensions.swift in Sources */,
 				FB6C461C25F1C332009ED947 /* CareDetailViewController.swift in Sources */,
 				FBC7333025E404CC0048999C /* PlantIconPickerController.swift in Sources */,
+				FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */,
 				FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */,
 				FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */,
 				FB6C462D25F2FC8B009ED947 /* TaskType.swift in Sources */,

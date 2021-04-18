@@ -9,18 +9,18 @@ import UIKit
 
 // MARK: - Cell Registrations
 extension PlantEditorControllerController {
-//    func createPlantIconCellRegistration() -> UICollectionView.CellRegistration<IconCell, Item> {
-//        return UICollectionView.CellRegistration<IconCell, Item> { (cell, indexPath, item) in
-//            if case let .plantIcon(icon) = item.rowType {
-//                var config = cell.defaultConfigurtion()
-//                config.icon = icon
-//                cell.contentConfiguration = config
-//            }
-//        }
-//    }
+    func createPlantIconCellRegistration() -> UICollectionView.CellRegistration<IconCell, Item> {
+        return UICollectionView.CellRegistration<IconCell, Item> { (cell, indexPath, item) in
+            if case let .plantIcon(icon) = item.rowType {
+                var config = cell.defaultConfigurtion()
+                config.icon = icon
+                cell.contentConfiguration = config
+            }
+        }
+    }
 
-    func createPlantNameCellRegistration() -> UICollectionView.CellRegistration<TextFieldCell, ConfigItem> {
-        return UICollectionView.CellRegistration<TextFieldCell, ConfigItem> { (cell, IndexPath, item) in
+    func createPlantNameCellRegistration() -> UICollectionView.CellRegistration<TextFieldCell, Item> {
+        return UICollectionView.CellRegistration<TextFieldCell, Item> { (cell, IndexPath, item) in
             if case let .textField(_, value, placeholder) = item.rowType {
                 var config = cell.defaultTextFieldConfiguration()
                 config.placeholder = placeholder
@@ -34,8 +34,8 @@ extension PlantEditorControllerController {
         }
     }
 
-    func createValueCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, ConfigItem> {
-        return UICollectionView.CellRegistration<UICollectionViewListCell, ConfigItem> { (cell, indexPath, item) in
+    func createValueCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
             var configuration = UIListContentConfiguration.valueCell()
 
             if case let .listValue(image, text, secondaryText) = item.rowType {
@@ -52,8 +52,8 @@ extension PlantEditorControllerController {
         }
     }
 
-    func createDefaultListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, ConfigItem> {
-        return UICollectionView.CellRegistration<UICollectionViewListCell, ConfigItem> { (cell, indexPath, item) in
+    func createDefaultListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        return UICollectionView.CellRegistration<UICollectionViewListCell, Item> { (cell, indexPath, item) in
             var configuration = cell.defaultContentConfiguration()
 
             if case let .list(icon, text, secondaryText) = item.rowType {
@@ -144,7 +144,7 @@ extension PlantEditorControllerController {
     }
 
     internal func configureDataSource() {
-        let plantIconRegistration = IconHeaderCell.cellRegistration()
+        let plantIconRegistration = createPlantIconCellRegistration()
         let plantNameCellRegistration = createPlantNameCellRegistration()
         let valueCellResistration = createValueCellRegistration()
         let defaultRegistration = createDefaultListCellRegistration()
@@ -154,29 +154,26 @@ extension PlantEditorControllerController {
             (collectionView: UICollectionView, indexPath: IndexPath, item: Item) -> UICollectionViewCell? in
             switch item.rowType {
                 case .list:
-                    return collectionView.dequeueConfiguredReusableCell(using: defaultRegistration, for: indexPath, item: item as? ConfigItem)
+                    return collectionView.dequeueConfiguredReusableCell(using: defaultRegistration, for: indexPath, item: item)
                 case .listValue:
-                    return collectionView.dequeueConfiguredReusableCell(using: valueCellResistration, for: indexPath, item: item as? ConfigItem)
+                    return collectionView.dequeueConfiguredReusableCell(using: valueCellResistration, for: indexPath, item: item)
                 case .plantIcon:
-                    return collectionView.dequeueConfiguredReusableCell(using: plantIconRegistration, for: indexPath, item: item as? IconHeaderCell.Configuration)
+                    return collectionView.dequeueConfiguredReusableCell(using: plantIconRegistration, for: indexPath, item: item)
                 case .textField:
-                    return collectionView.dequeueConfiguredReusableCell(using: plantNameCellRegistration, for: indexPath, item: item as? ConfigItem)
+                    return collectionView.dequeueConfiguredReusableCell(using: plantNameCellRegistration, for: indexPath, item: item)
                 case .button:
-                    return collectionView.dequeueConfiguredReusableCell(using: buttonCellRegistration, for: indexPath, item: item as? ConfigItem)
+                    return collectionView.dequeueConfiguredReusableCell(using: buttonCellRegistration, for: indexPath, item: item)
             }
         }
 
         let supplementartyHeaderView = createSupplementaryHeaderRegistration()
         let buttonFooterView = createAddNewReminderFooterRegistration()
-        let iconBadgeView = createIconBadgeRegistration()
         dataSource.supplementaryViewProvider = { (collectionView, elementKind, indexPath) -> UICollectionReusableView? in
             switch elementKind {
                 case UICollectionView.elementKindSectionHeader:
                     return collectionView.dequeueConfiguredReusableSupplementary(using: supplementartyHeaderView, for: indexPath)
                 case UICollectionView.elementKindSectionFooter:
                     return collectionView.dequeueConfiguredReusableSupplementary(using: buttonFooterView, for: indexPath)
-                case PlantIconSupplementaryView.badgeElementKind:
-                    return collectionView.dequeueConfiguredReusableSupplementary(using: iconBadgeView, for: indexPath)
                 default:
                     return nil
             }

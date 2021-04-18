@@ -14,8 +14,11 @@ class StatisticView: UIView {
 
     lazy var imageView: UIImageView = {
         let view = UIImageView()
-        view.contentMode = .scaleAspectFit
         view.tintColor = tintColor
+        view.preferredSymbolConfiguration = .init(textStyle: .largeTitle)
+
+        let HCHP = view.contentHuggingPriority(for: .horizontal)
+        view.setContentHuggingPriority(HCHP+1, for: .horizontal)
         return view
     }()
 
@@ -29,6 +32,9 @@ class StatisticView: UIView {
     lazy var valueLabel: UILabel = {
         let view = UILabel()
         view.font = StatisticView.valueFont
+
+        let HCHP = view.contentHuggingPriority(for: .horizontal)
+        view.setContentHuggingPriority(HCHP+1, for: .horizontal)
         return view
     }()
 
@@ -61,18 +67,19 @@ class StatisticView: UIView {
 
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            imageView.topAnchor.constraint(equalTo: titleLabel.topAnchor),
-            imageView.bottomAnchor.constraint(equalTo: valueLabel.bottomAnchor),
+            imageView.centerYAnchor.constraint(equalTo: layoutMarginsGuide.centerYAnchor),
+            imageView.topAnchor.constraint(greaterThanOrEqualTo: titleLabel.topAnchor),
+            imageView.bottomAnchor.constraint(lessThanOrEqualTo: valueLabel.bottomAnchor),
 
             titleLabel.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1.0),
             titleLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
 
-            valueLabel.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 1.0),
+            valueLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
             valueLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
             valueLabel.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
 
-            unitLabel.leadingAnchor.constraint(equalTo: valueLabel.trailingAnchor),
+            unitLabel.leadingAnchor.constraint(equalTo: valueLabel.trailingAnchor, constant: 3),
             unitLabel.firstBaselineAnchor.constraint(equalTo: valueLabel.firstBaselineAnchor),
             unitLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
         ])

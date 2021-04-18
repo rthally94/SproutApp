@@ -9,17 +9,23 @@ import UIKit
 
 class CompactCardView: UIView {
     static let titleFont = UIFont.preferredFont(forTextStyle: .subheadline)
-    static let valueFont = UIFont.preferredFont(forTextStyle: .caption2)
+    static let valueFont = UIFont.preferredFont(forTextStyle: .footnote)
 
     lazy var imageView: UIImageView = {
         let view = UIImageView()
         view.preferredSymbolConfiguration = .init(font: CompactCardView.titleFont)
+        view.tintColor = tintColor
+
+        let HCHP = view.contentHuggingPriority(for: .horizontal) + 1
+        view.setContentHuggingPriority(HCHP, for: .horizontal)
+
         return view
     }()
 
     lazy var titleLabel: UILabel = {
         let view = UILabel()
         view.font = CompactCardView.titleFont
+        view.textColor = tintColor
         return view
     }()
 
@@ -35,6 +41,7 @@ class CompactCardView: UIView {
         super.layoutSubviews()
 
         layoutViewsIfNeeded()
+        backgroundColor = UIColor.secondarySystemGroupedBackground
     }
 }
 
