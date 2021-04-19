@@ -9,12 +9,55 @@ import Combine
 import CoreData
 import UIKit
 
-class PlantEditorControllerController: UIViewController {
+internal enum PlantEditorSection: Int, Hashable, CaseIterable, CustomStringConvertible {
+    case image
+    case plantInfo
+    case care
+    case actions
+
+    var description: String {
+        switch self {
+        case .image: return "Image"
+        case .plantInfo: return "General Information"
+        case .care: return "Care Details"
+        case .actions: return "Plant Actions"
+        }
+    }
+
+    var headerTitle: String? {
+        switch self {
+        case .care: return description
+        default: return nil
+        }
+    }
+
+    var headerMode: UICollectionLayoutListConfiguration.HeaderMode {
+        headerTitle == nil ? .none : .supplementary
+    }
+
+    var footerTitle: String? {
+        switch self {
+        case .care: return "Add Reminder"
+        default: return nil
+        }
+    }
+
+    var footerImage: UIImage? {
+        switch self {
+        case .care: return UIImage(systemName: "plus")
+        default: return nil
+        }
+    }
+
+    var footerMode: UICollectionLayoutListConfiguration.FooterMode {
+        footerTitle == nil ? .none : .supplementary
+    }
+}
+
+class PlantEditorControllerController: StaticCollectionViewController<PlantEditorSection> {
     // MARK: - Properties
     var viewContext: NSManagedObjectContext
     weak var delegate: PlantEditorDelegate?
-    
-    internal var dataSource: UICollectionViewDiffableDataSource<Section, Item>! = nil
     
     internal var editingPlant: GHPlant
     internal var selectedIndexPath: IndexPath?
@@ -27,8 +70,6 @@ class PlantEditorControllerController: UIViewController {
     ///   - model: The application model
     init(plant: GHPlant, viewContext: NSManagedObjectContext) {
         self.viewContext = viewContext
-        
-        // 1. Store the plant
         editingPlant = viewContext.object(with: plant.objectID) as! GHPlant
         
         super.init(nibName: nil, bundle: nil)
@@ -39,85 +80,6 @@ class PlantEditorControllerController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    // Data Source View Models
-    internal enum Section: Hashable, CaseIterable, CustomStringConvertible {
-        case image
-        case plantInfo
-        case care
-        case actions
-        
-        var description: String {
-            switch self {
-            case .image: return "Image"
-            case .plantInfo: return "General Information"
-            case .care: return "Care Details"
-            case .actions: return "Plant Actions"
-            }
-        }
-        
-        var headerTitle: String? {
-            switch self {
-            case .care: return description
-            default: return nil
-            }
-        }
-        
-        var headerMode: UICollectionLayoutListConfiguration.HeaderMode {
-            headerTitle == nil ? .none : .supplementary
-        }
-        
-        var footerTitle: String? {
-            switch self {
-            case .care: return "Add Reminder"
-            default: return nil
-            }
-        }
-        
-        var footerImage: UIImage? {
-            switch self {
-            case .care: return UIImage(systemName: "plus")
-            default: return nil
-            }
-        }
-        
-        var footerMode: UICollectionLayoutListConfiguration.FooterMode {
-            footerTitle == nil ? .none : .supplementary
-        }
-    }
-
-    internal struct Item: Hashable {
-        let rowType: RowType
-        var action: (() -> Void)?
-        
-        init(rowType: RowType) {
-            self.rowType = rowType
-            self.action = nil
-        }
-        
-        init(rowType: RowType, action: (() -> Void)?) {
-            self.rowType = rowType
-            self.action = action
-        }
-        
-        static func == (lhs: PlantEditorControllerController.Item, rhs: PlantEditorControllerController.Item) -> Bool {
-            lhs.rowType == rhs.rowType
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(rowType)
-        }
-    }
-    
-    internal enum RowType: Hashable {
-        case plantIcon(GHIcon?)
-        case list(icon: GHIcon?, text: String?, secondaryText: String?)
-        case listValue(image: UIImage?, text: String?, secondaryText: String?)
-        case textField(image: UIImage?, value: String?, placeholder: String?)
-        case button(image: UIImage?, text: String?, tintColor: UIColor = .label)
-    }
-    
-    internal var collectionView: UICollectionView! = nil
     
     internal lazy var plantIconPicker: PlantIconPickerController = {
         let vc = PlantIconPickerController(plant: editingPlant, viewContext: viewContext)
@@ -132,18 +94,11 @@ class PlantEditorControllerController: UIViewController {
     }()
     
     // MARK: - View Life Cycle
-    
-    override func loadView() {
-        super.loadView()
-        
-        configureHiearchy()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        collectionView.backgroundColor = .systemGroupedBackground
+
         configureDataSource()
+        collectionView.delegate = self
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(discardChanges))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(applyChanges))
@@ -185,49 +140,49 @@ class PlantEditorControllerController: UIViewController {
 //        vc.delegate = self
         navigateTo(vc)
     }
-}
 
-extension PlantEditorControllerController {
-    private func createLayout() -> UICollectionViewLayout {
+    override func makeLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout() { sectionIndex, layoutEnvironment in
-            let sectionInfo = Section.allCases[sectionIndex]
-            
-            switch sectionInfo {
+            let sectionKind = PlantEditorSection.allCases[sectionIndex]
+
+            switch sectionKind {
             case .image:
-                let badgeAnchor = NSCollectionLayoutAnchor(edges: [.bottom], fractionalOffset: CGPoint(x: 1.1, y: 0))
-                let badgeSize = NSCollectionLayoutSize(widthDimension: .estimated(44), heightDimension: .estimated(44))
-                
-                let badge = NSCollectionLayoutSupplementaryItem(layoutSize: badgeSize, elementKind: PlantIconSupplementaryView.badgeElementKind, containerAnchor: badgeAnchor)
-                
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize, supplementaryItems: [badge])
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
-                
+
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.3))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                
+
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0 )
                 return section
+            case .care:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48), heightDimension: .estimated(64))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                group.interItemSpacing = .flexible(6)
+
+                let section = NSCollectionLayoutSection(group: group)
+                if sectionKind.headerTitle != nil {
+                    let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                    let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                    section.boundarySupplementaryItems = [headerItem]
+                }
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+                return section
             default:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-                config.headerMode = sectionInfo.headerMode
-                config.footerMode = sectionInfo.footerMode
-                
+                config.headerMode = sectionKind.headerMode
+                config.footerMode = sectionKind.footerMode
+
                 return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
             }
         }
-        
+
         return layout
-    }
-    
-    private func configureHiearchy() {
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: createLayout())
-        collectionView.delegate = self
-        
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(collectionView)
-        collectionView.pinToBoundsOf(view)
     }
 }
 

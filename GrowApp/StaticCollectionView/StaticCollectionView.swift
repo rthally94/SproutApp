@@ -26,16 +26,25 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let listCellRegistration = makeListCellRegistration()
+
+        let textFieldCellRegistration = makeTextFieldCellRegistration()
 
         let iconRegistration = makeIconCellRegistration()
         let headerCellRegistration = makeHeaderCellRegistration()
         let statisticCellRegistration = makeStatisticCellRegistration()
         let todoCellRegistration = makeTodoCellRegistration()
-        let listCellRegistration = makeListCellRegistration()
         let compactCardRegistration = makeCompactCardRegistration()
 
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             switch item.rowType {
+            // UICollectionViewListCell
+            case .value1, .value2, .subtitle:
+                return collectionView.dequeueConfiguredReusableCell(using: listCellRegistration, for: indexPath, item: item)
+            // Form Cell
+            case .textField:
+                return collectionView.dequeueConfiguredReusableCell(using: textFieldCellRegistration, for: indexPath, item: item)
+            // Sprout Cell
             case .icon:
                 return collectionView.dequeueConfiguredReusableCell(using: iconRegistration, for: indexPath, item: item)
             case .header:
@@ -44,8 +53,6 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: statisticCellRegistration, for: indexPath, item: item)
             case .todo:
                 return collectionView.dequeueConfiguredReusableCell(using: todoCellRegistration, for: indexPath, item: item)
-            case .value1, .value2, .subtitle:
-                return collectionView.dequeueConfiguredReusableCell(using: listCellRegistration, for: indexPath, item: item)
             case .compactCard:
                 return collectionView.dequeueConfiguredReusableCell(using: compactCardRegistration, for: indexPath, item: item)
             }
@@ -57,107 +64,42 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
     internal func makeLayout() -> UICollectionViewLayout {
         return UICollectionViewFlowLayout()
     }
-
-    struct RowItem: Hashable {
-        typealias Icon = GHIcon
-
-        enum RowType: Hashable {
-            case value1, value2, subtitle
-            case compactCard
-            case icon, header
-            case statistic
-            case todo
-        }
-
-        var id: UUID
-        var rowType: RowType
-
-        var text: String?
-        var secondaryText: String?
-        var tertiaryText: String?
-        var image: UIImage?
-        var icon: Icon?
-        var isOn: Bool
-        var tintColor: UIColor?
-
-
-        /// Memberwise Initialzier. Not all properties are used in every row type.
-        /// - Parameters:
-        ///   - id: Unique Identifier of the item
-        ///   - rowType: Visual representation of the row
-        ///   - text: Primary Text
-        ///   - secondaryText: Secondary Text
-        ///   - tertiaryText: Tertiary Text
-        ///   - image: Image to display
-        ///   - icon: Icon to display
-        ///   - isOn: Flag to represent the state of a switch with an on/off state
-        init(id: UUID = UUID(), rowType: RowType, text: String? = nil, secondaryText: String? = nil, tertiaryText: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isOn: Bool = false, tintColor: UIColor? = .systemBlue) {
-            self.id = id
-            self.rowType = rowType
-            self.text = text
-            self.secondaryText = secondaryText
-            self.tertiaryText = tertiaryText
-            self.image = image
-            self.icon = icon
-            self.isOn = isOn
-            self.tintColor = tintColor
-        }
-
-        /// Initializer for a UICollectionViewListCell
-        /// - Parameters:
-        ///   - id: Unique identifier for the item
-        ///   - text: The primary text
-        ///   - secondaryText: The secondary text
-        ///   - image: The image to display
-//        init(id: UUID = UUID(), rowType: RowType = .value1, text: String? = nil, secondaryText: String? = nil, image: UIImage? = nil) {
-//            self.init(id: id, rowType: rowType, text: text, secondaryText: secondaryText, image: image)
-//        }
-
-        /// Initialzier for the Plant Icon
-        /// - Parameters:
-        ///   - id: Unique identifier for the item
-        ///   - icon: The icon
-        init(id: UUID = UUID(), icon: Icon?) {
-            self.init(id: id, rowType: .icon, icon: icon)
-        }
-
-        /// Initializer for the plant header
-        /// - Parameters:
-        ///   - id: Unique identifier for the item
-        ///   - title: The title
-        ///   - subtitle: The subtitle
-        init(id: UUID = UUID(), title: String?, subtitle: String?) {
-            self.init(id: id, rowType: .header, text: title, secondaryText: subtitle)
-        }
-
-        /// Initializer for the statistic cell
-        /// - Parameters:
-        ///   - id: Unique identifier for the item
-        ///   - title: The title
-        ///   - value: The value
-        ///   - unit: The unit
-        ///   - icon: The icon
-        ///   - tintColor: Primary tint color of the item
-        init(id: UUID = UUID(), title: String?, value: String?, unit: String? = nil, image: UIImage? = nil, icon: Icon? = nil, tintColor: UIColor? = nil) {
-            self.init(id: id, rowType: .statistic, text: title, secondaryText: value, tertiaryText: unit, image: image, icon: icon, tintColor: tintColor)
-        }
-
-        /// Initializer for a todo cell
-        /// - Parameters:
-        ///   - id: Unique identifier for the item
-        ///   - title: The title
-        ///   - subtitle: The subtitle
-        ///   - image: The image
-        ///   - icon: The icon
-        ///   - taskState: Flag to represent the state of a switch with an on/off state
-        ///   - tintColor: Primary tint color of the item
-        init(id: UUID = UUID(), title: String?, subtitle: String?, image: UIImage? = nil, icon: Icon? = nil, taskState: Bool, tintColor: UIColor? = nil) {
-            self.init(id: id, rowType: .todo, text: title, secondaryText: subtitle, image: image, icon: icon, isOn: taskState, tintColor: tintColor)
-        }
-    }
 }
 
 extension StaticCollectionViewController {
+    // MARK: - UICollectionViewListCell Configuration
+    func makeListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
+            var config: UIListContentConfiguration
+            switch item.rowType {
+            case .value1:
+                config = UIListContentConfiguration.cell()
+            case .value2:
+                config = UIListContentConfiguration.valueCell()
+            case .subtitle:
+                config = UIListContentConfiguration.subtitleCell()
+            default:
+                fatalError("Invalid rowType: \(item.rowType). List Cell requires rowType of \".value1\", \".value2\", or \".subtitle\"")
+            }
+
+            config.image = item.image
+            config.imageProperties.tintColor = item.tintColor
+
+            config.text = item.text
+            config.secondaryText = item.secondaryText
+
+            cell.contentConfiguration = config
+        }
+    }
+
+    // MARK: - Form Cell Registraion
+    func makeTextFieldCellRegistration() -> UICollectionView.CellRegistration<SproutTextFieldCell, Item> {
+        UICollectionView.CellRegistration<SproutTextFieldCell, Item> { cell, indexPath, item in
+            cell.updateWith(image: item.image, title: item.text, placeholder: item.secondaryText, value: item.tertiaryText)
+        }
+    }
+
+    // MARK: - Sprout Cell Registration
     func makeIconCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
         UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
             if let icon = item.icon {
@@ -213,30 +155,6 @@ extension StaticCollectionViewController {
                 }
                 cell.accessories = [ .todoAccessory(actionHandler: actionHandler) ]
             }
-        }
-    }
-
-    func makeListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
-            var config: UIListContentConfiguration
-            switch item.rowType {
-            case .value1:
-                config = UIListContentConfiguration.cell()
-            case .value2:
-                config = UIListContentConfiguration.valueCell()
-            case .subtitle:
-                config = UIListContentConfiguration.subtitleCell()
-            default:
-                fatalError("Invalid rowType: \(item.rowType). List Cell requires rowType of \".value1\", \".value2\", or \".subtitle\"")
-            }
-
-            config.image = item.image
-            config.imageProperties.tintColor = item.tintColor
-
-            config.text = item.text
-            config.secondaryText = item.secondaryText
-
-            cell.contentConfiguration = config
         }
     }
 

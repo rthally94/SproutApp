@@ -18,7 +18,7 @@ extension PlantEditorControllerController: UICollectionViewDelegate {
         if let action = item.action {
             selectedIndexPath = indexPath
 
-            action()
+            action(self)
         }
     }
 

@@ -195,11 +195,11 @@ private extension PlantDetailViewController {
         
         // Plant Info Header
         snapshot.appendItems([
-            Item(icon: plant.icon)
+            Item.icon(icon: plant.icon)
         ], toSection: .plantIcon)
 
         snapshot.appendItems([
-            Item(title: plant.name?.capitalized, subtitle: plant.type?.commonName?.capitalized)
+            Item.largeHeader(title: plant.name?.capitalized, subtitle: plant.type?.commonName?.capitalized)
         ], toSection: .plantHeader)
         
         // Plant Care Summary
@@ -214,8 +214,8 @@ private extension PlantDetailViewController {
         let lateColor = lateTasks.isEmpty ? UIColor.systemYellow.withAlphaComponent(0.5) : UIColor.yellow
         
         snapshot.appendItems([
-            Item(title: "Today", value: "\(tasksToday.count)", unit: "\(tasksToday.count == 1 ? "task" : "tasks")", image: UIImage(systemName: "calendar.badge.clock"), tintColor: todayColor),
-            Item(title: "Late", value: "\(tasksToday.count)", unit: "\(lateTasks.count == 1 ? "task" : "tasks")", image: UIImage(systemName: "exclamationmark.circle"), tintColor: lateColor)
+            Item.statistic(title: "Today", value: "\(tasksToday.count)", unit: "\(tasksToday.count == 1 ? "task" : "tasks")", image: UIImage(systemName: "calendar.badge.clock"), tintColor: todayColor),
+            Item.statistic(title: "Late", value: "\(tasksToday.count)", unit: "\(lateTasks.count == 1 ? "task" : "tasks")", image: UIImage(systemName: "exclamationmark.circle"), tintColor: lateColor)
         ], toSection: .taskSummary)
         
         // Up Next
@@ -230,14 +230,14 @@ private extension PlantDetailViewController {
                 lastCareString = ""
             }
 
-            return Item(title: task.taskType?.name, subtitle: lastCareString, icon: task.taskType?.icon, taskState: true)
+            return Item.todo(title: task.taskType?.name, subtitle: lastCareString, icon: task.taskType?.icon, taskState: true)
         }
         
         snapshot.appendItems(nextTasks, toSection: .upNext)
         
         // All Tasks
         let items: [Item] = plant.tasks.compactMap { task in
-            return Item(rowType: .compactCard, text: task.taskType?.name, secondaryText: task.interval?.intervalText() ?? "Tap to configure", icon: task.taskType?.icon)
+            return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image)
         }
         
         snapshot.appendItems(items, toSection: .careInfo)
