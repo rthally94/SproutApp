@@ -20,7 +20,9 @@ extension PlantEditorControllerController {
         // General Plant Info
         snapshot.appendItems([
             Item.textFieldCell(placeholder: "My New Plant", initialValue: plant.name, onChange: { _ in }),
-            Item.listCell(rowType: .value2, text: "Type", secondaryText: plant.type?.commonName ?? "Choose Type")
+            Item.listCell(rowType: .value2, text: "Type", secondaryText: plant.type?.commonName ?? "Choose Type", tapAction: { [unowned self] sender in
+                navigateTo(plantTypePicker)
+            })
         ], toSection: .plantInfo)
         
         // Plant Tasks
@@ -29,7 +31,7 @@ extension PlantEditorControllerController {
         }
         snapshot.appendItems(tasks, toSection: .care)
         
-        let deleteItem = Item.buttonCell(context: .destructive, title: "Delete Plant", image: UIImage(systemName: "trash.fill"), onChange: { _ in })
+        let deleteItem = Item.buttonCell(context: .destructive, title: "Delete Plant", image: UIImage(systemName: "trash.fill"), onTap: { _ in })
         snapshot.appendItems([deleteItem], toSection: .actions)
         return snapshot
     }

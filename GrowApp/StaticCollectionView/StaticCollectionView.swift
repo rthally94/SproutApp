@@ -92,6 +92,12 @@ extension StaticCollectionViewController {
             config.secondaryText = item.secondaryText
 
             cell.contentConfiguration = config
+
+            if item.isNavigable {
+                cell.accessories = [.disclosureIndicator()]
+            } else {
+                cell.accessories = []
+            }
         }
     }
 
