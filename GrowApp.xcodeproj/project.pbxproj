@@ -72,6 +72,7 @@
 		FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */; };
 		FB8E0D4A262B75B200F0FA09 /* CompactCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */; };
 		FB9E8C51262CCD7700514AAB /* RowItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C50262CCD7700514AAB /* RowItem.swift */; };
+		FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* ButtonCell.swift */; };
 		FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */; };
 		FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */; };
 		FBC5D63825EEA269005BF6B1 /* PlantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */; };
@@ -184,6 +185,7 @@
 		FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticCollectionView.swift; sourceTree = "<group>"; };
 		FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCardCell.swift; sourceTree = "<group>"; };
 		FB9E8C50262CCD7700514AAB /* RowItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowItem.swift; sourceTree = "<group>"; };
+		FB9E8C58262D08B400514AAB /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
 		FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCardViewController.swift; sourceTree = "<group>"; };
 		FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailViewController.swift; sourceTree = "<group>"; };
@@ -569,6 +571,7 @@
 			isa = PBXGroup;
 			children = (
 				FB0A9F3525DC5D7E0084AED8 /* TextFieldCell.swift */,
+				FB9E8C58262D08B400514AAB /* ButtonCell.swift */,
 			);
 			path = "Form Cells";
 			sourceTree = "<group>";
@@ -838,6 +841,7 @@
 				FB6661CB2620938F00DC8B04 /* Utility.swift in Sources */,
 				FBC7333825E572A30048999C /* PlantIconPickerController+DataSource.swift in Sources */,
 				FB7B813225BA25740053E543 /* WeekPicker.swift in Sources */,
+				FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */,
 				FB7ED52B26164290008FD1BE /* PlantsProvider.swift in Sources */,
 				FBC7331D25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift in Sources */,
 				FB0A9F3E25DD766B0084AED8 /* PlantType.swift in Sources */,

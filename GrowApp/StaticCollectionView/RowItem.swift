@@ -23,13 +23,17 @@ struct RowItem: Hashable {
         case value1, value2, subtitle
 
         // Form Cells
-        case textField
+        case textField, button
 
         // Sprout Cells
         case compactCard
         case icon, header
         case statistic
         case todo
+    }
+
+    enum DisplayContext: Int, Hashable {
+        case normal, primary, destructive
     }
 
     var id: UUID
@@ -42,6 +46,7 @@ struct RowItem: Hashable {
     var icon: Icon?
     var isOn: Bool
     var tintColor: UIColor?
+    var displayContext: DisplayContext?
 
     var action: ((_ sender: AnyObject) -> Void)?
 
@@ -55,7 +60,7 @@ struct RowItem: Hashable {
     ///   - image: Image to display
     ///   - icon: Icon to display
     ///   - isOn: Flag to represent the state of a switch with an on/off state
-    private init(id: UUID = UUID(), rowType: RowType, text: String? = nil, secondaryText: String? = nil, tertiaryText: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isOn: Bool = false, tintColor: UIColor? = .systemBlue, action: ((_ sender: AnyObject) -> Void)? = nil) {
+    private init(id: UUID = UUID(), rowType: RowType, text: String? = nil, secondaryText: String? = nil, tertiaryText: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isOn: Bool = false, tintColor: UIColor? = .systemBlue, displayContext: DisplayContext? = nil, action: ((_ sender: AnyObject) -> Void)? = nil) {
         self.id = id
         self.rowType = rowType
         self.text = text
@@ -65,6 +70,8 @@ struct RowItem: Hashable {
         self.icon = icon
         self.isOn = isOn
         self.tintColor = tintColor
+        self.displayContext = displayContext
+        self.action = action
     }
 
     // MARK: - List Cell Factory Methods
@@ -92,6 +99,10 @@ struct RowItem: Hashable {
     /// - Returns: The configured RowItem
     static func textFieldCell(id: UUID = UUID(), title: String? = nil, placeholder: String?, initialValue: String?, onChange: ((_ sender: AnyObject) -> Void)? ) -> RowItem {
         RowItem(id: id, rowType: .textField, text: title, secondaryText: placeholder, tertiaryText: initialValue, action: onChange)
+    }
+
+    static func buttonCell(id: UUID = UUID(), context: DisplayContext = .normal, title: String? = nil, image: UIImage? = nil, tintColor: UIColor? = nil, onChange: ((_ sender: AnyObject) -> Void)?) -> RowItem {
+        return RowItem(id: id, rowType: .button, text: title, image: image, tintColor: tintColor, displayContext: context, action: onChange)
     }
 
     // MARK: - Sprout Cell Factory Methods

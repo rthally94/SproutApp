@@ -29,6 +29,7 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
         let listCellRegistration = makeListCellRegistration()
 
         let textFieldCellRegistration = makeTextFieldCellRegistration()
+        let buttonCellRegistration = makeButtonCellRegistration()
 
         let iconRegistration = makeIconCellRegistration()
         let headerCellRegistration = makeHeaderCellRegistration()
@@ -44,6 +45,8 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
             // Form Cell
             case .textField:
                 return collectionView.dequeueConfiguredReusableCell(using: textFieldCellRegistration, for: indexPath, item: item)
+            case .button:
+                return collectionView.dequeueConfiguredReusableCell(using: buttonCellRegistration, for: indexPath, item: item)
             // Sprout Cell
             case .icon:
                 return collectionView.dequeueConfiguredReusableCell(using: iconRegistration, for: indexPath, item: item)
@@ -68,7 +71,7 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
 
 extension StaticCollectionViewController {
     // MARK: - UICollectionViewListCell Configuration
-    func makeListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+    private func makeListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
             var config: UIListContentConfiguration
             switch item.rowType {
@@ -93,9 +96,28 @@ extension StaticCollectionViewController {
     }
 
     // MARK: - Form Cell Registraion
-    func makeTextFieldCellRegistration() -> UICollectionView.CellRegistration<SproutTextFieldCell, Item> {
+    private func makeTextFieldCellRegistration() -> UICollectionView.CellRegistration<SproutTextFieldCell, Item> {
         UICollectionView.CellRegistration<SproutTextFieldCell, Item> { cell, indexPath, item in
             cell.updateWith(image: item.image, title: item.text, placeholder: item.secondaryText, value: item.tertiaryText)
+        }
+    }
+
+    private func makeButtonCellRegistration() -> UICollectionView.CellRegistration<ButtonCell, Item> {
+        UICollectionView.CellRegistration<ButtonCell, Item> { cell, indexPath, item in
+            cell.image = item.image
+            cell.text = item.text
+            cell.tintColor = item.tintColor
+
+            if case .normal = item.displayContext {
+                cell.displayContext = .normal
+            } else if case .primary = item.displayContext {
+                cell.displayContext = .primary
+            } else if case .destructive = item.displayContext {
+                cell.displayContext = .destructive
+            }
+            
+            cell.layer.cornerRadius = 10
+            cell.clipsToBounds = true
         }
     }
 

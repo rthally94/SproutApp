@@ -29,8 +29,8 @@ extension PlantEditorControllerController {
         }
         snapshot.appendItems(tasks, toSection: .care)
         
-        //        let deleteItem = Item.butto(rowType: .button(image: UIImage(systemName: "trash.fill"), text: "Delete Plant", tintColor: UIColor.systemRed))
-        //        snapshot.appendItems([deleteItem], toSection: .actions)
+        let deleteItem = Item.buttonCell(context: .destructive, title: "Delete Plant", image: UIImage(systemName: "trash.fill"), onChange: { _ in })
+        snapshot.appendItems([deleteItem], toSection: .actions)
         return snapshot
     }
 
