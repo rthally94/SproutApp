@@ -8,23 +8,35 @@
 import UIKit
 import CoreGraphics
 
-enum CornerStyle: Hashable {
-    case circle
-    case roundedRect
-    case none
-}
-
-enum ScaleMode: Hashable {
-    case padded(multiplier: CGFloat, points: CGFloat)
-    case full
-}
-
 struct IconConfiguration: Hashable {
-    var icon: Icon?
-    var cornerMode: CornerStyle?
+    private static let placeholderImage = UIImage(systemName: "photo.on.rectangle.angled")!
+    private static let placeholderColor = UIColor.systemGray
+
+    private var _image: UIImage?
+    var image: UIImage? {
+        get {
+            return _image ?? IconConfiguration.placeholderImage
+        }
+        set {
+            _image = newValue
+        }
+    }
+
+    private var _tintColor: UIColor?
+    var tintColor: UIColor? {
+        get {
+            _tintColor ?? IconConfiguration.placeholderColor
+        }
+
+        set {
+            _tintColor = newValue
+        }
+    }
+    
+    var cornerStyle: IconView.CornerStyle = .circle
     
     func cornerRadius(rect: CGRect) -> CGFloat {
-        switch cornerMode {
+        switch cornerStyle {
         case .circle:
             return min(rect.width, rect.height) / 2
         case .roundedRect:
@@ -34,53 +46,32 @@ struct IconConfiguration: Hashable {
         }
     }
     
-    var image: UIImage? {
-        switch icon {
-        case let .image(image):
-            return image
-        default:
-            return nil
-        }
-    }
-    
-    var symbolImage: UIImage? {
-        switch icon {
-        case let .symbol(symbolName, _):
-            return UIImage(systemName: symbolName)
-        default:
-            return nil
-        }
-    }
-    
     var iconColor: UIColor {
         return UIColor.labelColor(against: tintColor)
     }
     
-    var tintColor: UIColor? {
-        switch icon {
-        case let .symbol(_, tintColor):
-            return tintColor
-        default:
-            return nil
-        }
-    }
-    
     var gradientBackground: CAGradientLayer {
         let gradient = CAGradientLayer()
-        let color = tintColor ?? .gray
-        gradient.colors = [color.cgColor, color.cgColor]
+        if let color = tintColor {
+            gradient.colors = [color.cgColor, color.cgColor]
+        }
         return gradient
     }
 }
 
 class IconView: UIView {
+    enum CornerStyle: Hashable {
+        case circle
+        case roundedRect
+        case none
+    }
+    
     func defaultConfiguration() -> IconConfiguration {
-        let icon: Icon = .symbol(name: "exclamationmark.triangle", tintColor: .systemGray)
-        return IconConfiguration(icon: icon, cornerMode: .circle)
+        return IconConfiguration()
     }
     
     private var appliedIconConfiguration: IconConfiguration?
-    var iconViewConfiguration: IconConfiguration? {
+    var configuration: IconConfiguration? {
         didSet {
             setNeedsLayout()
         }
@@ -114,43 +105,41 @@ class IconView: UIView {
     
     func configureHiearchy() {
         symbolIconView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(symbolIconView)
-        
-        NSLayoutConstraint.activate([
-            symbolIconView.widthAnchor.constraint(equalTo: widthAnchor),
-            symbolIconView.heightAnchor.constraint(equalTo: symbolIconView.widthAnchor),
-            symbolIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            symbolIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
-        ])
-        
         imageIconView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(symbolIconView)
         addSubview(imageIconView)
-        
-        NSLayoutConstraint.activate([
-            imageIconView.widthAnchor.constraint(equalTo: widthAnchor),
-            imageIconView.heightAnchor.constraint(equalTo: imageIconView.widthAnchor),
-            imageIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
-        ])
+
+        symbolIconView.pinToBoundsOf(self)
+        imageIconView.pinToBoundsOf(self)
+
+        let aspectConstraint = widthAnchor.constraint(equalTo: heightAnchor)
+        aspectConstraint.isActive = true
     }
     
     private func configureView() {
-        guard iconViewConfiguration != appliedIconConfiguration || bounds != appliedBounds else { return }
-        let config = iconViewConfiguration ?? defaultConfiguration()
+        guard configuration != appliedIconConfiguration || bounds != appliedBounds else { return }
+        let config = configuration ?? defaultConfiguration()
         
         // Configure CornerStyle
         layer.cornerRadius = config.cornerRadius(rect: bounds)
         clipsToBounds = true
         
         // Configure Icon
-        imageIconView.image = config.image
-        symbolIconView.image = config.symbolImage
-        
-        // Colors
-        symbolIconView.tintColor = config.iconColor
-        let gradient = config.gradientBackground
-        gradient.frame = layer.bounds
-        symbolIconView.layer.insertSublayer(gradient, at: 0)
+        if let image = config.image, !image.isSymbolImage {
+            // Apply image parameters
+            imageIconView.image = config.image
+            imageIconView.isHidden = false
+            symbolIconView.isHidden = true
+        } else {
+            // Apply SF Symbol parameters
+            symbolIconView.image = config.image
+            symbolIconView.tintColor = config.iconColor
+            let gradient = config.gradientBackground
+            gradient.frame = layer.bounds
+            symbolIconView.layer.insertSublayer(gradient, at: 0)
+            imageIconView.isHidden = true
+            symbolIconView.isHidden = false
+        }
         
         appliedIconConfiguration = config
         appliedBounds = bounds

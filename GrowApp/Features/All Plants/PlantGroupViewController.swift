@@ -5,12 +5,33 @@
 //  Created by Ryan Thally on 2/27/21.
 //
 
+import Combine
+import CoreData
 import UIKit
 
 class PlantGroupViewController: UIViewController {
-    var model: GrowAppModel
+    // MARK: - Properties
+    typealias Section = PlantsProvider.Section
+    typealias Item = PlantsProvider.Item
     
-    init(model: GrowAppModel) {
+    var model: GreenHouseAppModel
+    let viewContext: NSManagedObjectContext
+    let plantsProvider: PlantsProvider
+    
+    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    var cancellables = Set<AnyCancellable>()
+    
+    lazy var collectionView: UICollectionView = {
+        let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
+        cv.backgroundColor = .clear
+        cv.delegate = self
+        return cv
+    }()
+    
+    // MARK: - Initializers
+    init(viewContext: NSManagedObjectContext, model: GreenHouseAppModel) {
+        self.viewContext = viewContext
+        self.plantsProvider = PlantsProvider(managedObjectContext: viewContext)
         self.model = model
         super.init(nibName: nil, bundle: nil)
     }
@@ -19,25 +40,7 @@ class PlantGroupViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    enum Section: Hashable {
-        case plants
-    }
-    
-    struct Item: Hashable {
-        let id: UUID
-        let icon: Icon
-        let title: String
-        let subtitle: String?
-    }
-    
-    lazy var dataSource = makeDataSource()
-    lazy var collectionView: UICollectionView = {
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        cv.backgroundColor = .clear
-        cv.delegate = self
-        return cv
-    }()
-    
+    // MARK: - View Life Cycle
     override func loadView() {
         super.loadView()
         
@@ -47,14 +50,17 @@ class PlantGroupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Your Plants"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(showPlantConfiguration))
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        dataSource = makeDataSource()
+        plantsProvider.$snapshot
+            .sink(receiveValue: { [weak self] snapshot in
+                if let snapshot = snapshot {
+                    self?.dataSource.apply(snapshot)
+                }
+            })
+            .store(in: &cancellables)
         
-        reloadDataSource()
+        title = "Your Plants"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPlant))
     }
     
     func configureHiearchy() {
@@ -69,37 +75,56 @@ class PlantGroupViewController: UIViewController {
         ])
     }
     
-    @objc func showPlantConfiguration() {
-        let vc = PlantConfigurationViewController(model: model)
-        vc.onSave = reloadDataSource
+    @objc func addNewPlant() {
+        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        editingContext.parent = viewContext
+        
+        // 1. Create a new plant in the model
+        let newPlant = GHPlant(context: editingContext)
+        let wateringTask = GHTask(context: editingContext)
+        wateringTask.id = UUID()
+        wateringTask.taskType = GHTaskType.wateringTaskType(context: editingContext)
+        newPlant.addToTasks_(wateringTask)
+        
+        let vc = PlantEditorControllerController(plant: newPlant, viewContext: editingContext)
+        vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
+    }
+}
+
+extension PlantGroupViewController: PlantEditorDelegate {
+    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
+        do {
+            try viewContext.save()
+        } catch {
+            viewContext.rollback()
+        }
     }
 }
 
 extension PlantGroupViewController {
     func makeLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/3), heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .estimated(200))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        item.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
+        section.contentInsets = .init(top: 16, leading: 16, bottom: 0, trailing: 16)
+        
         return UICollectionViewCompositionalLayout(section: section)
     }
 }
 
 extension PlantGroupViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<PlantCardCell, Item> {
-        return UICollectionView.CellRegistration<PlantCardCell, Item>() { cell, indexPath, item in
-            
-            var config = cell.iconView.defaultConfiguration()
-            config.icon = item.icon
-            cell.iconView.iconViewConfiguration = config
-            
-            cell.textLabel.text = item.title
-            cell.secondaryTextLabel.text = item.subtitle
+        return UICollectionView.CellRegistration<PlantCardCell, Item>() {[weak self] cell, indexPath, item in
+            guard let plant = self?.plantsProvider.object(at: indexPath) else { return }
+            var iconConfig = cell.iconView.defaultConfiguration()
+            iconConfig.image = plant.icon?.image
+            cell.iconView.configuration = iconConfig
+            cell.textLabel.text = plant.name
         }
     }
     
@@ -112,32 +137,12 @@ extension PlantGroupViewController {
         
         return dataSource
     }
-    
-    func makeSnapshot(with plants: [Plant]) -> NSDiffableDataSourceSnapshot<Section, Item> {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections([.plants])
-        
-        let items = plants.sorted(by: { $0.creationDate < $1.creationDate }).map { plant in
-            Item(id: plant.id, icon: plant.icon, title: plant.name, subtitle: "\(plant.tasks.count) tasks")
-        }
-        snapshot.appendItems(items, toSection: .plants)
-        
-        return snapshot
-    }
-    
-    private func reloadDataSource() {
-        let plants = model.getPlants()
-        let snapshot = makeSnapshot(with: plants)
-        dataSource.apply(snapshot)
-    }
 }
 
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let item = dataSource.itemIdentifier(for: indexPath), let plant = model.getPlant(with: item.id) {
-            let vc = PlantDetailViewController(model: model)
-            vc.plant = plant
-            navigationController?.pushViewController(vc, animated: true)
-        }
+        let item = plantsProvider.object(at: indexPath)
+        let vc = PlantDetailViewController(plant: item, viewContext: viewContext)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -8,57 +8,34 @@
 import UIKit
 
 private extension UIConfigurationStateCustomKey {
-    static let plant = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseListCell.plant")
     static let task = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseListCell.task")
 }
 
 private extension UICellConfigurationState {
-    var plant: Plant? {
-        set { self[.plant] = newValue }
-        get { return self[.plant] as? Plant }
-    }
-    
-    var task: Task? {
+    var task: GHTask? {
         set { self[.task] = newValue }
-        get { return self[.task] as? Task }
+        get { return self[.task] as? GHTask }
     }
 }
 
 class GreenHouseListCell: UICollectionViewListCell {
-    private var plant: Plant?
-    private var task: Task?
+    private var task: GHTask?
     
-    func updateWith(task newTask: Task, plant newPlant: Plant) {
-        updateWithTask(newTask)
-        updateWithPlant(newPlant)
-    }
-    
-    func updateWithTask(_ newTask: Task) {
+    func updateWithTask(_ newTask: GHTask) {
         guard task != newTask else { return }
         task = newTask
         setNeedsUpdateConfiguration()
     }
     
-    func updateWithPlant(_ newPlant: Plant) {
-        guard plant != newPlant else { return }
-        plant = newPlant
-        setNeedsUpdateConfiguration()
-    }
-    
     override var configurationState: UICellConfigurationState {
         var state = super.configurationState
-        state.plant = plant
+        state.task = task
         return state
     }
 }
 
 class TaskCalendarListCell: GreenHouseListCell {
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        
-        return formatter
-    }()
-    
+    private let dateFormatter = Utility.dateFormatter
     private func defaultListContentConfiguration() -> UIListContentConfiguration { return .subtitleCell() }
     private lazy var listContentView = UIListContentView(configuration: defaultListContentConfiguration())
     
@@ -68,8 +45,6 @@ class TaskCalendarListCell: GreenHouseListCell {
     
     private func setupViewsIfNeeded() {
         guard customViewConstraints == nil else { return }
-        plantIconView.translatesAutoresizingMaskIntoConstraints = false
-        
         contentView.addSubview(listContentView)
         contentView.addSubview(plantIconView)
         
@@ -119,30 +94,20 @@ class TaskCalendarListCell: GreenHouseListCell {
         
         var content = defaultListContentConfiguration().updated(for: state)
         
-        if let plant = state.plant, let task = state.task {
-            // Configure for both present
-            content.text = plant.name.capitalized
-            if let lastCareDate = task.lastCareDate {
-                content.secondaryText = "Last: " + TaskCalendarListCell.dateFormatter.string(from: lastCareDate)
-            } else {
-                content.secondaryText = "Last: Never"
-            }
-            plantIconView.iconViewConfiguration = .init(icon: plant.icon, cornerMode: .circle)
-            
-        } else if let plant = state.plant {
-            // Configure for just the plant
-            content.text = plant.name.capitalized
-            content.secondaryText = "\(plant.tasks.count) tasks"
-            plantIconView.iconViewConfiguration = .init(icon: plant.icon, cornerMode: .circle)
-        } else if let task = state.task {
+        if let task = state.task {
             // Configure for just the task
-            content.text = task.type.description
-            if let lastCareDate = task.lastCareDate {
-                content.secondaryText = "Last: " + TaskCalendarListCell.dateFormatter.string(from: lastCareDate)
+            content.text = task.taskType?.name
+            if let lastLogDate = task.lastLogDate {
+                content.secondaryText = "Last: " + dateFormatter.string(from: lastLogDate)
             } else {
                 content.secondaryText = "Last: Never"
             }
-            plantIconView.iconViewConfiguration = .init(icon: task.type.icon, cornerMode: CornerStyle.none)
+            
+            var iconConfig = plantIconView.defaultConfiguration()
+            iconConfig.image = task.taskType?.icon?.image
+            iconConfig.tintColor = task.taskType?.icon?.color
+            iconConfig.cornerStyle = .none
+            plantIconView.configuration = iconConfig
         }
         
         content.image = nil

@@ -5,321 +5,256 @@
 //  Created by Ryan Thally on 3/2/21.
 //
 
+import CoreData
 import UIKit
 
-class PlantDetailViewController: UIViewController {
-    static let dateComponentsFormatter: DateComponentsFormatter = {
-       let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.month, .weekOfMonth, .day]
-        formatter.maximumUnitCount = 1
-        formatter.formattingContext = .beginningOfSentence
-        formatter.unitsStyle = .full
-        return formatter
-    }()
-    static let careDateFormatter = RelativeDateFormatter()
-    var model: GrowAppModel
-    var plant: Plant? {
-        didSet {
-            configureSubviews()
+enum PlantDetailSection: Int, CaseIterable {
+    case plantIcon, plantHeader
+    case taskSummary
+    case upNext
+    case careInfo
+
+    func headerTitle() -> String? {
+        switch self {
+        case .upNext:
+            return "Up Next"
+        case .careInfo:
+            return "Care Info"
+        default:
+            return nil
         }
     }
+
+    func headerSubtitle() -> String? {
+        switch self {
+        case .careInfo:
+            return ""
+        default:
+            return nil
+        }
+    }
+
+    func headerIcon() -> UIImage? {
+        switch self {
+        default:
+            return nil
+        }
+    }
+}
+
+class PlantDetailViewController: StaticCollectionViewController<PlantDetailSection> {
+    // MARK: - Properties
+    let dateComponentsFormatter = Utility.dateComponentsFormatter
+    let careDateFormatter = Utility.relativeDateFormatter
     
-    init(model: GrowAppModel) {
-        self.model = model
+    let viewContext: NSManagedObjectContext
+    
+    var plant: GHPlant
+    
+    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
+        self.plant = viewContext.object(with: plant.objectID) as! GHPlant
+        self.viewContext = viewContext
+        
         super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    enum Section: Hashable, CaseIterable {
-        case plantInfo
-        case summary
-        case upNext
-        case careInfo
+
+    private lazy var plantEditor: PlantEditorControllerController = {
+        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        editingContext.parent = viewContext
         
-        func headerTitle() -> String? {
-            switch self {
-            case .upNext:
-                return "Up Next"
-            case .careInfo:
-                return "Care Info"
-            default:
-                return nil
-            }
-        }
-        
-        func headerSubtitle() -> String? {
-            switch self {
-            case .careInfo:
-                return ""
-            default:
-                return nil
-            }
-        }
-        
-        func headerIcon() -> UIImage? {
-            switch self {
-            default:
-                return nil
-            }
-        }
-    }
-    
-    struct Item: Hashable {
-        var id: UUID?
-        var icon: Icon?
-        var text: String?
-        var secondaryText: String?
-    }
-    
-    lazy var collectionView: UICollectionView = {
-        let view = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        view.backgroundColor = .systemGroupedBackground
-        view.delegate = self
-        return view
+        let vc = PlantEditorControllerController(plant: plant, viewContext: editingContext)
+        vc.delegate = self
+        return vc
     }()
     
-    lazy var dataSource: UICollectionViewDiffableDataSource<Section, Item> = makeDataSource()
-    
-    override func loadView() {
-        super.loadView()
-        
-        configureHiearchy()
-    }
+    // MARK: - View Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let headerRegistration = makeInsetGroupedSectionHeaderRegistration()
+        dataSource.supplementaryViewProvider = { (collectionView, elementKind, indexPath) -> UICollectionReusableView? in
+            switch elementKind {
+            case UICollectionView.elementKindSectionHeader:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+            default:
+                return nil
+            }
+        }
+
+        collectionView.delegate = self
+        updateUI()
         
         title = "Plant Details"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPlant))
     }
     
-    //MARK: Actions
+    //MARK: - Actions
     @objc private func editPlant() {
-        guard let plant = plant else { return }
-        let vc = PlantConfigurationViewController(plant: plant, model: model)
-        vc.onSave = configureSubviews
-        
-        present(vc.wrappedInNavigationController(), animated: true)
+        present(plantEditor.wrappedInNavigationController(), animated: true)
+    }
+
+    internal override func makeLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
+            guard let sectionKind = PlantDetailSection(rawValue: sectionIndex) else { fatalError("Cannot get section for index: \(sectionIndex)") }
+            switch sectionKind {
+            case .plantIcon, .plantHeader:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+
+                let section = NSCollectionLayoutSection(group: group)
+                return section
+            case .taskSummary:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48), heightDimension: .estimated(64))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                group.interItemSpacing = .flexible(6)
+
+                let section = NSCollectionLayoutSection(group: group)
+                if sectionKind.headerTitle() != nil {
+                    let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                    let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                    section.boundarySupplementaryItems = [headerItem]
+                }
+                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 16, bottom: 0, trailing: 16)
+                return section
+            case .careInfo:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48), heightDimension: .estimated(64))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                group.interItemSpacing = .flexible(6)
+
+                let section = NSCollectionLayoutSection(group: group)
+                if sectionKind.headerTitle() != nil {
+                    let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                    let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+                    section.boundarySupplementaryItems = [headerItem]
+                }
+                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+                return section
+            case .upNext:
+                var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+                if sectionKind.headerTitle() != nil {
+                    config.headerMode = .supplementary
+                }
+                let section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
+                return section
+            }
+        }
+
+        return layout
     }
 }
 
-extension PlantDetailViewController {
-    func nextTaskDateStirng() -> String? {
-        if let plant = plant, let nextTaskDate = plant.getDateOfNextTask() {
-            return PlantDetailViewController.careDateFormatter.string(from: nextTaskDate)
+extension PlantDetailViewController: PlantEditorDelegate {
+    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
+        self.plant = plant
+        updateUI()
+        
+        do {
+            try viewContext.save()
+        } catch {
+            viewContext.rollback()
+        }
+    }
+}
+
+private extension PlantDetailViewController {
+    func nextTaskDateString() -> String? {
+        let nextTasks: [(task: GHTask, date: Date)] = plant.tasks.compactMap { task in
+            if let nextDate = task.nextCareDate(after: Calendar.current.startOfDay(for: Date())) {
+                return (task, nextDate)
+            } else {
+                return nil
+            }
+        }
+        
+        if let nextTask = nextTasks.min(by: { $0.date < $1.date }) {
+            return careDateFormatter.string(from: nextTask.date)
         } else {
             return nil
         }
     }
 }
 
-extension PlantDetailViewController {
-    func makeLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            let sectionKind = Section.allCases[sectionIndex]
-            switch sectionKind {
-            case .plantInfo:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
-                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0)
-                return section
-            case .summary:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 10, bottom: 0, trailing: 0)
-                
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 10, bottom: 20, trailing: 20)
-                return section
-            case .upNext, .careInfo:
-                var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-                config.headerMode = .supplementary
-                
-                let section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
-                return section
-            }
-        }
-        
-        return layout
-    }
-}
-
-extension PlantDetailViewController {
-    func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        guard let strongPlant = plant else { return snapshot }
-        
-        snapshot.appendSections(Section.allCases)
+private extension PlantDetailViewController {
+    func makeSnapshot() -> NSDiffableDataSourceSnapshot<PlantDetailSection, Item> {
+        var snapshot = NSDiffableDataSourceSnapshot<PlantDetailSection, Item>()
+        snapshot.appendSections(PlantDetailSection.allCases)
         
         // Plant Info Header
         snapshot.appendItems([
-            Item(icon: strongPlant.icon, text: strongPlant.name, secondaryText: strongPlant.type.commonName)
-        ], toSection: .plantInfo)
+            Item.icon(icon: plant.icon)
+        ], toSection: .plantIcon)
+
+        snapshot.appendItems([
+            Item.largeHeader(title: plant.name?.capitalized, subtitle: plant.type?.commonName?.capitalized)
+        ], toSection: .plantHeader)
         
         // Plant Care Summary
-        let tasksToday = plant?.todaysTasks()
-        let lateTasks = plant?.lateTasks()
+        let tasksToday: Set<GHTask> = plant.tasks.filter { task in
+            task.isDateInInterval(Date())
+        }
+        let lateTasks: Set<GHTask> = plant.tasks.filter { task in
+            task.isLate()
+        }
         
-        let todayColor = tasksToday?.isEmpty ?? true ? UIColor.systemGreen.withAlphaComponent(0.5) : UIColor.systemGreen
-        let lateColor = lateTasks?.isEmpty ?? true ? UIColor.systemYellow.withAlphaComponent(0.5) : UIColor.yellow
+        let todayColor = tasksToday.isEmpty ? UIColor.systemGreen.withAlphaComponent(0.5) : UIColor.systemGreen
+        let lateColor = lateTasks.isEmpty ? UIColor.systemYellow.withAlphaComponent(0.5) : UIColor.yellow
         
         snapshot.appendItems([
-            Item(icon: .symbol(name: "calendar.badge.clock", tintColor: todayColor), text: "Today", secondaryText: "\(tasksToday?.count ?? 0) tasks"),
-            Item(icon: .symbol(name: "exclamationmark.circle", tintColor: lateColor), text: "Late", secondaryText: "\(lateTasks?.count ?? 0) tasks")
-        ], toSection: .summary)
+            Item.statistic(title: "Today", value: "\(tasksToday.count)", unit: "\(tasksToday.count == 1 ? "task" : "tasks")", image: UIImage(systemName: "calendar.badge.clock"), tintColor: todayColor),
+            Item.statistic(title: "Late", value: "\(tasksToday.count)", unit: "\(lateTasks.count == 1 ? "task" : "tasks")", image: UIImage(systemName: "exclamationmark.circle"), tintColor: lateColor)
+        ], toSection: .taskSummary)
         
         // Up Next
-        let nextTasks: [Item] = strongPlant.nextTasks().map { task in
+        let next = lateTasks.union(tasksToday)
+        let nextTasks: [Item] = next.map { task -> Item in
             let lastCareString: String
             if task.isLate() {
                 guard let lastDate = task.lastCareDate, let expectedDate = task.nextCareDate(after: lastDate) else { fatalError("Unable to calculate days late but task was flagged as late.")}
                 let daysLateComponents = Calendar.current.dateComponents([.day, .month], from: expectedDate, to: Calendar.current.startOfDay(for: Date()))
-                lastCareString = "\(PlantDetailViewController.dateComponentsFormatter.string(from: daysLateComponents) ?? "Not") late"
+                lastCareString = "\(dateComponentsFormatter.string(from: daysLateComponents) ?? "Not") late"
             } else {
                 lastCareString = ""
             }
-            return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: lastCareString)
+
+            return Item.todo(title: task.taskType?.name, subtitle: lastCareString, icon: task.taskType?.icon, taskState: true)
         }
         
         snapshot.appendItems(nextTasks, toSection: .upNext)
         
         // All Tasks
-        let items: [Item] = strongPlant.tasks.map { task in
-            return Item(id: task.id, icon: task.type.icon, text: task.type.description, secondaryText: task.interval.description)
+        let items: [Item] = plant.tasks.compactMap { task in
+            return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image)
         }
         
         snapshot.appendItems(items, toSection: .careInfo)
         return snapshot
     }
-    
-    func makeHeaderCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
-        UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
-            if let icon = item.icon {
-                var config = cell.iconView.defaultConfiguration()
-                config.icon = icon
-                cell.iconView.iconViewConfiguration = config
-            }
-            
-            cell.titleLabel.text = item.text
-            cell.subtitleLabel.text = item.secondaryText
-            cell.backgroundColor = .systemGroupedBackground
-        }
-    }
-    
-    func makeSummaryCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
-            var config = UIListContentConfiguration.statisticCell()
-            
-            config.image = item.icon?.image
-            config.text = item.text
-            config.secondaryText = item.secondaryText
-            
-            config.imageProperties.tintColor = item.icon?.tintColor
-            config.secondaryTextProperties.color = item.icon?.tintColor ?? config.textProperties.color
-            
-            cell.contentConfiguration = config
-            
-            cell.contentView.backgroundColor = .secondarySystemGroupedBackground
-            cell.layer.cornerRadius = 10
-            cell.clipsToBounds = true
-        }
-    }
-    
-    func makeUpNextCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
-            var config = UIListContentConfiguration.subtitleCell()
-            
-            config.image = item.icon?.image
-            config.imageProperties.tintColor = item.icon?.tintColor
-            
-            config.text = item.text
-            config.secondaryText = item.secondaryText
-            
-            cell.contentConfiguration = config
-            
-            cell.accessories = [ .todoAccessory() ]
-        }
-    }
-    
-    func makeCareInfoCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
-            var config = UIListContentConfiguration.subtitleCell()
-            
-            if case let .symbol(symbolName, tintColor) = item.icon {
-                config.image = UIImage(systemName: symbolName)
-                config.imageProperties.tintColor = tintColor
-            } else if case let .image(image) = item.icon {
-                config.image = image
-            }
-            
-            config.text = item.text
-            config.secondaryText = item.secondaryText
-            
-            cell.contentConfiguration = config
-            cell.accessories = [
-                .disclosureIndicator()
-            ]
-        }
-    }
-    
+
     func makeInsetGroupedSectionHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
-        UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { [unowned self] cell, elementKind, indexPath in
+        UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { cell, elementKind, indexPath in
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             var config = UIListContentConfiguration.largeGroupedHeader()
-            
-            let section = Section.allCases[indexPath.section]
+
+            guard let section = PlantDetailSection(rawValue: indexPath.section) else { return }
             config.text = section.headerTitle()?.capitalized
-            if case .upNext = section {
-                config.secondaryText = self.nextTaskDateStirng()
-            }
-            
+
             cell.contentConfiguration = config
+            cell.contentView.backgroundColor = .systemGroupedBackground
         }
-    }
-    
-    func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
-        let headerCellRegistration = makeHeaderCellRegistration()
-        let summaryCellRegistration = makeSummaryCellRegistration()
-        let upNextCellRegistration = makeUpNextCellRegistration()
-        let careInfoCellRegistration = makeCareInfoCellRegistration()
-        
-        let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
-            let sectionKind = Section.allCases[indexPath.section]
-            switch sectionKind {
-            case .plantInfo:
-                return collectionView.dequeueConfiguredReusableCell(using: headerCellRegistration, for: indexPath, item: item)
-            case .summary:
-                return collectionView.dequeueConfiguredReusableCell(using: summaryCellRegistration, for: indexPath, item: item)
-            case .upNext:
-                return collectionView.dequeueConfiguredReusableCell(using: upNextCellRegistration, for: indexPath, item: item)
-            case .careInfo:
-                return collectionView.dequeueConfiguredReusableCell(using: careInfoCellRegistration, for: indexPath, item: item)
-            }
-        }
-        
-        let defaultHeaderRegistration = makeInsetGroupedSectionHeaderRegistration()
-        dataSource.supplementaryViewProvider = { collectionView, _, indexPath in
-            let sectionKind = Section.allCases[indexPath.section]
-            switch sectionKind {
-            case .upNext, .careInfo:
-                return collectionView.dequeueConfiguredReusableSupplementary(using: defaultHeaderRegistration, for: indexPath)
-            default:
-                return nil
-            }
-        }
-        
-        return dataSource
     }
 }
 
@@ -330,9 +265,7 @@ extension PlantDetailViewController {
         collectionView.pinToBoundsOf(view)
     }
     
-    func configureSubviews() {
-        guard plant != nil else { return }
-        
+    func updateUI() {
         let snapshot = makeSnapshot()
         dataSource.apply(snapshot)
     }
@@ -340,7 +273,7 @@ extension PlantDetailViewController {
 
 extension PlantDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let sectionKind = Section.allCases[indexPath.section]
+        let sectionKind = PlantDetailSection.allCases[indexPath.section]
         switch sectionKind {
         case .careInfo:
             return true
@@ -350,13 +283,14 @@ extension PlantDetailViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let sectionKind = Section.allCases[indexPath.section]
+//        let sectionKind = Section.allCases[indexPath.section]
         
-        if sectionKind == .careInfo {
-            let vc = CareDetailViewController(nibName: nil, bundle: nil)
-            vc.plant = plant
-            vc.selectedTaskID = dataSource.itemIdentifier(for: indexPath)?.id
-            navigationController?.pushViewController(vc, animated: true)
-        }
+//        if sectionKind == .careInfo {
+//            let vc = CareDetailViewController(nibName: nil, bundle: nil)
+//            vc.plant = plant
+//            vc.selectedTask = dataSource.itemIdentifier(for: indexPath)?.task
+//
+//            navigationController?.pushViewController(vc, animated: true)
+//        }
     }
 }
