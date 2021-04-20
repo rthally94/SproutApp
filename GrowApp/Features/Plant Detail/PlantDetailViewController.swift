@@ -102,11 +102,21 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             guard let sectionKind = PlantDetailSection(rawValue: sectionIndex) else { fatalError("Cannot get section for index: \(sectionIndex)") }
             switch sectionKind {
-            case .plantIcon, .plantHeader:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+            case .plantIcon:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.3))
+                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
+
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = .init(top: 20, leading: 0, bottom: 0, trailing: 0)
+                return section
+            case .plantHeader:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(60))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(60))
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 
                 let section = NSCollectionLayoutSection(group: group)
@@ -199,7 +209,7 @@ private extension PlantDetailViewController {
         ], toSection: .plantIcon)
 
         snapshot.appendItems([
-            Item.largeHeader(title: plant.name?.capitalized, subtitle: plant.type?.commonName?.capitalized)
+            Item.titleHeader(title: plant.name?.capitalized, subtitle: plant.type?.commonName?.capitalized)
         ], toSection: .plantHeader)
         
         // Plant Care Summary
@@ -237,7 +247,9 @@ private extension PlantDetailViewController {
         
         // All Tasks
         let items: [Item] = plant.tasks.compactMap { task in
-            return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image)
+            return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tapAction: { [unowned self] sender in
+                print(task.taskType?.name ?? "Unknown")
+            })
         }
         
         snapshot.appendItems(items, toSection: .careInfo)
@@ -273,24 +285,12 @@ extension PlantDetailViewController {
 
 extension PlantDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let sectionKind = PlantDetailSection.allCases[indexPath.section]
-        switch sectionKind {
-        case .careInfo:
-            return true
-        default:
-             return false
-        }
+        let item = dataSource.itemIdentifier(for: indexPath)
+        return item?.isNavigable ?? false
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let sectionKind = Section.allCases[indexPath.section]
-        
-//        if sectionKind == .careInfo {
-//            let vc = CareDetailViewController(nibName: nil, bundle: nil)
-//            vc.plant = plant
-//            vc.selectedTask = dataSource.itemIdentifier(for: indexPath)?.task
-//
-//            navigationController?.pushViewController(vc, animated: true)
-//        }
+        let item = dataSource.itemIdentifier(for: indexPath)
+        item?.action?(self)
     }
 }

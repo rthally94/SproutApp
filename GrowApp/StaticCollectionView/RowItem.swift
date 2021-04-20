@@ -24,13 +24,14 @@ struct RowItem: Hashable {
         case value1, value2, subtitle
 
         // Form Cells
-        case textField, button
+        case textField, button, pickerRow
 
         // Sprout Cells
         case compactCard
-        case icon, header
+        case icon, header, largeHeader
         case statistic
         case todo
+        case customView
     }
 
     enum DisplayContext: Int, Hashable {
@@ -50,10 +51,13 @@ struct RowItem: Hashable {
     var displayContext: DisplayContext?
 
     var action: RowAction?
+    var customView: UIView?
 
     var isNavigable: Bool {
         switch rowType {
         case .value1, .value2, .subtitle:
+            return action != nil
+        case .button:
             return action != nil
         case .compactCard, .icon, .statistic:
             return action != nil
@@ -72,7 +76,7 @@ struct RowItem: Hashable {
     ///   - image: Image to display
     ///   - icon: Icon to display
     ///   - isOn: Flag to represent the state of a switch with an on/off state
-    private init(id: UUID = UUID(), rowType: RowType, text: String? = nil, secondaryText: String? = nil, tertiaryText: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isOn: Bool = false, tintColor: UIColor? = .systemBlue, displayContext: DisplayContext? = nil, action: RowAction? = nil) {
+    private init(id: UUID = UUID(), rowType: RowType, text: String? = nil, secondaryText: String? = nil, tertiaryText: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isOn: Bool = false, tintColor: UIColor? = .systemBlue, displayContext: DisplayContext? = nil, action: RowAction? = nil, customView: UIView? = nil) {
         self.id = id
         self.rowType = rowType
         self.text = text
@@ -84,6 +88,7 @@ struct RowItem: Hashable {
         self.tintColor = tintColor
         self.displayContext = displayContext
         self.action = action
+        self.customView = customView
     }
 
     // MARK: - List Cell Factory Methods
@@ -109,11 +114,11 @@ struct RowItem: Hashable {
     ///   - initialValue: The initial value of the text field
     ///   - onChange: Closure to perform an action when the text field text changes
     /// - Returns: The configured RowItem
-    static func textFieldCell(id: UUID = UUID(), title: String? = nil, placeholder: String?, initialValue: String?, onChange: RowAction?) -> RowItem {
+    static func textField(id: UUID = UUID(), title: String? = nil, placeholder: String?, initialValue: String?, onChange: RowAction?) -> RowItem {
         RowItem(id: id, rowType: .textField, text: title, secondaryText: placeholder, tertiaryText: initialValue, action: onChange)
     }
 
-    static func buttonCell(id: UUID = UUID(), context: DisplayContext = .normal, title: String? = nil, image: UIImage? = nil, tintColor: UIColor? = nil, onTap: RowAction?) -> RowItem {
+    static func button(id: UUID = UUID(), context: DisplayContext = .normal, title: String? = nil, image: UIImage? = nil, tintColor: UIColor? = nil, onTap: RowAction?) -> RowItem {
         return RowItem(id: id, rowType: .button, text: title, image: image, tintColor: tintColor, displayContext: context, action: onTap)
     }
 
@@ -134,8 +139,12 @@ struct RowItem: Hashable {
     ///   - title: The title
     ///   - subtitle: The subtitle
     /// - Returns: The configured RowItem
-    static func largeHeader(id: UUID = UUID(), title: String?, subtitle: String?) -> RowItem {
+    static func titleHeader(id: UUID = UUID(), title: String?, subtitle: String?) -> RowItem {
         RowItem(id: id, rowType: .header, text: title, secondaryText: subtitle)
+    }
+
+    static func largeHeader(id: UUID = UUID(), title: String?, value: String?, image: UIImage?, tintColor: UIColor?) -> RowItem {
+        RowItem(id: id, rowType: .largeHeader, text: title, secondaryText: value, image: image, tintColor: tintColor)
     }
 
     /// Creates a new RowItem for a statistic cell
@@ -165,7 +174,15 @@ struct RowItem: Hashable {
         RowItem(id: id, rowType: .todo, text: title, secondaryText: subtitle, image: image, icon: icon, isOn: taskState, tintColor: tintColor, action: tapAction)
     }
 
+    static func pickerRow(id: UUID = UUID(), title: String?, subtitle: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isSelected: Bool, tapAction: RowAction? = nil) -> RowItem {
+        RowItem(id: id, rowType: .pickerRow, text: title, secondaryText: subtitle, image: image, icon: icon, isOn: isSelected, action: tapAction)
+    }
+
     static func compactCardCell(id: UUID = UUID(), title: String?, value: String?, image: UIImage? = nil, tapAction: RowAction? = nil) -> RowItem {
         RowItem(id: id, rowType: .compactCard, text: title, secondaryText: value, image: image, action: tapAction)
+    }
+
+    static func customView(id: UUID = UUID(), customView: UIView) -> RowItem {
+         RowItem(id: id, rowType: .customView, customView: customView)
     }
 }

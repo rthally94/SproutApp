@@ -138,7 +138,7 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     internal func showTaskEditor(for task: GHTask) {
         let vc = TaskEditorController(task: task, viewContext: viewContext)
 //        vc.delegate = self
-        navigateTo(vc)
+        navigateTo(vc.wrappedInNavigationController(), modal: true)
     }
 
     override func makeLayout() -> UICollectionViewLayout {
@@ -147,15 +147,22 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
 
             switch sectionKind {
             case .image:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+                let imageItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+                let imageItem = NSCollectionLayoutItem(layoutSize: imageItemSize)
+                imageItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.3))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                let buttonItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(40))
+                let buttonItem = NSCollectionLayoutItem(layoutSize: buttonItemSize)
 
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0 )
+                let imageGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(1.0))
+                let imageGroup = NSCollectionLayoutGroup.vertical(layoutSize: imageGroupSize, subitems: [imageItem])
+
+                let mainGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                let mainGroup = NSCollectionLayoutGroup.vertical(layoutSize: mainGroupSize, subitems: [imageGroup, buttonItem])
+
+                let edgeInset = layoutEnvironment.container.effectiveContentSize.width / 3.5
+                let section = NSCollectionLayoutSection(group: mainGroup)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: edgeInset, bottom: 0, trailing: edgeInset )
                 return section
             case .care:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48), heightDimension: .estimated(64))

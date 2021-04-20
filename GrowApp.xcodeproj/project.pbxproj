@@ -71,6 +71,10 @@
 		FB8E0D40262B324400F0FA09 /* StatisticCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */; };
 		FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */; };
 		FB8E0D4A262B75B200F0FA09 /* CompactCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */; };
+		FB92AF66262E093D0062DE47 /* LargeHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF65262E093D0062DE47 /* LargeHeaderCell.swift */; };
+		FB92AF6B262E50510062DE47 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF6A262E50510062DE47 /* ImagePicker.swift */; };
+		FB92AF71262EF6130062DE47 /* CustomViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF70262EF6130062DE47 /* CustomViewCell.swift */; };
+		FB92AF75262EF8A70062DE47 /* WeekdayPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */; };
 		FB9E8C51262CCD7700514AAB /* RowItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C50262CCD7700514AAB /* RowItem.swift */; };
 		FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* ButtonCell.swift */; };
 		FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */; };
@@ -184,6 +188,10 @@
 		FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticCell.swift; sourceTree = "<group>"; };
 		FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticCollectionView.swift; sourceTree = "<group>"; };
 		FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCardCell.swift; sourceTree = "<group>"; };
+		FB92AF65262E093D0062DE47 /* LargeHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeHeaderCell.swift; sourceTree = "<group>"; };
+		FB92AF6A262E50510062DE47 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		FB92AF70262EF6130062DE47 /* CustomViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewCell.swift; sourceTree = "<group>"; };
+		FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdayPickerCell.swift; sourceTree = "<group>"; };
 		FB9E8C50262CCD7700514AAB /* RowItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowItem.swift; sourceTree = "<group>"; };
 		FB9E8C58262D08B400514AAB /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
 		FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCardViewController.swift; sourceTree = "<group>"; };
@@ -489,6 +497,7 @@
 		FB7B812425B9D4B80053E543 /* Compoents */ = {
 			isa = PBXGroup;
 			children = (
+				FB92AF69262E50370062DE47 /* ImagePicker */,
 				FBD549A3262B1C8300640A8F /* StatisticView */,
 				FBD54994262A5EF500640A8F /* CompactCardView */,
 				FB6C463A25F44329009ED947 /* IconView */,
@@ -567,11 +576,20 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		FB92AF69262E50370062DE47 /* ImagePicker */ = {
+			isa = PBXGroup;
+			children = (
+				FB92AF6A262E50510062DE47 /* ImagePicker.swift */,
+			);
+			path = ImagePicker;
+			sourceTree = "<group>";
+		};
 		FB9E8C54262CE05F00514AAB /* Form Cells */ = {
 			isa = PBXGroup;
 			children = (
 				FB0A9F3525DC5D7E0084AED8 /* TextFieldCell.swift */,
 				FB9E8C58262D08B400514AAB /* ButtonCell.swift */,
+				FB92AF70262EF6130062DE47 /* CustomViewCell.swift */,
 			);
 			path = "Form Cells";
 			sourceTree = "<group>";
@@ -579,10 +597,13 @@
 		FB9E8C55262CE06B00514AAB /* Sprout Cells */ = {
 			isa = PBXGroup;
 			children = (
+				FBD549AA262B224600640A8F /* HeaderCell.swift */,
 				FB6C460C25F11BA0009ED947 /* IconHeaderCell.swift */,
 				FBC7330225DDB4F00048999C /* IconCell.swift */,
 				FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */,
 				FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */,
+				FB92AF65262E093D0062DE47 /* LargeHeaderCell.swift */,
+				FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */,
 			);
 			path = "Sprout Cells";
 			sourceTree = "<group>";
@@ -629,7 +650,6 @@
 			isa = PBXGroup;
 			children = (
 				FB6C461225F11BC4009ED947 /* CareInfoCell.swift */,
-				FBD549AA262B224600640A8F /* HeaderCell.swift */,
 			);
 			path = CollectionViewCells;
 			sourceTree = "<group>";
@@ -822,6 +842,7 @@
 				FB6C463725F2FD01009ED947 /* CareValue.swift in Sources */,
 				FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				FB6661AC261DF19E00DC8B04 /* GHTaskInterval+Extensions.swift in Sources */,
+				FB92AF71262EF6130062DE47 /* CustomViewCell.swift in Sources */,
 				FBC7330325DDB4F00048999C /* IconCell.swift in Sources */,
 				FBF8AC5225DD80AC00E7E8EB /* IconView.swift in Sources */,
 				FB7ED53A26167484008FD1BE /* GHPlant+Extensions.swift in Sources */,
@@ -834,9 +855,11 @@
 				FB7ED5132614F5AC008FD1BE /* TaskCalendarProvider.swift in Sources */,
 				FB6661C12620925D00DC8B04 /* GHDatePickerListCell.swift in Sources */,
 				FB7B815B25BE19060053E543 /* OutlineImageCell.swift in Sources */,
+				FB92AF6B262E50510062DE47 /* ImagePicker.swift in Sources */,
 				FB6C461325F11BC4009ED947 /* CareInfoCell.swift in Sources */,
 				FBC7330925DDD5BE0048999C /* Icon.swift in Sources */,
 				FB21B70F25B1E5F500D02384 /* GreenHouseAppModel.swift in Sources */,
+				FB92AF66262E093D0062DE47 /* LargeHeaderCell.swift in Sources */,
 				FB6C460D25F11BA0009ED947 /* IconHeaderCell.swift in Sources */,
 				FB6661CB2620938F00DC8B04 /* Utility.swift in Sources */,
 				FBC7333825E572A30048999C /* PlantIconPickerController+DataSource.swift in Sources */,
@@ -876,6 +899,7 @@
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */,
 				FB76D347262A5AF500D00036 /* SproutTaskLargeHeaderView.swift in Sources */,
+				FB92AF75262EF8A70062DE47 /* WeekdayPickerCell.swift in Sources */,
 				FB7ED5212615FFD3008FD1BE /* GHTaskIntervalWrapper.swift in Sources */,
 				FB7ED5092614D111008FD1BE /* UIImageTransformer.swift in Sources */,
 			);
