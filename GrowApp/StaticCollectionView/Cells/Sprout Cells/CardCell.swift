@@ -1,5 +1,5 @@
 //
-//  PlantCardCell.swift
+//  CardCell.swift
 //  GrowApp
 //
 //  Created by Ryan Thally on 2/27/21.
@@ -8,60 +8,44 @@
 import UIKit
 
 class CardCell: UICollectionViewCell {
-    lazy var iconView: IconView = {
-        let view = IconView()
-        return view
-    }()
-    
-    lazy var textLabel: UILabel = {
-        let view = UILabel()
-        view.font = UIFont.preferredFont(forTextStyle: .callout)
-        
-        view.numberOfLines = 0
-        view.lineBreakMode = .byWordWrapping
-        view.textAlignment = .center
-        return view
-    }()
-    
-    lazy var secondaryTextLabel: UILabel = {
-        let view = UILabel()
-        view.font = UIFont.preferredFont(forTextStyle: .caption2)
-        return view
-    }()
+    var cardView = CardView()
+
+    var image: UIImage? {
+        get { cardView.imageView.image }
+        set { cardView.imageView.image = newValue }
+    }
+
+    var text: String? {
+        get { cardView.textLabel.text }
+        set { cardView.textLabel.text = newValue }
+    }
+
+    var secondaryText: String? {
+        get { cardView.secondaryTextLabel.text }
+        set { cardView.secondaryTextLabel.text = newValue }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        configureHiearchy()
+        setupViews()
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
+        setupViews()
     }
-}
 
-extension CardCell {
-    func configureHiearchy() {
-        iconView.translatesAutoresizingMaskIntoConstraints = false
-        let textStack = UIStackView(arrangedSubviews: [textLabel, secondaryTextLabel])
-        textStack.axis = .vertical
-        textStack.distribution = .fillProportionally
-        textStack.alignment = .center
-        textStack.translatesAutoresizingMaskIntoConstraints = false
-        
-        contentView.addSubview(iconView)
-        contentView.addSubview(textStack)
-        
-        NSLayoutConstraint.activate([
-            iconView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            iconView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            iconView.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: 0.6),
-            iconView.heightAnchor.constraint(equalTo: iconView.widthAnchor, multiplier: 1.0),
-            
-            textStack.topAnchor.constraint(equalToSystemSpacingBelow: iconView.bottomAnchor, multiplier: 1.0),
-            textStack.centerXAnchor.constraint(equalTo: iconView.centerXAnchor),
-            textStack.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 0.8),
-            textStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+    private func setupViews() {
+        contentView.addSubview(cardView)
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.pinToBoundsOf(contentView)
+
+        contentView.layer.cornerRadius = 10
+        contentView.clipsToBounds = true
+
+        contentView.layer.shadowColor = UIColor.black.cgColor
+        contentView.layer.shadowOffset = .zero
+        contentView.layer.shadowRadius = 5
+        contentView.layer.shadowOpacity = 0.5
     }
 }

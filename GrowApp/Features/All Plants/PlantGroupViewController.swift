@@ -104,10 +104,10 @@ extension PlantGroupViewController: PlantEditorDelegate {
 
 extension PlantGroupViewController {
     func makeLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .estimated(200))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.65))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
@@ -118,13 +118,11 @@ extension PlantGroupViewController {
 }
 
 extension PlantGroupViewController {
-    func makeCellRegistration() -> UICollectionView.CellRegistration<PlantCardCell, Item> {
-        return UICollectionView.CellRegistration<PlantCardCell, Item>() {[weak self] cell, indexPath, item in
+    func makeCellRegistration() -> UICollectionView.CellRegistration<CardCell, Item> {
+        return UICollectionView.CellRegistration<CardCell, Item>() {[weak self] cell, indexPath, item in
             guard let plant = self?.plantsProvider.object(at: indexPath) else { return }
-            var iconConfig = cell.iconView.defaultConfiguration()
-            iconConfig.image = plant.icon?.image
-            cell.iconView.configuration = iconConfig
-            cell.textLabel.text = plant.name
+            cell.image = plant.icon?.image
+            cell.text = plant.name
         }
     }
     
