@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PlantCardCell: UICollectionViewCell {
+class CardCell: UICollectionViewCell {
     lazy var iconView: IconView = {
         let view = IconView()
         return view
@@ -40,7 +40,7 @@ class PlantCardCell: UICollectionViewCell {
     }
 }
 
-extension PlantCardCell {
+extension CardCell {
     func configureHiearchy() {
         iconView.translatesAutoresizingMaskIntoConstraints = false
         let textStack = UIStackView(arrangedSubviews: [textLabel, secondaryTextLabel])

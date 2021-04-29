@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PlantHeroCell: UICollectionViewCell {
+class HeroCell: UICollectionViewCell {
     var heroView = HeroView()
 
     var image: UIImage? {
