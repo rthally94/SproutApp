@@ -77,9 +77,10 @@
 		FB92AF75262EF8A70062DE47 /* WeekdayPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */; };
 		FB92AF80262F032F0062DE47 /* GridPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF7F262F032F0062DE47 /* GridPicker.swift */; };
 		FB92AF88262F7D270062DE47 /* IntervalPickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF87262F7D270062DE47 /* IntervalPickerButton.swift */; };
+		FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* CardView.swift */; };
 		FB9E8C51262CCD7700514AAB /* RowItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C50262CCD7700514AAB /* RowItem.swift */; };
 		FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* ButtonCell.swift */; };
-		FBB03C0D263777F900F7F364 /* PlantHeroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C0C263777F900F7F364 /* PlantHeroCell.swift */; };
+		FBB03C0D263777F900F7F364 /* HeroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C0C263777F900F7F364 /* HeroCell.swift */; };
 		FBB03C122637781C00F7F364 /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C112637781C00F7F364 /* HeroView.swift */; };
 		FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */; };
 		FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */; };
@@ -108,7 +109,7 @@
 		FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */; };
 		FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */; };
 		FBEB496C260CBED300F6060C /* PlantGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */; };
-		FBEB4972260CBEF800F6060C /* PlantCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4971260CBEF800F6060C /* PlantCardCell.swift */; };
+		FBEB4972260CBEF800F6060C /* CardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4971260CBEF800F6060C /* CardCell.swift */; };
 		FBF8AC5225DD80AC00E7E8EB /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF8AC5125DD80AC00E7E8EB /* IconView.swift */; };
 		FBFAECB92617D93300F0C67D /* PlantEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFAECB82617D93300F0C67D /* PlantEditorDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -198,9 +199,10 @@
 		FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdayPickerCell.swift; sourceTree = "<group>"; };
 		FB92AF7F262F032F0062DE47 /* GridPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridPicker.swift; sourceTree = "<group>"; };
 		FB92AF87262F7D270062DE47 /* IntervalPickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalPickerButton.swift; sourceTree = "<group>"; };
+		FB9C66A9263A539D00CDC15A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		FB9E8C50262CCD7700514AAB /* RowItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowItem.swift; sourceTree = "<group>"; };
 		FB9E8C58262D08B400514AAB /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
-		FBB03C0C263777F900F7F364 /* PlantHeroCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantHeroCell.swift; sourceTree = "<group>"; };
+		FBB03C0C263777F900F7F364 /* HeroCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCell.swift; sourceTree = "<group>"; };
 		FBB03C112637781C00F7F364 /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
 		FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCardViewController.swift; sourceTree = "<group>"; };
 		FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -229,7 +231,7 @@
 		FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
 		FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICellAccessory+Extensions.swift"; sourceTree = "<group>"; };
 		FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlantGroupViewController.swift; path = "GrowApp/Features/All Plants/PlantGroupViewController.swift"; sourceTree = SOURCE_ROOT; };
-		FBEB4971260CBEF800F6060C /* PlantCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantCardCell.swift; sourceTree = "<group>"; };
+		FBEB4971260CBEF800F6060C /* CardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardCell.swift; sourceTree = "<group>"; };
 		FBF8AC5125DD80AC00E7E8EB /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
 		FBFAECB82617D93300F0C67D /* PlantEditorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantEditorDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -441,7 +443,6 @@
 		FB6C460B25F11B81009ED947 /* Collection View Cells */ = {
 			isa = PBXGroup;
 			children = (
-				FBEB4971260CBEF800F6060C /* PlantCardCell.swift */,
 			);
 			path = "Collection View Cells";
 			sourceTree = "<group>";
@@ -505,6 +506,7 @@
 		FB7B812425B9D4B80053E543 /* Compoents */ = {
 			isa = PBXGroup;
 			children = (
+				FB9C66A8263A538D00CDC15A /* CardView */,
 				FBB03C102637780B00F7F364 /* PlantHero */,
 				FB92AF7E262F02DF0062DE47 /* GridPicker */,
 				FB92AF69262E50370062DE47 /* ImagePicker */,
@@ -603,6 +605,14 @@
 			path = GridPicker;
 			sourceTree = "<group>";
 		};
+		FB9C66A8263A538D00CDC15A /* CardView */ = {
+			isa = PBXGroup;
+			children = (
+				FB9C66A9263A539D00CDC15A /* CardView.swift */,
+			);
+			path = CardView;
+			sourceTree = "<group>";
+		};
 		FB9E8C54262CE05F00514AAB /* Form Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -616,6 +626,7 @@
 		FB9E8C55262CE06B00514AAB /* Sprout Cells */ = {
 			isa = PBXGroup;
 			children = (
+				FBEB4971260CBEF800F6060C /* CardCell.swift */,
 				FBD549AA262B224600640A8F /* HeaderCell.swift */,
 				FB6C460C25F11BA0009ED947 /* IconHeaderCell.swift */,
 				FBC7330225DDB4F00048999C /* IconCell.swift */,
@@ -623,7 +634,7 @@
 				FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */,
 				FB92AF65262E093D0062DE47 /* LargeHeaderCell.swift */,
 				FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */,
-				FBB03C0C263777F900F7F364 /* PlantHeroCell.swift */,
+				FBB03C0C263777F900F7F364 /* HeroCell.swift */,
 			);
 			path = "Sprout Cells";
 			sourceTree = "<group>";
@@ -844,7 +855,7 @@
 				FB0A9F2B25DACF450084AED8 /* LogEntry.swift in Sources */,
 				FBC5D63825EEA269005BF6B1 /* PlantDetailViewController.swift in Sources */,
 				FB5F34A325B8FA3900CCE6BC /* SlideInPresentationManager.swift in Sources */,
-				FBB03C0D263777F900F7F364 /* PlantHeroCell.swift in Sources */,
+				FBB03C0D263777F900F7F364 /* HeroCell.swift in Sources */,
 				FB9E8C51262CCD7700514AAB /* RowItem.swift in Sources */,
 				FB6661B2261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift in Sources */,
 				FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */,
@@ -911,7 +922,7 @@
 				FBD20AE8260FDB44008915E1 /* SymbolIconView.swift in Sources */,
 				FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */,
 				FB8E0D40262B324400F0FA09 /* StatisticCell.swift in Sources */,
-				FBEB4972260CBEF800F6060C /* PlantCardCell.swift in Sources */,
+				FBEB4972260CBEF800F6060C /* CardCell.swift in Sources */,
 				FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */,
 				FB6C463125F2FCAB009ED947 /* TaskInterval.swift in Sources */,
 				FB6661A1261DEB9900DC8B04 /* GHTaskType+Extensions.swift in Sources */,
@@ -933,6 +944,7 @@
 				FB76D347262A5AF500D00036 /* SproutTaskLargeHeaderView.swift in Sources */,
 				FB92AF75262EF8A70062DE47 /* WeekdayPickerCell.swift in Sources */,
 				FB7ED5212615FFD3008FD1BE /* GHTaskIntervalWrapper.swift in Sources */,
+				FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */,
 				FB7ED5092614D111008FD1BE /* UIImageTransformer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

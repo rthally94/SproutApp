@@ -1,5 +1,5 @@
 //
-//  PlantHeroCell.swift
+//  HeroCell.swift
 //  GrowApp
 //
 //  Created by Ryan Thally on 4/26/21.

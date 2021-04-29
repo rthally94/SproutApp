@@ -144,8 +144,8 @@ extension StaticCollectionViewController {
         }
     }
 
-    func makeHeroCellRegistration() -> UICollectionView.CellRegistration<PlantHeroCell, Item> {
-        UICollectionView.CellRegistration<PlantHeroCell, Item> { cell, indexPath, item in
+    func makeHeroCellRegistration() -> UICollectionView.CellRegistration<HeroCell, Item> {
+        UICollectionView.CellRegistration<HeroCell, Item> { cell, indexPath, item in
             cell.image = item.image
             cell.headerTitle = item.text
             cell.headerSubtitle = item.secondaryText
