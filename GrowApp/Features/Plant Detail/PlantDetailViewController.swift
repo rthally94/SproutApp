@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 
 enum PlantDetailSection: Int, CaseIterable {
-    case plantIcon, plantHeader
+    case plantHero
     case taskSummary
     case upNext
     case careInfo
@@ -46,7 +46,7 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
     // MARK: - Properties
     let dateComponentsFormatter = Utility.dateComponentsFormatter
     let careDateFormatter = Utility.relativeDateFormatter
-    
+
     let viewContext: NSManagedObjectContext
     
     var plant: GHPlant
@@ -102,21 +102,11 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             guard let sectionKind = PlantDetailSection(rawValue: sectionIndex) else { fatalError("Cannot get section for index: \(sectionIndex)") }
             switch sectionKind {
-            case .plantIcon:
+            case .plantHero:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.3))
-                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = .init(top: 20, leading: 0, bottom: 0, trailing: 0)
-                return section
-            case .plantHeader:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(60))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(60))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(1.0))
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 
                 let section = NSCollectionLayoutSection(group: group)
@@ -205,12 +195,8 @@ private extension PlantDetailViewController {
         
         // Plant Info Header
         snapshot.appendItems([
-            Item.icon(icon: plant.icon)
-        ], toSection: .plantIcon)
-
-        snapshot.appendItems([
-            Item.titleHeader(title: plant.name?.capitalized, subtitle: plant.type?.commonName?.capitalized)
-        ], toSection: .plantHeader)
+            .hero(image: plant.icon?.image, title: plant.name)
+        ], toSection: .plantHero)
         
         // Plant Care Summary
         let tasksToday: Set<GHTask> = plant.tasks.filter { task in
@@ -240,14 +226,14 @@ private extension PlantDetailViewController {
                 lastCareString = ""
             }
 
-            return Item.todo(title: task.taskType?.name, subtitle: lastCareString, icon: task.taskType?.icon, taskState: true)
+            return Item.todo(title: task.taskType?.name, subtitle: lastCareString, image: task.taskType?.icon?.image, taskState: true)
         }
         
         snapshot.appendItems(nextTasks, toSection: .upNext)
         
         // All Tasks
         let items: [Item] = plant.tasks.compactMap { task in
-            return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tapAction: { [unowned self] sender in
+            return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tapAction: { [unowned self] in
                 print(task.taskType?.name ?? "Unknown")
             })
         }
@@ -286,11 +272,11 @@ extension PlantDetailViewController {
 extension PlantDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let item = dataSource.itemIdentifier(for: indexPath)
-        return item?.isNavigable ?? false
+        return item?.isTappable ?? false
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = dataSource.itemIdentifier(for: indexPath)
-        item?.action?(self)
+        item?.tapAction?()
     }
 }

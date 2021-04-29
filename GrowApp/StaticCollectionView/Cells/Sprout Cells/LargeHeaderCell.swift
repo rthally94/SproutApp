@@ -19,8 +19,8 @@ class LargeHeaderCell: UICollectionViewCell {
     }
 
     var value: String? {
-        set { largeHeaderView.valueLabel.text = newValue }
-        get { largeHeaderView.valueLabel.text }
+        set { largeHeaderView.subtitleLabel.text = newValue }
+        get { largeHeaderView.subtitleLabel.text }
     }
 
     override var tintColor: UIColor! {

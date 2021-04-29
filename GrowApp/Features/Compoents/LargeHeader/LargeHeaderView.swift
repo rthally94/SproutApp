@@ -30,7 +30,7 @@ class LargeHeaderView: UIView {
         return view
     }()
 
-    lazy var valueLabel: UILabel = {
+    lazy var subtitleLabel: UILabel = {
         let view = UILabel()
         view.font = LargeHeaderView.valueFont
         return view
@@ -41,7 +41,7 @@ class LargeHeaderView: UIView {
             let textColor = UIColor.labelColor(against: backgroundColor)
             imageView.tintColor = textColor
             titleLabel.textColor = textColor
-            valueLabel.textColor = textColor
+            subtitleLabel.textColor = textColor
         }
     }
 
@@ -60,11 +60,11 @@ private extension LargeHeaderView {
 
         imageView.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        valueLabel.translatesAutoresizingMaskIntoConstraints = false
+        subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(imageView)
         addSubview(titleLabel)
-        addSubview(valueLabel)
+        addSubview(subtitleLabel)
 
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
@@ -74,10 +74,10 @@ private extension LargeHeaderView {
             titleLabel.leadingAnchor.constraint(equalToSystemSpacingAfter: imageView.trailingAnchor, multiplier: 1.0),
             titleLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
 
-            valueLabel.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 1.0),
-            valueLabel.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            valueLabel.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            valueLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
+            subtitleLabel.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 1.0),
+            subtitleLabel.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            subtitleLabel.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor)
         ])
 
 

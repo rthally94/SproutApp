@@ -29,27 +29,44 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     let task: GHTask
 
     private lazy var imageView = UIImageView(image: UIImage(systemName: "circle"))
-    private lazy var weekdayPicker: ImagePicker = {
-        let action = UIAction { action in
-            guard let sender = action.sender as? ImagePicker else { return }
-            let weekdays = sender.selectedIndices.map {
-                Calendar.current.veryShortStandaloneWeekdaySymbols[$0]
-            }
-            print(weekdays)
+    private lazy var weekdayPicker: GridPicker = {
+        let daySelectionChangedAction = UIAction { action in
+            guard let sender = action.sender as? GridPicker else { return }
+            let selection = sender.selectedIndices
+            print(selection.sorted())
         }
 
-        let picker = ImagePicker(frame: .zero, primaryAction: action)
-        picker.images = Calendar.current.veryShortStandaloneWeekdaySymbols.compactMap {
-            UIImage(systemName: "\($0.lowercased()).circle")
+        let picker = GridPicker()
+        picker.addAction(daySelectionChangedAction, for: .valueChanged)
+        picker.items = Calendar.current.veryShortStandaloneWeekdaySymbols.map {
+            return "\($0)"
         }
+        picker.itemsPerRow = 7
+        return picker
+    }()
+
+    private lazy var dayPicker: GridPicker = {
+        let daySelectionChangedAction = UIAction { action in
+            guard let sender = action.sender as? GridPicker else { return }
+            let selection = sender.selectedIndices
+            print(selection.sorted())
+        }
+
+        let picker = GridPicker()
+        picker.addAction(daySelectionChangedAction, for: .valueChanged)
+        picker.items = Array(1...31).map {
+            return "\($0)"
+        }
+        picker.itemsPerRow = 7
         return picker
     }()
     
     init(task: GHTask, viewContext: NSManagedObjectContext) {
         self.viewContext = viewContext
         self.task = viewContext.object(with: task.objectID) as! GHTask
-        if task.interval == nil {
-            task.interval = GHTaskInterval(context: viewContext)
+        if self.task.interval == nil {
+            self.task.interval = GHTaskInterval(context: viewContext)
+            self.task.interval?.type = 0
         }
         
         super.init(nibName: nil, bundle: nil)
@@ -75,7 +92,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
                 return nil
             }
         }
-        updateDataSource()
+        applyDefaultSnapshot()
     }
 
     override func makeLayout() -> UICollectionViewLayout {
@@ -106,83 +123,22 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
 extension TaskEditorController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let item = dataSource.itemIdentifier(for: indexPath)
-        return item?.isNavigable ?? false
+        return item?.isTappable ?? false
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = dataSource.itemIdentifier(for: indexPath)
-        item?.action?(self)
+        item?.tapAction?()
+        collectionView.deselectItem(at: indexPath, animated: true)
     }
-    
-//    private func makeValueCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, FormItem> {
-//        UICollectionView.CellRegistration<UICollectionViewListCell, FormItem> { cell, indexPath, item in
-//            var config = UIListContentConfiguration.valueCell()
-//            if case let .valueListCell(image, text, secondaryText) = item {
-//                config.image = image
-//                config.text = text
-//                config.secondaryText = secondaryText
-//            }
-//            cell.contentConfiguration = config
-//        }
-//    }
-//
-//    private func makeToggleRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, FormItem> {
-//        UICollectionView.CellRegistration<UICollectionViewListCell, FormItem> { cell, indexPath, item in
-//            if case let .toggle(image, text, secondaryText, isOn, action) = item {
-//                var config = UIListContentConfiguration.subtitleCell()
-//                config.image = image
-//                config.text = text
-//                config.secondaryText = secondaryText
-//
-//                config.directionalLayoutMargins = .init(top: 10, leading: 0, bottom: 10, trailing: 0)
-//
-//                cell.contentConfiguration = config
-//
-//                cell.accessories = [
-//                    .toggleAccessory(isOn: isOn, action: action)
-//                ]
-//            } else if case let .outlineToggle(image, text, secondaryText, isOn) = item {
-//                var config = UIListContentConfiguration.subtitleCell()
-//                config.image = image
-//                config.text = text
-//                config.secondaryText = secondaryText
-//
-//                config.directionalLayoutMargins = .init(top: 10, leading: 0, bottom: 10, trailing: 0)
-//
-//                cell.contentConfiguration = config
-//
-//                let outlineAction = UIAction { [unowned self] action in
-//                    guard let toggle = action.sender as? UISwitch else { return }
-//                    print(toggle.isOn ? "Yes" : "No")
-//
-//                    if toggle.isOn {
-//                        updateDatePickerHeader(with: Date())
-//                    } else {
-//                        hideDatePicker()
-//                    }
-//                }
-//
-//                cell.accessories = [
-//                    .toggleAccessory(isOn: isOn, action: outlineAction)
-//                ]
-//            }
-//        }
-//    }
-//
-//    private func makeDatePickerRegistration() -> UICollectionView.CellRegistration<DatePickerListCell, FormItem> {
-//        UICollectionView.CellRegistration<DatePickerListCell, FormItem> { cell, indexPath, item in
-//            guard case let .datePicker(date, action) = item else { return }
-//            cell.updateWith(date: date ?? Date(), action: action)
-//        }
-//    }
 }
 
 extension TaskEditorController {
     func updateUI() {
-        updateDataSource()
+        applyDefaultSnapshot()
     }
     
-    private func updateDataSource() {
+    private func applyDefaultSnapshot() {
         var dataSourceSnapshot = NSDiffableDataSourceSnapshot<TaskEditorSection, Item>()
         dataSourceSnapshot.appendSections(TaskEditorSection.allCases)
         dataSource.apply(dataSourceSnapshot)
@@ -204,29 +160,88 @@ extension TaskEditorController {
         dataSource.apply(notesSnapshot, to: .notes)
 
         var repeatsIntervalSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        let intervalType = task.interval?.frequency() ?? .none
         repeatsIntervalSnapshot.append([
-            Item.pickerRow(title: "Never", isSelected: true),
-            Item.pickerRow(title: "Daily", isSelected: false),
-            Item.pickerRow(title: "Weekly", isSelected: false),
-            Item.pickerRow(title: "Monthly", isSelected: false)
+            Item.pickerRow(title: "Never", isSelected: intervalType == .none, tapAction: {[unowned self] in
+                selectInterval(.none)
+            }),
+            Item.pickerRow(title: "Daily", isSelected: intervalType == .daily, tapAction: {[unowned self] in
+                selectInterval(.daily)
+            }),
+            Item.pickerRow(title: "Weekly", isSelected: intervalType == .weekly, tapAction: {[unowned self] in
+                selectInterval(.weekly)
+            }),
+            Item.pickerRow(title: "Monthly", isSelected: intervalType == .monthly, tapAction: {[unowned self] in
+                selectInterval(.monthly)
+            })
         ])
         dataSource.apply(repeatsIntervalSnapshot, to: .repeatInterval)
 
-//        if task.interval?.frequency() == GHTaskIntervalType.weekly {
-            var repeatsValueSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        var repeatsValueSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        if case .weekly = task.interval?.frequency() {
             repeatsValueSnapshot.append([
                 Item.customView(customView: weekdayPicker)
             ])
-            dataSource.apply(repeatsValueSnapshot, to: .repeatValue)
-//        }
+        } else if case .monthly = task.interval?.frequency() {
+            repeatsValueSnapshot.append([
+                Item.customView(customView: dayPicker)
+            ])
+        }
+
+        dataSource.apply(repeatsValueSnapshot, to: .repeatValue)
 
         var actionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
         actionSnapshot.append([
-            Item.button(context: .destructive, title: "Remove", image: UIImage(systemName: "trash"), onTap: {[unowned self] sender in
+            Item.button(context: .destructive, title: "Remove", image: UIImage(systemName: "trash"), onTap: {
                 print("Deleted")
             })
         ])
         dataSource.apply(actionSnapshot, to: .actions)
+    }
+    private func selectInterval(_ newValue: GHTaskIntervalType) {
+        guard let interval = task.interval else { return }
+        guard let oldType = GHTaskIntervalType(rawValue: Int(interval.type)) else { return }
+        // Prevent reloading if the values are the same
+        guard oldType != newValue else { return }
+
+        // Update the task interval parameters
+        task.interval?.type = Int16(newValue.rawValue)
+
+        // Update header without animation
+        var headerSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        headerSnapshot.append([
+            Item.largeHeader(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tintColor: task.taskType?.icon?.color)
+        ])
+        dataSource.apply(headerSnapshot, to: .header, animatingDifferences: false)
+
+        // Update interval picker without animation
+        var intervalSnapshot = dataSource.snapshot(for: .repeatInterval)
+        let itemToDeselect = intervalSnapshot.items[oldType.rawValue]
+        let itemToSelect = intervalSnapshot.items[newValue.rawValue]
+
+        intervalSnapshot.insert([
+            Item.pickerRow(title: itemToDeselect.text, isSelected: !itemToDeselect.isOn, tapAction: itemToDeselect.tapAction)
+        ], after: itemToDeselect)
+        intervalSnapshot.delete([itemToDeselect])
+
+        intervalSnapshot.insert([
+            Item.pickerRow(title: itemToSelect.text, isSelected: !itemToSelect.isOn, tapAction: itemToSelect.tapAction)
+        ], after: itemToSelect)
+        intervalSnapshot.delete([itemToSelect])
+        dataSource.apply(intervalSnapshot, to: .repeatInterval, animatingDifferences: false)
+
+        // Update the values picker for the appropriate interval
+        var valuesSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        if case .weekly = newValue {
+            valuesSnapshot.append([
+                Item.customView(customView: weekdayPicker)
+            ])
+        } else if case .monthly = newValue {
+            valuesSnapshot.append([
+                Item.customView(customView: dayPicker)
+            ])
+        }
+        dataSource.apply(valuesSnapshot, to: .repeatValue, animatingDifferences: false)
     }
 
     func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
@@ -238,41 +253,4 @@ extension TaskEditorController {
             supplementaryView.contentView.backgroundColor = .systemGroupedBackground
         }
     }
-        // Type Selection
-//        var typeSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-//        typeSnapshot.append([
-//            FormItem.valueListCell(image: nil, text: "Type", secondaryText: task.taskType?.name ?? "Select Type")
-//        ])
-//        dataSource.apply(typeSnapshot, to: .type)
-//
-//        // Starting Date/Repeats
-//        let date = task.interval?.startDate
-//
-//        var datePickerSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-//
-//        let isOn = task.interval?.startDate != nil
-//        let dateString: String? = {
-//            if let startDate = task.interval?.startDate {
-//                return dateFormatter.string(from: startDate)
-//            } else {
-//                return nil
-//            }
-//        }()
-//
-//        let header = FormItem.outlineToggle(image: UIImage(systemName: "calendar"), text: "Date", secondaryText: dateString, isOn: isOn)
-//        datePickerSnapshot.append([
-//            header
-//        ])
-//
-//        let dateChangedAction = UIAction { [unowned self] action in
-//            guard let datePicker = action.sender as? UIDatePicker else { return }
-//            let date = datePicker.date
-//            self.task.interval?.startDate = date
-//            self.updateDatePickerHeader(with: date)
-//        }
-//
-//        let picker = FormItem.datePicker(date, dateChangedAction)
-//        datePickerSnapshot.append([picker], to: header)
-//
-//        dataSource.apply(datePickerSnapshot, to: .interval)
 }

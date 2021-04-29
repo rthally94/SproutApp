@@ -44,4 +44,11 @@ extension UIView {
             self.trailingAnchor.constraint(equalTo: parent.layoutMarginsGuide.trailingAnchor)
         ])
     }
+
+    func blurBackground() {
+        let blurEffect = UIBlurEffect(style: .regular)
+        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+        insertSubview(blurEffectView, at: 0)
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    }
 }

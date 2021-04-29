@@ -14,33 +14,33 @@ extension PlantEditorControllerController {
         snapshot.appendSections(PlantEditorSection.allCases)
         // Header Image
         snapshot.appendItems([
-            RowItem.icon(icon: plant.icon, tapAction: { [unowned self] sender in
+            RowItem.icon(image: plant.icon?.image, tapAction: { [unowned self] in
                 navigateTo(plantIconPicker.wrappedInNavigationController(), modal: true)
             }),
             
-            RowItem.button(context: .normal, title: "Edit", onTap: {[unowned self] sender in
+            RowItem.button(context: .normal, title: "Edit", onTap: {[unowned self] in
                 navigateTo(plantIconPicker.wrappedInNavigationController(), modal: true)
             })
         ], toSection: .image)
         
         // General Plant Info
         snapshot.appendItems([
-            Item.textField(placeholder: "My New Plant", initialValue: plant.name, onChange: { _ in }),
-            Item.listCell(rowType: .value2, text: "Type", secondaryText: plant.type?.commonName ?? "Choose Type", tapAction: { [unowned self] sender in
+            Item.textField(placeholder: "My New Plant", initialValue: plant.name, onChange: { sender in }),
+            Item.listCell(rowType: .value2, text: "Type", secondaryText: plant.type?.commonName ?? "Choose Type", tapAction: { [unowned self] in
                 navigateTo(plantTypePicker)
             })
         ], toSection: .plantInfo)
         
         // Plant Tasks
         let tasks: [Item] = plant.tasks.compactMap { task in
-            Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText() ?? "Tap to configure", image: task.taskType?.icon?.image, tapAction: {[unowned self] sender in
+            Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText() ?? "Tap to configure", image: task.taskType?.icon?.image, tapAction: {[unowned self] in
                 print(task.taskType?.name ?? "Unknown")
                 showTaskEditor(for: task)
             })
         }
         snapshot.appendItems(tasks, toSection: .care)
         
-        let deleteItem = Item.button(context: .destructive, title: "Delete Plant", image: UIImage(systemName: "trash.fill"), onTap: { _ in })
+        let deleteItem = Item.button(context: .destructive, title: "Delete Plant", image: UIImage(systemName: "trash.fill"), onTap: { })
         snapshot.appendItems([deleteItem], toSection: .actions)
         return snapshot
     }

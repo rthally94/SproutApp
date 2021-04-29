@@ -10,15 +10,15 @@ import UIKit
 extension PlantEditorControllerController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return false }
-        return item.isNavigable
+        return item.isTappable
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
-        if let action = item.action {
+        if let action = item.tapAction {
             selectedIndexPath = indexPath
 
-            action(self)
+            action()
         }
     }
 

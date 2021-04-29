@@ -31,6 +31,7 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
         let pickerRowCellRegistration = makePickerCellRegistration()
 
         let iconRegistration = makeIconCellRegistration()
+        let heroRegistration = makeHeroCellRegistration()
         let headerCellRegistration = makeHeaderCellRegistration()
         let largeHeaderCellRegistration = makeLargeHeaderCellRegistration()
         let statisticCellRegistration = makeStatisticCellRegistration()
@@ -54,6 +55,8 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
             // Sprout Cell
             case .icon:
                 return collectionView.dequeueConfiguredReusableCell(using: iconRegistration, for: indexPath, item: item)
+            case .hero:
+                return collectionView.dequeueConfiguredReusableCell(using: heroRegistration, for: indexPath, item: item)
             case .header:
                 return collectionView.dequeueConfiguredReusableCell(using: headerCellRegistration, for: indexPath, item: item)
             case .largeHeader:
@@ -100,12 +103,6 @@ extension StaticCollectionViewController {
             config.secondaryText = item.secondaryText
 
             cell.contentConfiguration = config
-
-            if item.isNavigable {
-                cell.accessories = [.disclosureIndicator()]
-            } else {
-                cell.accessories = []
-            }
         }
     }
 
@@ -138,14 +135,20 @@ extension StaticCollectionViewController {
     // MARK: - Sprout Cell Registration
     func makeIconCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
         UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
-            if let icon = item.icon {
-                var config = cell.iconView.defaultConfiguration()
-                config.image = icon.image
-                config.tintColor = icon.color
-                cell.iconView.configuration = config
-            }
+            var config = cell.iconView.defaultConfiguration()
+            config.image = item.image
+            config.tintColor = item.tintColor
+            cell.iconView.configuration = config
 
             cell.backgroundColor = .systemGroupedBackground
+        }
+    }
+
+    func makeHeroCellRegistration() -> UICollectionView.CellRegistration<PlantHeroCell, Item> {
+        UICollectionView.CellRegistration<PlantHeroCell, Item> { cell, indexPath, item in
+            cell.image = item.image
+            cell.headerTitle = item.text
+            cell.headerSubtitle = item.secondaryText
         }
     }
 
@@ -186,8 +189,8 @@ extension StaticCollectionViewController {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> {cell, indexPath, item in
             var config = UIListContentConfiguration.subtitleCell()
 
-            config.image = item.icon?.image ?? item.image
-            config.imageProperties.tintColor = item.icon?.color ?? item.tintColor
+            config.image = item.image
+            config.imageProperties.tintColor = item.tintColor
 
             config.text = item.text
             config.secondaryText = item.secondaryText
@@ -210,8 +213,8 @@ extension StaticCollectionViewController {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
             var config = UIListContentConfiguration.subtitleCell()
 
-            config.image = item.icon?.image ?? item.image
-            config.imageProperties.tintColor = item.icon?.color ?? item.tintColor
+            config.image = item.image
+            config.imageProperties.tintColor = item.tintColor
 
             config.text = item.text
             config.secondaryText = item.secondaryText
@@ -223,10 +226,10 @@ extension StaticCollectionViewController {
 
     func makeCompactCardRegistration() -> UICollectionView.CellRegistration<CompactCardCell, Item> {
         UICollectionView.CellRegistration<CompactCardCell, Item> { cell, indexPath, item in
-            cell.image = item.icon?.image ?? item.image
+            cell.image = item.image
             cell.title = item.text
             cell.value = item.secondaryText
-            cell.tintColor = item.icon?.color ?? item.tintColor
+            cell.tintColor = item.tintColor
         }
     }
 
