@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PlantHeroView: UIView {
+class HeroView: UIView {
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
