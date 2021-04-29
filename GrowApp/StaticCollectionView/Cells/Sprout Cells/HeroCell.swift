@@ -40,9 +40,9 @@ class HeroCell: UICollectionViewCell {
         heroView.translatesAutoresizingMaskIntoConstraints = false
         heroView.pinToBoundsOf(contentView)
 
-        contentView.layer.shadowColor = UIColor.black.cgColor
-        contentView.layer.shadowOpacity = 0.5
-        contentView.layer.shadowOffset = .zero
-        contentView.layer.shadowRadius = 5
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 0, height: 5)
+        layer.shadowRadius = 5
     }
 }

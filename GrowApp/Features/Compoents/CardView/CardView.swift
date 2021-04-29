@@ -30,10 +30,10 @@ class CardView: UIView {
     private lazy var textStack: UIStackView = {
         let stack = UIStackView(arrangedSubviews: [textLabel, secondaryTextLabel])
         stack.axis = .vertical
-        stack.distribution = .fillProportionally
+        stack.distribution = .fill
         stack.alignment = .leading
 
-        stack.layoutMargins = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        stack.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
         stack.isLayoutMarginsRelativeArrangement = true
 
         stack.blurBackground(style: .prominent)

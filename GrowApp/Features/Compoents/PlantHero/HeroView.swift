@@ -23,17 +23,15 @@ class HeroView: UIView {
     lazy private var headerStack: UIStackView = {
         let view = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
         view.axis = .vertical
-        view.distribution = .fillProportionally
+        view.distribution = .fill
         view.alignment = .center
+
+        view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+        view.isLayoutMarginsRelativeArrangement = true
 
         view.blurBackground(style: .prominent)
         view.clipsToBounds = true
         view.layer.cornerRadius = 10
-
-        view.layer.shadowColor = UIColor.black.cgColor
-        view.layer.shadowOpacity = 0.5
-        view.layer.shadowOffset = .zero
-        view.layer.shadowRadius = 5
 
         return view
     }()

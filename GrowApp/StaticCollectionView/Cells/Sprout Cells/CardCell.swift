@@ -43,9 +43,9 @@ class CardCell: UICollectionViewCell {
         contentView.layer.cornerRadius = 10
         contentView.clipsToBounds = true
 
-        contentView.layer.shadowColor = UIColor.black.cgColor
-        contentView.layer.shadowOffset = .zero
-        contentView.layer.shadowRadius = 5
-        contentView.layer.shadowOpacity = 0.5
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowOffset = CGSize(width: 0, height: 5)
+        layer.shadowRadius = 2.5
+        layer.shadowOpacity = 0.2
     }
 }
