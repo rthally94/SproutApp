@@ -195,7 +195,7 @@ private extension PlantDetailViewController {
         
         // Plant Info Header
         snapshot.appendItems([
-            .hero(image: plant.icon?.image, title: plant.name)
+            .hero(image: plant.icon?.image, title: plant.name, subtitle: plant.type?.commonName)
         ], toSection: .plantHero)
         
         // Plant Care Summary
