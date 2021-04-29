@@ -13,8 +13,7 @@ class PlantGroupViewController: UIViewController {
     // MARK: - Properties
     typealias Section = PlantsProvider.Section
     typealias Item = PlantsProvider.Item
-    
-    var model: GreenHouseAppModel
+
     let viewContext: NSManagedObjectContext
     let plantsProvider: PlantsProvider
     
@@ -29,10 +28,9 @@ class PlantGroupViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    init(viewContext: NSManagedObjectContext, model: GreenHouseAppModel) {
+    init(viewContext: NSManagedObjectContext) {
         self.viewContext = viewContext
         self.plantsProvider = PlantsProvider(managedObjectContext: viewContext)
-        self.model = model
         super.init(nibName: nil, bundle: nil)
     }
     
