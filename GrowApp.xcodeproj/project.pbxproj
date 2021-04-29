@@ -78,6 +78,8 @@
 		FB92AF80262F032F0062DE47 /* GridPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF7F262F032F0062DE47 /* GridPicker.swift */; };
 		FB92AF88262F7D270062DE47 /* IntervalPickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF87262F7D270062DE47 /* IntervalPickerButton.swift */; };
 		FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* CardView.swift */; };
+		FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */; };
+		FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* TasksProvider.swift */; };
 		FB9E8C51262CCD7700514AAB /* RowItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C50262CCD7700514AAB /* RowItem.swift */; };
 		FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* ButtonCell.swift */; };
 		FBB03C0D263777F900F7F364 /* HeroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C0C263777F900F7F364 /* HeroCell.swift */; };
@@ -200,6 +202,8 @@
 		FB92AF7F262F032F0062DE47 /* GridPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridPicker.swift; sourceTree = "<group>"; };
 		FB92AF87262F7D270062DE47 /* IntervalPickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalPickerButton.swift; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
+		FB9C66B4263AE76900CDC15A /* TasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksProvider.swift; sourceTree = "<group>"; };
 		FB9E8C50262CCD7700514AAB /* RowItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowItem.swift; sourceTree = "<group>"; };
 		FB9E8C58262D08B400514AAB /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
 		FBB03C0C263777F900F7F364 /* HeroCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCell.swift; sourceTree = "<group>"; };
@@ -339,6 +343,7 @@
 			isa = PBXGroup;
 			children = (
 				FB7B812425B9D4B80053E543 /* Compoents */,
+				FB9C66AF263AE63800CDC15A /* Up Next */,
 				FBC5D60A25EC2BE0005BF6B1 /* MainViewController */,
 				FB5F348325B4C29100CCE6BC /* TaskCalendar */,
 				FBC5D61B25EC555E005BF6B1 /* All Plants */,
@@ -613,6 +618,15 @@
 			path = CardView;
 			sourceTree = "<group>";
 		};
+		FB9C66AF263AE63800CDC15A /* Up Next */ = {
+			isa = PBXGroup;
+			children = (
+				FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */,
+				FB9C66B4263AE76900CDC15A /* TasksProvider.swift */,
+			);
+			path = "Up Next";
+			sourceTree = "<group>";
+		};
 		FB9E8C54262CE05F00514AAB /* Form Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -878,6 +892,7 @@
 				FBC7332125E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift in Sources */,
 				FB7ED5192615260F008FD1BE /* StorageProvider.swift in Sources */,
 				FB92AF88262F7D270062DE47 /* IntervalPickerButton.swift in Sources */,
+				FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */,
 				FBC7332925E307DF0048999C /* PlantTypePickerViewController.swift in Sources */,
 				FB7B813E25BA6CA50053E543 /* WeekPickerCell.swift in Sources */,
 				FB6C463725F2FD01009ED947 /* CareValue.swift in Sources */,
@@ -930,6 +945,7 @@
 				FB92AF80262F032F0062DE47 /* GridPicker.swift in Sources */,
 				FBC7333025E404CC0048999C /* PlantIconPickerController.swift in Sources */,
 				FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */,
+				FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */,
 				FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */,
 				FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */,
 				FB6C462D25F2FC8B009ED947 /* TaskType.swift in Sources */,
