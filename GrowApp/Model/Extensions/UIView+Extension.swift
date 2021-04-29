@@ -45,8 +45,8 @@ extension UIView {
         ])
     }
 
-    func blurBackground() {
-        let blurEffect = UIBlurEffect(style: .regular)
+    func blurBackground(style: UIBlurEffect.Style = .regular) {
+        let blurEffect = UIBlurEffect(style: style)
         let blurEffectView = UIVisualEffectView(effect: blurEffect)
         insertSubview(blurEffectView, at: 0)
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]

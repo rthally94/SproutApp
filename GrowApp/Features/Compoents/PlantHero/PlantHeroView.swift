@@ -26,7 +26,7 @@ class PlantHeroView: UIView {
         view.distribution = .fillProportionally
         view.alignment = .center
 
-        view.blurBackground()
+        view.blurBackground(style: .prominent)
         view.clipsToBounds = true
         view.layer.cornerRadius = 10
 
