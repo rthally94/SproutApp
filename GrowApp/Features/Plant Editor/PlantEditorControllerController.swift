@@ -137,7 +137,7 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     
     internal func showTaskEditor(for task: GHTask) {
         let vc = TaskEditorController(task: task, viewContext: viewContext)
-//        vc.delegate = self
+        vc.delegate = self
         navigateTo(vc.wrappedInNavigationController(), modal: true)
     }
 
@@ -204,5 +204,11 @@ extension PlantEditorControllerController: PlantTypePickerDelegate {
     func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType) {
         editingPlant.type = plantType
         updateUI()
+    }
+}
+
+extension PlantEditorControllerController: TaskEditorDelegate {
+    func taskEditor(_ editor: TaskEditorController, didUpdateTask task: GHTask) {
+        
     }
 }

@@ -26,6 +26,7 @@ enum TaskEditorSection: Int, Hashable, CaseIterable {
 class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     let dateFormatter = Utility.dateFormatter
     let viewContext: NSManagedObjectContext
+    var delegate: TaskEditorDelegate?
     let task: GHTask
 
     private lazy var imageView = UIImageView(image: UIImage(systemName: "circle"))
@@ -68,6 +69,9 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
             self.task.interval = GHTaskInterval(context: viewContext)
             self.task.interval?.type = 0
         }
+        if self.task.nextCareDate == nil {
+            self.task.nextCareDate = Date()
+        }
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -93,6 +97,9 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
             }
         }
         applyDefaultSnapshot()
+
+        title = "Edit Task"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
     }
 
     override func makeLayout() -> UICollectionViewLayout {
@@ -117,6 +124,16 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         }
 
         return layout
+    }
+
+    @objc private func doneButtonPressed(_ sender: AnyObject) {
+        delegate?.taskEditor(self, didUpdateTask: task)
+        dismiss(animated: true)
+    }
+
+    @objc private func cancelButtonPressed(_ sender: AnyObject) {
+        delegate?.taskEditorDidCancel(self)
+        dismiss(animated: true)
     }
 }
 
