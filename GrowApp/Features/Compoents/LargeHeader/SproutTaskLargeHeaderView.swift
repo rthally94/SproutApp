@@ -19,6 +19,6 @@ class SproutTaskLargeHeaderView: LargeHeaderView {
 
         imageView.image = task.taskType?.icon?.image
         titleLabel.text = task.taskType?.name?.capitalized
-        valueLabel.text = task.interval?.intervalText()
+        subtitleLabel.text = task.interval?.intervalText()
     }
 }

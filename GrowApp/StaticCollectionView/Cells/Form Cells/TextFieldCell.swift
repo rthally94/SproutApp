@@ -41,8 +41,9 @@ class TextFieldCell: UICollectionViewListCell {
     private var title: String?
     private var placeholder: String?
     private var value: String?
+    internal var onChange: ((String?) -> Void)?
 
-    func updateWith(image: UIImage?, title: String?, placeholder: String?, value: String?) {
+    func updateWith(image: UIImage?, title: String?, placeholder: String?, value: String?, onChange: ((String?) -> Void)? = nil) {
         var updated = false
 
         if self.image != image {
@@ -64,6 +65,8 @@ class TextFieldCell: UICollectionViewListCell {
             self.value = value
             updated = true
         }
+
+        self.onChange = onChange
 
         if updated {
             setNeedsUpdateConfiguration()
@@ -92,7 +95,6 @@ class SproutTextFieldCell: TextFieldCell {
         return stack
     }()
 
-//    private var customViewConstraints: (textFieldLeading: NSLayoutConstraint, textFieldCenterY: NSLayoutConstraint, textFieldTrailing: NSLayoutConstraint)?
     private var customViewConstraints: (
         stackTop: NSLayoutConstraint, stackLeading: NSLayoutConstraint, stackBottom: NSLayoutConstraint, stackTrailing: NSLayoutConstraint)?
 
@@ -148,6 +150,6 @@ extension SproutTextFieldCell: UITextFieldDelegate {
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
-//        appliedConfiguration.onChange?(textField)
+        self.onChange?(textField.text)
     }
 }

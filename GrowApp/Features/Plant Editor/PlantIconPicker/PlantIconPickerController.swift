@@ -10,28 +10,24 @@ import UIKit
 
 class PlantIconPickerController: UIViewController {
     // MARK: - Properties
-    
-    internal var icon: GHIcon? {
-        get {
-            currentIcon
-        }
-        set {
-            if newValue != currentIcon {
-                currentIcon = newValue
+
+    var icon: GHIcon? {
+        didSet {
+            if icon != oldValue {
                 dataSource.apply(makeSnapshot())
             }
         }
     }
-    
-    private var currentIcon: GHIcon?
+
     var delegate: PlantIconPickerControllerDelegate?
     let viewContext: NSManagedObjectContext
     
     init(plant: GHPlant, viewContext: NSManagedObjectContext) {
-        currentIcon = plant.icon
         self.viewContext = viewContext
-        
         super.init(nibName: nil, bundle: nil)
+
+        let plant = viewContext.object(with: plant.objectID) as! GHPlant
+        icon = plant.icon
     }
     
     required init?(coder: NSCoder) {
@@ -86,8 +82,8 @@ class PlantIconPickerController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissPicker))
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(saveAndDismiss))
+        let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
         
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = doneButton
@@ -96,16 +92,19 @@ class PlantIconPickerController: UIViewController {
     
     // MARK: - Actions
     
-    @objc private func dismissPicker() {
+    @objc private func cancelButtonPressed() {
+        viewContext.rollback()
         delegate?.plantIconPickerDidCancel(self)
         
         dismiss(animated: true)
     }
     
-    @objc private func saveAndDismiss() {
-        if let icon = currentIcon {
+    @objc private func doneButtonPressed() {
+        if let icon = icon {
+            try? viewContext.save()
             delegate?.plantIconPicker(self, didSelectIcon: icon)
         }
+
         dismiss(animated: true)
     }
     

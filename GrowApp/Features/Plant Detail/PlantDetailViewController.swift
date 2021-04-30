@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 
 enum PlantDetailSection: Int, CaseIterable {
-    case plantIcon, plantHeader
+    case plantHero
     case taskSummary
     case upNext
     case careInfo
@@ -46,27 +46,14 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
     // MARK: - Properties
     let dateComponentsFormatter = Utility.dateComponentsFormatter
     let careDateFormatter = Utility.relativeDateFormatter
-    
-    let viewContext: NSManagedObjectContext
-    
-    var plant: GHPlant
-    
-    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
-        self.plant = viewContext.object(with: plant.objectID) as! GHPlant
-        self.viewContext = viewContext
-        
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
-    private lazy var plantEditor: PlantEditorControllerController = {
-        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = viewContext
-        
-        let vc = PlantEditorControllerController(plant: plant, viewContext: editingContext)
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+    var plant: GHPlant?
+
+    private lazy var plantEditor: PlantEditorControllerController = {        
+        let vc = PlantEditorControllerController()
+        vc.plant = plant
+        vc.persistentContainer = persistentContainer
         vc.delegate = self
         return vc
     }()
@@ -102,11 +89,11 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             guard let sectionKind = PlantDetailSection(rawValue: sectionIndex) else { fatalError("Cannot get section for index: \(sectionIndex)") }
             switch sectionKind {
-            case .plantIcon, .plantHeader:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+            case .plantHero:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(1.0))
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 
                 let section = NSCollectionLayoutSection(group: group)
@@ -162,29 +149,14 @@ extension PlantDetailViewController: PlantEditorDelegate {
         self.plant = plant
         updateUI()
         
-        do {
-            try viewContext.save()
-        } catch {
-            viewContext.rollback()
-        }
+        persistentContainer.saveContextIfNeeded()
     }
 }
 
 private extension PlantDetailViewController {
-    func nextTaskDateString() -> String? {
-        let nextTasks: [(task: GHTask, date: Date)] = plant.tasks.compactMap { task in
-            if let nextDate = task.nextCareDate(after: Calendar.current.startOfDay(for: Date())) {
-                return (task, nextDate)
-            } else {
-                return nil
-            }
-        }
-        
-        if let nextTask = nextTasks.min(by: { $0.date < $1.date }) {
-            return careDateFormatter.string(from: nextTask.date)
-        } else {
-            return nil
-        }
+    func nextTaskDateString() -> String {
+        let nextTaskDate = plant?.tasks.map { $0.nextCareDate ?? Date() }.min() ?? Date()
+        return careDateFormatter.string(from: nextTaskDate)
     }
 }
 
@@ -195,20 +167,20 @@ private extension PlantDetailViewController {
         
         // Plant Info Header
         snapshot.appendItems([
-            Item.icon(icon: plant.icon)
-        ], toSection: .plantIcon)
-
-        snapshot.appendItems([
-            Item.largeHeader(title: plant.name?.capitalized, subtitle: plant.type?.commonName?.capitalized)
-        ], toSection: .plantHeader)
+            .hero(image: plant?.icon?.image, title: plant?.name, subtitle: plant?.type?.commonName)
+        ], toSection: .plantHero)
         
         // Plant Care Summary
-        let tasksToday: Set<GHTask> = plant.tasks.filter { task in
-            task.isDateInInterval(Date())
-        }
-        let lateTasks: Set<GHTask> = plant.tasks.filter { task in
-            task.isLate()
-        }
+        let tasksToday: Set<GHTask> = plant?.tasks.filter { task in
+            guard let date = task.nextCareDate else { return false }
+            return Calendar.current.isDateInToday(date)
+        } ?? []
+
+        let lateTasks: Set<GHTask> = plant?.tasks.filter { task in
+            guard let date = task.nextCareDate else { return false }
+            let today = Calendar.current.startOfDay(for: Date())
+            return date < today
+        } ?? []
         
         let todayColor = tasksToday.isEmpty ? UIColor.systemGreen.withAlphaComponent(0.5) : UIColor.systemGreen
         let lateColor = lateTasks.isEmpty ? UIColor.systemYellow.withAlphaComponent(0.5) : UIColor.yellow
@@ -221,24 +193,18 @@ private extension PlantDetailViewController {
         // Up Next
         let next = lateTasks.union(tasksToday)
         let nextTasks: [Item] = next.map { task -> Item in
-            let lastCareString: String
-            if task.isLate() {
-                guard let lastDate = task.lastCareDate, let expectedDate = task.nextCareDate(after: lastDate) else { fatalError("Unable to calculate days late but task was flagged as late.")}
-                let daysLateComponents = Calendar.current.dateComponents([.day, .month], from: expectedDate, to: Calendar.current.startOfDay(for: Date()))
-                lastCareString = "\(dateComponentsFormatter.string(from: daysLateComponents) ?? "Not") late"
-            } else {
-                lastCareString = ""
-            }
-
-            return Item.todo(title: task.taskType?.name, subtitle: lastCareString, icon: task.taskType?.icon, taskState: true)
+            let lastCareString: String = "nils"
+            return Item.todo(title: task.taskType?.name, subtitle: lastCareString, image: task.taskType?.icon?.image, taskState: true)
         }
         
         snapshot.appendItems(nextTasks, toSection: .upNext)
         
         // All Tasks
-        let items: [Item] = plant.tasks.compactMap { task in
-            return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image)
-        }
+        let items: [Item] = plant?.tasks.compactMap { task in
+            return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tapAction: { [unowned self] in
+                print(task.taskType?.name ?? "Unknown")
+            })
+        } ?? []
         
         snapshot.appendItems(items, toSection: .careInfo)
         return snapshot
@@ -273,24 +239,12 @@ extension PlantDetailViewController {
 
 extension PlantDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        let sectionKind = PlantDetailSection.allCases[indexPath.section]
-        switch sectionKind {
-        case .careInfo:
-            return true
-        default:
-             return false
-        }
+        let item = dataSource.itemIdentifier(for: indexPath)
+        return item?.isTappable ?? false
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let sectionKind = Section.allCases[indexPath.section]
-        
-//        if sectionKind == .careInfo {
-//            let vc = CareDetailViewController(nibName: nil, bundle: nil)
-//            vc.plant = plant
-//            vc.selectedTask = dataSource.itemIdentifier(for: indexPath)?.task
-//
-//            navigationController?.pushViewController(vc, animated: true)
-//        }
+        let item = dataSource.itemIdentifier(for: indexPath)
+        item?.tapAction?()
     }
 }
