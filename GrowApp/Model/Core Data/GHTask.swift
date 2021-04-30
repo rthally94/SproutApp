@@ -34,4 +34,14 @@ public class GHTask: NSManagedObject {
         lastLogDate = markedDate
         nextCareDate = interval?.nextDate(after: markedDate)
     }
+
+    @objc var relativeNextCareDateString: String {
+        let formatter = Utility.relativeDateFormatter
+        assert(nextCareDate != nil, "WARNING: nextCareDate for task \(self) is nil. A value needs to be set.")
+        if let nextCareDate = nextCareDate {
+            return formatter.string(from: nextCareDate)
+        } else {
+            return "NO DATE"
+        }
+    }
 }
