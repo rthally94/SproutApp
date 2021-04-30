@@ -8,13 +8,20 @@
 import Foundation
 
 extension GHTaskInterval {
-    func frequency() -> GHTaskIntervalType {
-        GHTaskIntervalType(rawValue: Int(type)) ?? .none
+    var wrappedFrequency: GHTaskIntervalType {
+        guard let frequency = repeatsFrequency else { return .never }
+        return GHTaskIntervalType(rawValue: frequency) ?? .never
     }
-    
+
+    var componentsArray: [Int] {
+        return repeatsValues ?? []
+    }
+}
+
+extension GHTaskInterval {
     func frequencyText() -> String {
-        switch frequency() {
-        case .none:
+        switch wrappedFrequency {
+        case .never:
             return "never"
         case .daily:
             return "every day"
@@ -26,18 +33,18 @@ extension GHTaskInterval {
     }
     
     func valueText() -> String? {
-        switch frequency() {
-        case .none:
+        switch wrappedFrequency {
+        case .never:
             return "no interval"
         case .daily:
-            if let value = values?.first {
+            if let value = componentsArray.first {
                 return "every \(value) days"
             } else {
                 return nil
             }
         case .weekly:
-            guard let values = values else { return nil }
-            let weekdayStrings: [String] = values.sorted().compactMap {
+            guard !componentsArray.isEmpty else { return nil }
+            let weekdayStrings: [String] = componentsArray.compactMap {
                 let weekdayIndex = $0 - 1
                 if weekdayIndex >= Calendar.current.shortWeekdaySymbols.startIndex && weekdayIndex < Calendar.current.shortWeekdaySymbols.endIndex {
                     return Calendar.current.shortWeekdaySymbols[weekdayIndex]
@@ -49,8 +56,8 @@ extension GHTaskInterval {
             return weekdayStrings.joined(separator: ", ")
             
         case .monthly:
-            guard let values = values else { return nil }
-            let dayStrings: [String] = values.sorted().compactMap {
+            guard !componentsArray.isEmpty else { return nil }
+            let dayStrings: [String] = componentsArray.compactMap {
                 let number = NSNumber(value: $0)
                 return TaskInterval.ordinalNumberFormatter.string(from: number)
             }
@@ -63,8 +70,8 @@ extension GHTaskInterval {
         let valueString = valueText()?.sentenceCase()
         let frequencyString = frequencyText().sentenceCase()
         
-        switch frequency() {
-        case .none:
+        switch wrappedFrequency {
+        case .never:
             return valueString ?? frequencyString
         case .daily:
             return valueString ?? frequencyString

@@ -47,26 +47,13 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
     let dateComponentsFormatter = Utility.dateComponentsFormatter
     let careDateFormatter = Utility.relativeDateFormatter
 
-    let viewContext: NSManagedObjectContext
-    
-    var plant: GHPlant
-    
-    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
-        self.plant = viewContext.object(with: plant.objectID) as! GHPlant
-        self.viewContext = viewContext
-        
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+    var plant: GHPlant?
 
-    private lazy var plantEditor: PlantEditorControllerController = {
-        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = viewContext
-        
-        let vc = PlantEditorControllerController(plant: plant, viewContext: editingContext)
+    private lazy var plantEditor: PlantEditorControllerController = {        
+        let vc = PlantEditorControllerController()
+        vc.plant = plant
+        vc.persistentContainer = persistentContainer
         vc.delegate = self
         return vc
     }()
@@ -162,29 +149,14 @@ extension PlantDetailViewController: PlantEditorDelegate {
         self.plant = plant
         updateUI()
         
-        do {
-            try viewContext.save()
-        } catch {
-            viewContext.rollback()
-        }
+        persistentContainer.saveContextIfNeeded()
     }
 }
 
 private extension PlantDetailViewController {
-    func nextTaskDateString() -> String? {
-        let nextTasks: [(task: GHTask, date: Date)] = plant.tasks.compactMap { task in
-            if let nextDate = task.nextCareDate(after: Calendar.current.startOfDay(for: Date())) {
-                return (task, nextDate)
-            } else {
-                return nil
-            }
-        }
-        
-        if let nextTask = nextTasks.min(by: { $0.date < $1.date }) {
-            return careDateFormatter.string(from: nextTask.date)
-        } else {
-            return nil
-        }
+    func nextTaskDateString() -> String {
+        let nextTaskDate = plant?.tasks.map { $0.nextCareDate ?? Date() }.min() ?? Date()
+        return careDateFormatter.string(from: nextTaskDate)
     }
 }
 
@@ -195,16 +167,20 @@ private extension PlantDetailViewController {
         
         // Plant Info Header
         snapshot.appendItems([
-            .hero(image: plant.icon?.image, title: plant.name, subtitle: plant.type?.commonName)
+            .hero(image: plant?.icon?.image, title: plant?.name, subtitle: plant?.type?.commonName)
         ], toSection: .plantHero)
         
         // Plant Care Summary
-        let tasksToday: Set<GHTask> = plant.tasks.filter { task in
-            task.isDateInInterval(Date())
-        }
-        let lateTasks: Set<GHTask> = plant.tasks.filter { task in
-            task.isLate()
-        }
+        let tasksToday: Set<GHTask> = plant?.tasks.filter { task in
+            guard let date = task.nextCareDate else { return false }
+            return Calendar.current.isDateInToday(date)
+        } ?? []
+
+        let lateTasks: Set<GHTask> = plant?.tasks.filter { task in
+            guard let date = task.nextCareDate else { return false }
+            let today = Calendar.current.startOfDay(for: Date())
+            return date < today
+        } ?? []
         
         let todayColor = tasksToday.isEmpty ? UIColor.systemGreen.withAlphaComponent(0.5) : UIColor.systemGreen
         let lateColor = lateTasks.isEmpty ? UIColor.systemYellow.withAlphaComponent(0.5) : UIColor.yellow
@@ -217,26 +193,18 @@ private extension PlantDetailViewController {
         // Up Next
         let next = lateTasks.union(tasksToday)
         let nextTasks: [Item] = next.map { task -> Item in
-            let lastCareString: String
-            if task.isLate() {
-                guard let lastDate = task.lastCareDate, let expectedDate = task.nextCareDate(after: lastDate) else { fatalError("Unable to calculate days late but task was flagged as late.")}
-                let daysLateComponents = Calendar.current.dateComponents([.day, .month], from: expectedDate, to: Calendar.current.startOfDay(for: Date()))
-                lastCareString = "\(dateComponentsFormatter.string(from: daysLateComponents) ?? "Not") late"
-            } else {
-                lastCareString = ""
-            }
-
+            let lastCareString: String = "nils"
             return Item.todo(title: task.taskType?.name, subtitle: lastCareString, image: task.taskType?.icon?.image, taskState: true)
         }
         
         snapshot.appendItems(nextTasks, toSection: .upNext)
         
         // All Tasks
-        let items: [Item] = plant.tasks.compactMap { task in
+        let items: [Item] = plant?.tasks.compactMap { task in
             return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tapAction: { [unowned self] in
                 print(task.taskType?.name ?? "Unknown")
             })
-        }
+        } ?? []
         
         snapshot.appendItems(items, toSection: .careInfo)
         return snapshot

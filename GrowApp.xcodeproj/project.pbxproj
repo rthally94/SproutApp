@@ -93,7 +93,6 @@
 		FBC7331125DECCC20048999C /* RoundedRect.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7331025DECCC20048999C /* RoundedRect.swift */; };
 		FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */; };
 		FBC7331D25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7331C25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift */; };
-		FBC7332125E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7332025E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift */; };
 		FBC7332925E307DF0048999C /* PlantTypePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7332825E307DF0048999C /* PlantTypePickerViewController.swift */; };
 		FBC7333025E404CC0048999C /* PlantIconPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7332F25E404CC0048999C /* PlantIconPickerController.swift */; };
 		FBC7333425E478D20048999C /* CameraOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333325E478D20048999C /* CameraOverlayView.swift */; };
@@ -217,7 +216,6 @@
 		FBC7331025DECCC20048999C /* RoundedRect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRect.swift; sourceTree = "<group>"; };
 		FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewHeader.swift; sourceTree = "<group>"; };
 		FBC7331C25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantConfigurationVIewController+DataSource.swift"; sourceTree = "<group>"; };
-		FBC7332025E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantConfigurationViewController+CollectionViewDelegate.swift"; sourceTree = "<group>"; };
 		FBC7332825E307DF0048999C /* PlantTypePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTypePickerViewController.swift; sourceTree = "<group>"; };
 		FBC7332F25E404CC0048999C /* PlantIconPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconPickerController.swift; sourceTree = "<group>"; };
 		FBC7333325E478D20048999C /* CameraOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraOverlayView.swift; sourceTree = "<group>"; };
@@ -545,7 +543,6 @@
 			children = (
 				FB7B815E25BE2BE10053E543 /* PlantEditorControllerController.swift */,
 				FBC7331C25E2EA380048999C /* PlantConfigurationVIewController+DataSource.swift */,
-				FBC7332025E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift */,
 				FBFAECB82617D93300F0C67D /* PlantEditorDelegate.swift */,
 				FBC7331A25E2E0D70048999C /* Collection View Cells */,
 				FBC7332E25E404A40048999C /* PlantIconPicker */,
@@ -889,7 +886,6 @@
 				FB6661D126209F1800DC8B04 /* TaskEditorDelegate.swift in Sources */,
 				FB7ED5422616A235008FD1BE /* GHIcon+Extensions.swift in Sources */,
 				FB7ED4E526120D74008FD1BE /* PlantStore.swift in Sources */,
-				FBC7332125E2EA990048999C /* PlantConfigurationViewController+CollectionViewDelegate.swift in Sources */,
 				FB7ED5192615260F008FD1BE /* StorageProvider.swift in Sources */,
 				FB92AF88262F7D270062DE47 /* IntervalPickerButton.swift in Sources */,
 				FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */,

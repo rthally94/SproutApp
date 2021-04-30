@@ -14,11 +14,11 @@ class PlantGroupViewController: UIViewController {
     typealias Section = PlantsProvider.Section
     typealias Item = PlantsProvider.Item
 
-    let viewContext: NSManagedObjectContext
-    let plantsProvider: PlantsProvider
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+    private var plantsProvider: PlantsProvider?
     
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    var cancellables = Set<AnyCancellable>()
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var cancellables = Set<AnyCancellable>()
     
     lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
@@ -26,17 +26,6 @@ class PlantGroupViewController: UIViewController {
         cv.delegate = self
         return cv
     }()
-    
-    // MARK: - Initializers
-    init(viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
-        self.plantsProvider = PlantsProvider(managedObjectContext: viewContext)
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     // MARK: - View Life Cycle
     override func loadView() {
@@ -47,9 +36,10 @@ class PlantGroupViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        plantsProvider = PlantsProvider(managedObjectContext: persistentContainer.viewContext)
         dataSource = makeDataSource()
-        plantsProvider.$snapshot
+        plantsProvider?.$snapshot
             .sink(receiveValue: { [weak self] snapshot in
                 if let snapshot = snapshot {
                     self?.dataSource.apply(snapshot)
@@ -75,7 +65,7 @@ class PlantGroupViewController: UIViewController {
     
     @objc func addNewPlant() {
         let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = viewContext
+        editingContext.parent = persistentContainer.viewContext
         
         // 1. Create a new plant in the model
         let newPlant = GHPlant(context: editingContext)
@@ -84,7 +74,8 @@ class PlantGroupViewController: UIViewController {
         wateringTask.taskType = GHTaskType.wateringTaskType(context: editingContext)
         newPlant.addToTasks_(wateringTask)
         
-        let vc = PlantEditorControllerController(plant: newPlant, viewContext: editingContext)
+        let vc = PlantEditorControllerController()
+        vc.plant = newPlant
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }
@@ -92,11 +83,7 @@ class PlantGroupViewController: UIViewController {
 
 extension PlantGroupViewController: PlantEditorDelegate {
     func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
-        do {
-            try viewContext.save()
-        } catch {
-            viewContext.rollback()
-        }
+        persistentContainer.saveContextIfNeeded()
     }
 }
 
@@ -118,7 +105,7 @@ extension PlantGroupViewController {
 extension PlantGroupViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<CardCell, Item> {
         return UICollectionView.CellRegistration<CardCell, Item>() {[weak self] cell, indexPath, item in
-            guard let plant = self?.plantsProvider.object(at: indexPath) else { return }
+            guard let plant = self?.plantsProvider?.object(at: indexPath) else { return }
             cell.image = plant.icon?.image
             cell.text = plant.name
         }
@@ -137,8 +124,10 @@ extension PlantGroupViewController {
 
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = plantsProvider.object(at: indexPath)
-        let vc = PlantDetailViewController(plant: item, viewContext: viewContext)
+        let item = plantsProvider?.object(at: indexPath)
+        let vc = PlantDetailViewController()
+        vc.persistentContainer = persistentContainer
+        vc.plant = item
         navigationController?.pushViewController(vc, animated: true)
     }
 }

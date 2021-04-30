@@ -21,9 +21,9 @@ class TaskCalendarProvider: NSObject {
         request.sortDescriptors = [NSSortDescriptor(keyPath: \GHTask.plant?.name, ascending: true)]
         
         // TODO: Add support to fetch for a specific day
-        let intervalPredicate = GHTask.isDateInIntervalPredicate(Date())
-        print(intervalPredicate.predicateFormat)
-        request.predicate = NSPredicate(format: "SUBQUERY(interval, $x, \(intervalPredicate.predicateFormat)).@count > 0")
+//        let intervalPredicate = GHTask.isDateInIntervalPredicate(Date())
+//        print(intervalPredicate.predicateFormat)
+//        request.predicate = NSPredicate(format: "SUBQUERY(interval, $x, \(intervalPredicate.predicateFormat)).@count > 0")
         
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         

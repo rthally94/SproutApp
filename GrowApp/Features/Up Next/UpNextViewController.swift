@@ -13,12 +13,13 @@ class UpNextViewController: UIViewController {
     // MARK: - Properties
     typealias Section = TasksProvider.Section
     typealias Item = TasksProvider.Item
+    private let dateFormatter = Utility.relativeDateFormatter
 
-    let viewContext: NSManagedObjectContext
-    let tasksProvider: TasksProvider
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+    private var tasksProvider: TasksProvider?
 
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    var cancellables: Set<AnyCancellable> = []
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var cancellables: Set<AnyCancellable> = []
 
     lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
@@ -26,17 +27,6 @@ class UpNextViewController: UIViewController {
         cv.delegate = self
         return cv
     }()
-
-    // MARK: - Initializers
-    init(viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
-        self.tasksProvider = TasksProvider(managedObjectContext: viewContext)
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
     // MARK: - View Life Cycle
     override func loadView() {
@@ -46,8 +36,10 @@ class UpNextViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tasksProvider = TasksProvider(managedObjectContext: persistentContainer.viewContext)
+
         dataSource = makeDataSource()
-        tasksProvider.$snapshot
+        tasksProvider?.$snapshot
             .sink {[weak self] snapshot in
                 if let snapshot = snapshot {
                     self?.dataSource.apply(snapshot)
@@ -67,14 +59,14 @@ class UpNextViewController: UIViewController {
 
 private extension UpNextViewController {
     func makeLayout() -> UICollectionViewLayout {
-        var config = UICollectionLayoutListConfiguration(appearance: .sidebarPlain)
+        var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
         config.headerMode = .supplementary
         return UICollectionViewCompositionalLayout.list(using: config)
     }
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
         UICollectionView.CellRegistration<TaskCalendarListCell, Item> {[weak self] cell, indexPath, item in
-            guard let task = self?.tasksProvider.object(at: indexPath) else { return }
+            guard let task = self?.tasksProvider?.object(at: indexPath) else { return }
             cell.updateWithTask(task)
         }
     }

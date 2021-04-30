@@ -125,7 +125,7 @@ extension CareDetailViewController {
                 Item(icon: icon, text: selectedTask.taskType?.name, secondaryText: selectedTask.interval?.intervalText())
             ], toSection: .header)
         
-            let image = Int(selectedTask.interval?.type ?? 0) == GHTaskIntervalType.none.rawValue ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
+            let image = selectedTask.interval?.wrappedFrequency == .none ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
             let item = Item(image: image, tintColor: .systemBlue, text: nil, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.interval?.startDate ?? Date()))")
             
             snapshot.appendItems([

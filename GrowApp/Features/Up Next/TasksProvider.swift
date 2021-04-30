@@ -17,6 +17,14 @@ class TasksProvider: NSObject {
     typealias Item = NSManagedObjectID
     typealias Section = String
 
+    let stringToDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss ZZ"
+        return formatter
+    }()
+
+    let headerDateFormatter = Utility.relativeDateFormatter
+
     let moc: NSManagedObjectContext
     fileprivate let fetchedResultsController: NSFetchedResultsController<GHTask>
 
@@ -31,7 +39,7 @@ class TasksProvider: NSObject {
         let sortByPlantName = NSSortDescriptor(keyPath: \GHTask.plant?.name, ascending: true)
         request.sortDescriptors = [sortByNextTaskDate, sortByTaskName, sortByPlantName]
 
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(GHTask.nextCareDate), cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(GHTask.relativeNextCareDateString), cacheName: nil)
 
         super.init()
 
@@ -55,6 +63,11 @@ extension TasksProvider: NSFetchedResultsControllerDelegate {
 
         newSnapshot.reloadItems(idsToReload)
         self.snapshot = newSnapshot
+    }
+
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String) -> String? {
+        guard let date = stringToDateFormatter.date(from: sectionName) else { return sectionName }
+        return headerDateFormatter.string(from: date)
     }
 }
 

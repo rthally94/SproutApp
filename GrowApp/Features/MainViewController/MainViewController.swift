@@ -10,20 +10,24 @@ import UIKit
 
 class MainViewController: UIViewController {
     lazy var upNextVC: some UIViewController = {
-        let vc = UpNextViewController(viewContext: viewContext)
+        let vc = UpNextViewController()
+        vc.persistentContainer = persistentContainer
         let nav = vc.wrappedInNavigationController()
         nav.tabBarItem = UITabBarItem(title: "Up Next", image: UIImage(systemName: "text.badge.checkmark"), tag: 0)
         return nav
     }()
 
     lazy var timelineVC: some UIViewController = {
-        let vc = TaskCalendarViewController(viewContext: viewContext).wrappedInNavigationController()
-        vc.tabBarItem = UITabBarItem(title: "Calendar", image: UIImage(systemName: "calendar"), tag: 1)
-        return vc
+        let vc = TaskCalendarViewController()
+        vc.persistentContainer = persistentContainer
+        let nav = vc.wrappedInNavigationController()
+        nav.tabBarItem = UITabBarItem(title: "Calendar", image: UIImage(systemName: "calendar"), tag: 1)
+        return nav
     }()
     
     lazy var plantGroupVC: some UIViewController = {
-        let vc = PlantGroupViewController(viewContext: viewContext)
+        let vc = PlantGroupViewController()
+        vc.persistentContainer = persistentContainer
         let nav = vc.wrappedInNavigationController()
         nav.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
         nav.tabBarItem.tag = 2
@@ -40,21 +44,14 @@ class MainViewController: UIViewController {
         return vc
     }()
     
-    var viewContext: NSManagedObjectContext
-    
-    init(viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
-     
-        super.init(nibName: nil, bundle: nil)
-        
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
         present()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func present() {
+    private func present() {
         addChild(tabBarVC)
         view.addSubview(tabBarVC.view)
         didMove(toParent: self)

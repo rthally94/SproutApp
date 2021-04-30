@@ -15,17 +15,20 @@ extension PlantEditorControllerController {
         // Header Image
         snapshot.appendItems([
             RowItem.icon(image: plant.icon?.image, tapAction: { [unowned self] in
-                navigateTo(plantIconPicker.wrappedInNavigationController(), modal: true)
+                showIconEditor()
             }),
             
             RowItem.button(context: .normal, title: "Edit", onTap: {[unowned self] in
-                navigateTo(plantIconPicker.wrappedInNavigationController(), modal: true)
+                showIconEditor()
             })
         ], toSection: .image)
         
         // General Plant Info
         snapshot.appendItems([
-            Item.textField(placeholder: "My New Plant", initialValue: plant.name, onChange: { sender in }),
+            Item.textField(placeholder: "My New Plant", initialValue: plant.name, onChange: { newValue in
+                guard let value = newValue as? String else { return }
+                plant.name = value
+            }),
             Item.listCell(rowType: .value2, text: "Type", secondaryText: plant.type?.commonName ?? "Choose Type", tapAction: { [unowned self] in
                 navigateTo(plantTypePicker)
             })
@@ -62,7 +65,7 @@ extension PlantEditorControllerController {
         // initial data
         let snapshot: NSDiffableDataSourceSnapshot<PlantEditorSection, Item>
 
-        snapshot = makeSnapshot(from: editingPlant)
+        snapshot = makeSnapshot(from: plant)
 
         dataSource.apply(snapshot, animatingDifferences: false)
     }

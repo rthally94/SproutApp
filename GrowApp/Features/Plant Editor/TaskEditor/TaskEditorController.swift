@@ -29,12 +29,20 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     var delegate: TaskEditorDelegate?
     let task: GHTask
 
+    private let repeatFrequencyChoices = [
+        GHTaskIntervalType.never,
+        GHTaskIntervalType.daily,
+        GHTaskIntervalType.weekly,
+        GHTaskIntervalType.monthly
+    ]
+
     private lazy var imageView = UIImageView(image: UIImage(systemName: "circle"))
-    private lazy var weekdayPicker: GridPicker = {
-        let daySelectionChangedAction = UIAction { action in
+    private func makeWeekdayPicker() -> GridPicker {
+        let daySelectionChangedAction = UIAction {[unowned self] action in
             guard let sender = action.sender as? GridPicker else { return }
-            let selection = sender.selectedIndices
-            print(selection.sorted())
+            let selectedWeekdays = sender.selectedIndices.sorted().map{ $0 + 1 }
+            self.task.interval?.repeatsValues = selectedWeekdays
+            print(selectedWeekdays)
         }
 
         let picker = GridPicker()
@@ -44,13 +52,14 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         }
         picker.itemsPerRow = 7
         return picker
-    }()
+    }
 
-    private lazy var dayPicker: GridPicker = {
+    private func makeDayPicker() -> GridPicker {
         let daySelectionChangedAction = UIAction { action in
             guard let sender = action.sender as? GridPicker else { return }
-            let selection = sender.selectedIndices
-            print(selection.sorted())
+            let selectedDays = sender.selectedIndices.sorted().map { $0 + 1 }
+            self.task.interval?.repeatsValues = selectedDays
+            print(selectedDays)
         }
 
         let picker = GridPicker()
@@ -60,15 +69,15 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         }
         picker.itemsPerRow = 7
         return picker
-    }()
+    }
     
     init(task: GHTask, viewContext: NSManagedObjectContext) {
         self.viewContext = viewContext
         self.task = viewContext.object(with: task.objectID) as! GHTask
         if self.task.interval == nil {
             self.task.interval = GHTaskInterval(context: viewContext)
-            self.task.interval?.type = 0
         }
+
         if self.task.nextCareDate == nil {
             self.task.nextCareDate = Date()
         }
@@ -177,31 +186,24 @@ extension TaskEditorController {
         dataSource.apply(notesSnapshot, to: .notes)
 
         var repeatsIntervalSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-        let intervalType = task.interval?.frequency() ?? .none
-        repeatsIntervalSnapshot.append([
-            Item.pickerRow(title: "Never", isSelected: intervalType == .none, tapAction: {[unowned self] in
-                selectInterval(.none)
-            }),
-            Item.pickerRow(title: "Daily", isSelected: intervalType == .daily, tapAction: {[unowned self] in
-                selectInterval(.daily)
-            }),
-            Item.pickerRow(title: "Weekly", isSelected: intervalType == .weekly, tapAction: {[unowned self] in
-                selectInterval(.weekly)
-            }),
-            Item.pickerRow(title: "Monthly", isSelected: intervalType == .monthly, tapAction: {[unowned self] in
-                selectInterval(.monthly)
+        let intervalType = task.interval?.wrappedFrequency
+
+        let items = repeatFrequencyChoices.map { type in
+            Item.pickerRow(title: type.rawValue.capitalized, isSelected: intervalType == type, tapAction: {[unowned self] in
+                selectInterval(type)
             })
-        ])
+        }
+        repeatsIntervalSnapshot.append(items)
         dataSource.apply(repeatsIntervalSnapshot, to: .repeatInterval)
 
         var repeatsValueSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-        if case .weekly = task.interval?.frequency() {
+        if case .weekly = task.interval?.wrappedFrequency {
             repeatsValueSnapshot.append([
-                Item.customView(customView: weekdayPicker)
+                Item.customView(customView: makeWeekdayPicker())
             ])
-        } else if case .monthly = task.interval?.frequency() {
+        } else if case .monthly = task.interval?.wrappedFrequency {
             repeatsValueSnapshot.append([
-                Item.customView(customView: dayPicker)
+                Item.customView(customView: makeDayPicker())
             ])
         }
 
@@ -217,12 +219,13 @@ extension TaskEditorController {
     }
     private func selectInterval(_ newValue: GHTaskIntervalType) {
         guard let interval = task.interval else { return }
-        guard let oldType = GHTaskIntervalType(rawValue: Int(interval.type)) else { return }
+        let oldType = interval.wrappedFrequency
         // Prevent reloading if the values are the same
         guard oldType != newValue else { return }
 
         // Update the task interval parameters
-        task.interval?.type = Int16(newValue.rawValue)
+        interval.repeatsFrequency = newValue.rawValue
+        interval.repeatsValues = []
 
         // Update header without animation
         var headerSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
@@ -233,8 +236,9 @@ extension TaskEditorController {
 
         // Update interval picker without animation
         var intervalSnapshot = dataSource.snapshot(for: .repeatInterval)
-        let itemToDeselect = intervalSnapshot.items[oldType.rawValue]
-        let itemToSelect = intervalSnapshot.items[newValue.rawValue]
+        guard let itemToDeselect = intervalSnapshot.items.first(where: { $0.text == oldType.rawValue.capitalized}),
+              let itemToSelect = intervalSnapshot.items.first(where: { $0.text == newValue.rawValue.capitalized})
+        else { return }
 
         intervalSnapshot.insert([
             Item.pickerRow(title: itemToDeselect.text, isSelected: !itemToDeselect.isOn, tapAction: itemToDeselect.tapAction)
@@ -251,11 +255,11 @@ extension TaskEditorController {
         var valuesSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
         if case .weekly = newValue {
             valuesSnapshot.append([
-                Item.customView(customView: weekdayPicker)
+                Item.customView(customView: makeWeekdayPicker())
             ])
         } else if case .monthly = newValue {
             valuesSnapshot.append([
-                Item.customView(customView: dayPicker)
+                Item.customView(customView: makeDayPicker())
             ])
         }
         dataSource.apply(valuesSnapshot, to: .repeatValue, animatingDifferences: false)

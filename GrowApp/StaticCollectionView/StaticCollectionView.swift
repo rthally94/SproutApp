@@ -109,7 +109,7 @@ extension StaticCollectionViewController {
     // MARK: - Form Cell Registraion
     private func makeTextFieldCellRegistration() -> UICollectionView.CellRegistration<SproutTextFieldCell, Item> {
         UICollectionView.CellRegistration<SproutTextFieldCell, Item> { cell, indexPath, item in
-            cell.updateWith(image: item.image, title: item.text, placeholder: item.secondaryText, value: item.tertiaryText)
+            cell.updateWith(image: item.image, title: item.text, placeholder: item.secondaryText, value: item.tertiaryText, onChange: item.valueChangedAction)
         }
     }
 

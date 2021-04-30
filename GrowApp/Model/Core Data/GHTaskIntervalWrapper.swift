@@ -7,6 +7,6 @@
 
 import Foundation
 
-enum GHTaskIntervalType: Int {
-    case none, daily, weekly, monthly
+enum GHTaskIntervalType: String {
+    case never, daily, weekly, monthly
 }

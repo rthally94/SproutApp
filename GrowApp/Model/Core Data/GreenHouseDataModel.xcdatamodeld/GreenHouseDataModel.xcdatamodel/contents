@@ -30,9 +30,9 @@
         <relationship name="taskType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="tasks" inverseEntity="GHTaskType"/>
     </entity>
     <entity name="GHTaskInterval" representedClassName="GHTaskInterval" syncable="YES" codeGenerationType="class">
+        <attribute name="repeatsFrequency" optional="YES" attributeType="String"/>
+        <attribute name="repeatsValues" optional="YES" attributeType="Transformable" customClassName="[Int]"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="values" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="[Int]"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTask" inverseName="interval" inverseEntity="GHTask"/>
     </entity>
     <entity name="GHTaskType" representedClassName="GHTaskType" syncable="YES" codeGenerationType="class">
