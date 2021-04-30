@@ -47,7 +47,7 @@ class HeaderCell: UICollectionViewCell {
             titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             titleLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: 1.0),
 
-            subtitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 1.0),
+            subtitleLabel.topAnchor.constraint(equalToSystemSpacingBelow: titleLabel.bottomAnchor, multiplier: 0.5),
             subtitleLabel.centerXAnchor.constraint(equalTo: titleLabel.centerXAnchor),
             subtitleLabel.widthAnchor.constraint(lessThanOrEqualTo: contentView.widthAnchor, multiplier: 1.0),
             subtitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)

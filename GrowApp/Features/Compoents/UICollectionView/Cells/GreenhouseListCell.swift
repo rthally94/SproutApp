@@ -96,17 +96,13 @@ class TaskCalendarListCell: GreenHouseListCell {
         
         if let task = state.task {
             // Configure for just the task
-            content.text = task.taskType?.name
-            if let lastLogDate = task.lastLogDate {
-                content.secondaryText = "Last: " + dateFormatter.string(from: lastLogDate)
-            } else {
-                content.secondaryText = "Last: Never"
-            }
+            content.text = task.plant?.name
+            content.secondaryText = task.taskType?.name
             
             var iconConfig = plantIconView.defaultConfiguration()
-            iconConfig.image = task.taskType?.icon?.image
+            iconConfig.image = task.plant?.icon?.image
             iconConfig.tintColor = task.taskType?.icon?.color
-            iconConfig.cornerStyle = .none
+            iconConfig.cornerStyle = .circle
             plantIconView.configuration = iconConfig
         }
         

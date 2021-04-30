@@ -56,39 +56,14 @@ internal enum PlantEditorSection: Int, Hashable, CaseIterable, CustomStringConve
 
 class PlantEditorControllerController: StaticCollectionViewController<PlantEditorSection> {
     // MARK: - Properties
-    var viewContext: NSManagedObjectContext
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
     weak var delegate: PlantEditorDelegate?
     
-    internal var editingPlant: GHPlant
-    internal var selectedIndexPath: IndexPath?
-    
-    // MARK: - Initializers
-    
-    /// Configures the plant configurator for editing an existing plant
-    /// - Parameters:
-    ///   - plant: The plant to edit
-    ///   - model: The application model
-    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
-        editingPlant = viewContext.object(with: plant.objectID) as! GHPlant
-        
-        super.init(nibName: nil, bundle: nil)
-        
-        title = "Edit Plant"
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    internal lazy var plantIconPicker: PlantIconPickerController = {
-        let vc = PlantIconPickerController(plant: editingPlant, viewContext: viewContext)
-        vc.delegate = self
-        return vc
-    }()
+    var plant: GHPlant!
+    private var selectedIndexPath: IndexPath?
     
     internal lazy var plantTypePicker: PlantTypePickerViewController = {
-        let vc = PlantTypePickerViewController(plant: editingPlant, viewContext: viewContext)
+        let vc = PlantTypePickerViewController(plant: plant, viewContext: persistentContainer.viewContext)
         vc.delegate = self
         return vc
     }()
@@ -96,6 +71,10 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        assert(plant != nil, "PlantEditorViewController --- Plant cannot be edited when \"nil\". Designate the plant to be edited before presenting.")
+
+        title = plant.isInserted ? "New Plant" : "Edit Plant"
 
         configureDataSource()
         collectionView.delegate = self
@@ -111,51 +90,68 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
             collectionView.deselectItem(at: selectedIndex, animated: false)
         }
     }
-    
+
+    // MARK: - UI Configuration
     private func updateUI() {
         guard dataSource != nil else { return }
-        dataSource.apply(makeSnapshot(from: editingPlant))
+        dataSource.apply(makeSnapshot(from: plant))
+    }
+
+    override func makeLayout() -> UICollectionViewLayout {
+        return plantEditorLayout()
     }
     
     // MARK: - Actions
     @objc private func applyChanges() {
-        do {
-            try viewContext.save()
-        } catch {
-            viewContext.rollback()
-        }
+        persistentContainer.saveContextIfNeeded()
         
-        delegate?.plantEditor(self, didUpdatePlant: editingPlant)
+        delegate?.plantEditor(self, didUpdatePlant: plant)
         dismiss(animated: true)
     }
     
     @objc private func discardChanges() {
-        viewContext.rollback()
+        persistentContainer.viewContext.rollback()
         delegate?.plantEditorDidCancel(self)
         dismiss(animated: true)
     }
-    
-    internal func showTaskEditor(for task: GHTask) {
-        let vc = TaskEditorController(task: task, viewContext: viewContext)
-//        vc.delegate = self
-        navigateTo(vc)
+
+    internal func showIconEditor() {
+        let vc = PlantIconPickerController(plant: plant, viewContext: persistentContainer.viewContext)
+        vc.delegate = self
+        navigateTo(vc.wrappedInNavigationController(), modal: true)
     }
 
-    override func makeLayout() -> UICollectionViewLayout {
+    internal func showTaskEditor(for task: GHTask) {
+        let vc = TaskEditorController(task: task, viewContext: persistentContainer.viewContext)
+        vc.delegate = self
+        navigateTo(vc.wrappedInNavigationController(), modal: true)
+    }
+}
+
+// MARK: - Collection View Configuration
+private extension PlantEditorControllerController {
+    private func plantEditorLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout() { sectionIndex, layoutEnvironment in
             let sectionKind = PlantEditorSection.allCases[sectionIndex]
 
             switch sectionKind {
             case .image:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
+                let imageItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+                let imageItem = NSCollectionLayoutItem(layoutSize: imageItemSize)
+                imageItem.contentInsets = NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5)
 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(0.3))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+                let buttonItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(40))
+                let buttonItem = NSCollectionLayoutItem(layoutSize: buttonItemSize)
 
-                let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0 )
+                let imageGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalWidth(1.0))
+                let imageGroup = NSCollectionLayoutGroup.vertical(layoutSize: imageGroupSize, subitems: [imageItem])
+
+                let mainGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                let mainGroup = NSCollectionLayoutGroup.vertical(layoutSize: mainGroupSize, subitems: [imageGroup, buttonItem])
+
+                let edgeInset = layoutEnvironment.container.effectiveContentSize.width / 3.5
+                let section = NSCollectionLayoutSection(group: mainGroup)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: edgeInset, bottom: 0, trailing: edgeInset )
                 return section
             case .care:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48), heightDimension: .estimated(64))
@@ -186,16 +182,59 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     }
 }
 
+// MARK: - UICollectionViewDelegate
+extension PlantEditorControllerController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return false }
+        return item.isTappable
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let item = dataSource.itemIdentifier(for: indexPath) else { return }
+        if let action = item.tapAction {
+            selectedIndexPath = indexPath
+
+            action()
+        }
+    }
+
+    func navigateTo(_ destination: UIViewController, modal: Bool = false) {
+        if let navigationController = navigationController, modal == false {
+            navigationController.pushViewController(destination, animated: true)
+        } else {
+            present(destination, animated: true)
+        }
+    }
+}
+
+
+// MARK: - PlantIconPickerDelegate
 extension PlantEditorControllerController: PlantIconPickerControllerDelegate {
     func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: GHIcon) {
-        editingPlant.icon = picker.icon
+        guard let icon = persistentContainer.viewContext.object(with: icon.objectID) as? GHIcon else { return }
+        plant.icon = icon
         updateUI()
     }
 }
 
+// MARK: - PlantTypePickerDelegate
 extension PlantEditorControllerController: PlantTypePickerDelegate {
     func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType) {
-        editingPlant.type = plantType
+        guard let type = persistentContainer.viewContext.object(with: plantType.objectID) as? GHPlantType else { return }
+        plant.type = type
+        updateUI()
+    }
+}
+
+// MARK: - PlantTaskEditroDelegate
+extension PlantEditorControllerController: TaskEditorDelegate {
+    func taskEditor(_ editor: TaskEditorController, didUpdateTask task: GHTask) {
+        guard let task = persistentContainer.viewContext.object(with: task.objectID) as? GHTask else { return }
+
+        if let existingTask = plant.tasks.first(where: { $0.id == task.id }) {
+            plant.tasks.remove(existingTask)
+        }
+        plant.addToTasks_(task)
         updateUI()
     }
 }

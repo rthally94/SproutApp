@@ -5,12 +5,11 @@
 //  Created by Ryan Thally on 1/15/21.
 //
 
+import CoreData
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
     var window: UIWindow?
-    var storageProvider = StorageProvider()
     
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -19,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
 
-        window.rootViewController = MainViewController(viewContext: storageProvider.persistentContainer.viewContext)
+        window.rootViewController = MainViewController()
         window.rootViewController?.view.backgroundColor = .systemBackground
         self.window = window
         window.makeKeyAndVisible()

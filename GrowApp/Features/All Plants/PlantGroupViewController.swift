@@ -13,13 +13,12 @@ class PlantGroupViewController: UIViewController {
     // MARK: - Properties
     typealias Section = PlantsProvider.Section
     typealias Item = PlantsProvider.Item
+
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+    private var plantsProvider: PlantsProvider?
     
-    var model: GreenHouseAppModel
-    let viewContext: NSManagedObjectContext
-    let plantsProvider: PlantsProvider
-    
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    var cancellables = Set<AnyCancellable>()
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    private var cancellables = Set<AnyCancellable>()
     
     lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
@@ -28,30 +27,18 @@ class PlantGroupViewController: UIViewController {
         return cv
     }()
     
-    // MARK: - Initializers
-    init(viewContext: NSManagedObjectContext, model: GreenHouseAppModel) {
-        self.viewContext = viewContext
-        self.plantsProvider = PlantsProvider(managedObjectContext: viewContext)
-        self.model = model
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     // MARK: - View Life Cycle
     override func loadView() {
         super.loadView()
-        
         configureHiearchy()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        plantsProvider = PlantsProvider(managedObjectContext: persistentContainer.viewContext)
         dataSource = makeDataSource()
-        plantsProvider.$snapshot
+        plantsProvider?.$snapshot
             .sink(receiveValue: { [weak self] snapshot in
                 if let snapshot = snapshot {
                     self?.dataSource.apply(snapshot)
@@ -62,52 +49,40 @@ class PlantGroupViewController: UIViewController {
         title = "Your Plants"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPlant))
     }
-    
+
+
     func configureHiearchy() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
-        
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        collectionView.frame = view.bounds
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
-    
+
+    // MARK: - Actions
     @objc func addNewPlant() {
-        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = viewContext
-        
+        let viewContext = persistentContainer.viewContext
+
         // 1. Create a new plant in the model
-        let newPlant = GHPlant(context: editingContext)
-        let wateringTask = GHTask(context: editingContext)
+        let newPlant = GHPlant(context: viewContext)
+        let wateringTask = GHTask(context: viewContext)
         wateringTask.id = UUID()
-        wateringTask.taskType = GHTaskType.wateringTaskType(context: editingContext)
+        wateringTask.taskType = GHTaskType.wateringTaskType(context: viewContext)
         newPlant.addToTasks_(wateringTask)
-        
-        let vc = PlantEditorControllerController(plant: newPlant, viewContext: editingContext)
+
+        let vc = PlantEditorControllerController()
+        vc.plant = newPlant
+        vc.persistentContainer = persistentContainer
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }
 }
 
-extension PlantGroupViewController: PlantEditorDelegate {
-    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
-        do {
-            try viewContext.save()
-        } catch {
-            viewContext.rollback()
-        }
-    }
-}
-
+// MARK: - UICollectionView Configuration
 extension PlantGroupViewController {
     func makeLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .estimated(200))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(200))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.65))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
@@ -115,34 +90,40 @@ extension PlantGroupViewController {
         
         return UICollectionViewCompositionalLayout(section: section)
     }
-}
 
-extension PlantGroupViewController {
-    func makeCellRegistration() -> UICollectionView.CellRegistration<PlantCardCell, Item> {
-        return UICollectionView.CellRegistration<PlantCardCell, Item>() {[weak self] cell, indexPath, item in
-            guard let plant = self?.plantsProvider.object(at: indexPath) else { return }
-            var iconConfig = cell.iconView.defaultConfiguration()
-            iconConfig.image = plant.icon?.image
-            cell.iconView.configuration = iconConfig
-            cell.textLabel.text = plant.name
+    func makeCellRegistration() -> UICollectionView.CellRegistration<CardCell, Item> {
+        return UICollectionView.CellRegistration<CardCell, Item>() {[weak self] cell, indexPath, item in
+            guard let plant = self?.plantsProvider?.object(at: indexPath) else { return }
+            cell.image = plant.icon?.image
+            cell.text = plant.name
         }
     }
-    
+
     func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let cellRegistration = makeCellRegistration()
-            
+
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
-        
+
         return dataSource
     }
 }
 
+// MARK: - UICollectionViewDelegate
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = plantsProvider.object(at: indexPath)
-        let vc = PlantDetailViewController(plant: item, viewContext: viewContext)
+        let item = plantsProvider?.object(at: indexPath)
+        let vc = PlantDetailViewController()
+        vc.persistentContainer = persistentContainer
+        vc.plant = item
         navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+// MARK: - PlantEditorDelegate
+extension PlantGroupViewController: PlantEditorDelegate {
+    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
+        persistentContainer.saveContextIfNeeded()
     }
 }

@@ -16,10 +16,8 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
     override func loadView() {
         super.loadView()
 
-        collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(collectionView)
-        collectionView.pinToBoundsOf(self.view)
+        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: makeLayout())
+        self.view = collectionView
 
         collectionView.backgroundColor = .systemGroupedBackground
     }
@@ -30,12 +28,17 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
 
         let textFieldCellRegistration = makeTextFieldCellRegistration()
         let buttonCellRegistration = makeButtonCellRegistration()
+        let pickerRowCellRegistration = makePickerCellRegistration()
 
         let iconRegistration = makeIconCellRegistration()
+        let heroRegistration = makeHeroCellRegistration()
         let headerCellRegistration = makeHeaderCellRegistration()
+        let largeHeaderCellRegistration = makeLargeHeaderCellRegistration()
         let statisticCellRegistration = makeStatisticCellRegistration()
         let todoCellRegistration = makeTodoCellRegistration()
         let compactCardRegistration = makeCompactCardRegistration()
+        let customViewCellRegistration = makeCustomViewCellRegistration()
+
 
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             switch item.rowType {
@@ -47,17 +50,25 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: textFieldCellRegistration, for: indexPath, item: item)
             case .button:
                 return collectionView.dequeueConfiguredReusableCell(using: buttonCellRegistration, for: indexPath, item: item)
+            case .pickerRow:
+                return collectionView.dequeueConfiguredReusableCell(using: pickerRowCellRegistration, for: indexPath, item: item)
             // Sprout Cell
             case .icon:
                 return collectionView.dequeueConfiguredReusableCell(using: iconRegistration, for: indexPath, item: item)
+            case .hero:
+                return collectionView.dequeueConfiguredReusableCell(using: heroRegistration, for: indexPath, item: item)
             case .header:
                 return collectionView.dequeueConfiguredReusableCell(using: headerCellRegistration, for: indexPath, item: item)
+            case .largeHeader:
+                return collectionView.dequeueConfiguredReusableCell(using: largeHeaderCellRegistration, for: indexPath, item: item)
             case .statistic:
                 return collectionView.dequeueConfiguredReusableCell(using: statisticCellRegistration, for: indexPath, item: item)
             case .todo:
                 return collectionView.dequeueConfiguredReusableCell(using: todoCellRegistration, for: indexPath, item: item)
             case .compactCard:
                 return collectionView.dequeueConfiguredReusableCell(using: compactCardRegistration, for: indexPath, item: item)
+            case .customView:
+                return collectionView.dequeueConfiguredReusableCell(using: customViewCellRegistration, for: indexPath, item: item)
             }
         }
     }
@@ -98,7 +109,7 @@ extension StaticCollectionViewController {
     // MARK: - Form Cell Registraion
     private func makeTextFieldCellRegistration() -> UICollectionView.CellRegistration<SproutTextFieldCell, Item> {
         UICollectionView.CellRegistration<SproutTextFieldCell, Item> { cell, indexPath, item in
-            cell.updateWith(image: item.image, title: item.text, placeholder: item.secondaryText, value: item.tertiaryText)
+            cell.updateWith(image: item.image, title: item.text, placeholder: item.secondaryText, value: item.tertiaryText, onChange: item.valueChangedAction)
         }
     }
 
@@ -124,14 +135,20 @@ extension StaticCollectionViewController {
     // MARK: - Sprout Cell Registration
     func makeIconCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
         UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
-            if let icon = item.icon {
-                var config = cell.iconView.defaultConfiguration()
-                config.image = icon.image
-                config.tintColor = icon.color
-                cell.iconView.configuration = config
-            }
+            var config = cell.iconView.defaultConfiguration()
+            config.image = item.image
+            config.tintColor = item.tintColor
+            cell.iconView.configuration = config
 
             cell.backgroundColor = .systemGroupedBackground
+        }
+    }
+
+    func makeHeroCellRegistration() -> UICollectionView.CellRegistration<HeroCell, Item> {
+        UICollectionView.CellRegistration<HeroCell, Item> { cell, indexPath, item in
+            cell.image = item.image
+            cell.headerTitle = item.text
+            cell.headerSubtitle = item.secondaryText
         }
     }
 
@@ -139,6 +156,18 @@ extension StaticCollectionViewController {
         UICollectionView.CellRegistration<HeaderCell, Item> { cell, indexPath, item in
             cell.titleLabel.text = item.text
             cell.subtitleLabel.text = item.secondaryText
+        }
+    }
+
+    func makeLargeHeaderCellRegistration() -> UICollectionView.CellRegistration<LargeHeaderCell, Item> {
+        UICollectionView.CellRegistration<LargeHeaderCell, Item> { cell, indexPathm, item in
+            cell.image = item.image
+            cell.title = item.text
+            cell.value = item.secondaryText
+            cell.tintColor = item.tintColor
+
+            cell.layer.cornerRadius = 10
+            cell.clipsToBounds = true
         }
     }
 
@@ -160,8 +189,8 @@ extension StaticCollectionViewController {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> {cell, indexPath, item in
             var config = UIListContentConfiguration.subtitleCell()
 
-            config.image = item.icon?.image ?? item.image
-            config.imageProperties.tintColor = item.icon?.color ?? item.tintColor
+            config.image = item.image
+            config.imageProperties.tintColor = item.tintColor
 
             config.text = item.text
             config.secondaryText = item.secondaryText
@@ -180,12 +209,35 @@ extension StaticCollectionViewController {
         }
     }
 
+    func makePickerCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
+            var config = UIListContentConfiguration.subtitleCell()
+
+            config.image = item.image
+            config.imageProperties.tintColor = item.tintColor
+
+            config.text = item.text
+            config.secondaryText = item.secondaryText
+
+            cell.contentConfiguration = config
+            cell.accessories = item.isOn ? [ .checkmark() ] : []
+        }
+    }
+
     func makeCompactCardRegistration() -> UICollectionView.CellRegistration<CompactCardCell, Item> {
         UICollectionView.CellRegistration<CompactCardCell, Item> { cell, indexPath, item in
-            cell.image = item.icon?.image ?? item.image
+            cell.image = item.image
             cell.title = item.text
             cell.value = item.secondaryText
-            cell.tintColor = item.icon?.color ?? item.tintColor
+            cell.tintColor = item.tintColor
+        }
+    }
+
+    func makeCustomViewCellRegistration() -> UICollectionView.CellRegistration<CustomViewCell, Item> {
+        UICollectionView.CellRegistration<CustomViewCell, Item> { cell, indexPath, item in
+            cell.customView = item.customView
+
+            cell.backgroundColor = .secondarySystemGroupedBackground
         }
     }
 }
