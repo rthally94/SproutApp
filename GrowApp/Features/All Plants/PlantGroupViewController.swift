@@ -30,7 +30,6 @@ class PlantGroupViewController: UIViewController {
     // MARK: - View Life Cycle
     override func loadView() {
         super.loadView()
-        
         configureHiearchy()
     }
     
@@ -50,43 +49,34 @@ class PlantGroupViewController: UIViewController {
         title = "Your Plants"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPlant))
     }
-    
+
+
     func configureHiearchy() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
-        
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        collectionView.frame = view.bounds
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
-    
+
+    // MARK: - Actions
     @objc func addNewPlant() {
-        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = persistentContainer.viewContext
-        
+        let viewContext = persistentContainer.viewContext
+
         // 1. Create a new plant in the model
-        let newPlant = GHPlant(context: editingContext)
-        let wateringTask = GHTask(context: editingContext)
+        let newPlant = GHPlant(context: viewContext)
+        let wateringTask = GHTask(context: viewContext)
         wateringTask.id = UUID()
-        wateringTask.taskType = GHTaskType.wateringTaskType(context: editingContext)
+        wateringTask.taskType = GHTaskType.wateringTaskType(context: viewContext)
         newPlant.addToTasks_(wateringTask)
-        
+
         let vc = PlantEditorControllerController()
         vc.plant = newPlant
+        vc.persistentContainer = persistentContainer
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }
 }
 
-extension PlantGroupViewController: PlantEditorDelegate {
-    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
-        persistentContainer.saveContextIfNeeded()
-    }
-}
-
+// MARK: - UICollectionView Configuration
 extension PlantGroupViewController {
     func makeLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .fractionalHeight(1.0))
@@ -100,9 +90,7 @@ extension PlantGroupViewController {
         
         return UICollectionViewCompositionalLayout(section: section)
     }
-}
 
-extension PlantGroupViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<CardCell, Item> {
         return UICollectionView.CellRegistration<CardCell, Item>() {[weak self] cell, indexPath, item in
             guard let plant = self?.plantsProvider?.object(at: indexPath) else { return }
@@ -110,18 +98,19 @@ extension PlantGroupViewController {
             cell.text = plant.name
         }
     }
-    
+
     func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let cellRegistration = makeCellRegistration()
-            
+
         dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
             return collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
-        
+
         return dataSource
     }
 }
 
+// MARK: - UICollectionViewDelegate
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = plantsProvider?.object(at: indexPath)
@@ -129,5 +118,12 @@ extension PlantGroupViewController: UICollectionViewDelegate {
         vc.persistentContainer = persistentContainer
         vc.plant = item
         navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+// MARK: - PlantEditorDelegate
+extension PlantGroupViewController: PlantEditorDelegate {
+    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
+        persistentContainer.saveContextIfNeeded()
     }
 }

@@ -72,7 +72,9 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        assert(plant != nil, "PlantEditorViewController:#line --- Plant cannot be edited when \"nil\". Designate the plant to be edited before presenting.")
+        assert(plant != nil, "PlantEditorViewController --- Plant cannot be edited when \"nil\". Designate the plant to be edited before presenting.")
+
+        title = plant.isInserted ? "New Plant" : "Edit Plant"
 
         configureDataSource()
         collectionView.delegate = self
@@ -88,10 +90,15 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
             collectionView.deselectItem(at: selectedIndex, animated: false)
         }
     }
-    
+
+    // MARK: - UI Configuration
     private func updateUI() {
         guard dataSource != nil else { return }
         dataSource.apply(makeSnapshot(from: plant))
+    }
+
+    override func makeLayout() -> UICollectionViewLayout {
+        return plantEditorLayout()
     }
     
     // MARK: - Actions
@@ -119,8 +126,11 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
         vc.delegate = self
         navigateTo(vc.wrappedInNavigationController(), modal: true)
     }
+}
 
-    override func makeLayout() -> UICollectionViewLayout {
+// MARK: - Collection View Configuration
+private extension PlantEditorControllerController {
+    private func plantEditorLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout() { sectionIndex, layoutEnvironment in
             let sectionKind = PlantEditorSection.allCases[sectionIndex]
 
@@ -172,34 +182,7 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     }
 }
 
-extension PlantEditorControllerController: PlantIconPickerControllerDelegate {
-    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: GHIcon) {
-        guard let icon = persistentContainer.viewContext.object(with: icon.objectID) as? GHIcon else { return }
-        plant.icon = icon
-        updateUI()
-    }
-}
-
-extension PlantEditorControllerController: PlantTypePickerDelegate {
-    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType) {
-        guard let type = persistentContainer.viewContext.object(with: plantType.objectID) as? GHPlantType else { return }
-        plant.type = type
-        updateUI()
-    }
-}
-
-extension PlantEditorControllerController: TaskEditorDelegate {
-    func taskEditor(_ editor: TaskEditorController, didUpdateTask task: GHTask) {
-        guard let task = persistentContainer.viewContext.object(with: task.objectID) as? GHTask else { return }
-
-        if let existingTask = plant.tasks.first(where: { $0.id == task.id }) {
-            plant.tasks.remove(existingTask)
-        }
-        plant.addToTasks_(task)
-        updateUI()
-    }
-}
-
+// MARK: - UICollectionViewDelegate
 extension PlantEditorControllerController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return false }
@@ -224,3 +207,34 @@ extension PlantEditorControllerController: UICollectionViewDelegate {
     }
 }
 
+
+// MARK: - PlantIconPickerDelegate
+extension PlantEditorControllerController: PlantIconPickerControllerDelegate {
+    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: GHIcon) {
+        guard let icon = persistentContainer.viewContext.object(with: icon.objectID) as? GHIcon else { return }
+        plant.icon = icon
+        updateUI()
+    }
+}
+
+// MARK: - PlantTypePickerDelegate
+extension PlantEditorControllerController: PlantTypePickerDelegate {
+    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType) {
+        guard let type = persistentContainer.viewContext.object(with: plantType.objectID) as? GHPlantType else { return }
+        plant.type = type
+        updateUI()
+    }
+}
+
+// MARK: - PlantTaskEditroDelegate
+extension PlantEditorControllerController: TaskEditorDelegate {
+    func taskEditor(_ editor: TaskEditorController, didUpdateTask task: GHTask) {
+        guard let task = persistentContainer.viewContext.object(with: task.objectID) as? GHTask else { return }
+
+        if let existingTask = plant.tasks.first(where: { $0.id == task.id }) {
+            plant.tasks.remove(existingTask)
+        }
+        plant.addToTasks_(task)
+        updateUI()
+    }
+}

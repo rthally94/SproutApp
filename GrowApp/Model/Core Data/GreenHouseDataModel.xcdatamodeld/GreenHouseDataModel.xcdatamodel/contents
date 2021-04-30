@@ -7,7 +7,7 @@
         <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="icon" inverseEntity="GHPlant"/>
         <relationship name="taskType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="icon" inverseEntity="GHTaskType"/>
     </entity>
-    <entity name="GHPlant" representedClassName="GHPlant" syncable="YES" codeGenerationType="class">
+    <entity name="GHPlant" representedClassName="GHPlant" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
@@ -21,7 +21,7 @@
         <attribute name="scientificName" optional="YES" attributeType="String"/>
         <relationship name="plants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="type" inverseEntity="GHPlant"/>
     </entity>
-    <entity name="GHTask" representedClassName="GHTask" syncable="YES" codeGenerationType="class">
+    <entity name="GHTask" representedClassName="GHTask" syncable="YES" codeGenerationType="category">
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="lastLogDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="nextCareDate" optional="YES" attributeType="Date" defaultDateTimeInterval="641398560" usesScalarValueType="NO"/>
@@ -29,13 +29,13 @@
         <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="tasks_" inverseEntity="GHPlant"/>
         <relationship name="taskType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="tasks" inverseEntity="GHTaskType"/>
     </entity>
-    <entity name="GHTaskInterval" representedClassName="GHTaskInterval" syncable="YES" codeGenerationType="class">
+    <entity name="GHTaskInterval" representedClassName="GHTaskInterval" syncable="YES" codeGenerationType="category">
         <attribute name="repeatsFrequency" optional="YES" attributeType="String"/>
         <attribute name="repeatsValues" optional="YES" attributeType="Transformable" customClassName="[Int]"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="task" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTask" inverseName="interval" inverseEntity="GHTask"/>
     </entity>
-    <entity name="GHTaskType" representedClassName="GHTaskType" syncable="YES" codeGenerationType="class">
+    <entity name="GHTaskType" representedClassName="GHTaskType" syncable="YES" codeGenerationType="category">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHIcon" inverseName="taskType" inverseEntity="GHIcon"/>
         <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GHTask" inverseName="taskType" inverseEntity="GHTask"/>

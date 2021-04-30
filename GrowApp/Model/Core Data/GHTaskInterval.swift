@@ -1,11 +1,50 @@
 //
-//  GHTaskInterval+Extensions.swift
+//  GHTaskInterval.swift
 //  GrowApp
 //
-//  Created by Ryan Thally on 4/7/21.
+//  Created by Ryan Thally on 4/30/21.
 //
 
-import Foundation
+import CoreData
+
+public class GHTaskInterval: NSManagedObject {
+    static let RepeatsNeverFrequency = "never"
+    static let RepeatsDailyFrequency = "daily"
+    static let RepeatsWeeklyFrequency = "weekly"
+    static let RepeatsMonthlyFrequency = "monthly"
+
+    func nextDate(after testDate: Date) -> Date {
+        var returnDate = Date()
+
+        let interval = (wrappedFrequency, componentsArray)
+        switch interval {
+        case (.daily, let components):
+            guard let value = components.first else { break }
+            if let newDate = Calendar.current.date(byAdding: .day, value: value, to: testDate, wrappingComponents: true) {
+                returnDate = newDate
+            }
+
+        case (.weekly, let components):
+            let currentWeekday = Calendar.current.component(.weekday, from: testDate)
+            guard let nextWeekday = components.first(where: { $0 > currentWeekday }) ?? components.first else { break }
+            let nextDateComponents = DateComponents(weekday: nextWeekday)
+            guard let nextDate = Calendar.current.nextDate(after: testDate, matching: nextDateComponents, matchingPolicy: .nextTime) else { break }
+            returnDate = nextDate
+
+        case (.monthly, let components):
+            let currentDay = Calendar.current.component(.day, from: testDate)
+            guard let nextDay = components.first(where: { $0 > currentDay }) ?? components.first else { break }
+            let nextDayComponents = DateComponents(day: nextDay)
+            guard let nextDate = Calendar.current.nextDate(after: testDate, matching: nextDayComponents, matchingPolicy: .nextTime) else { break }
+            returnDate = nextDate
+
+        default:
+            break
+        }
+
+        return returnDate
+    }
+}
 
 extension GHTaskInterval {
     var wrappedFrequency: GHTaskIntervalType {
@@ -31,7 +70,7 @@ extension GHTaskInterval {
             return "every month"
         }
     }
-    
+
     func valueText() -> String? {
         switch wrappedFrequency {
         case .never:
@@ -52,24 +91,24 @@ extension GHTaskInterval {
                     return nil
                 }
             }
-            
+
             return weekdayStrings.joined(separator: ", ")
-            
+
         case .monthly:
             guard !componentsArray.isEmpty else { return nil }
             let dayStrings: [String] = componentsArray.compactMap {
                 let number = NSNumber(value: $0)
                 return TaskInterval.ordinalNumberFormatter.string(from: number)
             }
-            
+
             return dayStrings.joined(separator: ", ")
         }
     }
-    
+
     func intervalText() -> String {
         let valueString = valueText()?.sentenceCase()
         let frequencyString = frequencyText().sentenceCase()
-        
+
         switch wrappedFrequency {
         case .never:
             return valueString ?? frequencyString

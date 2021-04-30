@@ -19,6 +19,10 @@
 		FB21B70F25B1E5F500D02384 /* GreenHouseAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B70E25B1E5F500D02384 /* GreenHouseAppModel.swift */; };
 		FB21B71225B1E61100D02384 /* Plant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B71125B1E61100D02384 /* Plant.swift */; };
 		FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */; };
+		FB263864263C7F3100180B54 /* GHTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB263863263C7F3100180B54 /* GHTask.swift */; };
+		FB26386A263C7FD200180B54 /* GHTaskType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB263869263C7FD200180B54 /* GHTaskType.swift */; };
+		FB263870263C821E00180B54 /* GHTaskInterval.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB26386F263C821E00180B54 /* GHTaskInterval.swift */; };
+		FB263878263C9B8300180B54 /* GHPlant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB263877263C9B8300180B54 /* GHPlant.swift */; };
 		FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348425B4C2AD00CCE6BC /* TaskCalendarViewController.swift */; };
 		FB5F348925B63E6900CCE6BC /* GreenhouseListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */; };
 		FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348C25B6411F00CCE6BC /* DividerView.swift */; };
@@ -28,7 +32,6 @@
 		FB5F34A325B8FA3900CCE6BC /* SlideInPresentationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F34A225B8FA3900CCE6BC /* SlideInPresentationManager.swift */; };
 		FB666180261B9FF100DC8B04 /* PlantIconPickerControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB66617F261B9FF100DC8B04 /* PlantIconPickerControllerDelegate.swift */; };
 		FB6661A1261DEB9900DC8B04 /* GHTaskType+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661A0261DEB9900DC8B04 /* GHTaskType+Extensions.swift */; };
-		FB6661AC261DF19E00DC8B04 /* GHTaskInterval+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661AB261DF19E00DC8B04 /* GHTaskInterval+Extensions.swift */; };
 		FB6661B2261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661B1261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift */; };
 		FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661B5261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift */; };
 		FB6661BB261FD09800DC8B04 /* TaskEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661BA261FD09800DC8B04 /* TaskEditorController.swift */; };
@@ -140,6 +143,10 @@
 		FB21B70E25B1E5F500D02384 /* GreenHouseAppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenHouseAppModel.swift; sourceTree = "<group>"; };
 		FB21B71125B1E61100D02384 /* Plant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plant.swift; sourceTree = "<group>"; };
 		FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIListContentConfiguration+Extension.swift"; sourceTree = "<group>"; };
+		FB263863263C7F3100180B54 /* GHTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHTask.swift; sourceTree = "<group>"; };
+		FB263869263C7FD200180B54 /* GHTaskType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHTaskType.swift; sourceTree = "<group>"; };
+		FB26386F263C821E00180B54 /* GHTaskInterval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHTaskInterval.swift; sourceTree = "<group>"; };
+		FB263877263C9B8300180B54 /* GHPlant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHPlant.swift; sourceTree = "<group>"; };
 		FB5F348425B4C2AD00CCE6BC /* TaskCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCalendarViewController.swift; sourceTree = "<group>"; };
 		FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenhouseListCell.swift; sourceTree = "<group>"; };
 		FB5F348C25B6411F00CCE6BC /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
@@ -149,7 +156,6 @@
 		FB5F34A225B8FA3900CCE6BC /* SlideInPresentationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideInPresentationManager.swift; sourceTree = "<group>"; };
 		FB66617F261B9FF100DC8B04 /* PlantIconPickerControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconPickerControllerDelegate.swift; sourceTree = "<group>"; };
 		FB6661A0261DEB9900DC8B04 /* GHTaskType+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GHTaskType+Extensions.swift"; sourceTree = "<group>"; };
-		FB6661AB261DF19E00DC8B04 /* GHTaskInterval+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GHTaskInterval+Extensions.swift"; sourceTree = "<group>"; };
 		FB6661B1261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPersistentContainer+Extensions.swift"; sourceTree = "<group>"; };
 		FB6661B5261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
 		FB6661BA261FD09800DC8B04 /* TaskEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorController.swift; sourceTree = "<group>"; };
@@ -391,7 +397,6 @@
 				FB7ED51C2615FF3C008FD1BE /* GHTask+Extensions.swift */,
 				FB6661A0261DEB9900DC8B04 /* GHTaskType+Extensions.swift */,
 				FB7ED5412616A235008FD1BE /* GHIcon+Extensions.swift */,
-				FB6661AB261DF19E00DC8B04 /* GHTaskInterval+Extensions.swift */,
 			);
 			path = "CoreData Model Extensions";
 			sourceTree = "<group>";
@@ -426,6 +431,10 @@
 				FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */,
 				FB6661A6261DEBA700DC8B04 /* CoreData Model Extensions */,
 				FB7ED5202615FFD3008FD1BE /* GHTaskIntervalWrapper.swift */,
+				FB263863263C7F3100180B54 /* GHTask.swift */,
+				FB263869263C7FD200180B54 /* GHTaskType.swift */,
+				FB26386F263C821E00180B54 /* GHTaskInterval.swift */,
+				FB263877263C9B8300180B54 /* GHPlant.swift */,
 			);
 			path = "Core Data";
 			sourceTree = "<group>";
@@ -856,6 +865,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB21B6FC25B1E5CC00D02384 /* ViewController.swift in Sources */,
+				FB263864263C7F3100180B54 /* GHTask.swift in Sources */,
 				FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */,
 				FBC7333425E478D20048999C /* CameraOverlayView.swift in Sources */,
 				FB5F348925B63E6900CCE6BC /* GreenhouseListCell.swift in Sources */,
@@ -893,9 +903,9 @@
 				FB7B813E25BA6CA50053E543 /* WeekPickerCell.swift in Sources */,
 				FB6C463725F2FD01009ED947 /* CareValue.swift in Sources */,
 				FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */,
-				FB6661AC261DF19E00DC8B04 /* GHTaskInterval+Extensions.swift in Sources */,
 				FB92AF71262EF6130062DE47 /* CustomViewCell.swift in Sources */,
 				FBC7330325DDB4F00048999C /* IconCell.swift in Sources */,
+				FB263870263C821E00180B54 /* GHTaskInterval.swift in Sources */,
 				FBF8AC5225DD80AC00E7E8EB /* IconView.swift in Sources */,
 				FB7ED53A26167484008FD1BE /* GHPlant+Extensions.swift in Sources */,
 				FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */,
@@ -945,12 +955,14 @@
 				FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */,
 				FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */,
 				FB6C462D25F2FC8B009ED947 /* TaskType.swift in Sources */,
+				FB26386A263C7FD200180B54 /* GHTaskType.swift in Sources */,
 				FB7ED51D2615FF3C008FD1BE /* GHTask+Extensions.swift in Sources */,
 				FBB03C122637781C00F7F364 /* HeroView.swift in Sources */,
 				FB6661D52620BF5300DC8B04 /* GHToggleListCell.swift in Sources */,
 				FBEB496C260CBED300F6060C /* PlantGroupViewController.swift in Sources */,
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
 				FBFAECB92617D93300F0C67D /* PlantEditorDelegate.swift in Sources */,
+				FB263878263C9B8300180B54 /* GHPlant.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */,
 				FB76D347262A5AF500D00036 /* SproutTaskLargeHeaderView.swift in Sources */,
