@@ -61,18 +61,17 @@ class PlantGroupViewController: UIViewController {
     @objc func addNewPlant() {
         let viewContext = persistentContainer.viewContext
 
-        // 1. Create a new plant in the model
-        let newPlant = GHPlant(context: viewContext)
-        let wateringTask = GHTask(context: viewContext)
-        wateringTask.id = UUID()
-        wateringTask.taskType = GHTaskType.wateringTaskType(context: viewContext)
-        newPlant.addToTasks_(wateringTask)
-
-        let vc = PlantEditorControllerController()
-        vc.plant = newPlant
-        vc.persistentContainer = persistentContainer
-        vc.delegate = self
-        present(vc.wrappedInNavigationController(), animated: true)
+        do {
+            let newPlant = try GHPlant.createDefaultPlant(inContext: viewContext)
+            let vc = PlantEditorControllerController()
+            vc.plant = newPlant
+            vc.persistentContainer = persistentContainer
+            vc.delegate = self
+            present(vc.wrappedInNavigationController(), animated: true)
+            
+        } catch {
+            fatalError("Unable to create new plant with default template: \(error)")
+        }
     }
 }
 
