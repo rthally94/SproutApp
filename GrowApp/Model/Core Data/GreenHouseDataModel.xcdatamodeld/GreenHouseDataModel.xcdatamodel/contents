@@ -19,7 +19,7 @@
         <attribute name="commonName" optional="YES" attributeType="String"/>
         <attribute name="plantCount" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="plants.@count" usesScalarValueType="YES"/>
         <attribute name="scientificName" optional="YES" attributeType="String"/>
-        <relationship name="plants" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="type" inverseEntity="GHPlant"/>
+        <relationship name="plants" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="GHPlant" inverseName="type" inverseEntity="GHPlant"/>
     </entity>
     <entity name="GHTask" representedClassName=".GHTask" syncable="YES" codeGenerationType="category">
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
@@ -38,7 +38,7 @@
     <entity name="GHTaskType" representedClassName=".GHTaskType" syncable="YES" codeGenerationType="category">
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHIcon" inverseName="taskType" inverseEntity="GHIcon"/>
-        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="GHTask" inverseName="taskType" inverseEntity="GHTask"/>
+        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="GHTask" inverseName="taskType" inverseEntity="GHTask"/>
     </entity>
     <elements>
         <element name="GHIcon" positionX="-36" positionY="36" width="128" height="104"/>
