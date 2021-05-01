@@ -24,7 +24,7 @@ extension PlantIconPickerController {
             collectionView.dequeueConfiguredReusableCell(using: cellRegistration, for: indexPath, item: item)
         }
         
-        dataSource.apply(makeSnapshot())
+        dataSource?.apply(makeSnapshot())
     }
     
     func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {

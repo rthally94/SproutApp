@@ -22,6 +22,8 @@ class StorageProvider {
         })
         
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+        persistentContainer.viewContext.undoManager = UndoManager()
+
         let request: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlantType.plantCount, ascending: true)]
         if let types = try? persistentContainer.viewContext.fetch(request), types.isEmpty {

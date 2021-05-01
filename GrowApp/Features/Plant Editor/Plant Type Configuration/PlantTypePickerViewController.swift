@@ -15,29 +15,18 @@ class PlantTypePickerViewController: UIViewController {
     typealias Item = PlantTypesProvider.Item
 
     var selectedType: GHPlantType?
-    var plantTypesProvider: PlantTypesProvider
+    lazy var plantTypesProvider: PlantTypesProvider = PlantTypesProvider(managedObjectContext: persistentContainer.viewContext)
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer {
+        didSet {
+            plantTypesProvider = PlantTypesProvider(managedObjectContext: persistentContainer.viewContext)
+        }
+    }
+
     weak var delegate: PlantTypePickerDelegate?
     
     private var collectionView: UICollectionView! = nil
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellables = Set<AnyCancellable>()
-
-    // MARK: - Initializers
-    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
-        self.selectedType = plant.type
-        self.plantTypesProvider = PlantTypesProvider(managedObjectContext: viewContext)
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    init(type: GHPlantType?, viewContext: NSManagedObjectContext) {
-        self.selectedType = type
-        self.plantTypesProvider = PlantTypesProvider(managedObjectContext: viewContext)
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 
     // MARK: - View Life Cycle
     override func loadView() {

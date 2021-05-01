@@ -25,9 +25,9 @@ enum TaskEditorSection: Int, Hashable, CaseIterable {
 
 class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     let dateFormatter = Utility.dateFormatter
-    let viewContext: NSManagedObjectContext
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
     var delegate: TaskEditorDelegate?
-    let task: GHTask
+    var task: GHTask?
 
     private let repeatFrequencyChoices = [
         GHTaskIntervalType.never,
@@ -41,7 +41,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         let daySelectionChangedAction = UIAction {[unowned self] action in
             guard let sender = action.sender as? GridPicker else { return }
             let selectedWeekdays = sender.selectedIndices.sorted().map{ $0 + 1 }
-            self.task.interval?.repeatsValues = selectedWeekdays
+            self.task?.interval?.repeatsValues = selectedWeekdays
             print(selectedWeekdays)
         }
 
@@ -58,7 +58,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         let daySelectionChangedAction = UIAction { action in
             guard let sender = action.sender as? GridPicker else { return }
             let selectedDays = sender.selectedIndices.sorted().map { $0 + 1 }
-            self.task.interval?.repeatsValues = selectedDays
+            self.task?.interval?.repeatsValues = selectedDays
             print(selectedDays)
         }
 
@@ -71,27 +71,11 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         return picker
     }
     
-    init(task: GHTask, viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
-        self.task = viewContext.object(with: task.objectID) as! GHTask
-        if self.task.interval == nil {
-            self.task.interval = GHTaskInterval(context: viewContext)
-        }
-
-        if self.task.nextCareDate == nil {
-            self.task.nextCareDate = Date()
-        }
-        
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        assert(task != nil, "TaskEditorViewController --- Task cannot be \"nil\". Set the property before presenting.")
 
         collectionView.delegate = self
 
@@ -136,12 +120,18 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     }
 
     @objc private func doneButtonPressed(_ sender: AnyObject) {
-        delegate?.taskEditor(self, didUpdateTask: task)
+        if let task = task {
+            delegate?.taskEditor(self, didUpdateTask: task)
+        }
+
+        persistentContainer.viewContext.undoManager?.endUndoGrouping()
         dismiss(animated: true)
     }
 
     @objc private func cancelButtonPressed(_ sender: AnyObject) {
         delegate?.taskEditorDidCancel(self)
+        persistentContainer.viewContext.undoManager?.endUndoGrouping()
+        persistentContainer.viewContext.undoManager?.undoNestedGroup()
         dismiss(animated: true)
     }
 }
@@ -172,7 +162,7 @@ extension TaskEditorController {
         // Header Row
         var headerSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
         headerSnapshot.append([
-            Item.largeHeader(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tintColor: task.taskType?.icon?.color)
+            Item.largeHeader(title: task?.taskType?.name, value: task?.interval?.intervalText(), image: task?.taskType?.icon?.image, tintColor: task?.taskType?.icon?.color)
         ])
         dataSource.apply(headerSnapshot, to: .header)
 
@@ -186,7 +176,7 @@ extension TaskEditorController {
         dataSource.apply(notesSnapshot, to: .notes)
 
         var repeatsIntervalSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-        let intervalType = task.interval?.wrappedFrequency
+        let intervalType = task?.interval?.wrappedFrequency
 
         let items = repeatFrequencyChoices.map { type in
             Item.pickerRow(title: type.rawValue.capitalized, isSelected: intervalType == type, tapAction: {[unowned self] in
@@ -197,11 +187,11 @@ extension TaskEditorController {
         dataSource.apply(repeatsIntervalSnapshot, to: .repeatInterval)
 
         var repeatsValueSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-        if case .weekly = task.interval?.wrappedFrequency {
+        if case .weekly = task?.interval?.wrappedFrequency {
             repeatsValueSnapshot.append([
                 Item.customView(customView: makeWeekdayPicker())
             ])
-        } else if case .monthly = task.interval?.wrappedFrequency {
+        } else if case .monthly = task?.interval?.wrappedFrequency {
             repeatsValueSnapshot.append([
                 Item.customView(customView: makeDayPicker())
             ])
@@ -218,7 +208,7 @@ extension TaskEditorController {
         dataSource.apply(actionSnapshot, to: .actions)
     }
     private func selectInterval(_ newValue: GHTaskIntervalType) {
-        guard let interval = task.interval else { return }
+        guard let interval = task?.interval else { return }
         let oldType = interval.wrappedFrequency
         // Prevent reloading if the values are the same
         guard oldType != newValue else { return }
@@ -230,7 +220,7 @@ extension TaskEditorController {
         // Update header without animation
         var headerSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
         headerSnapshot.append([
-            Item.largeHeader(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tintColor: task.taskType?.icon?.color)
+            Item.largeHeader(title: task?.taskType?.name, value: task?.interval?.intervalText(), image: task?.taskType?.icon?.image, tintColor: task?.taskType?.icon?.color)
         ])
         dataSource.apply(headerSnapshot, to: .header, animatingDifferences: false)
 

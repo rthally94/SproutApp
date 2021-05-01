@@ -9,6 +9,10 @@ import CoreData
 import UIKit
 
 public class GHTask: NSManagedObject {
+    /// Creats a new task using the "Watering" template
+    /// - Parameter context: The managed object context to insert the task in
+    /// - Throws: Errors related to CoreData
+    /// - Returns: The new, configured task
     static func wateringTask(in context: NSManagedObjectContext) throws -> GHTask {
         let task = GHTask(context: context)
         task.id = UUID()
@@ -29,12 +33,14 @@ public class GHTask: NSManagedObject {
         return task
     }
 
+    /// Marks a task as complete. Increments lastLogDate and nextCareDate.
     func markAsComplete() {
         let markedDate = Date()
         lastLogDate = markedDate
         nextCareDate = interval?.nextDate(after: markedDate)
     }
 
+    /// String the represents the nextCareDate relative to today's date
     @objc var relativeNextCareDateString: String {
         let formatter = Utility.relativeDateFormatter
         assert(nextCareDate != nil, "WARNING: nextCareDate for task \(self) is nil. A value needs to be set.")

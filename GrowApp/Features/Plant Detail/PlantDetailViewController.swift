@@ -146,8 +146,13 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
 
 extension PlantDetailViewController: PlantEditorDelegate {
     func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
-        self.plant = plant
-        updateUI()
+        if plant.isUpdated {
+            print("Updated")
+            self.plant = plant
+            updateUI()
+        } else if plant.isDeleted {
+            navigationController?.popViewController(animated: false)
+        }
         
         persistentContainer.saveContextIfNeeded()
     }

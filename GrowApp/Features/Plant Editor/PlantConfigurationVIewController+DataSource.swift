@@ -42,9 +42,14 @@ extension PlantEditorControllerController {
             })
         }
         snapshot.appendItems(tasks, toSection: .care)
+
+        if !isNew {
+            let deleteItem = Item.button(context: .destructive, title: "Delete Plant", image: UIImage(systemName: "trash.fill"), onTap: {[unowned self] in
+                deletePlant()
+            })
+            snapshot.appendItems([deleteItem], toSection: .actions)
+        }
         
-        let deleteItem = Item.button(context: .destructive, title: "Delete Plant", image: UIImage(systemName: "trash.fill"), onTap: { })
-        snapshot.appendItems([deleteItem], toSection: .actions)
         return snapshot
     }
 

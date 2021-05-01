@@ -73,9 +73,11 @@ class ButtonCell: UICollectionViewCell {
         let constraints = (
             stackTop: stack.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
             stackBottom: stack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
-            stackCenterX: stack.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            stackCenterX: stack.centerXAnchor.constraint(equalTo: contentView.layoutMarginsGuide.centerXAnchor),
             stackWidth: stack.widthAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.widthAnchor)
         )
+
+        constraints.stackWidth.priority-=1
 
         NSLayoutConstraint.activate([
             constraints.stackTop,
@@ -85,6 +87,9 @@ class ButtonCell: UICollectionViewCell {
         ])
 
         appliedConstraints = constraints
+
+        imageView.isHidden = imageView.image == nil
+        textLabel.isHidden = textLabel.text == nil
 
         applyButtonStyling()
     }
