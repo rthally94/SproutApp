@@ -36,12 +36,30 @@ extension PlantEditorControllerController {
         
         // Plant Tasks
         let tasks: [Item] = plant.tasks.compactMap { task in
-            Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText() ?? "Tap to configure", image: task.taskType?.icon?.image, tapAction: {[unowned self] in
+            Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tapAction: {[unowned self] in
                 print(task.taskType?.name ?? "Unknown")
                 showTaskEditor(for: task)
             })
         }
-        snapshot.appendItems(tasks, toSection: .care)
+        snapshot.appendItems(tasks, toSection: .plantCare)
+
+        let unassignedTasks: [Item] = GHTaskType.TaskTypeName.allCases.compactMap { type in
+            if !plant.tasks.contains(where: { $0.taskType?.name == type.description }), let task = try? GHTask.defaultTask(in: persistentContainer.viewContext, ofType: type) {
+                return Item.compactCardCell(title: task.taskType?.name, value: "Tap to configure", image: task.taskType?.icon?.image, tapAction: {[unowned self] in
+                    print(task.taskType?.name ?? "Unknown")
+                    plant.addToTasks_(task)
+                    showTaskEditor(for: task)
+                })
+            } else {
+                return nil
+            }
+        }
+
+        plant.tasks.forEach {
+            print($0.taskType?.name)
+        }
+
+        snapshot.appendItems(unassignedTasks, toSection: .unconfiguredCare)
 
         if !isNew {
             let deleteItem = Item.button(context: .destructive, title: "Delete Plant", image: UIImage(systemName: "trash.fill"), onTap: {[unowned self] in

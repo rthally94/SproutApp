@@ -93,6 +93,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
 
         title = "Edit Task"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
+        persistentContainer.viewContext.undoManager?.beginUndoGrouping()
     }
 
     override func makeLayout() -> UICollectionViewLayout {

@@ -12,21 +12,23 @@ import UIKit
 internal enum PlantEditorSection: Int, Hashable, CaseIterable, CustomStringConvertible {
     case image
     case plantInfo
-    case care
+    case plantCare
+    case unconfiguredCare
     case actions
 
     var description: String {
         switch self {
         case .image: return "Image"
         case .plantInfo: return "General Information"
-        case .care: return "Care Details"
+        case .plantCare: return "Care Details"
+        case .unconfiguredCare: return "Unconfigured Tasks"
         case .actions: return "Plant Actions"
         }
     }
 
     var headerTitle: String? {
         switch self {
-        case .care: return description
+        case .plantCare: return description
         default: return nil
         }
     }
@@ -37,14 +39,14 @@ internal enum PlantEditorSection: Int, Hashable, CaseIterable, CustomStringConve
 
     var footerTitle: String? {
         switch self {
-        case .care: return "Add Reminder"
+        case .plantCare: return "Add Reminder"
         default: return nil
         }
     }
 
     var footerImage: UIImage? {
         switch self {
-        case .care: return UIImage(systemName: "plus")
+        case .plantCare: return UIImage(systemName: "plus")
         default: return nil
         }
     }
@@ -167,12 +169,13 @@ private extension PlantEditorControllerController {
 
                 let mainGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
                 let mainGroup = NSCollectionLayoutGroup.vertical(layoutSize: mainGroupSize, subitems: [imageGroup, buttonItem])
+                mainGroup.interItemSpacing = .fixed(10)
 
                 let edgeInset = layoutEnvironment.container.effectiveContentSize.width / 3.5
                 let section = NSCollectionLayoutSection(group: mainGroup)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: edgeInset, bottom: 0, trailing: edgeInset )
                 return section
-            case .care:
+            case .plantCare, .unconfiguredCare:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48), heightDimension: .estimated(64))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 

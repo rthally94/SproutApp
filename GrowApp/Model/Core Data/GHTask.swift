@@ -13,7 +13,7 @@ public class GHTask: NSManagedObject {
     /// - Parameter context: The managed object context to insert the task in
     /// - Throws: Errors related to CoreData
     /// - Returns: The new, configured task
-    static func wateringTask(in context: NSManagedObjectContext) throws -> GHTask {
+    static func defaultTask(in context: NSManagedObjectContext, ofType type: GHTaskType.TaskTypeName) throws -> GHTask {
         let task = GHTask(context: context)
         task.id = UUID()
         task.lastLogDate = nil
@@ -24,12 +24,7 @@ public class GHTask: NSManagedObject {
         interval.startDate = Date()
         task.interval = interval
 
-        let taskType = try GHTaskType.fetchOrCreateTaskType(withName: GHTaskType.WateringTaskType, inContext: context)
-        let icon = GHIcon(context: context)
-        icon.symbolName = "drop.fill"
-        icon.color = UIColor.systemBlue
-        taskType.icon = icon
-
+        task.taskType = try GHTaskType.fetchOrCreateTaskType(withName: type, inContext: context)
         return task
     }
 
