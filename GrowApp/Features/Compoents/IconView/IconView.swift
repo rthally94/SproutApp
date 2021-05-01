@@ -37,7 +37,7 @@ struct IconConfiguration: Hashable {
         }
     }
     
-    var cornerStyle: IconView.CornerStyle = .circle
+    var cornerStyle: IconView.CornerStyle = .roundedRect
     
     func cornerRadius(rect: CGRect) -> CGFloat {
         switch cornerStyle {

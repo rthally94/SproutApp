@@ -69,6 +69,11 @@ class IconCellContentView: UIView & UIContentView {
             plantIcon.heightAnchor.constraint(equalTo: heightAnchor),
             plantIcon.widthAnchor.constraint(equalTo: plantIcon.heightAnchor),
         ])
+
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 0, height: 5)
+        layer.shadowRadius = 5
     }
     
     private var appliedContentConfiguration: IconCellContentConfiguration!
@@ -81,7 +86,7 @@ class IconCellContentView: UIView & UIContentView {
         config.image = appliedContentConfiguration.image
         config.tintColor = appliedContentConfiguration.tintColor
         config.symbolConfiguration = appliedContentConfiguration.symbolConfiguration
-        
+
         plantIcon.configuration = config
     }
 }
