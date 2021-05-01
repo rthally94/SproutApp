@@ -11,25 +11,29 @@ import CoreGraphics
 struct IconConfiguration: Hashable {
     private static let placeholderImage = UIImage(systemName: "photo.on.rectangle.angled")!
     private static let placeholderColor = UIColor.systemGray
+    private static let placeholderSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .largeTitle)
 
-    private var _image: UIImage?
     var image: UIImage? {
-        get {
-            return _image ?? IconConfiguration.placeholderImage
-        }
-        set {
-            _image = newValue
+        didSet {
+            if image == nil {
+                image = IconConfiguration.placeholderImage
+            }
         }
     }
 
-    private var _tintColor: UIColor?
-    var tintColor: UIColor? {
-        get {
-            _tintColor ?? IconConfiguration.placeholderColor
+    var symbolConfiguration: UIImage.SymbolConfiguration? {
+        didSet {
+            if symbolConfiguration == nil {
+                symbolConfiguration = IconConfiguration.placeholderSymbolConfiguration
+            }
         }
+    }
 
-        set {
-            _tintColor = newValue
+    var tintColor: UIColor? {
+        didSet {
+            if tintColor == nil {
+                tintColor = IconConfiguration.placeholderColor
+            }
         }
     }
     

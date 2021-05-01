@@ -33,6 +33,7 @@ struct RowItem: Hashable {
 
     typealias TapAction = () -> Void
     typealias ValueChangedAction = (_ sender: Any) -> Void
+    typealias Icon = GHIcon
 
     enum DisplayContext: Int, Hashable {
         case normal, primary, destructive
