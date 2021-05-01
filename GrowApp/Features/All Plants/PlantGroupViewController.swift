@@ -78,14 +78,16 @@ class PlantGroupViewController: UIViewController {
 // MARK: - UICollectionView Configuration
 extension PlantGroupViewController {
     func makeLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/2), heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
         
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.65))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
-        section.contentInsets = .init(top: 16, leading: 16, bottom: 0, trailing: 16)
+        section.contentInsets = .init(top: 16, leading: 8, bottom: 0, trailing: 8)
+        section.interGroupSpacing = 16
         
         return UICollectionViewCompositionalLayout(section: section)
     }
