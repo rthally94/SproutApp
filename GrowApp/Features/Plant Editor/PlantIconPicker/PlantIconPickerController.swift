@@ -14,26 +14,13 @@ class PlantIconPickerController: UIViewController {
     var icon: GHIcon? {
         didSet {
             if icon != oldValue {
-                dataSource.apply(makeSnapshot())
+                dataSource?.apply(makeSnapshot())
             }
         }
     }
 
     var delegate: PlantIconPickerControllerDelegate?
-    let viewContext: NSManagedObjectContext
-    
-    init(plant: GHPlant, viewContext: NSManagedObjectContext) {
-        self.viewContext = viewContext
-        super.init(nibName: nil, bundle: nil)
-
-        let plant = viewContext.object(with: plant.objectID) as! GHPlant
-        icon = plant.icon
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
     enum Section: Hashable, CaseIterable {
         case currentImage
         case recommended
@@ -66,7 +53,7 @@ class PlantIconPickerController: UIViewController {
     }
     
     var collectionView: UICollectionView! = nil
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>! = nil
+    var dataSource: UICollectionViewDiffableDataSource<Section, Item>? = nil
     
     internal let imagePicker = UIImagePickerController()
     
@@ -88,29 +75,34 @@ class PlantIconPickerController: UIViewController {
         navigationItem.leftBarButtonItem = cancelButton
         navigationItem.rightBarButtonItem = doneButton
         navigationItem.title = "Plant Image"
+
+        // Start Change Tracking
+        persistentContainer.viewContext.undoManager?.beginUndoGrouping()
     }
     
     // MARK: - Actions
     
     @objc private func cancelButtonPressed() {
-        viewContext.rollback()
         delegate?.plantIconPickerDidCancel(self)
-        
+        persistentContainer.viewContext.undoManager?.endUndoGrouping()
+        persistentContainer.viewContext.undoManager?.undoNestedGroup()
+
         dismiss(animated: true)
     }
     
     @objc private func doneButtonPressed() {
         if let icon = icon {
-            try? viewContext.save()
             delegate?.plantIconPicker(self, didSelectIcon: icon)
         }
-
+        
+        persistentContainer.viewContext.undoManager?.endUndoGrouping()
         dismiss(animated: true)
     }
     
     func updateUI(animated: Bool = true) {
         let snapshot = makeSnapshot()
-        dataSource.apply(snapshot, animatingDifferences: animated)
+        dataSource?
+            .apply(snapshot, animatingDifferences: animated)
     }
 }
 

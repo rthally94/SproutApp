@@ -61,9 +61,15 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     
     var plant: GHPlant!
     private var selectedIndexPath: IndexPath?
-    
+
+    internal var isNew: Bool {
+        return plant.isInserted
+    }
+
     internal lazy var plantTypePicker: PlantTypePickerViewController = {
-        let vc = PlantTypePickerViewController(plant: plant, viewContext: persistentContainer.viewContext)
+        let vc = PlantTypePickerViewController()
+        vc.persistentContainer = persistentContainer
+        vc.selectedType = plant.type
         vc.delegate = self
         return vc
     }()
@@ -74,13 +80,15 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
 
         assert(plant != nil, "PlantEditorViewController --- Plant cannot be edited when \"nil\". Designate the plant to be edited before presenting.")
 
-        title = plant.isInserted ? "New Plant" : "Edit Plant"
+        title = isNew ? "New Plant" : "Edit Plant"
 
         configureDataSource()
         collectionView.delegate = self
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(discardChanges))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(applyChanges))
+
+        persistentContainer.viewContext.undoManager?.beginUndoGrouping()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -103,28 +111,39 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     
     // MARK: - Actions
     @objc private func applyChanges() {
-        persistentContainer.saveContextIfNeeded()
-        
         delegate?.plantEditor(self, didUpdatePlant: plant)
-        dismiss(animated: true)
+        dismiss(animated: true) {
+            self.persistentContainer.viewContext.undoManager?.endUndoGrouping()
+            self.persistentContainer.saveContextIfNeeded()
+        }
     }
     
     @objc private func discardChanges() {
-        persistentContainer.viewContext.rollback()
         delegate?.plantEditorDidCancel(self)
+        persistentContainer.viewContext.undoManager?.endUndoGrouping()
+        persistentContainer.viewContext.undoManager?.undoNestedGroup()
         dismiss(animated: true)
     }
 
-    internal func showIconEditor() {
-        let vc = PlantIconPickerController(plant: plant, viewContext: persistentContainer.viewContext)
+    func showIconEditor() {
+        let vc = PlantIconPickerController()
+        vc.persistentContainer = persistentContainer
+        vc.icon = plant.icon
         vc.delegate = self
         navigateTo(vc.wrappedInNavigationController(), modal: true)
     }
 
-    internal func showTaskEditor(for task: GHTask) {
-        let vc = TaskEditorController(task: task, viewContext: persistentContainer.viewContext)
+    func showTaskEditor(for task: GHTask) {
+        let vc = TaskEditorController()
+        vc.persistentContainer = persistentContainer
+        vc.task = task
         vc.delegate = self
         navigateTo(vc.wrappedInNavigationController(), modal: true)
+    }
+
+    func deletePlant() {
+        persistentContainer.viewContext.delete(plant)
+        applyChanges()
     }
 }
 
