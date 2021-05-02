@@ -12,21 +12,23 @@ import UIKit
 internal enum PlantEditorSection: Int, Hashable, CaseIterable, CustomStringConvertible {
     case image
     case plantInfo
-    case care
+    case plantCare
+    case unconfiguredCare
     case actions
 
     var description: String {
         switch self {
         case .image: return "Image"
         case .plantInfo: return "General Information"
-        case .care: return "Care Details"
+        case .plantCare: return "Care Details"
+        case .unconfiguredCare: return "Unconfigured Tasks"
         case .actions: return "Plant Actions"
         }
     }
 
     var headerTitle: String? {
         switch self {
-        case .care: return description
+        case .plantCare: return description
         default: return nil
         }
     }
@@ -37,14 +39,14 @@ internal enum PlantEditorSection: Int, Hashable, CaseIterable, CustomStringConve
 
     var footerTitle: String? {
         switch self {
-        case .care: return "Add Reminder"
+        case .plantCare: return "Add Reminder"
         default: return nil
         }
     }
 
     var footerImage: UIImage? {
         switch self {
-        case .care: return UIImage(systemName: "plus")
+        case .plantCare: return UIImage(systemName: "plus")
         default: return nil
         }
     }
@@ -77,7 +79,7 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        persistentContainer.viewContext.undoManager?.beginUndoGrouping()
         assert(plant != nil, "PlantEditorViewController --- Plant cannot be edited when \"nil\". Designate the plant to be edited before presenting.")
 
         title = isNew ? "New Plant" : "Edit Plant"
@@ -87,8 +89,6 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(discardChanges))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(applyChanges))
-
-        persistentContainer.viewContext.undoManager?.beginUndoGrouping()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -111,17 +111,18 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     
     // MARK: - Actions
     @objc private func applyChanges() {
+        persistentContainer.viewContext.undoManager?.endUndoGrouping()
+        cleanupUnusuedTasks()
         delegate?.plantEditor(self, didUpdatePlant: plant)
-        dismiss(animated: true) {
-            self.persistentContainer.viewContext.undoManager?.endUndoGrouping()
-            self.persistentContainer.saveContextIfNeeded()
-        }
+        persistentContainer.saveContextIfNeeded()
+        dismiss(animated: true)
     }
     
     @objc private func discardChanges() {
-        delegate?.plantEditorDidCancel(self)
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
         persistentContainer.viewContext.undoManager?.undoNestedGroup()
+        cleanupUnusuedTasks()
+        delegate?.plantEditorDidCancel(self)
         dismiss(animated: true)
     }
 
@@ -145,6 +146,19 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
         persistentContainer.viewContext.delete(plant)
         applyChanges()
     }
+
+    func cleanupUnusuedTasks() {
+        let allUnconfiguredTasksRequest: NSFetchRequest<GHTask> = GHTask.fetchRequest()
+        allUnconfiguredTasksRequest.predicate = NSPredicate(format: "%K == nil", #keyPath(GHTask.plant))
+        do {
+            let allUnconfigredTasks = try persistentContainer.viewContext.fetch(allUnconfiguredTasksRequest)
+            allUnconfigredTasks.forEach {
+                persistentContainer.viewContext.delete($0)
+            }
+        } catch {
+            print(error)
+        }
+    }
 }
 
 // MARK: - Collection View Configuration
@@ -167,12 +181,13 @@ private extension PlantEditorControllerController {
 
                 let mainGroupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
                 let mainGroup = NSCollectionLayoutGroup.vertical(layoutSize: mainGroupSize, subitems: [imageGroup, buttonItem])
+                mainGroup.interItemSpacing = .fixed(10)
 
                 let edgeInset = layoutEnvironment.container.effectiveContentSize.width / 3.5
                 let section = NSCollectionLayoutSection(group: mainGroup)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: edgeInset, bottom: 0, trailing: edgeInset )
                 return section
-            case .care:
+            case .plantCare, .unconfiguredCare:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48), heightDimension: .estimated(64))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
@@ -248,12 +263,16 @@ extension PlantEditorControllerController: PlantTypePickerDelegate {
 // MARK: - PlantTaskEditroDelegate
 extension PlantEditorControllerController: TaskEditorDelegate {
     func taskEditor(_ editor: TaskEditorController, didUpdateTask task: GHTask) {
-        guard let task = persistentContainer.viewContext.object(with: task.objectID) as? GHTask else { return }
+        print("Inserted: \(task.isInserted) | Updated: \(task.isUpdated) | Deleted: \(task.isDeleted)")
 
         if let existingTask = plant.tasks.first(where: { $0.id == task.id }) {
             plant.tasks.remove(existingTask)
         }
-        plant.addToTasks_(task)
+        
+        if task.isUpdated || task.isInserted {
+            plant.addToTasks_(task)
+        }
+
         updateUI()
     }
 }

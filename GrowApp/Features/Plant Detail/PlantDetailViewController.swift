@@ -49,14 +49,6 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
 
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
     var plant: GHPlant?
-
-    private lazy var plantEditor: PlantEditorControllerController = {        
-        let vc = PlantEditorControllerController()
-        vc.plant = plant
-        vc.persistentContainer = persistentContainer
-        vc.delegate = self
-        return vc
-    }()
     
     // MARK: - View Life Cycle
     
@@ -82,7 +74,11 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
     
     //MARK: - Actions
     @objc private func editPlant() {
-        present(plantEditor.wrappedInNavigationController(), animated: true)
+        let vc = PlantEditorControllerController()
+        vc.plant = plant
+        vc.persistentContainer = persistentContainer
+        vc.delegate = self
+        present(vc.wrappedInNavigationController(), animated: true)
     }
 
     internal override func makeLayout() -> UICollectionViewLayout {

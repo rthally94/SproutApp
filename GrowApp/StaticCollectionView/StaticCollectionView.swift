@@ -133,13 +133,12 @@ extension StaticCollectionViewController {
     }
 
     // MARK: - Sprout Cell Registration
-    func makeIconCellRegistration() -> UICollectionView.CellRegistration<IconHeaderCell, Item> {
-        UICollectionView.CellRegistration<IconHeaderCell, Item> { cell, _, item in
-            var config = cell.iconView.defaultConfiguration()
+    func makeIconCellRegistration() -> UICollectionView.CellRegistration<IconCell, Item> {
+        UICollectionView.CellRegistration<IconCell, Item> { cell, _, item in
+            var config = cell.defaultConfigurtion()
             config.image = item.image
             config.tintColor = item.tintColor
-            cell.iconView.configuration = config
-
+            cell.contentConfiguration = config
             cell.backgroundColor = .systemGroupedBackground
         }
     }

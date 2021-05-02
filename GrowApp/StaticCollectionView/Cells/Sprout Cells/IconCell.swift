@@ -9,13 +9,26 @@ import UIKit
 
 class IconCell: UICollectionViewCell {
     func defaultConfigurtion() -> IconCellContentConfiguration {
-        return  IconCellContentConfiguration()
+        var config = IconCellContentConfiguration()
+        config.tintColor = .systemBlue
+        config.symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 100, weight: .bold)
+        return  config
     }
 }
 
 struct IconCellContentConfiguration: UIContentConfiguration, Hashable {
-    var icon: GHIcon?
-    
+    var image: UIImage?
+    var tintColor: UIColor?
+    var symbolConfiguration: UIImage.SymbolConfiguration?
+
+    static func ImageConfiguration(image: UIImage) -> IconCellContentConfiguration {
+        return IconCellContentConfiguration(image: image, tintColor: nil, symbolConfiguration: nil)
+    }
+
+    static func SymbolConfiguration(symbolName: String, tintColor: UIColor? = nil, preferredConfiguration: UIImage.SymbolConfiguration? = nil) -> IconCellContentConfiguration {
+        return IconCellContentConfiguration(image: UIImage(systemName: symbolName), tintColor: tintColor, symbolConfiguration: preferredConfiguration)
+    }
+
     func makeContentView() -> UIView & UIContentView {
         return IconCellContentView(configuration: self)
     }
@@ -56,6 +69,11 @@ class IconCellContentView: UIView & UIContentView {
             plantIcon.heightAnchor.constraint(equalTo: heightAnchor),
             plantIcon.widthAnchor.constraint(equalTo: plantIcon.heightAnchor),
         ])
+
+        layer.shadowColor = UIColor.gray.cgColor
+        layer.shadowOpacity = 0.5
+        layer.shadowOffset = CGSize(width: 0, height: 5)
+        layer.shadowRadius = 5
     }
     
     private var appliedContentConfiguration: IconCellContentConfiguration!
@@ -65,8 +83,10 @@ class IconCellContentView: UIView & UIContentView {
         
         // configure view
         var config = plantIcon.defaultConfiguration()
-        config.image = appliedContentConfiguration.icon?.image
-        config.tintColor = appliedContentConfiguration.icon?.color
+        config.image = appliedContentConfiguration.image
+        config.tintColor = appliedContentConfiguration.tintColor
+        config.symbolConfiguration = appliedContentConfiguration.symbolConfiguration
+
         plantIcon.configuration = config
     }
 }

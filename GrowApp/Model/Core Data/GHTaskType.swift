@@ -6,20 +6,44 @@
 //
 
 import CoreData
+import UIKit
 
 public class GHTaskType: NSManagedObject {
-    static let WateringTaskType = "watering"
+    enum TaskTypeName: String, CaseIterable, CustomStringConvertible {
+        case wateringTaskType
 
-    static func fetchOrCreateTaskType(withName name: String, inContext context: NSManagedObjectContext) throws -> GHTaskType {
+        var description: String {
+            switch self {
+                case .wateringTaskType: return "Watering"
+            }
+        }
+    }
+
+    static var allTypes = [
+        TaskTypeName.wateringTaskType
+    ]
+
+    static func Icon(inContext context: NSManagedObjectContext, forType type: GHTaskType.TaskTypeName) -> GHIcon {
+        switch type {
+        case .wateringTaskType:
+            let icon = GHIcon(context: context)
+            icon.symbolName = "drop.fill"
+            icon.color = UIColor.systemBlue
+            return icon
+        }
+    }
+
+    static func fetchOrCreateTaskType(withName name: GHTaskType.TaskTypeName, inContext context: NSManagedObjectContext) throws -> GHTaskType {
         let request: NSFetchRequest<GHTaskType> = GHTaskType.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == %@", #keyPath(GHTaskType.name), name)
+        request.predicate = NSPredicate(format: "%K == %@", #keyPath(GHTaskType.name), name.rawValue)
 
         if let type = try context.fetch(request).first {
             return type
         }
 
         let newType = GHTaskType(context: context)
-        newType.name = name
+        newType.name = name.description
+        newType.icon = GHTaskType.Icon(inContext: context, forType: name)
 
         return newType
     }

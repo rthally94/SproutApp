@@ -127,4 +127,10 @@ extension PlantGroupViewController: PlantEditorDelegate {
     func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
         persistentContainer.saveContextIfNeeded()
     }
+
+    func plantEditorDidCancel(_ editor: PlantEditorControllerController) {
+        if let plant = editor.plant {
+            persistentContainer.viewContext.delete(plant)
+        }
+    }
 }

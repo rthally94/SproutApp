@@ -75,6 +75,9 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        print("TaskEditorController --- Begin Grouping")
+        persistentContainer.viewContext.undoManager?.beginUndoGrouping()
+
         assert(task != nil, "TaskEditorViewController --- Task cannot be \"nil\". Set the property before presenting.")
 
         collectionView.delegate = self
@@ -119,12 +122,14 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         return layout
     }
 
+    // MARK: - Actions
     @objc private func doneButtonPressed(_ sender: AnyObject) {
         if let task = task {
             delegate?.taskEditor(self, didUpdateTask: task)
         }
 
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
+        print("TaskEditorController --- End Grouping")
         dismiss(animated: true)
     }
 
@@ -132,7 +137,16 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         delegate?.taskEditorDidCancel(self)
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
         persistentContainer.viewContext.undoManager?.undoNestedGroup()
+        print("TaskEditorController --- End Grouping")
         dismiss(animated: true)
+    }
+
+    private func unassignTask() {
+        if let task = task {
+            persistentContainer.viewContext.delete(task)
+//            self.task = nil
+        }
+        doneButtonPressed(self)
     }
 }
 
@@ -202,6 +216,7 @@ extension TaskEditorController {
         var actionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
         actionSnapshot.append([
             Item.button(context: .destructive, title: "Remove", image: UIImage(systemName: "trash"), onTap: {
+                self.unassignTask()
                 print("Deleted")
             })
         ])
