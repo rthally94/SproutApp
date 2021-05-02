@@ -79,7 +79,7 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        persistentContainer.viewContext.undoManager?.beginUndoGrouping()
         assert(plant != nil, "PlantEditorViewController --- Plant cannot be edited when \"nil\". Designate the plant to be edited before presenting.")
 
         title = isNew ? "New Plant" : "Edit Plant"
@@ -89,8 +89,6 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(discardChanges))
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(applyChanges))
-
-        persistentContainer.viewContext.undoManager?.beginUndoGrouping()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -113,17 +111,18 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     
     // MARK: - Actions
     @objc private func applyChanges() {
+        persistentContainer.viewContext.undoManager?.endUndoGrouping()
+        cleanupUnusuedTasks()
         delegate?.plantEditor(self, didUpdatePlant: plant)
-        dismiss(animated: true) {
-            self.persistentContainer.viewContext.undoManager?.endUndoGrouping()
-            self.persistentContainer.saveContextIfNeeded()
-        }
+        persistentContainer.saveContextIfNeeded()
+        dismiss(animated: true)
     }
     
     @objc private func discardChanges() {
-        delegate?.plantEditorDidCancel(self)
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
         persistentContainer.viewContext.undoManager?.undoNestedGroup()
+        cleanupUnusuedTasks()
+        delegate?.plantEditorDidCancel(self)
         dismiss(animated: true)
     }
 
@@ -146,6 +145,19 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     func deletePlant() {
         persistentContainer.viewContext.delete(plant)
         applyChanges()
+    }
+
+    func cleanupUnusuedTasks() {
+        let allUnconfiguredTasksRequest: NSFetchRequest<GHTask> = GHTask.fetchRequest()
+        allUnconfiguredTasksRequest.predicate = NSPredicate(format: "%K == nil", #keyPath(GHTask.plant))
+        do {
+            let allUnconfigredTasks = try persistentContainer.viewContext.fetch(allUnconfiguredTasksRequest)
+            allUnconfigredTasks.forEach {
+                persistentContainer.viewContext.delete($0)
+            }
+        } catch {
+            print(error)
+        }
     }
 }
 
@@ -251,12 +263,16 @@ extension PlantEditorControllerController: PlantTypePickerDelegate {
 // MARK: - PlantTaskEditroDelegate
 extension PlantEditorControllerController: TaskEditorDelegate {
     func taskEditor(_ editor: TaskEditorController, didUpdateTask task: GHTask) {
-        guard let task = persistentContainer.viewContext.object(with: task.objectID) as? GHTask else { return }
+        print("Inserted: \(task.isInserted) | Updated: \(task.isUpdated) | Deleted: \(task.isDeleted)")
 
         if let existingTask = plant.tasks.first(where: { $0.id == task.id }) {
             plant.tasks.remove(existingTask)
         }
-        plant.addToTasks_(task)
+        
+        if task.isUpdated || task.isInserted {
+            plant.addToTasks_(task)
+        }
+
         updateUI()
     }
 }
