@@ -85,6 +85,7 @@
 		FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* TasksProvider.swift */; };
 		FB9E8C51262CCD7700514AAB /* RowItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C50262CCD7700514AAB /* RowItem.swift */; };
 		FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* ButtonCell.swift */; };
+		FBAF462A263F5D9600854D2C /* LaunchScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF4629263F5D9600854D2C /* LaunchScreenViewController.swift */; };
 		FBB03C0D263777F900F7F364 /* HeroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C0C263777F900F7F364 /* HeroCell.swift */; };
 		FBB03C122637781C00F7F364 /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C112637781C00F7F364 /* HeroView.swift */; };
 		FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */; };
@@ -210,6 +211,7 @@
 		FB9C66B4263AE76900CDC15A /* TasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksProvider.swift; sourceTree = "<group>"; };
 		FB9E8C50262CCD7700514AAB /* RowItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowItem.swift; sourceTree = "<group>"; };
 		FB9E8C58262D08B400514AAB /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
+		FBAF4629263F5D9600854D2C /* LaunchScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenViewController.swift; sourceTree = "<group>"; };
 		FBB03C0C263777F900F7F364 /* HeroCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCell.swift; sourceTree = "<group>"; };
 		FBB03C112637781C00F7F364 /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
 		FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCardViewController.swift; sourceTree = "<group>"; };
@@ -344,6 +346,7 @@
 		FB5F348225B4C28300CCE6BC /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				FBAF4628263F5D8000854D2C /* LaunchScreen */,
 				FB7B812425B9D4B80053E543 /* Compoents */,
 				FB9C66AF263AE63800CDC15A /* Up Next */,
 				FBC5D60A25EC2BE0005BF6B1 /* MainViewController */,
@@ -650,6 +653,14 @@
 			path = "Sprout Cells";
 			sourceTree = "<group>";
 		};
+		FBAF4628263F5D8000854D2C /* LaunchScreen */ = {
+			isa = PBXGroup;
+			children = (
+				FBAF4629263F5D9600854D2C /* LaunchScreenViewController.swift */,
+			);
+			path = LaunchScreen;
+			sourceTree = "<group>";
+		};
 		FBB03C102637780B00F7F364 /* PlantHero */ = {
 			isa = PBXGroup;
 			children = (
@@ -939,6 +950,7 @@
 				FB92AF80262F032F0062DE47 /* GridPicker.swift in Sources */,
 				FBC7333025E404CC0048999C /* PlantIconPickerController.swift in Sources */,
 				FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */,
+				FBAF462A263F5D9600854D2C /* LaunchScreenViewController.swift in Sources */,
 				FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */,
 				FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */,
 				FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */,
