@@ -55,10 +55,6 @@ extension PlantEditorControllerController {
             }
         }
 
-        plant.tasks.forEach {
-            print($0.taskType?.name)
-        }
-
         snapshot.appendItems(unassignedTasks, toSection: .unconfiguredCare)
 
         if !isNew {

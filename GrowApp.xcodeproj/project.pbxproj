@@ -99,7 +99,6 @@
 		FBC7332925E307DF0048999C /* PlantTypePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7332825E307DF0048999C /* PlantTypePickerViewController.swift */; };
 		FBC7333025E404CC0048999C /* PlantIconPickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7332F25E404CC0048999C /* PlantIconPickerController.swift */; };
 		FBC7333425E478D20048999C /* CameraOverlayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333325E478D20048999C /* CameraOverlayView.swift */; };
-		FBC7333825E572A30048999C /* PlantIconPickerController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333725E572A30048999C /* PlantIconPickerController+DataSource.swift */; };
 		FBC7333C25E572DA0048999C /* PlantIconPickerController+Delegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333B25E572DA0048999C /* PlantIconPickerController+Delegates.swift */; };
 		FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */; };
 		FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */; };
@@ -225,7 +224,6 @@
 		FBC7332825E307DF0048999C /* PlantTypePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTypePickerViewController.swift; sourceTree = "<group>"; };
 		FBC7332F25E404CC0048999C /* PlantIconPickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconPickerController.swift; sourceTree = "<group>"; };
 		FBC7333325E478D20048999C /* CameraOverlayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraOverlayView.swift; sourceTree = "<group>"; };
-		FBC7333725E572A30048999C /* PlantIconPickerController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantIconPickerController+DataSource.swift"; sourceTree = "<group>"; };
 		FBC7333B25E572DA0048999C /* PlantIconPickerController+Delegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PlantIconPickerController+Delegates.swift"; sourceTree = "<group>"; };
 		FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconSupplementaryView.swift; sourceTree = "<group>"; };
 		FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHeaderFooterView.swift; sourceTree = "<group>"; };
@@ -381,13 +379,6 @@
 				FB5F34A225B8FA3900CCE6BC /* SlideInPresentationManager.swift */,
 			);
 			path = BottomSlidePresentation;
-			sourceTree = "<group>";
-		};
-		FB666189261BC9F000DC8B04 /* ChildPickers */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ChildPickers;
 			sourceTree = "<group>";
 		};
 		FB6661A6261DEBA700DC8B04 /* CoreData Model Extensions */ = {
@@ -726,9 +717,7 @@
 		FBC7332E25E404A40048999C /* PlantIconPicker */ = {
 			isa = PBXGroup;
 			children = (
-				FB666189261BC9F000DC8B04 /* ChildPickers */,
 				FBC7332F25E404CC0048999C /* PlantIconPickerController.swift */,
-				FBC7333725E572A30048999C /* PlantIconPickerController+DataSource.swift */,
 				FBC7333B25E572DA0048999C /* PlantIconPickerController+Delegates.swift */,
 				FB66617F261B9FF100DC8B04 /* PlantIconPickerControllerDelegate.swift */,
 			);
@@ -924,7 +913,6 @@
 				FB92AF66262E093D0062DE47 /* LargeHeaderCell.swift in Sources */,
 				FB6C460D25F11BA0009ED947 /* IconHeaderCell.swift in Sources */,
 				FB6661CB2620938F00DC8B04 /* Utility.swift in Sources */,
-				FBC7333825E572A30048999C /* PlantIconPickerController+DataSource.swift in Sources */,
 				FB7B813225BA25740053E543 /* WeekPicker.swift in Sources */,
 				FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */,
 				FB7ED52B26164290008FD1BE /* PlantsProvider.swift in Sources */,

@@ -8,7 +8,13 @@
 import CoreData
 import UIKit
 
-class PlantIconPickerController: UIViewController {
+enum PlantIconPickerSection: Hashable, CaseIterable {
+    case currentImage
+    case recommended
+    case icons
+}
+
+class PlantIconPickerController: StaticCollectionViewController<PlantIconPickerSection> {
     // MARK: - Properties
 
     var icon: GHIcon? {
@@ -21,54 +27,16 @@ class PlantIconPickerController: UIViewController {
 
     var delegate: PlantIconPickerControllerDelegate?
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
-    enum Section: Hashable, CaseIterable {
-        case currentImage
-        case recommended
-        case icons
-    }
-    
-    struct Item: Hashable {
-        var image: UIImage?
-        var tintColor: UIColor?
-        var action: (() -> Void)?
-        
-        init(icon: GHIcon?, action: (() -> Void)? = nil) {
-            self.init(image: icon?.image, tintColor: icon?.color, action: action)
-        }
-        
-        init(image: UIImage?, tintColor: UIColor?, action: (() -> Void)? = nil) {
-            self.image = image
-            self.tintColor = tintColor
-            self.action = action
-        }
-        
-        static func == (lhs: PlantIconPickerController.Item, rhs: PlantIconPickerController.Item) -> Bool { lhs.image == rhs.image
-            && lhs.tintColor == rhs.tintColor
-        }
-        
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(image)
-            hasher.combine(tintColor)
-        }
-    }
-    
-    var collectionView: UICollectionView! = nil
-    var dataSource: UICollectionViewDiffableDataSource<Section, Item>? = nil
     
     internal let imagePicker = UIImagePickerController()
     
     // MARK: - View Life Cycle
     
-    override func loadView() {
-        super.loadView()
-        
-        configureHiearchy()
-        configureDataSource()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        collectionView.delegate = self
+
         let cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
         
@@ -78,6 +46,7 @@ class PlantIconPickerController: UIViewController {
 
         // Start Change Tracking
         persistentContainer.viewContext.undoManager?.beginUndoGrouping()
+        dataSource?.apply(makeSnapshot())
     }
     
     // MARK: - Actions
@@ -104,21 +73,19 @@ class PlantIconPickerController: UIViewController {
         dataSource?
             .apply(snapshot, animatingDifferences: animated)
     }
-}
 
-extension PlantIconPickerController {
-    func makeLayout() -> UICollectionViewLayout {
+    override func makeLayout() -> UICollectionViewLayout {
         return UICollectionViewCompositionalLayout() { sectionIndex, layoutEnvironment in
-            let sectionLayoutKind = Section.allCases[sectionIndex]
-            
+            let sectionLayoutKind = PlantIconPickerSection.allCases[sectionIndex]
+
             switch sectionLayoutKind {
             case .currentImage:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                
+
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(150))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                
+
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: 0, bottom: 0, trailing: 0 )
                 return section
@@ -127,24 +94,33 @@ extension PlantIconPickerController {
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 let inset = layoutEnvironment.container.effectiveContentSize.width / 16
                 item.contentInsets = NSDirectionalEdgeInsets(top: inset, leading: inset, bottom: inset, trailing: inset)
-                
+
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(100))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                
+
                 let section = NSCollectionLayoutSection(group: group)
                 return section
             }
         }
     }
-    
-    func configureHiearchy() {
-        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: makeLayout())
-        collectionView.dataSource = dataSource
-        collectionView.delegate = self
-        
-        collectionView.backgroundColor = .systemGroupedBackground
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(collectionView)
-        collectionView.pinToBoundsOf(view)
+}
+
+private extension PlantIconPickerController {
+    func makeSnapshot() -> NSDiffableDataSourceSnapshot<PlantIconPickerSection, Item> {
+        var snapshot = NSDiffableDataSourceSnapshot<PlantIconPickerSection, Item>()
+        snapshot.appendSections(PlantIconPickerSection.allCases)
+
+        let iconItem = Item.icon(image: icon?.image)
+        snapshot.appendItems([iconItem], toSection: .currentImage)
+
+        let cameraButtonItem = Item.button(image: UIImage(systemName: "camera"), onTap: {
+            self.showImagePicker(preferredType: .camera)
+        })
+        let photoLibraryButton = Item.button(image: UIImage(systemName: "photo.on.rectangle"), onTap: {
+            self.showImagePicker(preferredType: .photoLibrary)
+        })
+        snapshot.appendItems([cameraButtonItem, photoLibraryButton], toSection: .icons)
+
+        return snapshot
     }
 }
