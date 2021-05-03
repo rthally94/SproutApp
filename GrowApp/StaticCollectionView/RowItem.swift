@@ -52,6 +52,7 @@ struct RowItem: Hashable {
     var isOn: Bool
     var tintColor: UIColor?
     var displayContext: DisplayContext?
+    var accessories: [UICellAccessory]?
 
     // Actions
     var tapAction: TapAction?
@@ -73,7 +74,7 @@ struct RowItem: Hashable {
     ///   - image: Image to display
     ///   - icon: Icon to display
     ///   - isOn: Flag to represent the state of a switch with an on/off state
-    private init(id: UUID = UUID(), rowType: RowType, text: String? = nil, secondaryText: String? = nil, tertiaryText: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isOn: Bool = false, tintColor: UIColor? = .systemBlue, displayContext: DisplayContext? = nil, tapAction: TapAction? = nil, valueChangedAction: ValueChangedAction? = nil, customView: UIView? = nil) {
+    private init(id: UUID = UUID(), rowType: RowType, text: String? = nil, secondaryText: String? = nil, tertiaryText: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isOn: Bool = false, tintColor: UIColor? = .systemBlue, displayContext: DisplayContext? = nil, accessories: [UICellAccessory]? = nil, tapAction: TapAction? = nil, valueChangedAction: ValueChangedAction? = nil, customView: UIView? = nil) {
         self.id = id
         self.rowType = rowType
         self.text = text
@@ -84,6 +85,7 @@ struct RowItem: Hashable {
         self.isOn = isOn
         self.tintColor = tintColor
         self.displayContext = displayContext
+        self.accessories = accessories
         self.tapAction = tapAction
         self.valueChangedAction = valueChangedAction
         self.customView = customView
@@ -98,8 +100,8 @@ struct RowItem: Hashable {
     ///   - secondaryText: The secondary text
     ///   - image: The image to display
     /// - Returns: The configured RowItem
-    static func listCell(id: UUID = UUID(), rowType: RowType = .value1, text: String? = nil, secondaryText: String? = nil, image: UIImage? = nil, tapAction: TapAction? = nil) -> RowItem {
-        RowItem(id: id, rowType: rowType, text: text, secondaryText: secondaryText, image: image, tapAction: tapAction)
+    static func listCell(id: UUID = UUID(), rowType: RowType = .value1, text: String? = nil, secondaryText: String? = nil, image: UIImage? = nil, accessories: [UICellAccessory] = [], tapAction: TapAction? = nil) -> RowItem {
+        RowItem(id: id, rowType: rowType, text: text, secondaryText: secondaryText, image: image, accessories: accessories, tapAction: tapAction)
     }
 
     // MARK: - Form Cell Factory Methods

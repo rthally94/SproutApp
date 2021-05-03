@@ -9,7 +9,14 @@ import UIKit
 
 class GridPicker: UIControl {
     var itemsPerRow: Int = 7
-    var selectedIndices = Set<Int>()
+    var selectedIndices = Set<Int>() {
+        didSet {
+            imageButtons.enumerated().forEach { index, item in
+                guard let button = item as? UIButton else { return }
+                button.isSelected = selectedIndices.contains(index)
+            }
+        }
+    }
 
     var items: [String] = [] {
         didSet {

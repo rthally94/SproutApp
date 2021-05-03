@@ -201,9 +201,12 @@ extension TaskEditorController {
         dataSource.apply(repeatsIntervalSnapshot, to: .repeatInterval)
 
         var repeatsValueSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-        if case .weekly = task?.interval?.wrappedFrequency {
+        if case .weekly = task?.interval?.wrappedFrequency, let values = task?.interval?.componentsArray {
+            let picker = makeWeekdayPicker()
+            let selectedWeekdays = values.map{ $0 - 1 }
+            picker.selectedIndices = Set<Int>(selectedWeekdays)
             repeatsValueSnapshot.append([
-                Item.customView(customView: makeWeekdayPicker())
+                Item.customView(customView: picker)
             ])
         } else if case .monthly = task?.interval?.wrappedFrequency {
             repeatsValueSnapshot.append([
@@ -259,8 +262,10 @@ extension TaskEditorController {
         // Update the values picker for the appropriate interval
         var valuesSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
         if case .weekly = newValue {
+            let picker = makeWeekdayPicker()
+            picker.selectedIndices = Set<Int>(task?.interval?.componentsArray ?? [])
             valuesSnapshot.append([
-                Item.customView(customView: makeWeekdayPicker())
+                Item.customView(customView: picker)
             ])
         } else if case .monthly = newValue {
             valuesSnapshot.append([

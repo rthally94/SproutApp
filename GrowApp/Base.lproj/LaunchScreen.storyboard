@@ -4,7 +4,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -15,19 +14,38 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Launch Screen Image" translatesAutoresizingMaskIntoConstraints="NO" id="nWX-ak-glU">
+                                <rect key="frame" x="103.5" y="123" width="207" height="207"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="nWX-ak-glU" secondAttribute="height" id="fTd-aF-Ozv"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sprout Development" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bgp-qf-Jd4">
+                                <rect key="frame" x="110" y="350" width="194" height="82"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" red="0.080099999999999977" green="0.4715516666666667" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="Bgp-qf-Jd4" firstAttribute="centerX" secondItem="nWX-ak-glU" secondAttribute="centerX" id="82a-kd-VYt"/>
+                            <constraint firstItem="nWX-ak-glU" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="9C9-J8-00r"/>
+                            <constraint firstItem="nWX-ak-glU" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" multiplier="1/2" id="hIk-ey-T4L"/>
+                            <constraint firstItem="Bgp-qf-Jd4" firstAttribute="top" secondItem="nWX-ak-glU" secondAttribute="bottom" constant="20" id="ofi-Kf-ddm"/>
+                            <constraint firstItem="nWX-ak-glU" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.5" id="y5v-dc-09s"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="U7l-lF-aQH"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="962.31884057971024" y="375"/>
+            <point key="canvasLocation" x="266.66666666666669" y="203.57142857142856"/>
         </scene>
     </scenes>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <image name="Launch Screen Image" width="341.33334350585938" height="341.33334350585938"/>
     </resources>
 </document>

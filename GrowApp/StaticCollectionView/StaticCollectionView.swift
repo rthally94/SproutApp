@@ -103,6 +103,8 @@ extension StaticCollectionViewController {
             config.secondaryText = item.secondaryText
 
             cell.contentConfiguration = config
+
+            cell.accessories = item.accessories ?? []
         }
     }
 

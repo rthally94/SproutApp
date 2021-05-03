@@ -29,7 +29,7 @@ extension PlantEditorControllerController {
                 guard let value = newValue as? String else { return }
                 plant.name = value
             }),
-            Item.listCell(rowType: .value2, text: "Type", secondaryText: plant.type?.commonName ?? "Choose Type", tapAction: { [unowned self] in
+            Item.listCell(rowType: .value2, text: "Type", secondaryText: plant.type?.commonName ?? "Choose Type", accessories: [.disclosureIndicator()], tapAction: { [unowned self] in
                 navigateTo(plantTypePicker)
             })
         ], toSection: .plantInfo)
@@ -53,10 +53,6 @@ extension PlantEditorControllerController {
             } else {
                 return nil
             }
-        }
-
-        plant.tasks.forEach {
-            print($0.taskType?.name)
         }
 
         snapshot.appendItems(unassignedTasks, toSection: .unconfiguredCare)

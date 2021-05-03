@@ -9,13 +9,11 @@ import UIKit
 
 extension PlantIconPickerController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        dataSource?.itemIdentifier(for: indexPath)?.action != nil
+        dataSource?.itemIdentifier(for: indexPath)?.isTappable == true
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let item = dataSource?.itemIdentifier(for: indexPath) {
-            item.action?()
-        }
+        dataSource?.itemIdentifier(for: indexPath)?.tapAction?()
     }
 }
 
