@@ -41,7 +41,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         let daySelectionChangedAction = UIAction {[unowned self] action in
             guard let sender = action.sender as? GridPicker else { return }
             let selectedWeekdays = sender.selectedIndices.sorted().map{ $0 + 1 }
-            self.task?.interval?.repeatsValues = selectedWeekdays
+            self.setIntervalValue(to: selectedWeekdays)
             print(selectedWeekdays)
         }
 
@@ -58,7 +58,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         let daySelectionChangedAction = UIAction { action in
             guard let sender = action.sender as? GridPicker else { return }
             let selectedDays = sender.selectedIndices.sorted().map { $0 + 1 }
-            self.task?.interval?.repeatsValues = selectedDays
+            self.setIntervalValue(to: selectedDays)
             print(selectedDays)
         }
 
@@ -228,6 +228,7 @@ extension TaskEditorController {
         ])
         dataSource.apply(actionSnapshot, to: .actions)
     }
+
     private func selectInterval(_ newValue: GHTaskIntervalType) {
         guard let interval = task?.interval else { return }
         let oldType = interval.wrappedFrequency
@@ -281,6 +282,18 @@ extension TaskEditorController {
         }
 
         dataSource.apply(repeatsValueSnapshot, to: .repeatValue, animatingDifferences: false)
+    }
+
+    func setIntervalValue(to newValue: [Int]) {
+        task?.interval?.repeatsValues = newValue
+
+        var headerSnapshot = dataSource.snapshot(for: .header)
+        let newHeaderItem = Item.largeHeader(title: task?.taskType?.name, value: task?.interval?.intervalText(), image: task?.taskType?.icon?.image, tintColor: task?.taskType?.icon?.color)
+        guard let oldItem = headerSnapshot.items.first(where: {$0.text == newHeaderItem.text}) else { return }
+        headerSnapshot.insert([newHeaderItem], after: oldItem)
+        headerSnapshot.delete([oldItem])
+
+        dataSource.apply(headerSnapshot, to: .header, animatingDifferences: false)
     }
 
     func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
