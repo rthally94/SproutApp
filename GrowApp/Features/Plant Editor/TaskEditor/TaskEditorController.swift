@@ -208,9 +208,12 @@ extension TaskEditorController {
             repeatsValueSnapshot.append([
                 Item.customView(customView: picker)
             ])
-        } else if case .monthly = task?.interval?.wrappedFrequency {
+        } else if case .monthly = task?.interval?.wrappedFrequency, let values = task?.interval?.componentsArray {
+            let picker = makeDayPicker()
+            let selectedDays = values.map { $0 - 1}
+            picker.selectedIndices = Set<Int>(selectedDays)
             repeatsValueSnapshot.append([
-                Item.customView(customView: makeDayPicker())
+                Item.customView(customView: picker)
             ])
         }
 
@@ -260,19 +263,24 @@ extension TaskEditorController {
         dataSource.apply(intervalSnapshot, to: .repeatInterval, animatingDifferences: false)
 
         // Update the values picker for the appropriate interval
-        var valuesSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-        if case .weekly = newValue {
+        var repeatsValueSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        if case .weekly = task?.interval?.wrappedFrequency, let values = task?.interval?.componentsArray {
             let picker = makeWeekdayPicker()
-            picker.selectedIndices = Set<Int>(task?.interval?.componentsArray ?? [])
-            valuesSnapshot.append([
+            let selectedWeekdays = values.map{ $0 - 1 }
+            picker.selectedIndices = Set<Int>(selectedWeekdays)
+            repeatsValueSnapshot.append([
                 Item.customView(customView: picker)
             ])
-        } else if case .monthly = newValue {
-            valuesSnapshot.append([
-                Item.customView(customView: makeDayPicker())
+        } else if case .monthly = task?.interval?.wrappedFrequency, let values = task?.interval?.componentsArray {
+            let picker = makeDayPicker()
+            let selectedDays = values.map { $0 - 1}
+            picker.selectedIndices = Set<Int>(selectedDays)
+            repeatsValueSnapshot.append([
+                Item.customView(customView: picker)
             ])
         }
-        dataSource.apply(valuesSnapshot, to: .repeatValue, animatingDifferences: false)
+
+        dataSource.apply(repeatsValueSnapshot, to: .repeatValue, animatingDifferences: false)
     }
 
     func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
