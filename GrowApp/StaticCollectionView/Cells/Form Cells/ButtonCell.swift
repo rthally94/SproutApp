@@ -7,31 +7,76 @@
 
 import UIKit
 
-class ButtonCell: UICollectionViewCell {
-    static let buttonFont = UIFont.preferredFont(forTextStyle: .headline)
-    enum DisplayMode: Int {
-        case normal, primary, destructive
-    }
+private extension UIConfigurationStateCustomKey {
+    static let image = UIConfigurationStateCustomKey("net.thally.ryan.SproutButtonCell.image")
+    static let title = UIConfigurationStateCustomKey("net.thally.ryan.SproutButtonCell.title")
+    static let displayMode = UIConfigurationStateCustomKey("net.thally.ryan.SproutButtonCell.displayMode")
+}
+
+private extension UICellConfigurationState {
+    typealias DisplayModeType = ButtonCell.DisplayMode
 
     var image: UIImage? {
-        set { imageView.image = newValue }
-        get { imageView.image }
+        set { self[.image] = newValue }
+        get { return self[.image] as? UIImage }
     }
 
-    var text: String? {
-        set { textLabel.text = newValue }
-        get { textLabel.text }
+    var title: String? {
+        set { self[.title] = newValue }
+        get { return self[.title] as? String }
     }
 
-    var displayContext: DisplayMode = .normal {
-        didSet {
-            applyButtonStyling()
+    var displayMode: DisplayModeType {
+        set { self[.displayMode] = newValue }
+        get { return self[.displayMode] as? DisplayModeType ?? .normal }
+    }
+}
+
+class ButtonCell: UICollectionViewCell {
+    enum DisplayMode: Int {
+        case plain, normal, primary, destructive
+    }
+
+    var image: UIImage? { didSet {
+        if image != oldValue {
+            setNeedsUpdateConfiguration()
         }
+    }}
+
+    var title: String? { didSet {
+        if title != oldValue {
+            setNeedsUpdateConfiguration()
+        }
+    }}
+
+    var displayMode: DisplayMode = .normal { didSet {
+        if displayMode != oldValue {
+            setNeedsUpdateConfiguration()
+        }
+    }}
+
+    override var isSelected: Bool { didSet {
+        if isSelected != oldValue {
+            setNeedsUpdateConfiguration()
+        }
+    }}
+
+    override var configurationState: UICellConfigurationState {
+        var state = super.configurationState
+        state.image = image
+        state.title = title
+        state.displayMode = displayMode
+        state.isSelected = isSelected
+        return state
     }
+}
+
+class SproutButtonCell: ButtonCell {
+    static let buttonFont = UIFont.preferredFont(forTextStyle: .headline)
 
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
-        view.preferredSymbolConfiguration = .init(font: ButtonCell.buttonFont)
+        view.preferredSymbolConfiguration = .init(font: SproutButtonCell.buttonFont)
 
         let HCHP = view.contentHuggingPriority(for: .horizontal)
         let VCHP = view.contentHuggingPriority(for: .vertical)
@@ -43,7 +88,7 @@ class ButtonCell: UICollectionViewCell {
 
     private lazy var textLabel: UILabel = {
         let view = UILabel()
-        view.font = ButtonCell.buttonFont
+        view.font = SproutButtonCell.buttonFont
         return view
     }()
 
@@ -57,12 +102,6 @@ class ButtonCell: UICollectionViewCell {
     }()
 
     private var appliedConstraints: (stackTop: NSLayoutConstraint, stackBottom: NSLayoutConstraint, stackCenterX: NSLayoutConstraint, stackWidth: NSLayoutConstraint)?
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        setupViewsIfNeeded()
-    }
 
     private func setupViewsIfNeeded() {
         guard appliedConstraints == nil else { return }
@@ -87,15 +126,40 @@ class ButtonCell: UICollectionViewCell {
         ])
 
         appliedConstraints = constraints
-
-        imageView.isHidden = imageView.image == nil
-        textLabel.isHidden = textLabel.text == nil
-
-        applyButtonStyling()
     }
 
-    private func applyButtonStyling() {
-        switch displayContext {
+    override func updateConfiguration(using state: UICellConfigurationState) {
+        setupViewsIfNeeded()
+
+        // Apply configuration properties
+        imageView.image = state.image
+        imageView.isHidden = state.image == nil
+
+        textLabel.text = state.title
+        textLabel.isHidden = state.title == nil
+
+        // Style based on selection context
+        if state.isSelected {
+            // Apply selection styling
+            applySelectedButtonStyle(forMode: state.displayMode)
+        } else if state.isDisabled {
+            // Apply disabled styling
+            applyDisabledButtonStyle(forMode: state.displayMode)
+        } else {
+            // Apply default styling
+            applyDefaultButtonStyle(forMode: state.displayMode)
+        }
+
+    }
+}
+
+private extension SproutButtonCell {
+    func applyDefaultButtonStyle(forMode mode: DisplayMode) {
+        switch mode {
+        case .plain:
+            contentView.backgroundColor = .clear
+            imageView.tintColor = tintColor
+            textLabel.textColor = tintColor
         case .normal:
             contentView.backgroundColor = .secondarySystemGroupedBackground
             imageView.tintColor = tintColor
@@ -109,6 +173,46 @@ class ButtonCell: UICollectionViewCell {
             contentView.backgroundColor = .secondarySystemGroupedBackground
             imageView.tintColor = .systemRed
             textLabel.textColor = .systemRed
+        }
+    }
+
+    func applySelectedButtonStyle(forMode mode: DisplayMode) {
+        switch mode {
+        case .plain:
+            let bgColor = tintColor
+            contentView.backgroundColor = bgColor
+            imageView.tintColor = UIColor.labelColor(against: bgColor)
+            textLabel.textColor = UIColor.labelColor(against: bgColor)
+        case .normal:
+            contentView.backgroundColor = .secondarySystemGroupedBackground
+            imageView.tintColor = tintColor
+            textLabel.textColor = tintColor
+        case .primary:
+            contentView.backgroundColor = tintColor
+            let labelColor = UIColor.labelColor(against: tintColor)
+            imageView.tintColor = labelColor
+            textLabel.textColor = labelColor
+        case .destructive:
+            contentView.backgroundColor = .secondarySystemGroupedBackground
+            imageView.tintColor = .systemRed
+            textLabel.textColor = .systemRed
+        }
+    }
+
+    func applyDisabledButtonStyle(forMode mode: DisplayMode) {
+        switch mode {
+        case .plain:
+            contentView.backgroundColor = .clear
+            imageView.tintColor = UIColor.systemGray
+            textLabel.textColor = UIColor.systemGray
+        case .normal, .primary:
+            contentView.backgroundColor = .systemFill
+            imageView.tintColor = .systemGray
+            textLabel.textColor = .systemGray
+        case .destructive:
+            contentView.backgroundColor = .systemFill
+            imageView.tintColor = UIColor.systemRed.withAlphaComponent(0.5)
+            textLabel.textColor = UIColor.systemRed.withAlphaComponent(0.5)
         }
     }
 }

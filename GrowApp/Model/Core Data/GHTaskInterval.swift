@@ -53,7 +53,7 @@ extension GHTaskInterval {
     }
 
     var componentsArray: [Int] {
-        return repeatsValues ?? []
+        return repeatsValues?.sorted() ?? []
     }
 }
 

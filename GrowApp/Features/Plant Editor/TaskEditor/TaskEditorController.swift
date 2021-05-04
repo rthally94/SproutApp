@@ -37,40 +37,45 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     ]
 
     private lazy var imageView = UIImageView(image: UIImage(systemName: "circle"))
-    private func makeWeekdayPicker() -> GridPicker {
-        let daySelectionChangedAction = UIAction {[unowned self] action in
-            guard let sender = action.sender as? GridPicker else { return }
-            let selectedWeekdays = sender.selectedIndices.sorted().map{ $0 + 1 }
-            self.task?.interval?.repeatsValues = selectedWeekdays
-            print(selectedWeekdays)
-        }
 
-        let picker = GridPicker()
-        picker.addAction(daySelectionChangedAction, for: .valueChanged)
-        picker.items = Calendar.current.veryShortStandaloneWeekdaySymbols.map {
-            return "\($0)"
+    private func makeWeekdayPicker() -> [Item] {
+        guard let values = task?.interval?.repeatsValues else { return [] }
+        print("Has Values")
+        let items: [Item] = Array(1...7).map { value in
+            let title = Calendar.current.veryShortStandaloneWeekdaySymbols[value-1]
+
+            var item = Item.circleButtonCell(text: title, isSelected: values.contains(value), tapAction: {
+                self.repeatValueButtonTapped(value)
+            })
+            item.tag = value
+            return item
         }
-        picker.itemsPerRow = 7
-        return picker
+        print(items.count)
+
+        return items
     }
 
-    private func makeDayPicker() -> GridPicker {
-        let daySelectionChangedAction = UIAction { action in
-            guard let sender = action.sender as? GridPicker else { return }
-            let selectedDays = sender.selectedIndices.sorted().map { $0 + 1 }
-            self.task?.interval?.repeatsValues = selectedDays
-            print(selectedDays)
+    private func makeDayPicker() -> [Item] {
+        guard let values = task?.interval?.componentsArray else { return [] }
+        let items: [Item] = Array(1...31).map { value in
+            let title = String(value)
+
+            var item = Item.circleButtonCell(text: title, isSelected: values.contains(value), tapAction: {
+                self.repeatValueButtonTapped(value)
+            })
+            item.tag = value
+            return item
         }
 
-        let picker = GridPicker()
-        picker.addAction(daySelectionChangedAction, for: .valueChanged)
-        picker.items = Array(1...31).map {
-            return "\($0)"
-        }
-        picker.itemsPerRow = 7
-        return picker
+        return items
     }
-    
+
+    private func makeRepeatValueButton() -> IntervalPickerButton {
+        let button = IntervalPickerButton()
+        button.addTarget(self, action: #selector(repeatValueButtonTapped(_:)), for: .touchUpInside)
+        return button
+    }
+
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -79,6 +84,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         persistentContainer.viewContext.undoManager?.beginUndoGrouping()
 
         assert(task != nil, "TaskEditorViewController --- Task cannot be \"nil\". Set the property before presenting.")
+        assert(task?.interval != nil, "TaskEditorViewController --- Task Interval cannot be \"nil\". Set the property before presenting.")
 
         collectionView.delegate = self
 
@@ -92,6 +98,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
                 return nil
             }
         }
+
         applyDefaultSnapshot()
 
         title = "Edit Task"
@@ -103,14 +110,28 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
             guard let sectionKind = TaskEditorSection(rawValue: sectionIndex) else { fatalError("Section index not available: \(sectionIndex)") }
             switch sectionKind {
             case .header:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 
                 let section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = .init(top: 16, leading: 16, bottom: 0, trailing: 16)
+                return section
+            case .repeatValue:
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/7), heightDimension: .fractionalHeight(1.0))
+                let item = NSCollectionLayoutItem(layoutSize: itemSize)
+                item.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 3, bottom: 3, trailing: 3)
+
+                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(1/7))
+                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+
+                let section = NSCollectionLayoutSection(group: group)
+                section.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 24, bottom: 6, trailing: 24)
+                section.decorationItems = [
+                    NSCollectionLayoutDecorationItem.background(elementKind: RoundedRectBackgroundView.ElementKind)
+                ]
                 return section
             default:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
@@ -118,6 +139,8 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
                 return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
             }
         }
+
+        layout.register(RoundedRectBackgroundView.self, forDecorationViewOfKind: RoundedRectBackgroundView.ElementKind)
 
         return layout
     }
@@ -147,6 +170,16 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
 //            self.task = nil
         }
         doneButtonPressed(self)
+    }
+
+    @objc private func repeatValueButtonTapped(_ value: Int) {
+        var intervalValues = task?.interval?.repeatsValues ?? []
+        if intervalValues.contains(value) == true {
+            intervalValues.remove(value)
+        } else {
+            intervalValues.insert(value)
+        }
+        setIntervalValue(to: intervalValues)
     }
 }
 
@@ -201,17 +234,11 @@ extension TaskEditorController {
         dataSource.apply(repeatsIntervalSnapshot, to: .repeatInterval)
 
         var repeatsValueSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-        if case .weekly = task?.interval?.wrappedFrequency, let values = task?.interval?.componentsArray {
-            let picker = makeWeekdayPicker()
-            let selectedWeekdays = values.map{ $0 - 1 }
-            picker.selectedIndices = Set<Int>(selectedWeekdays)
-            repeatsValueSnapshot.append([
-                Item.customView(customView: picker)
-            ])
+        if case .weekly = task?.interval?.wrappedFrequency {
+            repeatsValueSnapshot.append(makeWeekdayPicker())
+
         } else if case .monthly = task?.interval?.wrappedFrequency {
-            repeatsValueSnapshot.append([
-                Item.customView(customView: makeDayPicker())
-            ])
+            repeatsValueSnapshot.append(makeDayPicker())
         }
 
         dataSource.apply(repeatsValueSnapshot, to: .repeatValue)
@@ -225,6 +252,7 @@ extension TaskEditorController {
         ])
         dataSource.apply(actionSnapshot, to: .actions)
     }
+
     private func selectInterval(_ newValue: GHTaskIntervalType) {
         guard let interval = task?.interval else { return }
         let oldType = interval.wrappedFrequency
@@ -260,19 +288,46 @@ extension TaskEditorController {
         dataSource.apply(intervalSnapshot, to: .repeatInterval, animatingDifferences: false)
 
         // Update the values picker for the appropriate interval
-        var valuesSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-        if case .weekly = newValue {
-            let picker = makeWeekdayPicker()
-            picker.selectedIndices = Set<Int>(task?.interval?.componentsArray ?? [])
-            valuesSnapshot.append([
-                Item.customView(customView: picker)
-            ])
-        } else if case .monthly = newValue {
-            valuesSnapshot.append([
-                Item.customView(customView: makeDayPicker())
-            ])
+        var repeatsValueSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        if case .weekly = task?.interval?.wrappedFrequency {
+            repeatsValueSnapshot.append(makeWeekdayPicker())
+
+        } else if case .monthly = task?.interval?.wrappedFrequency {
+            repeatsValueSnapshot.append(makeDayPicker())
         }
-        dataSource.apply(valuesSnapshot, to: .repeatValue, animatingDifferences: false)
+
+        dataSource.apply(repeatsValueSnapshot, to: .repeatValue, animatingDifferences: false)
+    }
+
+    func setIntervalValue(to newValue: Set<Int>) {
+        var valuesToChange: Set<Int> = []
+        if let currentValues = task?.interval?.repeatsValues {
+            valuesToChange = currentValues.symmetricDifference(newValue)
+        }
+
+        task?.interval?.repeatsValues = newValue
+
+        var headerSnapshot = dataSource.snapshot(for: .header)
+        let newHeaderItem = Item.largeHeader(title: task?.taskType?.name, value: task?.interval?.intervalText(), image: task?.taskType?.icon?.image, tintColor: task?.taskType?.icon?.color)
+        guard let oldItem = headerSnapshot.items.first(where: {$0.text == newHeaderItem.text}) else { return }
+        headerSnapshot.insert([newHeaderItem], after: oldItem)
+        headerSnapshot.delete([oldItem])
+
+        dataSource.apply(headerSnapshot, to: .header, animatingDifferences: false)
+
+        var repeatsValueSnapshot = dataSource.snapshot(for: .repeatValue)
+        for value in valuesToChange {
+            guard let oldItem = repeatsValueSnapshot.items.first(where: { $0.tag == value }) else { continue }
+            var newItem = Item.circleButtonCell(text: oldItem.text, isSelected: !oldItem.isOn, tapAction: {
+                self.repeatValueButtonTapped(value)
+            })
+            newItem.tag = value
+
+            repeatsValueSnapshot.insert([newItem], after: oldItem)
+            repeatsValueSnapshot.delete([oldItem])
+        }
+
+        dataSource.apply(repeatsValueSnapshot, to: .repeatValue, animatingDifferences: false)
     }
 
     func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {

@@ -31,7 +31,7 @@
     </entity>
     <entity name="GHTaskInterval" representedClassName=".GHTaskInterval" syncable="YES" codeGenerationType="category">
         <attribute name="repeatsFrequency" optional="YES" attributeType="String"/>
-        <attribute name="repeatsValues" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="[Int]"/>
+        <attribute name="repeatsValues" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="Set&lt;Int&gt;"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="task" maxCount="1" deletionRule="Nullify" destinationEntity="GHTask" inverseName="interval" inverseEntity="GHTask"/>
     </entity>
