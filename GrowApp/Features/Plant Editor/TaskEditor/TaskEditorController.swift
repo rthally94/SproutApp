@@ -70,12 +70,6 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         return items
     }
 
-    private func makeRepeatValueButton() -> IntervalPickerButton {
-        let button = IntervalPickerButton()
-        button.addTarget(self, action: #selector(repeatValueButtonTapped(_:)), for: .touchUpInside)
-        return button
-    }
-
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()

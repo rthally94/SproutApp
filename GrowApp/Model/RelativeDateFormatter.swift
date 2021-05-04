@@ -20,18 +20,17 @@ class RelativeDateFormatter: Formatter {
         let formatter = RelativeDateTimeFormatter()
         formatter.dateTimeStyle = .numeric
         formatter.unitsStyle = .full
-        formatter.formattingContext = .beginningOfSentence
+        formatter.formattingContext = .standalone
         return formatter
     }()
     
     func string(from date: Date) -> String {
         let today = Calendar.current.startOfDay(for: Date())
         let interval = Calendar.current.dateComponents([.day], from: today, to: date).day!
-        return RelativeDateFormatter.relativeDateTimeFormatter.localizedString(for: date, relativeTo: today)
-//        if interval >= -1 && interval <= 1 {
-//            return RelativeDateFormatter.dateFormatter.string(from: date)
-//        } else {
-//            return RelativeDateFormatter.relativeDateTimeFormatter.localizedString(for: date, relativeTo: today)
-//        }
+        if interval >= -1 && interval <= 1 {
+            return RelativeDateFormatter.dateFormatter.string(from: date)
+        } else {
+            return RelativeDateFormatter.relativeDateTimeFormatter.localizedString(for: date, relativeTo: today)
+        }
     }
 }
