@@ -85,6 +85,7 @@
 		FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* TasksProvider.swift */; };
 		FB9E8C51262CCD7700514AAB /* RowItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C50262CCD7700514AAB /* RowItem.swift */; };
 		FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* ButtonCell.swift */; };
+		FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */; };
 		FBB03C0D263777F900F7F364 /* HeroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C0C263777F900F7F364 /* HeroCell.swift */; };
 		FBB03C122637781C00F7F364 /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C112637781C00F7F364 /* HeroView.swift */; };
 		FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */; };
@@ -210,6 +211,7 @@
 		FB9C66B4263AE76900CDC15A /* TasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksProvider.swift; sourceTree = "<group>"; };
 		FB9E8C50262CCD7700514AAB /* RowItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowItem.swift; sourceTree = "<group>"; };
 		FB9E8C58262D08B400514AAB /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
+		FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectBackgroundView.swift; sourceTree = "<group>"; };
 		FBB03C0C263777F900F7F364 /* HeroCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCell.swift; sourceTree = "<group>"; };
 		FBB03C112637781C00F7F364 /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
 		FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCardViewController.swift; sourceTree = "<group>"; };
@@ -525,6 +527,7 @@
 				FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */,
 				FBC7333325E478D20048999C /* CameraOverlayView.swift */,
 				FBEB495C260CBC2800F6060C /* Orphaned */,
+				FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */,
 			);
 			path = Compoents;
 			sourceTree = "<group>";
@@ -890,6 +893,7 @@
 				FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */,
 				FBC7332925E307DF0048999C /* PlantTypePickerViewController.swift in Sources */,
 				FB7B813E25BA6CA50053E543 /* WeekPickerCell.swift in Sources */,
+				FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */,
 				FB6C463725F2FD01009ED947 /* CareValue.swift in Sources */,
 				FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				FB92AF71262EF6130062DE47 /* CustomViewCell.swift in Sources */,

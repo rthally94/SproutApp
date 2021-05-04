@@ -9,6 +9,8 @@ import UIKit
 
 class GridPicker: UIControl {
     var itemsPerRow: Int = 7
+    var rowHeight: CGFloat = 28
+
     var selectedIndices = Set<Int>() {
         didSet {
             imageButtons.enumerated().forEach { index, item in
@@ -24,11 +26,7 @@ class GridPicker: UIControl {
 
             imageButtons = items.enumerated().map { (index, item) in
                 let action = UIAction(title: item, handler: tapHandler(_:))
-                let button = IntervalPickerButton(primaryAction: action)
-
-//                button.contentEdgeInsets = .init(top: 10, left: 10, bottom: 10, right: 10)
-                button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
-
+                let button = IntervalPickerButton()
                 button.isSelected = selectedIndices.contains(index)
 
                 return button
@@ -65,13 +63,20 @@ class GridPicker: UIControl {
 
                 let rowStack = columnStackView.arrangedSubviews.last as? UIStackView
                 rowStack?.addArrangedSubview(button)
+                button.translatesAutoresizingMaskIntoConstraints = false
+                button.heightAnchor.constraint(equalToConstant: rowHeight).isActive = true
+                button.widthAnchor.constraint(equalTo: button.heightAnchor).isActive = true
             }
 
             let remaining = imageButtons.count % itemsPerRow
             if remaining != 0 {
                 let rowStack = columnStackView.arrangedSubviews.last as? UIStackView
                 for _ in 0...remaining {
-                    rowStack?.addArrangedSubview(UIView())
+                    let placeholderView = UIView()
+                    rowStack?.addArrangedSubview(placeholderView)
+                    placeholderView.translatesAutoresizingMaskIntoConstraints = false
+                    placeholderView.heightAnchor.constraint(equalToConstant: rowHeight).isActive = true
+                    placeholderView.widthAnchor.constraint(equalTo: placeholderView.heightAnchor).isActive = true
                 }
             }
 
@@ -82,55 +87,35 @@ class GridPicker: UIControl {
     private var rowStackView: UIStackView {
         let stackView = UIStackView()
         stackView.axis = .horizontal
-        stackView.distribution = .equalCentering
-        stackView.alignment = .center
+        stackView.distribution = .fillEqually
+        stackView.alignment = .fill
+        stackView.spacing = 16
         return stackView
     }
 
     private let columnStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
+        stackView.alignment = .fill
         stackView.distribution = .fill
         stackView.spacing = 16
-        stackView.alignment = .fill
         return stackView
     }()
 
-    private var customConstraints: (
-        stackTop: NSLayoutConstraint,
-        stackLeading: NSLayoutConstraint,
-        stackBotton: NSLayoutConstraint,
-        stackTrailing: NSLayoutConstraint
-    )?
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        setupViewsIfNeeded()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupViews()
     }
 
-    private func setupViewsIfNeeded() {
-        guard customConstraints == nil else { return }
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupViews()
+    }
 
+
+    private func setupViews() {
         addSubview(columnStackView)
-        columnStackView.translatesAutoresizingMaskIntoConstraints = false
-
-        let constraints = (
-            stackTop: columnStackView.topAnchor.constraint(equalTo: topAnchor),
-            stackLeading: columnStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackBotton: columnStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackTrailing: columnStackView.trailingAnchor.constraint(equalTo: trailingAnchor)
-        )
-
-        constraints.stackTop.priority-=1
-
-        NSLayoutConstraint.activate([
-            constraints.stackTop,
-            constraints.stackLeading,
-            constraints.stackBotton,
-            constraints.stackTrailing
-        ])
-
-        customConstraints = constraints
+        columnStackView.frame = bounds
+        columnStackView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
 }

@@ -48,7 +48,7 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
             // Form Cell
             case .textField:
                 return collectionView.dequeueConfiguredReusableCell(using: textFieldCellRegistration, for: indexPath, item: item)
-            case .button:
+            case .button, .circleButton:
                 return collectionView.dequeueConfiguredReusableCell(using: buttonCellRegistration, for: indexPath, item: item)
             case .pickerRow:
                 return collectionView.dequeueConfiguredReusableCell(using: pickerRowCellRegistration, for: indexPath, item: item)
@@ -115,22 +115,29 @@ extension StaticCollectionViewController {
         }
     }
 
-    private func makeButtonCellRegistration() -> UICollectionView.CellRegistration<ButtonCell, Item> {
-        UICollectionView.CellRegistration<ButtonCell, Item> { cell, indexPath, item in
+    private func makeButtonCellRegistration() -> UICollectionView.CellRegistration<SproutButtonCell, Item> {
+        UICollectionView.CellRegistration<SproutButtonCell, Item> { cell, indexPath, item in
+            cell.title = item.text
             cell.image = item.image
-            cell.text = item.text
             cell.tintColor = item.tintColor
+            cell.isSelected = item.isOn
 
-            if case .normal = item.displayContext {
-                cell.displayContext = .normal
+            if case .plain = item.displayContext {
+                cell.displayMode = .plain
+            } else if case .normal = item.displayContext {
+                cell.displayMode = .normal
             } else if case .primary = item.displayContext {
-                cell.displayContext = .primary
+                cell.displayMode = .primary
             } else if case .destructive = item.displayContext {
-                cell.displayContext = .destructive
+                cell.displayMode = .destructive
             }
-            
-            cell.layer.cornerRadius = 10
-            cell.clipsToBounds = true
+
+            if item.rowType == .circleButton {
+                cell.layer.cornerRadius = cell.bounds.height/2
+            } else {
+                cell.layer.cornerRadius = 10
+            }
+                cell.clipsToBounds = true
         }
     }
 
@@ -237,8 +244,7 @@ extension StaticCollectionViewController {
     func makeCustomViewCellRegistration() -> UICollectionView.CellRegistration<CustomViewCell, Item> {
         UICollectionView.CellRegistration<CustomViewCell, Item> { cell, indexPath, item in
             cell.customView = item.customView
-
-            cell.backgroundColor = .secondarySystemGroupedBackground
+            cell.backgroundColor = .clear
         }
     }
 }

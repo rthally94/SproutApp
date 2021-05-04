@@ -17,18 +17,19 @@ struct RowItem: Hashable {
     }
 
     enum RowType: Hashable {
-           // List Cells
-           case value1, value2, subtitle
+        // List Cells
+        case value1, value2, subtitle
 
-           // Form Cells
-           case textField, button, pickerRow
+        // Form Cells
+        case textField, button, pickerRow
 
-           // Sprout Cells
-           case compactCard
-           case icon, hero, header, largeHeader
-           case statistic
-           case todo
-           case customView
+        // Sprout Cells
+        case compactCard
+        case icon, hero, header, largeHeader
+        case statistic
+        case todo
+        case circleButton
+        case customView
     }
 
     typealias TapAction = () -> Void
@@ -36,11 +37,12 @@ struct RowItem: Hashable {
     typealias Icon = GHIcon
 
     enum DisplayContext: Int, Hashable {
-        case normal, primary, destructive
+        case plain, normal, primary, destructive
     }
 
     // Unique identifier of the row
     var id: UUID
+    var tag: Int = 0
     var rowType: RowType
 
     // Display Properties
@@ -186,7 +188,12 @@ struct RowItem: Hashable {
         RowItem(id: id, rowType: .compactCard, text: title, secondaryText: value, image: image, tapAction: tapAction)
     }
 
+    static func circleButtonCell(id: UUID = UUID(), text: String? = nil, image: UIImage? = nil, isSelected: Bool, tintColor: UIColor? = nil, tapAction: TapAction? = nil) -> RowItem {
+        let tintColor = isSelected ? tintColor : .systemGray
+        return RowItem(id: id, rowType: .circleButton, text: text, image: image, isOn: isSelected, tintColor: tintColor, displayContext: .plain, tapAction: tapAction)
+    }
+
     static func customView(id: UUID = UUID(), customView: UIView) -> RowItem {
-         RowItem(id: id, rowType: .customView, customView: customView)
+        RowItem(id: id, rowType: .customView, customView: customView)
     }
 }
