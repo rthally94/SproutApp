@@ -268,8 +268,8 @@ extension PlantEditorControllerController: TaskEditorDelegate {
         if let existingTask = plant.tasks.first(where: { $0.id == task.id }) {
             plant.tasks.remove(existingTask)
         }
-        
-        if task.isUpdated || task.isInserted {
+
+        if !task.isDeleted {
             plant.addToTasks_(task)
         }
 

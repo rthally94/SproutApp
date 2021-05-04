@@ -301,8 +301,8 @@
 			children = (
 				FB6661C72620938200DC8B04 /* Core Data */,
 				FB6C45FA25EFE9F0009ED947 /* Extensions */,
-				FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */,
 				FB6661C42620936700DC8B04 /* Orphaned */,
+				FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */,
 				FB6661CA2620938F00DC8B04 /* Utility.swift */,
 			);
 			path = Model;
@@ -443,13 +443,6 @@
 				FB6661B5261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift */,
 			);
 			path = Extensions;
-			sourceTree = "<group>";
-		};
-		FB6C460B25F11B81009ED947 /* Collection View Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Collection View Cells";
 			sourceTree = "<group>";
 		};
 		FB6C461A25F1C31B009ED947 /* CareDetail */ = {
@@ -681,7 +674,6 @@
 		FBC5D61B25EC555E005BF6B1 /* All Plants */ = {
 			isa = PBXGroup;
 			children = (
-				FB6C460B25F11B81009ED947 /* Collection View Cells */,
 				FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */,
 				FB7ED52A26164290008FD1BE /* PlantsProvider.swift */,
 			);
@@ -1117,14 +1109,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B3L9HWP3QN;
+				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = GrowApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.GrowApp;
+				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.seedling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1137,14 +1129,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B3L9HWP3QN;
+				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = GrowApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.GrowApp;
+				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.seedling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
