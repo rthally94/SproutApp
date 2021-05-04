@@ -79,6 +79,7 @@ private extension UpNextViewController {
                 cell.accessories = [
                     .todoAccessory(actionHandler: {_ in
                         task.markAsComplete()
+                        self?.persistentContainer.saveContextIfNeeded()
                     })
                 ]
             }

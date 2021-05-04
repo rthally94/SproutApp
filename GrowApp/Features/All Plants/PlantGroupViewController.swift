@@ -126,6 +126,7 @@ extension PlantGroupViewController: UICollectionViewDelegate {
 extension PlantGroupViewController: PlantEditorDelegate {
     func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
         persistentContainer.saveContextIfNeeded()
+        plantsProvider?.reload()
     }
 
     func plantEditorDidCancel(_ editor: PlantEditorControllerController) {

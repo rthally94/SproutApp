@@ -34,6 +34,10 @@ class PlantsProvider: NSObject {
     func object(at indexPath: IndexPath) -> GHPlant {
         return fetchedResultsController.object(at: indexPath)
     }
+
+    func reload() {
+        try! fetchedResultsController.performFetch()
+    }
 }
 
 extension PlantsProvider: NSFetchedResultsControllerDelegate {
