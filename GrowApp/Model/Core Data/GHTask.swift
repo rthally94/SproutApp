@@ -29,12 +29,13 @@ public class GHTask: NSManagedObject {
     }
 
     /// Marks a task as complete. Increments lastLogDate and nextCareDate.
-    func markAsComplete() {
+    func markAsComplete(completion: (() -> Void)? = nil) {
         let markedDate = Date()
         lastLogDate = markedDate
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [unowned self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [unowned self] in
             self.nextCareDate = interval?.nextDate(after: markedDate)
+            completion?()
         }
     }
 

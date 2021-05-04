@@ -11,10 +11,14 @@ import CoreData
 class StorageProvider {
     let persistentContainer: NSPersistentContainer
     
-    init() {
+    init(storeType: StoreType = .persisted) {
         ValueTransformer.setValueTransformer(UIImageTransformer(), forName: NSValueTransformerName("UIImageValueTransformer"))
         persistentContainer = NSPersistentContainer(name: "GreenHouseDataModel")
-        
+
+        if storeType == .inMemory {
+            persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+        }
+
         persistentContainer.loadPersistentStores(completionHandler: { description, error in
             if let error = error {
                 fatalError("Core Data store failed to load with error: \(error)")
@@ -29,6 +33,10 @@ class StorageProvider {
         if let types = try? persistentContainer.viewContext.fetch(request), types.isEmpty {
             loadPlantTypes()
         }
+    }
+
+    enum StoreType  {
+        case inMemory, persisted
     }
     
     func loadPlantTypes() {

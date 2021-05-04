@@ -14,7 +14,7 @@ public class GHTaskInterval: NSManagedObject {
     static let RepeatsMonthlyFrequency = "monthly"
 
     func nextDate(after testDate: Date) -> Date {
-        var returnDate = Date()
+        var returnDate = testDate
 
         let interval = (wrappedFrequency, componentsArray)
         switch interval {

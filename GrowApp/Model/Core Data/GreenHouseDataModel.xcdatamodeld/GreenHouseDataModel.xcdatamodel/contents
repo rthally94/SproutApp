@@ -30,7 +30,7 @@
         <relationship name="taskType" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="tasks" inverseEntity="GHTaskType"/>
     </entity>
     <entity name="GHTaskInterval" representedClassName=".GHTaskInterval" syncable="YES" codeGenerationType="category">
-        <attribute name="repeatsFrequency" optional="YES" attributeType="String"/>
+        <attribute name="repeatsFrequency" optional="YES" attributeType="String" defaultValueString="never"/>
         <attribute name="repeatsValues" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="Set&lt;Int&gt;"/>
         <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="task" maxCount="1" deletionRule="Nullify" destinationEntity="GHTask" inverseName="interval" inverseEntity="GHTask"/>

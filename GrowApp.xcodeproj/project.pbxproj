@@ -49,7 +49,6 @@
 		FB6C463725F2FD01009ED947 /* CareValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C463625F2FD01009ED947 /* CareValue.swift */; };
 		FB6C464325F58E01009ED947 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C464225F58E01009ED947 /* ScheduleView.swift */; };
 		FB6C464B25F591FD009ED947 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C464A25F591FD009ED947 /* ScheduleViewController.swift */; };
-		FB7490F725B1EB3B00925C29 /* PlantTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7490F625B1EB3B00925C29 /* PlantTests.swift */; };
 		FB76D33C262A576500D00036 /* SproutIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D33B262A576500D00036 /* SproutIconView.swift */; };
 		FB76D341262A592500D00036 /* LargeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D340262A592500D00036 /* LargeHeaderView.swift */; };
 		FB76D347262A5AF500D00036 /* SproutTaskLargeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D346262A5AF500D00036 /* SproutTaskLargeHeaderView.swift */; };
@@ -84,6 +83,8 @@
 		FB9E8C51262CCD7700514AAB /* RowItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C50262CCD7700514AAB /* RowItem.swift */; };
 		FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* ButtonCell.swift */; };
 		FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */; };
+		FBAF464E2641FE5000854D2C /* GHIntervalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF464D2641FE5000854D2C /* GHIntervalTests.swift */; };
+		FBAF46542642087600854D2C /* GHTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF46532642087600854D2C /* GHTaskTests.swift */; };
 		FBB03C0D263777F900F7F364 /* HeroCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C0C263777F900F7F364 /* HeroCell.swift */; };
 		FBB03C122637781C00F7F364 /* HeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C112637781C00F7F364 /* HeroView.swift */; };
 		FBB102FC25B9C7AF005C3C8E /* DatePickerCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */; };
@@ -173,7 +174,6 @@
 		FB6C464A25F591FD009ED947 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		FB7490E825B1E71200925C29 /* GrowAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		FB7490F625B1EB3B00925C29 /* PlantTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTests.swift; sourceTree = "<group>"; };
 		FB76D33B262A576500D00036 /* SproutIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIconView.swift; sourceTree = "<group>"; };
 		FB76D340262A592500D00036 /* LargeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeHeaderView.swift; sourceTree = "<group>"; };
 		FB76D346262A5AF500D00036 /* SproutTaskLargeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutTaskLargeHeaderView.swift; sourceTree = "<group>"; };
@@ -208,6 +208,8 @@
 		FB9E8C50262CCD7700514AAB /* RowItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RowItem.swift; sourceTree = "<group>"; };
 		FB9E8C58262D08B400514AAB /* ButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonCell.swift; sourceTree = "<group>"; };
 		FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectBackgroundView.swift; sourceTree = "<group>"; };
+		FBAF464D2641FE5000854D2C /* GHIntervalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHIntervalTests.swift; sourceTree = "<group>"; };
+		FBAF46532642087600854D2C /* GHTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHTaskTests.swift; sourceTree = "<group>"; };
 		FBB03C0C263777F900F7F364 /* HeroCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroCell.swift; sourceTree = "<group>"; };
 		FBB03C112637781C00F7F364 /* HeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroView.swift; sourceTree = "<group>"; };
 		FBB102FB25B9C7AF005C3C8E /* DatePickerCardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerCardViewController.swift; sourceTree = "<group>"; };
@@ -482,8 +484,9 @@
 		FB7490E925B1E71200925C29 /* GrowAppTests */ = {
 			isa = PBXGroup;
 			children = (
-				FB7490F625B1EB3B00925C29 /* PlantTests.swift */,
 				FB7490EC25B1E71200925C29 /* Info.plist */,
+				FBAF464D2641FE5000854D2C /* GHIntervalTests.swift */,
+				FBAF46532642087600854D2C /* GHTaskTests.swift */,
 			);
 			path = GrowAppTests;
 			sourceTree = "<group>";
@@ -787,6 +790,7 @@
 					};
 					FB7490E725B1E71200925C29 = {
 						CreatedOnToolsVersion = 12.3;
+						LastSwiftMigration = 1240;
 						TestTargetID = FB21B6F325B1E5CC00D02384;
 					};
 				};
@@ -945,7 +949,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB7490F725B1EB3B00925C29 /* PlantTests.swift in Sources */,
+				FBAF464E2641FE5000854D2C /* GHIntervalTests.swift in Sources */,
+				FBAF46542642087600854D2C /* GHTaskTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1131,8 +1136,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B3L9HWP3QN;
+				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = GrowAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1141,6 +1147,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.GrowAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GrowApp.app/GrowApp";
@@ -1151,8 +1158,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B3L9HWP3QN;
+				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = GrowAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
