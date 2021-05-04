@@ -38,7 +38,6 @@ class MainViewController: UIViewController {
         let vc = UITabBarController(nibName: nil, bundle: nil)
         vc.setViewControllers([
             upNextVC,
-            timelineVC,
             plantGroupVC
         ], animated: false)
         return vc

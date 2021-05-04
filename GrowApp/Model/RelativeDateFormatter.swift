@@ -18,9 +18,9 @@ class RelativeDateFormatter: Formatter {
     
     static let relativeDateTimeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
-        formatter.dateTimeStyle = .named
+        formatter.dateTimeStyle = .numeric
         formatter.unitsStyle = .full
-        formatter.formattingContext = .beginningOfSentence
+        formatter.formattingContext = .standalone
         return formatter
     }()
     

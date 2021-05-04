@@ -78,8 +78,6 @@
 		FB92AF6B262E50510062DE47 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF6A262E50510062DE47 /* ImagePicker.swift */; };
 		FB92AF71262EF6130062DE47 /* CustomViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF70262EF6130062DE47 /* CustomViewCell.swift */; };
 		FB92AF75262EF8A70062DE47 /* WeekdayPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */; };
-		FB92AF80262F032F0062DE47 /* GridPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF7F262F032F0062DE47 /* GridPicker.swift */; };
-		FB92AF88262F7D270062DE47 /* IntervalPickerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF87262F7D270062DE47 /* IntervalPickerButton.swift */; };
 		FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* CardView.swift */; };
 		FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */; };
 		FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* TasksProvider.swift */; };
@@ -204,8 +202,6 @@
 		FB92AF6A262E50510062DE47 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		FB92AF70262EF6130062DE47 /* CustomViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewCell.swift; sourceTree = "<group>"; };
 		FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdayPickerCell.swift; sourceTree = "<group>"; };
-		FB92AF7F262F032F0062DE47 /* GridPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridPicker.swift; sourceTree = "<group>"; };
-		FB92AF87262F7D270062DE47 /* IntervalPickerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntervalPickerButton.swift; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
 		FB9C66B4263AE76900CDC15A /* TasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksProvider.swift; sourceTree = "<group>"; };
@@ -301,8 +297,8 @@
 			children = (
 				FB6661C72620938200DC8B04 /* Core Data */,
 				FB6C45FA25EFE9F0009ED947 /* Extensions */,
-				FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */,
 				FB6661C42620936700DC8B04 /* Orphaned */,
+				FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */,
 				FB6661CA2620938F00DC8B04 /* Utility.swift */,
 			);
 			path = Model;
@@ -445,13 +441,6 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		FB6C460B25F11B81009ED947 /* Collection View Cells */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Collection View Cells";
-			sourceTree = "<group>";
-		};
 		FB6C461A25F1C31B009ED947 /* CareDetail */ = {
 			isa = PBXGroup;
 			children = (
@@ -513,7 +502,6 @@
 			children = (
 				FB9C66A8263A538D00CDC15A /* CardView */,
 				FBB03C102637780B00F7F364 /* PlantHero */,
-				FB92AF7E262F02DF0062DE47 /* GridPicker */,
 				FB92AF69262E50370062DE47 /* ImagePicker */,
 				FBD549A3262B1C8300640A8F /* StatisticView */,
 				FBD54994262A5EF500640A8F /* CompactCardView */,
@@ -601,15 +589,6 @@
 			path = ImagePicker;
 			sourceTree = "<group>";
 		};
-		FB92AF7E262F02DF0062DE47 /* GridPicker */ = {
-			isa = PBXGroup;
-			children = (
-				FB92AF7F262F032F0062DE47 /* GridPicker.swift */,
-				FB92AF87262F7D270062DE47 /* IntervalPickerButton.swift */,
-			);
-			path = GridPicker;
-			sourceTree = "<group>";
-		};
 		FB9C66A8263A538D00CDC15A /* CardView */ = {
 			isa = PBXGroup;
 			children = (
@@ -681,7 +660,6 @@
 		FBC5D61B25EC555E005BF6B1 /* All Plants */ = {
 			isa = PBXGroup;
 			children = (
-				FB6C460B25F11B81009ED947 /* Collection View Cells */,
 				FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */,
 				FB7ED52A26164290008FD1BE /* PlantsProvider.swift */,
 			);
@@ -889,7 +867,6 @@
 				FB7ED5422616A235008FD1BE /* GHIcon+Extensions.swift in Sources */,
 				FB7ED4E526120D74008FD1BE /* PlantStore.swift in Sources */,
 				FB7ED5192615260F008FD1BE /* StorageProvider.swift in Sources */,
-				FB92AF88262F7D270062DE47 /* IntervalPickerButton.swift in Sources */,
 				FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */,
 				FBC7332925E307DF0048999C /* PlantTypePickerViewController.swift in Sources */,
 				FB7B813E25BA6CA50053E543 /* WeekPickerCell.swift in Sources */,
@@ -940,7 +917,6 @@
 				FB6C463125F2FCAB009ED947 /* TaskInterval.swift in Sources */,
 				FB6661A1261DEB9900DC8B04 /* GHTaskType+Extensions.swift in Sources */,
 				FB6C461C25F1C332009ED947 /* CareDetailViewController.swift in Sources */,
-				FB92AF80262F032F0062DE47 /* GridPicker.swift in Sources */,
 				FBC7333025E404CC0048999C /* PlantIconPickerController.swift in Sources */,
 				FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */,
 				FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */,
@@ -1117,14 +1093,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B3L9HWP3QN;
+				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = GrowApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.GrowApp;
+				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.seedling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1137,14 +1113,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = B3L9HWP3QN;
+				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = GrowApp/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.GrowApp;
+				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.seedling;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

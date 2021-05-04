@@ -68,6 +68,21 @@ private extension UpNextViewController {
         UICollectionView.CellRegistration<TaskCalendarListCell, Item> {[weak self] cell, indexPath, item in
             guard let task = self?.tasksProvider?.object(at: indexPath) else { return }
             cell.updateWithTask(task)
+
+            if let lastLogDate = task.lastLogDate,
+               let nextCareDate = task.nextCareDate,
+               let difference = Calendar.current.dateComponents([.day], from: lastLogDate, to: nextCareDate).day,
+               difference <= 0
+            {
+                cell.accessories = [ .checkmark() ]
+            } else {
+                cell.accessories = [
+                    .todoAccessory(actionHandler: {_ in
+                        task.markAsComplete()
+                    })
+                ]
+            }
+
         }
     }
 
@@ -77,7 +92,7 @@ private extension UpNextViewController {
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             var configuration = UIListContentConfiguration.largeGroupedHeader()
             configuration.text = section
-//            configuration.secondaryText = itemCount == 1 ? "\(itemCount) task" : "\(itemCount) tasks"
+            //            configuration.secondaryText = itemCount == 1 ? "\(itemCount) task" : "\(itemCount) tasks"
             cell.contentConfiguration = configuration
         }
     }
@@ -91,10 +106,10 @@ private extension UpNextViewController {
         let taskHeader = createHeaderRegistration()
         dataSource.supplementaryViewProvider = { collectionView, elementKind, indexPath in
             switch elementKind {
-                case UICollectionView.elementKindSectionHeader:
-                    return collectionView.dequeueConfiguredReusableSupplementary(using: taskHeader, for: indexPath)
-                default:
-                    return nil
+            case UICollectionView.elementKindSectionHeader:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: taskHeader, for: indexPath)
+            default:
+                return nil
             }
         }
 
