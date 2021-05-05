@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 
 class PlantsProvider: NSObject {
-    typealias Section = Int
+    typealias Section = String
     typealias Item = NSManagedObjectID
     
     let moc: NSManagedObjectContext
@@ -33,6 +33,10 @@ class PlantsProvider: NSObject {
     
     func object(at indexPath: IndexPath) -> GHPlant {
         return fetchedResultsController.object(at: indexPath)
+    }
+
+    func object(withID id: NSManagedObjectID) -> GHPlant? {
+        return moc.object(with: id) as? GHPlant
     }
 
     func reload() {

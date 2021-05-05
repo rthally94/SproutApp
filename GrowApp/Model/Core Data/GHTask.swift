@@ -32,7 +32,7 @@ public class GHTask: NSManagedObject {
     func markAsComplete(completion: (() -> Void)? = nil) {
         let markedDate = Date()
         lastLogDate = markedDate
-
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [unowned self] in
             self.nextCareDate = interval?.nextDate(after: markedDate)
             completion?()

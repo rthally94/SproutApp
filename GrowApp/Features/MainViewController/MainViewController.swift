@@ -27,7 +27,11 @@ class MainViewController: UIViewController {
     
     lazy var plantGroupVC: some UIViewController = {
         let vc = PlantGroupViewController()
-        vc.persistentContainer = persistentContainer
+
+        let viewModel = PlantGroupViewModel()
+        viewModel.persistentContainer = persistentContainer
+        vc.viewModel = viewModel
+
         let nav = vc.wrappedInNavigationController()
         nav.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
         nav.tabBarItem.tag = 2

@@ -39,6 +39,13 @@ class UpNextViewController: UIViewController {
         tasksProvider = TasksProvider(managedObjectContext: persistentContainer.viewContext)
 
         dataSource = makeDataSource()
+
+        title = "Up Next"
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
         tasksProvider?.$snapshot
             .sink {[weak self] snapshot in
                 if let snapshot = snapshot {
@@ -46,8 +53,16 @@ class UpNextViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+    }
 
-        title = "Up Next"
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        cancellables.forEach {
+            $0.cancel()
+        }
+
+        cancellables.removeAll()
     }
 
     private func setupViews() {
