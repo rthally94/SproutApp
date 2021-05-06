@@ -44,22 +44,6 @@ public class GHTaskInterval: NSManagedObject {
 
         return returnDate
     }
-
-    public override func awakeFromFetch() {
-        super.awakeFromFetch()
-
-        let previousCareDate: Date
-        if let lastLogDate = task?.lastLogDate, Calendar.current.isDateInToday(lastLogDate) {
-            // Last Log is Today -> Next is after today
-            previousCareDate = lastLogDate
-        } else {
-            let today = Calendar.current.startOfDay(for: Date())
-            previousCareDate = today.addingTimeInterval(-1 * 24 * 60 * 60)
-        }
-
-        let nextCareDate = nextDate(after: previousCareDate)
-        task?.nextCareDate = nextCareDate
-    }
 }
 
 extension GHTaskInterval {

@@ -669,9 +669,9 @@
 		FBC5D61B25EC555E005BF6B1 /* All Plants */ = {
 			isa = PBXGroup;
 			children = (
-				FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */,
 				FB7ED52A26164290008FD1BE /* PlantsProvider.swift */,
 				FB82CDE02642F35F00E32F16 /* PlantGroupViewModel.swift */,
+				FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */,
 				FB82CDE42642F62B00E32F16 /* PlantGroupSection.swift */,
 				FB82CDE82642F6BE00E32F16 /* PlantGroupItem.swift */,
 			);

@@ -38,11 +38,20 @@ class PlantGroupViewModel {
 
                     zip(oldSnapshot.sectionIdentifiers, newSnapshot.sectionIdentifiers).forEach { sectionID, section in
                         let plantIDs = oldSnapshot.itemIdentifiers(inSection: sectionID)
-                        let items: [Item] = plantIDs.compactMap { plantID in
-                            guard let plant = self.plantsProvider.object(withID: plantID) else { return nil }
-                            return Item(plant: plant)
+                        var items = [Item]()
+                        var itemsToReload = [Item]()
+                        plantIDs.forEach { plantID in
+                            if let plant = self.plantsProvider.object(withID: plantID) {
+                                let item = Item(plant: plant)
+                                items.append(item)
+                                if plant.hasUpdates {
+                                    itemsToReload.append(item)
+                                }
+                            }
                         }
+
                         newSnapshot.appendItems(items, toSection: section)
+                        newSnapshot.reloadItems(itemsToReload)
                     }
                 }
                 return newSnapshot

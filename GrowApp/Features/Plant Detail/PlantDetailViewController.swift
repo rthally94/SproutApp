@@ -142,15 +142,14 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
 
 extension PlantDetailViewController: PlantEditorDelegate {
     func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
-        if plant.isUpdated {
-            print("Updated")
-            self.plant = plant
-            updateUI()
-        } else if plant.isDeleted {
+        if plant.isDeleted {
             navigationController?.popViewController(animated: false)
+            return
         }
-        
+
         persistentContainer.saveContextIfNeeded()
+        persistentContainer.viewContext.refresh(self.plant!, mergeChanges: true)
+        updateUI()
     }
 }
 
@@ -163,21 +162,22 @@ private extension PlantDetailViewController {
 
 private extension PlantDetailViewController {
     func makeSnapshot() -> NSDiffableDataSourceSnapshot<PlantDetailSection, Item> {
+        guard let id = plant?.objectID, let plant = persistentContainer.viewContext.object(with: id) as? GHPlant else { fatalError("Could not get plant from context") }
         var snapshot = NSDiffableDataSourceSnapshot<PlantDetailSection, Item>()
         snapshot.appendSections(PlantDetailSection.allCases)
         
         // Plant Info Header
         snapshot.appendItems([
-            .hero(image: plant?.icon?.image, title: plant?.name, subtitle: plant?.type?.commonName)
+            .hero(image: plant.icon?.image, title: plant.name, subtitle: plant.type?.commonName)
         ], toSection: .plantHero)
         
         // Plant Care Summary
-        let tasksToday: Set<GHTask> = plant?.tasks.filter { task in
+        let tasksToday: Set<GHTask> = plant.tasks.filter { task in
             guard let date = task.nextCareDate else { return false }
             return Calendar.current.isDateInToday(date)
         } ?? []
 
-        let lateTasks: Set<GHTask> = plant?.tasks.filter { task in
+        let lateTasks: Set<GHTask> = plant.tasks.filter { task in
             guard let date = task.nextCareDate else { return false }
             let today = Calendar.current.startOfDay(for: Date())
             return date < today
@@ -201,7 +201,7 @@ private extension PlantDetailViewController {
         snapshot.appendItems(nextTasks, toSection: .upNext)
         
         // All Tasks
-        let items: [Item] = plant?.tasks.compactMap { task in
+        let items: [Item] = plant.tasks.compactMap { task in
             return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tapAction: { [unowned self] in
                 print(task.taskType?.name ?? "Unknown")
             })

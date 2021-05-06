@@ -22,4 +22,11 @@ public class GHPlant: NSManagedObject {
 
         return newPlant
     }
+
+    var hasUpdates: Bool {
+        return isUpdated
+            || icon?.isUpdated == true
+            || type?.isUpdated == true
+            || tasks.contains(where: { $0.isUpdated })
+    }
 }

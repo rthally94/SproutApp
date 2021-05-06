@@ -49,4 +49,22 @@ public class GHTask: NSManagedObject {
             return "NO DATE"
         }
     }
+
+    public override func willSave() {
+        super.willSave()
+
+        let previousCareDate: Date
+        if let lastLogDate = lastLogDate, Calendar.current.isDateInToday(lastLogDate) {
+            // Last Log is Today -> Next is after today
+            previousCareDate = lastLogDate
+        } else {
+            let today = Calendar.current.startOfDay(for: Date())
+            previousCareDate = today.addingTimeInterval(-1 * 24 * 60 * 60)
+        }
+
+        let newDate = interval?.nextDate(after: previousCareDate)
+        if let newDate = newDate, (nextCareDate == nil || Calendar.current.dateComponents([.second], from: nextCareDate!, to: newDate).second! > 5) {
+            nextCareDate = newDate
+        }
+    }
 }

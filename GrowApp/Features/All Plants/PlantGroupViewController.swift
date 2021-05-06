@@ -36,13 +36,16 @@ class PlantGroupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationController?.delegate = self
         dataSource = makeDataSource()
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPlant))
+
         viewModel.snapshot
             .sink(receiveValue: { [weak self] snapshot in
                 self?.dataSource.apply(snapshot)
             })
             .store(in: &cancellables)
-        
+
         viewModel.$title
             .assign(to: \.title, on: self)
             .store(in: &cancellables)
@@ -61,10 +64,7 @@ class PlantGroupViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPlant))
     }
-
 
     func configureHiearchy() {
         view.addSubview(collectionView)
@@ -139,9 +139,20 @@ extension PlantGroupViewController: UICollectionViewDelegate {
 extension PlantGroupViewController: PlantEditorDelegate {
     func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
         viewModel.showList()
+
+        viewModel.persistentContainer.viewContext.refresh(plant, mergeChanges: true)
+        viewModel.persistentContainer.saveContextIfNeeded()
     }
 
     func plantEditorDidCancel(_ editor: PlantEditorControllerController) {
         viewModel.showList()
+    }
+}
+
+extension PlantGroupViewController: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if viewController == self {
+            viewModel.showList()
+        }
     }
 }

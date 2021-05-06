@@ -41,28 +41,14 @@ class UpNextViewController: UIViewController {
         dataSource = makeDataSource()
 
         title = "Up Next"
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
 
         tasksProvider?.$snapshot
             .sink {[weak self] snapshot in
-                if let snapshot = snapshot {
+                if let snapshot = snapshot, snapshot.numberOfItems > 0 {
                     self?.dataSource.apply(snapshot)
                 }
             }
             .store(in: &cancellables)
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        cancellables.forEach {
-            $0.cancel()
-        }
-
-        cancellables.removeAll()
     }
 
     private func setupViews() {

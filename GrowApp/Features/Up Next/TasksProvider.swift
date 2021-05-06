@@ -62,7 +62,10 @@ extension TasksProvider: NSFetchedResultsControllerDelegate {
         }
 
         newSnapshot.reloadItems(idsToReload)
-        self.snapshot = newSnapshot
+
+        if newSnapshot.numberOfSections == fetchedResultsController.sections?.count && newSnapshot.numberOfItems == fetchedResultsController.fetchedObjects?.count {
+            self.snapshot = newSnapshot
+        }
     }
 
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, sectionIndexTitleForSectionName sectionName: String) -> String? {

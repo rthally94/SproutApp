@@ -52,12 +52,6 @@ class StorageProvider {
 
 extension StorageProvider {
     func saveContext() {
-        if persistentContainer.viewContext.hasChanges {
-            do {
-                try persistentContainer.viewContext.save()
-            } catch {
-                print("Error saving context: \(error)")
-            }
-        }
+        persistentContainer.saveContextIfNeeded()
     }
 }

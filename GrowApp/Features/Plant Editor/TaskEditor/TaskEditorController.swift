@@ -40,7 +40,6 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
 
     private func makeWeekdayPicker() -> [Item] {
         guard let values = task?.interval?.repeatsValues else { return [] }
-        print("Has Values")
         let items: [Item] = Array(1...7).map { value in
             let title = Calendar.current.veryShortStandaloneWeekdaySymbols[value-1]
 
@@ -50,7 +49,6 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
             item.tag = value
             return item
         }
-        print(items.count)
 
         return items
     }
@@ -74,7 +72,6 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print("TaskEditorController --- Begin Grouping")
         persistentContainer.viewContext.undoManager?.beginUndoGrouping()
 
         assert(task != nil, "TaskEditorViewController --- Task cannot be \"nil\". Set the property before presenting.")
@@ -146,7 +143,6 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         }
 
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
-        print("TaskEditorController --- End Grouping")
         dismiss(animated: true)
     }
 
@@ -154,7 +150,6 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         delegate?.taskEditorDidCancel(self)
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
         persistentContainer.viewContext.undoManager?.undoNestedGroup()
-        print("TaskEditorController --- End Grouping")
         dismiss(animated: true)
     }
 
@@ -241,7 +236,6 @@ extension TaskEditorController {
         actionSnapshot.append([
             Item.button(context: .destructive, title: "Remove", image: UIImage(systemName: "trash"), onTap: {
                 self.unassignTask()
-                print("Deleted")
             })
         ])
         dataSource.apply(actionSnapshot, to: .actions)

@@ -245,8 +245,10 @@ extension PlantEditorControllerController: UICollectionViewDelegate {
 // MARK: - PlantIconPickerDelegate
 extension PlantEditorControllerController: PlantIconPickerControllerDelegate {
     func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: GHIcon) {
-        guard let icon = persistentContainer.viewContext.object(with: icon.objectID) as? GHIcon else { return }
-        plant.icon = icon
+        if icon.isInserted {
+            icon.plant = plant
+        }
+
         updateUI()
     }
 }
@@ -263,8 +265,6 @@ extension PlantEditorControllerController: PlantTypePickerDelegate {
 // MARK: - PlantTaskEditroDelegate
 extension PlantEditorControllerController: TaskEditorDelegate {
     func taskEditor(_ editor: TaskEditorController, didUpdateTask task: GHTask) {
-        print("Inserted: \(task.isInserted) | Updated: \(task.isUpdated) | Deleted: \(task.isDeleted)")
-
         if let existingTask = plant.tasks.first(where: { $0.id == task.id }) {
             plant.tasks.remove(existingTask)
         }
