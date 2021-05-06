@@ -11,6 +11,7 @@ import Foundation
 extension NSPersistentContainer {
     func saveContextIfNeeded() {
         if viewContext.hasChanges {
+            print("Persisting Changes")
             do {
                 try viewContext.save()
             } catch {

@@ -56,6 +56,9 @@ extension TasksProvider: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var newSnapshot = snapshot as NSDiffableDataSourceSnapshot<Section, Item>
         let idsToReload = newSnapshot.itemIdentifiers.filter { identifier in
+            if identifier.isTemporaryID {
+                print("UpNext - Found Temporary ID")
+            }
             guard let oldIndex = self.snapshot?.indexOfItem(identifier), let newIndex = newSnapshot.indexOfItem(identifier), oldIndex == newIndex else { return false }
             guard (try? controller.managedObjectContext.existingObject(with: identifier))?.isUpdated == true else { return false }
             return true

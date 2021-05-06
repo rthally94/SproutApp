@@ -120,5 +120,7 @@ private extension UpNextViewController {
 }
 
 extension UpNextViewController: UICollectionViewDelegate {
-
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        return false
+    }
 }

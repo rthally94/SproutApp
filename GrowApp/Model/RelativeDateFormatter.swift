@@ -15,7 +15,15 @@ class RelativeDateFormatter: Formatter {
         formatter.doesRelativeDateFormatting = true
         return formatter
     }()
-    
+
+    static let dateComponentsFormatter: DateComponentsFormatter = {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.day]
+        formatter.formattingContext = .middleOfSentence
+        formatter.unitsStyle = .full
+        return formatter
+    }()
+
     static let relativeDateTimeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.dateTimeStyle = .numeric
@@ -29,6 +37,8 @@ class RelativeDateFormatter: Formatter {
         let interval = Calendar.current.dateComponents([.day], from: today, to: date).day!
         if interval >= -1 && interval <= 1 {
             return RelativeDateFormatter.dateFormatter.string(from: date)
+        } else if interval < 30, let dateString = RelativeDateFormatter.dateComponentsFormatter.string(from: today, to: date) {
+            return "In " + dateString
         } else {
             return RelativeDateFormatter.relativeDateTimeFormatter.localizedString(for: date, relativeTo: today)
         }

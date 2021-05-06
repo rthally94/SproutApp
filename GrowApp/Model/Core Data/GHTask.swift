@@ -28,14 +28,21 @@ public class GHTask: NSManagedObject {
         return task
     }
 
+    public override func willSave() {
+        super.willSave()
+
+        print("TaskWillSave: Interval Updated:", interval?.isUpdated ?? false, "| Inserted:", interval?.isInserted ?? false, "| Deleted:", interval?.isDeleted ?? false)
+        if (interval?.isUpdated == true || interval?.isInserted == true) {
+            updateNextCareDate()
+        }
+    }
+
     /// Marks a task as complete. Increments lastLogDate and nextCareDate.
     func markAsComplete(completion: (() -> Void)? = nil) {
-        let markedDate = Date()
-        lastLogDate = markedDate
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [unowned self] in
-            self.nextCareDate = interval?.nextDate(after: markedDate)
-            completion?()
+        managedObjectContext?.persist {
+            let markedDate = Date()
+            self.lastLogDate = markedDate
+            self.updateNextCareDate()
         }
     }
 
@@ -50,9 +57,7 @@ public class GHTask: NSManagedObject {
         }
     }
 
-    public override func willSave() {
-        super.willSave()
-
+    func updateNextCareDate() {
         let previousCareDate: Date
         if let lastLogDate = lastLogDate, Calendar.current.isDateInToday(lastLogDate) {
             // Last Log is Today -> Next is after today
@@ -62,9 +67,16 @@ public class GHTask: NSManagedObject {
             previousCareDate = today.addingTimeInterval(-1 * 24 * 60 * 60)
         }
 
-        let newDate = interval?.nextDate(after: previousCareDate)
-        if let newDate = newDate, (nextCareDate == nil || Calendar.current.dateComponents([.second], from: nextCareDate!, to: newDate).second! > 5) {
-            nextCareDate = newDate
+        let nextDate = interval?.nextDate(after: previousCareDate)
+        if nextCareDate == nil {
+            print("Updating Next Care Date")
+            nextCareDate = nextDate
+        }
+        else if let nextCareDate = nextCareDate, let nextDate = nextDate, let delta = Calendar.current.dateComponents([.minute], from: nextCareDate, to: nextDate).minute, (delta < -1 || delta > 1) {
+            print("Updating Next Care Date")
+            self.nextCareDate = nextDate
+        } else {
+            print("nextCareDate does not need updating. Value is not withing delta for change")
         }
     }
 }

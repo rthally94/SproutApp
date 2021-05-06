@@ -26,6 +26,7 @@ class StorageProvider {
         })
         
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+        persistentContainer.viewContext.shouldDeleteInaccessibleFaults = true
         persistentContainer.viewContext.undoManager = UndoManager()
 
         let request: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()

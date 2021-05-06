@@ -41,6 +41,9 @@ class PlantGroupViewModel {
                         var items = [Item]()
                         var itemsToReload = [Item]()
                         plantIDs.forEach { plantID in
+                            if plantID.isTemporaryID {
+                                print("PlantDetail - Found Temporary ID")
+                            }
                             if let plant = self.plantsProvider.object(withID: plantID) {
                                 let item = Item(plant: plant)
                                 items.append(item)
