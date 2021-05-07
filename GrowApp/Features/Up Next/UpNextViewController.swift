@@ -11,12 +11,11 @@ import UIKit
 
 class UpNextViewController: UIViewController {
     // MARK: - Properties
-    typealias Section = TasksProvider.Section
-    typealias Item = TasksProvider.Item
-    private let dateFormatter = Utility.relativeDateFormatter
+    typealias Section = UpNextViewModel.Section
+    typealias Item = UpNextViewModel.Item
+    typealias Snapshot = UpNextViewModel.Snapshot
 
-    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
-    private var tasksProvider: TasksProvider?
+    var viewModel: UpNextViewModel = UpNextViewModel()
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellables: Set<AnyCancellable> = []
@@ -36,17 +35,13 @@ class UpNextViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tasksProvider = TasksProvider(managedObjectContext: persistentContainer.viewContext)
-
         dataSource = makeDataSource()
 
         title = "Up Next"
 
-        tasksProvider?.$snapshot
+        viewModel.snapshot
             .sink {[weak self] snapshot in
-                if let snapshot = snapshot, snapshot.numberOfItems > 0 {
-                    self?.dataSource.apply(snapshot)
-                }
+                self?.dataSource.apply(snapshot)
             }
             .store(in: &cancellables)
     }
@@ -67,20 +62,14 @@ private extension UpNextViewController {
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
         UICollectionView.CellRegistration<TaskCalendarListCell, Item> {[weak self] cell, indexPath, item in
-            guard let task = self?.tasksProvider?.object(at: indexPath) else { return }
-            cell.updateWithTask(task)
+            cell.updateWithText(item.title, secondaryText: item.subtitle, icon: item.icon)
 
-            if let lastLogDate = task.lastLogDate,
-               let nextCareDate = task.nextCareDate,
-               let difference = Calendar.current.dateComponents([.day], from: lastLogDate, to: nextCareDate).day,
-               difference <= 0
-            {
+            if item.isChecked {
                 cell.accessories = [ .checkmark() ]
             } else {
                 cell.accessories = [
                     .todoAccessory(actionHandler: {_ in
-                        task.markAsComplete()
-                        self?.persistentContainer.saveContextIfNeeded()
+                        self?.viewModel.markTaskAsComplete(item.task)
                     })
                 ]
             }
@@ -93,7 +82,7 @@ private extension UpNextViewController {
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             var configuration = UIListContentConfiguration.largeGroupedHeader()
-            configuration.text = section
+            configuration.text = section.title
             //            configuration.secondaryText = itemCount == 1 ? "\(itemCount) task" : "\(itemCount) tasks"
             cell.contentConfiguration = configuration
         }

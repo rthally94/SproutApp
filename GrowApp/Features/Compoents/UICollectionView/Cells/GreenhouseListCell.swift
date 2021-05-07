@@ -8,28 +8,60 @@
 import UIKit
 
 private extension UIConfigurationStateCustomKey {
-    static let task = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseListCell.task")
+    static let text = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseListCell.text")
+    static let secondaryText = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseListCell.secondaryText")
+    static let icon = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseListCell.icon")
 }
 
 private extension UICellConfigurationState {
-    var task: GHTask? {
-        set { self[.task] = newValue }
-        get { return self[.task] as? GHTask }
+    var text: String? {
+        set { self[.text] = newValue }
+        get { return self[.text] as? String }
+    }
+
+    var secondaryText: String? {
+        set { self[.secondaryText] = newValue }
+        get { return self[.secondaryText] as? String }
+    }
+
+    var icon: GHIcon? {
+        set { self[.icon] = newValue }
+        get { return self[.icon] as? GHIcon }
     }
 }
 
 class GreenHouseListCell: UICollectionViewListCell {
-    private var task: GHTask?
+    private var text: String?
+    private var secondaryText: String?
+    private var icon: GHIcon?
     
-    func updateWithTask(_ newTask: GHTask) {
-        guard task != newTask else { return }
-        task = newTask
-        setNeedsUpdateConfiguration()
+    func updateWithText(_ text: String?, secondaryText: String?, icon: GHIcon?) {
+        var updated = false
+        if self.text != text {
+            self.text = text
+            updated = true
+        }
+
+        if self.secondaryText != secondaryText {
+            self.secondaryText = secondaryText
+            updated = true
+        }
+
+        if self.icon != icon {
+            self.icon = icon
+            updated = true
+        }
+
+        if updated {
+            setNeedsUpdateConfiguration()
+        }
     }
     
     override var configurationState: UICellConfigurationState {
         var state = super.configurationState
-        state.task = task
+        state.text = text
+        state.secondaryText = secondaryText
+        state.icon = icon
         return state
     }
 }
@@ -93,18 +125,16 @@ class TaskCalendarListCell: GreenHouseListCell {
         setupViewsIfNeeded()
         
         var content = defaultListContentConfiguration().updated(for: state)
-        
-        if let task = state.task {
-            // Configure for just the task
-            content.text = task.plant?.name
-            content.secondaryText = task.taskType?.name
+
+        // Configure for just the task
+        content.text = state.text
+        content.secondaryText = state.secondaryText
             
-            var iconConfig = plantIconView.defaultConfiguration()
-            iconConfig.image = task.plant?.icon?.image
-            iconConfig.tintColor = task.taskType?.icon?.color
-            iconConfig.cornerStyle = .circle
-            plantIconView.configuration = iconConfig
-        }
+        var iconConfig = plantIconView.defaultConfiguration()
+        iconConfig.image = state.icon?.image
+        iconConfig.tintColor = state.icon?.color
+        iconConfig.cornerStyle = .circle
+        plantIconView.configuration = iconConfig
         
         content.image = nil
         content.axesPreservingSuperviewLayoutMargins = []

@@ -73,6 +73,9 @@
 		FB82CDE12642F35F00E32F16 /* PlantGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDE02642F35F00E32F16 /* PlantGroupViewModel.swift */; };
 		FB82CDE52642F62B00E32F16 /* PlantGroupSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDE42642F62B00E32F16 /* PlantGroupSection.swift */; };
 		FB82CDE92642F6BE00E32F16 /* PlantGroupItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDE82642F6BE00E32F16 /* PlantGroupItem.swift */; };
+		FB82CDF526444EBE00E32F16 /* UpNextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDF426444EBD00E32F16 /* UpNextViewModel.swift */; };
+		FB82CDF926444F7400E32F16 /* UpNextSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDF826444F7400E32F16 /* UpNextSection.swift */; };
+		FB82CDFD26444F7D00E32F16 /* UpNextItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDFC26444F7D00E32F16 /* UpNextItem.swift */; };
 		FB8E0D40262B324400F0FA09 /* StatisticCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */; };
 		FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */; };
 		FB8E0D4A262B75B200F0FA09 /* CompactCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */; };
@@ -201,6 +204,9 @@
 		FB82CDE02642F35F00E32F16 /* PlantGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantGroupViewModel.swift; sourceTree = "<group>"; };
 		FB82CDE42642F62B00E32F16 /* PlantGroupSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantGroupSection.swift; sourceTree = "<group>"; };
 		FB82CDE82642F6BE00E32F16 /* PlantGroupItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantGroupItem.swift; sourceTree = "<group>"; };
+		FB82CDF426444EBD00E32F16 /* UpNextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewModel.swift; sourceTree = "<group>"; };
+		FB82CDF826444F7400E32F16 /* UpNextSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextSection.swift; sourceTree = "<group>"; };
+		FB82CDFC26444F7D00E32F16 /* UpNextItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextItem.swift; sourceTree = "<group>"; };
 		FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticCell.swift; sourceTree = "<group>"; };
 		FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticCollectionView.swift; sourceTree = "<group>"; };
 		FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCardCell.swift; sourceTree = "<group>"; };
@@ -609,8 +615,11 @@
 		FB9C66AF263AE63800CDC15A /* Up Next */ = {
 			isa = PBXGroup;
 			children = (
-				FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */,
 				FB9C66B4263AE76900CDC15A /* TasksProvider.swift */,
+				FB82CDF426444EBD00E32F16 /* UpNextViewModel.swift */,
+				FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */,
+				FB82CDF826444F7400E32F16 /* UpNextSection.swift */,
+				FB82CDFC26444F7D00E32F16 /* UpNextItem.swift */,
 			);
 			path = "Up Next";
 			sourceTree = "<group>";
@@ -847,6 +856,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FB82CDF526444EBE00E32F16 /* UpNextViewModel.swift in Sources */,
 				FB21B6FC25B1E5CC00D02384 /* ViewController.swift in Sources */,
 				FB82CDE52642F62B00E32F16 /* PlantGroupSection.swift in Sources */,
 				FB263864263C7F3100180B54 /* GHTask.swift in Sources */,
@@ -934,6 +944,7 @@
 				FB6C461C25F1C332009ED947 /* CareDetailViewController.swift in Sources */,
 				FBC7333025E404CC0048999C /* PlantIconPickerController.swift in Sources */,
 				FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */,
+				FB82CDF926444F7400E32F16 /* UpNextSection.swift in Sources */,
 				FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */,
 				FB0A9F2725DACEA00084AED8 /* Task.swift in Sources */,
 				FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */,
@@ -947,6 +958,7 @@
 				FBFAECB92617D93300F0C67D /* PlantEditorDelegate.swift in Sources */,
 				FB263878263C9B8300180B54 /* GHPlant.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
+				FB82CDFD26444F7D00E32F16 /* UpNextItem.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */,
 				FB76D347262A5AF500D00036 /* SproutTaskLargeHeaderView.swift in Sources */,
 				FB92AF75262EF8A70062DE47 /* WeekdayPickerCell.swift in Sources */,
