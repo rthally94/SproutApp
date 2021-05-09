@@ -114,7 +114,6 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
         cleanupUnusuedTasks()
         delegate?.plantEditor(self, didUpdatePlant: plant)
-        persistentContainer.saveContextIfNeeded()
         dismiss(animated: true)
     }
     

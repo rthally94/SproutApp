@@ -17,7 +17,7 @@ public class GHTask: NSManagedObject {
         let task = GHTask(context: context)
         task.id = UUID()
         task.lastLogDate = nil
-        task.nextCareDate = Date()
+        task.nextCareDate = Calendar.current.startOfDay(for: Date())
 
         let interval = GHTaskInterval(context: context)
         interval.repeatsFrequency = GHTaskInterval.RepeatsNeverFrequency
@@ -46,17 +46,6 @@ public class GHTask: NSManagedObject {
         }
     }
 
-    /// String the represents the nextCareDate relative to today's date
-    @objc var relativeNextCareDateString: String {
-        let formatter = Utility.relativeDateFormatter
-        assert(nextCareDate != nil, "WARNING: nextCareDate for task \(self) is nil. A value needs to be set.")
-        if let nextCareDate = nextCareDate {
-            return formatter.string(from: nextCareDate)
-        } else {
-            return "NO DATE"
-        }
-    }
-
     func updateNextCareDate() {
         let previousCareDate: Date
         if let lastLogDate = lastLogDate, Calendar.current.isDateInToday(lastLogDate) {
@@ -72,9 +61,9 @@ public class GHTask: NSManagedObject {
             print("Updating Next Care Date")
             nextCareDate = nextDate
         }
-        else if let nextCareDate = nextCareDate, let nextDate = nextDate, let delta = Calendar.current.dateComponents([.minute], from: nextCareDate, to: nextDate).minute, (delta < -1 || delta > 1) {
+        else if let nextCareDate = nextCareDate, let nextDate = nextDate, nextCareDate == Calendar.current.startOfDay(for: nextDate) {
             print("Updating Next Care Date")
-            self.nextCareDate = nextDate
+            self.nextCareDate = Calendar.current.startOfDay(for: nextDate)
         } else {
             print("nextCareDate does not need updating. Value is not withing delta for change")
         }

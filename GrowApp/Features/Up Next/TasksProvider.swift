@@ -38,8 +38,9 @@ class TasksProvider: NSObject {
         return fetchedResultsController.object(at: indexPath)
     }
 
-    func object(withID id: NSManagedObjectID) -> GHTask? {
-        return moc.object(with: id) as? GHTask
+    func object(withID id: NSManagedObjectID) -> AnyObject? {
+        let task = moc.object(with: id)
+        return task
     }
 }
 

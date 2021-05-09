@@ -9,9 +9,10 @@ import Foundation
 
 struct UpNextItem: Hashable {
     var task: GHTask
+    var plant: GHPlant
 
     var title: String? {
-        return task.plant?.name
+        return plant.name
     }
 
     var subtitle: String? {
@@ -19,7 +20,7 @@ struct UpNextItem: Hashable {
     }
 
     var icon: GHIcon? {
-        return task.plant?.icon
+        return plant.icon
     }
 
     var isChecked: Bool {

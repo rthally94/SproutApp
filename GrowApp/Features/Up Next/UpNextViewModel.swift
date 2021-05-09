@@ -42,8 +42,10 @@ class UpNextViewModel {
                         var itemsToReload = [Item]()
 
                         taskIDs.forEach { taskID in
-                            if let task = self.tasksProvider.object(withID: taskID) {
-                                let item = Item(task: task)
+                            if let task = self.tasksProvider.object(withID: taskID) as? GHTask,
+                               let plantID = task.plant?.objectID,
+                               let plant = self.tasksProvider.object(withID: plantID) as? GHPlant {
+                                let item = Item(task: task, plant: plant)
                                 items.append(item)
                                 if task.isUpdated {
                                     itemsToReload.append(item)
