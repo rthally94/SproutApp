@@ -15,8 +15,9 @@ extension UICellAccessory {
         let todoButton = UIButton(type: .system, primaryAction: todoAction)
         
         let configuration = UICellAccessory.CustomViewConfiguration(customView: todoButton, placement: placement)
-        
-        todoButton.layer.borderColor = configuration.tintColor
+
+        todoButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+        todoButton.layer.borderColor = configuration.tintColor?.cgColor
         todoButton.layer.borderWidth = 3
         
         let todoAccessory = UICellAccessory.customView(configuration: configuration)

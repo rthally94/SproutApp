@@ -9,7 +9,7 @@ import CoreData
 import Foundation
 
 extension NSManagedObjectContext {
-    func persist(block: @escaping () -> Void) {
+    func persist(block: @escaping () -> Void, completion: (() -> Void)? = nil) {
         perform {
             block()
             
@@ -20,6 +20,7 @@ extension NSManagedObjectContext {
                     self.rollback()
                 }
             }
+            completion?()
         }
     }
 }

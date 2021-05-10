@@ -23,6 +23,15 @@ struct UpNextItem: Hashable {
         return plant.icon
     }
 
+    var daysLate: Int? {
+        guard let lastLogDate = task.lastLogDate,
+              let nextCareDate = task.nextCareDate,
+              let daysLate = Calendar.current.dateComponents([.day], from: nextCareDate, to: lastLogDate).day
+        else { return nil }
+
+        return daysLate < 0 ? 0 : daysLate
+    }
+
     var isChecked: Bool {
         guard let lastLogDate = task.lastLogDate, let nextCareDate = task.nextCareDate else { return false }
         return Calendar.current.startOfDay(for: lastLogDate) == Calendar.current.startOfDay(for: nextCareDate)

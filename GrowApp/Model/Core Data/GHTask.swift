@@ -17,7 +17,7 @@ public class GHTask: NSManagedObject {
         let task = GHTask(context: context)
         task.id = UUID()
         task.lastLogDate = nil
-        task.nextCareDate = Calendar.current.startOfDay(for: Date())
+        task.nextCareDate = nil
 
         let interval = GHTaskInterval(context: context)
         interval.repeatsFrequency = GHTaskInterval.RepeatsNeverFrequency
@@ -25,6 +25,9 @@ public class GHTask: NSManagedObject {
         task.interval = interval
 
         task.taskType = try GHTaskType.fetchOrCreateTaskType(withName: type, inContext: context)
+
+        task.updateNextCareDate()
+
         return task
     }
 
@@ -39,33 +42,52 @@ public class GHTask: NSManagedObject {
 
     /// Marks a task as complete. Increments lastLogDate and nextCareDate.
     func markAsComplete(completion: (() -> Void)? = nil) {
-        managedObjectContext?.persist {
+        managedObjectContext?.perform {
             let markedDate = Date()
             self.lastLogDate = markedDate
             self.updateNextCareDate()
+            completion?()
         }
     }
 
     func updateNextCareDate() {
-        let previousCareDate: Date
-        if let lastLogDate = lastLogDate, Calendar.current.isDateInToday(lastLogDate) {
-            // Last Log is Today -> Next is after today
-            previousCareDate = lastLogDate
-        } else {
-            let today = Calendar.current.startOfDay(for: Date())
-            previousCareDate = today.addingTimeInterval(-1 * 24 * 60 * 60)
+        enum TaskStatus {
+            case isNew, isOnTimeOrEarly, isLate
         }
 
-        let nextDate = interval?.nextDate(after: previousCareDate)
-        if nextCareDate == nil {
-            print("Updating Next Care Date")
-            nextCareDate = nextDate
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = today.addingTimeInterval(1*24*60*60)
+        var taskStatus: TaskStatus?
+
+        if lastLogDate == nil {
+            // Task is late
+            taskStatus = .isNew
+        } else if let lastLogDate = lastLogDate, let nextDate = interval?.nextDate(after: lastLogDate), nextDate < today {
+            taskStatus = .isLate
+        } else if let lastLogDate = lastLogDate, lastLogDate < tomorrow {
+            taskStatus = .isOnTimeOrEarly
         }
-        else if let nextCareDate = nextCareDate, let nextDate = nextDate, nextCareDate == Calendar.current.startOfDay(for: nextDate) {
-            print("Updating Next Care Date")
-            self.nextCareDate = Calendar.current.startOfDay(for: nextDate)
-        } else {
-            print("nextCareDate does not need updating. Value is not withing delta for change")
+
+        let newDate: Date?
+        switch taskStatus {
+        case .isNew:
+            // Placeholder date is the day prior
+            let placeholderDate = today.addingTimeInterval(-1 * 24 * 60 * 60)
+            newDate = interval?.nextDate(after: placeholderDate)
+        case .isOnTimeOrEarly:
+            // date is the date after the last log date
+            guard let date = lastLogDate else { fatalError("Case isOnTimeOrEarly used without a lastLogDate value set.") }
+            newDate = interval?.nextDate(after: date)
+        case .isLate:
+            // date is today
+            newDate = Calendar.current.startOfDay(for: Date())
+        default:
+            fatalError("Unknown task state")
+            break
         }
+
+        guard newDate != nil &&
+                newDate != nextCareDate else { return }
+        nextCareDate = newDate
     }
 }

@@ -62,7 +62,7 @@ private extension UpNextViewController {
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
         UICollectionView.CellRegistration<TaskCalendarListCell, Item> {[weak self] cell, indexPath, item in
-            cell.updateWithText(item.title, secondaryText: item.subtitle, icon: item.icon)
+            cell.updateWithText(item.title, secondaryText: item.subtitle, icon: item.icon, daysLate: item.daysLate)
 
             if item.isChecked {
                 cell.accessories = [ .checkmark() ]

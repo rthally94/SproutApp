@@ -13,15 +13,15 @@ public class GHTaskInterval: NSManagedObject {
     static let RepeatsWeeklyFrequency = "weekly"
     static let RepeatsMonthlyFrequency = "monthly"
 
-    func nextDate(after testDate: Date) -> Date {
-        var returnDate = testDate
+    func nextDate(after testDate: Date) -> Date? {
+        var returnDate: Date? = nil
 
         let interval = (wrappedFrequency, componentsArray)
         switch interval {
         case (.daily, let components):
             guard let value = components.first else { break }
             if let newDate = Calendar.current.date(byAdding: .day, value: value, to: testDate, wrappingComponents: true) {
-                returnDate = newDate
+                returnDate = Calendar.current.startOfDay(for: newDate)
             }
 
         case (.weekly, let components):
