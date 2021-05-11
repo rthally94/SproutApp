@@ -8,7 +8,7 @@
 import UIKit
 
 class SproutIconView: IconView {
-    var icon: GHIcon? {
+    var icon: SproutIcon? {
         didSet {
             populateIconProperties()
         }

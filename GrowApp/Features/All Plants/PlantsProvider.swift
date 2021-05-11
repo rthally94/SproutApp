@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 
 class PlantsProvider: NSObject {
-    typealias Section = Int
+    typealias Section = String
     typealias Item = NSManagedObjectID
     
     let moc: NSManagedObjectContext
@@ -35,6 +35,10 @@ class PlantsProvider: NSObject {
         return fetchedResultsController.object(at: indexPath)
     }
 
+    func object(withID id: NSManagedObjectID) -> GHPlant? {
+        return moc.object(with: id) as? GHPlant
+    }
+
     func reload() {
         try! fetchedResultsController.performFetch()
     }
@@ -42,16 +46,6 @@ class PlantsProvider: NSObject {
 
 extension PlantsProvider: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        var newSnapshot = snapshot as NSDiffableDataSourceSnapshot<Section, Item>
-        let idsToReload = newSnapshot.itemIdentifiers.filter {identifier in
-            guard let oldIndex = self.snapshot?.indexOfItem(identifier), let newIndex = newSnapshot.indexOfItem(identifier), oldIndex == newIndex else { return false }
-            
-            guard (try? controller.managedObjectContext.existingObject(with: identifier))?.isUpdated == true else { return false }
-            
-            return true
-        }
-        
-        newSnapshot.reloadItems(idsToReload)
-        self.snapshot = newSnapshot
+        self.snapshot = snapshot as NSDiffableDataSourceSnapshot<Section, Item>
     }
 }

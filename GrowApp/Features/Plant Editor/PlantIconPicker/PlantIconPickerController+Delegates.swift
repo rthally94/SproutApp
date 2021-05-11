@@ -40,9 +40,11 @@ extension PlantIconPickerController: UIImagePickerControllerDelegate, UINavigati
         guard let image = info[.editedImage] as? UIImage else { return }
         
         if icon == nil {
-            icon = GHIcon(context: persistentContainer.viewContext)
+            // If no icon exists, create a new icon
+            icon = SproutIcon(context: persistentContainer.viewContext)
         }
-        
+
+        // Apply the new selected image
         icon?.imageData = image.pngData()
         updateUI(animated: false)
         

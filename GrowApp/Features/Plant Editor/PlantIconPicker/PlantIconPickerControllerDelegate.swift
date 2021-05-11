@@ -7,12 +7,12 @@
 
 import Foundation
 
-protocol PlantIconPickerControllerDelegate: class {
-    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: GHIcon)
+protocol PlantIconPickerControllerDelegate: AnyObject {
+    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: SproutIcon)
     func plantIconPickerDidCancel(_ picker: PlantIconPickerController)
 }
 
 extension PlantIconPickerControllerDelegate {
-    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: GHIcon) { }
+    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: SproutIcon) { }
     func plantIconPickerDidCancel(_ picker: PlantIconPickerController) { }
 }

@@ -11,11 +11,11 @@ import UIKit
 
 class PlantGroupViewController: UIViewController {
     // MARK: - Properties
-    typealias Section = PlantsProvider.Section
-    typealias Item = PlantsProvider.Item
+    typealias Item = PlantGroupViewModel.Item
+    typealias Section = PlantGroupViewModel.Section
+    typealias Snapshot = PlantGroupViewModel.Snapshot
 
-    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
-    private var plantsProvider: PlantsProvider?
+    var viewModel: PlantGroupViewModel = PlantGroupViewModel()
     
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellables = Set<AnyCancellable>()
@@ -36,20 +36,35 @@ class PlantGroupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        plantsProvider = PlantsProvider(managedObjectContext: persistentContainer.viewContext)
+        navigationController?.delegate = self
         dataSource = makeDataSource()
-        plantsProvider?.$snapshot
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPlant))
+
+        viewModel.snapshot
             .sink(receiveValue: { [weak self] snapshot in
-                if let snapshot = snapshot {
-                    self?.dataSource.apply(snapshot)
-                }
+                self?.dataSource.apply(snapshot)
             })
             .store(in: &cancellables)
-        
-        title = "Your Plants"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPlant))
-    }
 
+        viewModel.$title
+            .assign(to: \.title, on: self)
+            .store(in: &cancellables)
+
+        viewModel.$presentedView
+            .sink { view in
+                switch view {
+                case .newPlant:
+                    guard let plant = self.viewModel.selectedPlant else { return }
+                    self.showPlantEditor(for: plant)
+                case .plantDetail:
+                    guard let plant = self.viewModel.selectedPlant else { return }
+                    self.showPlantDetail(for: plant)
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
 
     func configureHiearchy() {
         view.addSubview(collectionView)
@@ -59,19 +74,22 @@ class PlantGroupViewController: UIViewController {
 
     // MARK: - Actions
     @objc func addNewPlant() {
-        let viewContext = persistentContainer.viewContext
+        viewModel.addNewPlant()
+    }
 
-        do {
-            let newPlant = try GHPlant.createDefaultPlant(inContext: viewContext)
-            let vc = PlantEditorControllerController()
-            vc.plant = newPlant
-            vc.persistentContainer = persistentContainer
-            vc.delegate = self
-            present(vc.wrappedInNavigationController(), animated: true)
-            
-        } catch {
-            fatalError("Unable to create new plant with default template: \(error)")
-        }
+    func showPlantDetail(for plant: GHPlant) {
+        let vc = PlantDetailViewController()
+        vc.persistentContainer = viewModel.persistentContainer
+        vc.plant = plant
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func showPlantEditor(for plant: GHPlant) {
+        let vc = PlantEditorControllerController()
+        vc.plant = plant
+        vc.persistentContainer = viewModel.persistentContainer
+        vc.delegate = self
+        present(vc.wrappedInNavigationController(), animated: true)
     }
 }
 
@@ -93,10 +111,9 @@ extension PlantGroupViewController {
     }
 
     func makeCellRegistration() -> UICollectionView.CellRegistration<CardCell, Item> {
-        return UICollectionView.CellRegistration<CardCell, Item>() {[weak self] cell, indexPath, item in
-            guard let plant = self?.plantsProvider?.object(at: indexPath) else { return }
-            cell.image = plant.icon?.image
-            cell.text = plant.name
+        return UICollectionView.CellRegistration<CardCell, Item>() { cell, indexPath, item in
+            cell.image = item.image
+            cell.text = item.title
         }
     }
 
@@ -114,24 +131,28 @@ extension PlantGroupViewController {
 // MARK: - UICollectionViewDelegate
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let item = plantsProvider?.object(at: indexPath)
-        let vc = PlantDetailViewController()
-        vc.persistentContainer = persistentContainer
-        vc.plant = item
-        navigationController?.pushViewController(vc, animated: true)
+        viewModel.selectPlant(at: indexPath)
     }
 }
 
 // MARK: - PlantEditorDelegate
 extension PlantGroupViewController: PlantEditorDelegate {
     func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
-        persistentContainer.saveContextIfNeeded()
-        plantsProvider?.reload()
+        viewModel.showList()
+
+        viewModel.persistentContainer.viewContext.refresh(plant, mergeChanges: true)
+        viewModel.persistentContainer.saveContextIfNeeded()
     }
 
     func plantEditorDidCancel(_ editor: PlantEditorControllerController) {
-        if let plant = editor.plant {
-            persistentContainer.viewContext.delete(plant)
+        viewModel.showList()
+    }
+}
+
+extension PlantGroupViewController: UINavigationControllerDelegate {
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if viewController == self {
+            viewModel.showList()
         }
     }
 }

@@ -15,13 +15,13 @@ class CareDetailViewController: UIViewController {
         return formatter
     }()
     
-    var plant: Plant? {
+    var plant: GHPlant? {
         didSet {
             applySnapshotIfAble()
         }
     }
     
-    var selectedTask: GHTask? {
+    var selectedTask: CareInfo? {
         didSet {
             applySnapshotIfAble()
         }
@@ -33,14 +33,14 @@ class CareDetailViewController: UIViewController {
     }
 
     struct Item: Hashable {
-        var icon: GHIcon?
+        var icon: SproutIcon?
         var image: UIImage?
         var tintColor: UIColor?
         
         var text: String?
         var secondaryText: String?
         
-        init(icon: GHIcon?, text: String?, secondaryText: String?) {
+        init(icon: SproutIcon?, text: String?, secondaryText: String?) {
             self.icon = icon
             self.image = nil
             self.tintColor = nil
@@ -119,14 +119,14 @@ extension CareDetailViewController {
     func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         
-        if let selectedTask = selectedTask, let icon = selectedTask.taskType?.icon {
+        if let selectedTask = selectedTask, let icon = selectedTask.careCategory?.icon {
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems([
-                Item(icon: icon, text: selectedTask.taskType?.name, secondaryText: selectedTask.interval?.intervalText())
+                Item(icon: icon, text: selectedTask.careCategory?.name, secondaryText: selectedTask.careSchedule?.recurrenceRule?.intervalText())
             ], toSection: .header)
         
-            let image = selectedTask.interval?.wrappedFrequency == .none ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
-            let item = Item(image: image, tintColor: .systemBlue, text: nil, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.interval?.startDate ?? Date()))")
+            let image = selectedTask.careSchedule?.recurrenceRule?.frequency == .none ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
+            let item = Item(image: image, tintColor: .systemBlue, text: nil, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.careSchedule?.startingDate ?? Date()))")
             
             snapshot.appendItems([
                 item

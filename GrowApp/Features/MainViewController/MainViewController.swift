@@ -11,7 +11,10 @@ import UIKit
 class MainViewController: UIViewController {
     lazy var upNextVC: some UIViewController = {
         let vc = UpNextViewController()
-        vc.persistentContainer = persistentContainer
+        let viewModel = UpNextViewModel()
+        viewModel.persistentContainer = persistentContainer
+        vc.viewModel = viewModel
+
         let nav = vc.wrappedInNavigationController()
         nav.tabBarItem = UITabBarItem(title: "Up Next", image: UIImage(systemName: "text.badge.checkmark"), tag: 0)
         return nav
@@ -27,7 +30,11 @@ class MainViewController: UIViewController {
     
     lazy var plantGroupVC: some UIViewController = {
         let vc = PlantGroupViewController()
-        vc.persistentContainer = persistentContainer
+
+        let viewModel = PlantGroupViewModel()
+        viewModel.persistentContainer = persistentContainer
+        vc.viewModel = viewModel
+
         let nav = vc.wrappedInNavigationController()
         nav.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
         nav.tabBarItem.tag = 2

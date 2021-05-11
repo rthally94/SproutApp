@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol PlantEditorDelegate: class {
+protocol PlantEditorDelegate: AnyObject {
     func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant)
     func plantEditorDidCancel(_ editor: PlantEditorControllerController)
 }

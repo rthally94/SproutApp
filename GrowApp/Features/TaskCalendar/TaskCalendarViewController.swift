@@ -22,7 +22,7 @@ class TaskCalendarViewController: UIViewController {
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
 
     private var taskCalendarProvider: TaskCalendarProvider?
-    private var data: [TaskType: [Plant]] = [:]
+    private var data: [CareCategory: [GHPlant]] = [:]
     
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellables = Set<AnyCancellable>()
@@ -212,14 +212,14 @@ extension TaskCalendarViewController {
             if indexPath.section < sortedKeys.endIndex {
                 let task = sortedKeys[indexPath.section]
                 var config = UIListContentConfiguration.largeGroupedHeader()
-                config.textProperties.color = task.accentColor ?? .label
-                config.imageProperties.tintColor = task.accentColor
-
-                if case let .symbol(symbolName, _) = task.icon {
-                    config.image = UIImage(systemName: symbolName)
-                } else if case let .image(image) = task.icon {
-                    config.image = image
-                }
+//                config.textProperties.color = task.accentColor ?? .label
+//                config.imageProperties.tintColor = task.accentColor
+//
+//                if case let .symbol(symbolName, _) = task.icon {
+//                    config.image = UIImage(systemName: symbolName)
+//                } else if case let .image(image) = task.icon {
+//                    config.image = image
+//                }
 
                 config.text = task.description
 

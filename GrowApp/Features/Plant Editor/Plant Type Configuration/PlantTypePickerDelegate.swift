@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol PlantTypePickerDelegate: class {
+protocol PlantTypePickerDelegate: AnyObject {
     func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType)
     func plantTypePickerDidCancel(_ picker: PlantTypePickerViewController)
 }

@@ -1,5 +1,5 @@
 //
-//  GHTaskIntervalWrapper.swift
+//  CareInfoIntervalWrapper.swift
 //  GrowApp
 //
 //  Created by Ryan Thally on 4/1/21.
@@ -7,6 +7,6 @@
 
 import Foundation
 
-enum GHTaskIntervalType: String {
+enum SproutRecurrenceFrequency: String {
     case never, daily, weekly, monthly
 }

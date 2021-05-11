@@ -9,12 +9,29 @@ import Foundation
 import CoreData
 
 class StorageProvider {
+    static var managedObjectModel: NSManagedObjectModel = {
+        let bundle = Bundle(for: StorageProvider.self)
+        guard let url = bundle.url(forResource: "GreenHouseDataModel", withExtension: "momd") else {
+            fatalError("Failed to load momd file for GreenHouseDataModel")
+        }
+
+        guard let model = NSManagedObjectModel(contentsOf: url) else {
+            fatalError("Failed to load momd file for GreenHouseDataModel")
+        }
+
+        return model
+    }()
+
     let persistentContainer: NSPersistentContainer
     
-    init() {
+    init(storeType: StoreType = .persisted) {
         ValueTransformer.setValueTransformer(UIImageTransformer(), forName: NSValueTransformerName("UIImageValueTransformer"))
-        persistentContainer = NSPersistentContainer(name: "GreenHouseDataModel")
-        
+        persistentContainer = NSPersistentContainer(name: "GreenHouseDataModel", managedObjectModel:  Self.managedObjectModel)
+
+        if storeType == .inMemory {
+            persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+        }
+
         persistentContainer.loadPersistentStores(completionHandler: { description, error in
             if let error = error {
                 fatalError("Core Data store failed to load with error: \(error)")
@@ -22,6 +39,7 @@ class StorageProvider {
         })
         
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+        persistentContainer.viewContext.shouldDeleteInaccessibleFaults = true
         persistentContainer.viewContext.undoManager = UndoManager()
 
         let request: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
@@ -29,6 +47,10 @@ class StorageProvider {
         if let types = try? persistentContainer.viewContext.fetch(request), types.isEmpty {
             loadPlantTypes()
         }
+    }
+
+    enum StoreType  {
+        case inMemory, persisted
     }
     
     func loadPlantTypes() {
@@ -44,12 +66,6 @@ class StorageProvider {
 
 extension StorageProvider {
     func saveContext() {
-        if persistentContainer.viewContext.hasChanges {
-            do {
-                try persistentContainer.viewContext.save()
-            } catch {
-                print("Error saving context: \(error)")
-            }
-        }
+        persistentContainer.saveContextIfNeeded()
     }
 }
