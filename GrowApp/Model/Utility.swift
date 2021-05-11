@@ -30,4 +30,11 @@ extension Utility {
         let formatter = RelativeDateFormatter()
         return formatter
     }()
+
+    static let ordinalNumberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .ordinal
+        formatter.formattingContext = .middleOfSentence
+        return formatter
+    }()
 }

@@ -1,5 +1,5 @@
 //
-//  GHTaskTests.swift
+//  CareInfoTests.swift
 //  GrowAppTests
 //
 //  Created by Ryan Thally on 5/4/21.
@@ -8,7 +8,7 @@
 import XCTest
 @testable import GrowApp
 
-class GHTaskTests: XCTestCase {
+class CareInfoTests: XCTestCase {
     var storageProvider: StorageProvider!
     
     override func setUpWithError() throws {
@@ -16,19 +16,21 @@ class GHTaskTests: XCTestCase {
     }
 
     func testWateringTaskInitalState() throws {
-        let task = try GHTask.defaultTask(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
+        let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
 
         XCTAssertNotNil(task.id)
+        XCTAssertNotNil(task.creationDate)
+
         XCTAssertNil(task.lastLogDate)
         XCTAssertNil(task.nextCareDate)
-        XCTAssertNotNil(task.interval)
-        XCTAssertNotNil(task.taskType)
+        XCTAssertNil(task.careSchedule)
+        XCTAssertNotNil(task.careCategory)
     }
 
     func testUpdateNextCareDate_whenTaskIsNew_andIntervalIsDaily_NextDateIsToday() throws {
-        let task = try GHTask.defaultTask(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
-        task.interval?.repeatsFrequency = "daily"
-        task.interval?.repeatsValues = [1]
+        let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
+        let dailySchedule = CareSchedule.dailySchedule(interval: 1, context: storageProvider.persistentContainer.viewContext)
+        task.careSchedule = dailySchedule
         task.updateNextCareDate()
 
         let today = Calendar.current.startOfDay(for: Date())
@@ -38,11 +40,11 @@ class GHTaskTests: XCTestCase {
     }
 
     func testUpdateNextCareDate_whenTaskIsNew_andIntervalIsWeekly_NextDateIsNextInInterval() throws {
-        let task = try GHTask.defaultTask(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
-        task.interval?.repeatsFrequency = GHTaskIntervalType.weekly.rawValue
-
+        let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
         let weekday = 1
-        task.interval?.repeatsValues = [weekday]
+        let weeklySchedule = CareSchedule.weeklySchedule(daysOfTheWeek: [weekday], context: storageProvider.persistentContainer.viewContext)
+        task.careSchedule = weeklySchedule
+
         task.updateNextCareDate()
 
         let nextCareDate = try XCTUnwrap(task.nextCareDate)
@@ -55,11 +57,10 @@ class GHTaskTests: XCTestCase {
 
     func testUpdateNextCareDate_whenTaskHasALog_andLogDateIsToday_NextDateIsNextInInterval() throws {
         let expectation = expectation(description: "Update task completion status")
-        let task = try GHTask.defaultTask(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
-        task.interval?.repeatsFrequency = GHTaskIntervalType.daily.rawValue
+        let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
 
-        let days = 1
-        task.interval?.repeatsValues = [days]
+        let dailySchedule = CareSchedule.dailySchedule(interval: 1, context: storageProvider.persistentContainer.viewContext).self
+        task.careSchedule = dailySchedule
         task.updateNextCareDate()
 
         task.markAsComplete() {
@@ -76,14 +77,13 @@ class GHTaskTests: XCTestCase {
     }
 
     func testUpdateNextCareDate_whenTaskHasALog_andNextDateAfterLogDateIsBeforeToday_NextDateIsToday() throws {
-        let task = try GHTask.defaultTask(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
-        task.interval?.repeatsFrequency = GHTaskIntervalType.daily.rawValue
-        let days = 1
-        task.interval?.repeatsValues = [days]
+        let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
+        let dailySchedule = CareSchedule.dailySchedule(interval: 1, context: storageProvider.persistentContainer.viewContext)
+        task.careSchedule = dailySchedule
 
         let lastDate = Date().addingTimeInterval(-4*24*60*60)
         task.lastLogDate = lastDate
-        task.nextCareDate = task.interval?.nextDate(after: lastDate)
+        task.nextCareDate = task.careSchedule?.recurrenceRule?.nextDate(after: lastDate)
 
         let today = Calendar.current.startOfDay(for: Date())
         XCTAssertTrue(task.nextCareDate! < today)
@@ -94,9 +94,9 @@ class GHTaskTests: XCTestCase {
 
     func testMarkAsCompleted() throws {
         let firstUpdateExpectation = expectation(description: "Update task completion status")
-        let task = try GHTask.defaultTask(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
-        task.interval?.repeatsFrequency = GHTaskIntervalType.daily.rawValue
-        task.interval?.repeatsValues = [1]
+        let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
+        let dailySchedule = CareSchedule.dailySchedule(interval: 1, context: storageProvider.persistentContainer.viewContext)
+        task.careSchedule = dailySchedule
         task.updateNextCareDate()
 
         XCTAssertNil(task.lastLogDate)

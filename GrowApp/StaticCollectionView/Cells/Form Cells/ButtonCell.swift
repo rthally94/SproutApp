@@ -96,7 +96,6 @@ class SproutButtonCell: ButtonCell {
         let view = UIStackView(arrangedSubviews: [imageView, textLabel])
         view.axis = .horizontal
         view.alignment = .center
-        view.distribution = .fill
         view.spacing = 4
         return view
     }()
@@ -116,7 +115,7 @@ class SproutButtonCell: ButtonCell {
             stackWidth: stack.widthAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.widthAnchor)
         )
 
-        constraints.stackWidth.priority-=1
+//        constraints.stackWidth.priority-=1
 
         NSLayoutConstraint.activate([
             constraints.stackTop,

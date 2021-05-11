@@ -34,7 +34,7 @@ struct RowItem: Hashable {
 
     typealias TapAction = () -> Void
     typealias ValueChangedAction = (_ sender: Any) -> Void
-    typealias Icon = GHIcon
+    typealias Icon = SproutIcon
 
     enum DisplayContext: Int, Hashable {
         case plain, normal, primary, destructive

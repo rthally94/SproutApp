@@ -1,5 +1,5 @@
 //
-//  GHTask.swift
+//  CareInfo.swift
 //  GrowApp
 //
 //  Created by Ryan Thally on 4/30/21.
@@ -8,36 +8,39 @@
 import CoreData
 import UIKit
 
-public class GHTask: NSManagedObject {
+public class CareInfo: NSManagedObject {
     /// Creats a new task using the "Watering" template
     /// - Parameter context: The managed object context to insert the task in
     /// - Throws: Errors related to CoreData
     /// - Returns: The new, configured task
-    static func defaultTask(in context: NSManagedObjectContext, ofType type: GHTaskType.TaskTypeName) throws -> GHTask {
-        let task = GHTask(context: context)
-        task.id = UUID()
-        task.lastLogDate = nil
-        task.nextCareDate = nil
+    static func createDefaultInfoItem(in context: NSManagedObjectContext, ofType type: CareCategory.TaskTypeName) throws -> CareInfo {
+        let info = CareInfo(context: context)
+        info.id = UUID()
+        info.creationDate = Date()
 
-        let interval = GHTaskInterval(context: context)
-        interval.repeatsFrequency = GHTaskInterval.RepeatsNeverFrequency
-        interval.startDate = Date()
-        task.interval = interval
+        info.lastLogDate = nil
+        info.nextCareDate = nil
 
-        task.taskType = try GHTaskType.fetchOrCreateTaskType(withName: type, inContext: context)
+        info.careCategory = try CareCategory.fetchOrCreateCategory(withName: type, inContext: context)
+        info.updateNextCareDate()
 
-        task.updateNextCareDate()
-
-        return task
+        return info
     }
 
     public override func willSave() {
-        super.willSave()
-
-        print("TaskWillSave: Interval Updated:", interval?.isUpdated ?? false, "| Inserted:", interval?.isInserted ?? false, "| Deleted:", interval?.isDeleted ?? false)
-        if (interval?.isUpdated == true || interval?.isInserted == true) {
-            updateNextCareDate()
+        if plant == nil {
+            managedObjectContext?.delete(self)
+            print("Unusued CareInfo Deleted")
         }
+
+        if !isDeleted {
+            print("TaskWillSave: Interval Updated:", careSchedule?.isUpdated ?? false, "| Inserted:", careSchedule?.isInserted ?? false, "| Deleted:", careSchedule?.isDeleted ?? false)
+            if (careSchedule?.isUpdated == true || careSchedule?.isInserted == true) {
+                updateNextCareDate()
+            }
+        }
+
+        super.willSave()
     }
 
     /// Marks a task as complete. Increments lastLogDate and nextCareDate.
@@ -62,7 +65,7 @@ public class GHTask: NSManagedObject {
         if lastLogDate == nil {
             // Task is late
             taskStatus = .isNew
-        } else if let lastLogDate = lastLogDate, let nextDate = interval?.nextDate(after: lastLogDate), nextDate < today {
+        } else if let lastLogDate = lastLogDate, let nextDate = careSchedule?.recurrenceRule?.nextDate(after: lastLogDate), nextDate < today {
             taskStatus = .isLate
         } else if let lastLogDate = lastLogDate, lastLogDate < tomorrow {
             taskStatus = .isOnTimeOrEarly
@@ -73,11 +76,11 @@ public class GHTask: NSManagedObject {
         case .isNew:
             // Placeholder date is the day prior
             let placeholderDate = today.addingTimeInterval(-1 * 24 * 60 * 60)
-            newDate = interval?.nextDate(after: placeholderDate)
+            newDate = careSchedule?.recurrenceRule?.nextDate(after: placeholderDate)
         case .isOnTimeOrEarly:
             // date is the date after the last log date
             guard let date = lastLogDate else { fatalError("Case isOnTimeOrEarly used without a lastLogDate value set.") }
-            newDate = interval?.nextDate(after: date)
+            newDate = careSchedule?.recurrenceRule?.nextDate(after: date)
         case .isLate:
             // date is today
             newDate = Calendar.current.startOfDay(for: Date())

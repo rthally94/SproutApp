@@ -1,5 +1,5 @@
 //
-//  GHTask+Extensions.swift
+//  CareInfo+Extensions.swift
 //  GrowApp
 //
 //  Created by Ryan Thally on 4/1/21.
@@ -8,30 +8,30 @@
 import Foundation
 import CoreData
 
-//extension GHTask {
+//extension CareInfo {
 //    class func isDateInIntervalPredicate(_ date: Date) -> NSPredicate {
 //        let startOfDate = Calendar.current.startOfDay(for: date)
 //        // isStartDate after desiredDate
-//        let isStartDateAfterDesiredDatePredicate = NSPredicate(format: "%K >= %@", #keyPath(GHTask.interval.startDate), startOfDate as NSDate)
+//        let isStartDateAfterDesiredDatePredicate = NSPredicate(format: "%K >= %@", #keyPath(CareInfo.interval.startDate), startOfDate as NSDate)
 //
 //        // none
-//        let isTypeNonePredicate = NSPredicate(format: "%K = %d", #keyPath(GHTask.interval.type), Int16(GHTaskIntervalType.none.rawValue))
+//        let isTypeNonePredicate = NSPredicate(format: "%K = %d", #keyPath(CareInfo.interval.type), Int16(CareInfoIntervalType.none.rawValue))
 //        let nonePredicate = isTypeNonePredicate
 //
 //        // daily
-//        let isTypeDailyPredicate = NSPredicate(format: "%K == %d", #keyPath(GHTask.interval.type), Int16(GHTaskIntervalType.daily.rawValue))
+//        let isTypeDailyPredicate = NSPredicate(format: "%K == %d", #keyPath(CareInfo.interval.type), Int16(CareInfoIntervalType.daily.rawValue))
 //        let dailyPredicate = isTypeDailyPredicate
 //
 //        // weekly
 //        let weekday = Calendar.current.component(.weekday, from: startOfDate)
-//        let isTypeWeeklyPredicate = NSPredicate(format: "%K = %d", #keyPath(GHTask.interval.type), Int16(GHTaskIntervalType.weekly.rawValue))
-//        let isWeekdayInIntervalPredicate = NSPredicate(format: "%d IN %K", weekday, #keyPath(GHTask.interval.values))
+//        let isTypeWeeklyPredicate = NSPredicate(format: "%K = %d", #keyPath(CareInfo.interval.type), Int16(CareInfoIntervalType.weekly.rawValue))
+//        let isWeekdayInIntervalPredicate = NSPredicate(format: "%d IN %K", weekday, #keyPath(CareInfo.interval.values))
 //        let weeklyPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [isTypeWeeklyPredicate, isWeekdayInIntervalPredicate])
 //
 //        //monthly
 //        let day = Calendar.current.component(.day, from: startOfDate)
-//        let isTypeMonthlyPredicate = NSPredicate(format: "%K == %d", #keyPath(GHTask.interval.type), GHTaskIntervalType.monthly.rawValue)
-//        let isDayInIntervalPredicate = NSPredicate(format: "%d IN %K", day, #keyPath(GHTask.interval.values))
+//        let isTypeMonthlyPredicate = NSPredicate(format: "%K == %d", #keyPath(CareInfo.interval.type), CareInfoIntervalType.monthly.rawValue)
+//        let isDayInIntervalPredicate = NSPredicate(format: "%d IN %K", day, #keyPath(CareInfo.interval.values))
 //        let monthlyPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [isTypeMonthlyPredicate, isDayInIntervalPredicate])
 //
 //        let intervalPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [nonePredicate, dailyPredicate, weeklyPredicate, monthlyPredicate])
@@ -40,7 +40,7 @@ import CoreData
 //    }
 //}
 
-//extension GHTask {
+//extension CareInfo {
 //    var lastCareDate: Date? {
 //        return nil
 //    }
@@ -48,7 +48,7 @@ import CoreData
 //    func nextCareDate(after date: Date) -> Date? {
 //        guard let startDate = interval?.startDate, date >= startDate else { return interval?.startDate }
 //
-//        let intervalType = GHTaskIntervalType(rawValue: Int(interval?.type ?? Int16(0)))
+//        let intervalType = CareInfoIntervalType(rawValue: Int(interval?.type ?? Int16(0)))
 //        switch intervalType {
 //            case nil, .none?:
 //                return nil
@@ -93,7 +93,7 @@ import CoreData
 //    func previousCareDate(before date: Date) -> Date? {
 //        guard let startDate = interval?.startDate, date >= startDate else { return interval?.startDate }
 //
-//        let intervalType = GHTaskIntervalType(rawValue: Int(interval?.type ?? 0))
+//        let intervalType = CareInfoIntervalType(rawValue: Int(interval?.type ?? 0))
 //        switch intervalType {
 //            case nil, .none?:
 //                return nil
@@ -151,7 +151,7 @@ import CoreData
 //        // Test date must be after the starting date
 //        guard let startDate = interval?.startDate, date >= startDate else { return false }
 //
-//        let intervalType = GHTaskIntervalType(rawValue: Int(interval?.type ?? 0))
+//        let intervalType = CareInfoIntervalType(rawValue: Int(interval?.type ?? 0))
 //        switch intervalType {
 //            case nil, .none?: return true
 //            case .daily:

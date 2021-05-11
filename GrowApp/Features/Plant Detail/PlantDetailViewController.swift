@@ -171,12 +171,12 @@ private extension PlantDetailViewController {
         ], toSection: .plantHero)
         
         // Plant Care Summary
-        let tasksToday: Set<GHTask> = plant.tasks.filter { task in
+        let tasksToday: Set<CareInfo> = plant.tasks.filter { task in
             guard let date = task.nextCareDate else { return false }
             return Calendar.current.isDateInToday(date)
         } ?? []
 
-        let lateTasks: Set<GHTask> = plant.tasks.filter { task in
+        let lateTasks: Set<CareInfo> = plant.tasks.filter { task in
             guard let date = task.nextCareDate else { return false }
             let today = Calendar.current.startOfDay(for: Date())
             return date < today
@@ -194,15 +194,15 @@ private extension PlantDetailViewController {
         let next = lateTasks.union(tasksToday)
         let nextTasks: [Item] = next.map { task -> Item in
             let lastCareString: String = "nils"
-            return Item.todo(title: task.taskType?.name, subtitle: lastCareString, image: task.taskType?.icon?.image, taskState: true)
+            return Item.todo(title: task.careCategory?.name, subtitle: lastCareString, image: task.careCategory?.icon?.image, taskState: true)
         }
         
         snapshot.appendItems(nextTasks, toSection: .upNext)
         
         // All Tasks
         let items: [Item] = plant.tasks.compactMap { task in
-            return Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tapAction: { [unowned self] in
-                print(task.taskType?.name ?? "Unknown")
+            return Item.compactCardCell(title: task.careCategory?.name, value: task.careSchedule?.recurrenceRule?.intervalText(), image: task.careCategory?.icon?.image, tapAction: { [unowned self] in
+                print(task.careCategory?.name ?? "Unknown")
             })
         } ?? []
         

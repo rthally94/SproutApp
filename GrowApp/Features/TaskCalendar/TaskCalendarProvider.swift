@@ -10,18 +10,18 @@ import CoreData
 
 class TaskCalendarProvider: NSObject {
     let moc: NSManagedObjectContext
-    fileprivate let fetchedResultsController: NSFetchedResultsController<GHTask>
+    fileprivate let fetchedResultsController: NSFetchedResultsController<CareInfo>
     
     @Published var snapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>?
     
     init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext
         
-        let request: NSFetchRequest<GHTask> = GHTask.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \GHTask.plant?.name, ascending: true)]
+        let request: NSFetchRequest<CareInfo> = CareInfo.fetchRequest()
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \CareInfo.plant?.name, ascending: true)]
         
         // TODO: Add support to fetch for a specific day
-//        let intervalPredicate = GHTask.isDateInIntervalPredicate(Date())
+//        let intervalPredicate = CareInfo.isDateInIntervalPredicate(Date())
 //        print(intervalPredicate.predicateFormat)
 //        request.predicate = NSPredicate(format: "SUBQUERY(interval, $x, \(intervalPredicate.predicateFormat)).@count > 0")
         
@@ -33,7 +33,7 @@ class TaskCalendarProvider: NSObject {
         try! fetchedResultsController.performFetch()
     }
     
-    func object(at indexPath: IndexPath) -> GHTask {
+    func object(at indexPath: IndexPath) -> CareInfo {
         return fetchedResultsController.object(at: indexPath)
     }
 }

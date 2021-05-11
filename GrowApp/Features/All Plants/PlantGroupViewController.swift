@@ -112,8 +112,8 @@ extension PlantGroupViewController {
 
     func makeCellRegistration() -> UICollectionView.CellRegistration<CardCell, Item> {
         return UICollectionView.CellRegistration<CardCell, Item>() { cell, indexPath, item in
-            cell.image = item.plant.icon?.image
-            cell.text = item.plant.name
+            cell.image = item.image
+            cell.text = item.title
         }
     }
 

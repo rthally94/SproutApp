@@ -8,7 +8,7 @@
 import Foundation
 
 struct UpNextItem: Hashable {
-    var task: GHTask
+    var careInfo: CareInfo
     var plant: GHPlant
 
     var title: String? {
@@ -16,16 +16,16 @@ struct UpNextItem: Hashable {
     }
 
     var subtitle: String? {
-        return task.interval?.intervalText()
+        return careInfo.careSchedule?.recurrenceRule?.intervalText()
     }
 
-    var icon: GHIcon? {
+    var icon: SproutIcon? {
         return plant.icon
     }
 
     var daysLate: Int? {
-        guard let lastLogDate = task.lastLogDate,
-              let nextCareDate = task.nextCareDate,
+        guard let lastLogDate = careInfo.lastLogDate,
+              let nextCareDate = careInfo.nextCareDate,
               let daysLate = Calendar.current.dateComponents([.day], from: nextCareDate, to: lastLogDate).day
         else { return nil }
 
@@ -33,12 +33,12 @@ struct UpNextItem: Hashable {
     }
 
     var isChecked: Bool {
-        guard let lastLogDate = task.lastLogDate, let nextCareDate = task.nextCareDate else { return false }
+        guard let lastLogDate = careInfo.lastLogDate, let nextCareDate = careInfo.nextCareDate else { return false }
         return Calendar.current.startOfDay(for: lastLogDate) == Calendar.current.startOfDay(for: nextCareDate)
     }
 
     // MARK: - Task Actions
     func markAsComplete() {
-        task.markAsComplete()
+        careInfo.markAsComplete()
     }
 }

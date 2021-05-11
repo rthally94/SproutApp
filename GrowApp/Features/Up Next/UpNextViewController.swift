@@ -69,7 +69,7 @@ private extension UpNextViewController {
             } else {
                 cell.accessories = [
                     .todoAccessory(actionHandler: {_ in
-                        self?.viewModel.markTaskAsComplete(item.task)
+                        self?.viewModel.markTaskAsComplete(item.careInfo)
                     })
                 ]
             }

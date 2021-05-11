@@ -133,7 +133,7 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
         navigateTo(vc.wrappedInNavigationController(), modal: true)
     }
 
-    func showTaskEditor(for task: GHTask) {
+    func showTaskEditor(for task: CareInfo) {
         let vc = TaskEditorController()
         vc.persistentContainer = persistentContainer
         vc.task = task
@@ -147,13 +147,14 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     }
 
     func cleanupUnusuedTasks() {
-        let allUnconfiguredTasksRequest: NSFetchRequest<GHTask> = GHTask.fetchRequest()
-        allUnconfiguredTasksRequest.predicate = NSPredicate(format: "%K == nil", #keyPath(GHTask.plant))
+        let allUnconfiguredTasksRequest: NSFetchRequest<CareInfo> = CareInfo.fetchRequest()
+        allUnconfiguredTasksRequest.predicate = NSPredicate(format: "%K == nil", #keyPath(CareInfo.plant))
         do {
             let allUnconfigredTasks = try persistentContainer.viewContext.fetch(allUnconfiguredTasksRequest)
             allUnconfigredTasks.forEach {
                 persistentContainer.viewContext.delete($0)
             }
+            print("Cleaned \(allUnconfigredTasks.count) care items.")
         } catch {
             print(error)
         }
@@ -243,7 +244,7 @@ extension PlantEditorControllerController: UICollectionViewDelegate {
 
 // MARK: - PlantIconPickerDelegate
 extension PlantEditorControllerController: PlantIconPickerControllerDelegate {
-    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: GHIcon) {
+    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: SproutIcon) {
         if icon.isInserted {
             icon.plant = plant
         }
@@ -263,13 +264,13 @@ extension PlantEditorControllerController: PlantTypePickerDelegate {
 
 // MARK: - PlantTaskEditroDelegate
 extension PlantEditorControllerController: TaskEditorDelegate {
-    func taskEditor(_ editor: TaskEditorController, didUpdateTask task: GHTask) {
-        if let existingTask = plant.tasks.first(where: { $0.id == task.id }) {
+    func taskEditor(_ editor: TaskEditorController, didUpdateTask newInfo: CareInfo) {
+        if let existingTask = plant.tasks.first(where: { $0.id == newInfo.id }) {
             plant.tasks.remove(existingTask)
         }
 
-        if !task.isDeleted {
-            plant.addToTasks_(task)
+        if !newInfo.isDeleted {
+            plant.addToCareInfoItems(newInfo)
         }
 
         updateUI()

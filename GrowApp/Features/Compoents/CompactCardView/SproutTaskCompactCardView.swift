@@ -8,15 +8,15 @@
 import UIKit
 
 class SproutTaskCompactCardView: CompactCardView {
-    var task: GHTask? {
+    var careInfo: CareInfo? {
         didSet {
             populateCardProperties()
         }
     }
 
     private func populateCardProperties() {
-        imageView.image = task?.taskType?.icon?.image
-        titleLabel.text = task?.taskType?.name
-        valueLabel.text = task?.interval?.intervalText()
+        imageView.image = careInfo?.careCategory?.icon?.image
+        titleLabel.text = careInfo?.careCategory?.name
+        valueLabel.text = careInfo?.careSchedule?.recurrenceRule?.intervalText()
     }
 }

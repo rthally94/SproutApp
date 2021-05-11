@@ -8,17 +8,16 @@
 import UIKit
 
 class SproutTaskLargeHeaderView: LargeHeaderView {
-    var task: GHTask? {
+    var careInfo: CareInfo? {
         didSet {
             applyTaskPropertiesIfAble()
         }
     }
 
     private func applyTaskPropertiesIfAble() {
-        guard let task = task else { return }
-
-        imageView.image = task.taskType?.icon?.image
-        titleLabel.text = task.taskType?.name?.capitalized
-        subtitleLabel.text = task.interval?.intervalText()
+        guard let careInfo = careInfo else { return }
+        imageView.image = careInfo.careCategory?.icon?.image
+        titleLabel.text = careInfo.careCategory?.name?.capitalized
+        subtitleLabel.text = careInfo.careSchedule?.recurrenceRule?.intervalText()
     }
 }

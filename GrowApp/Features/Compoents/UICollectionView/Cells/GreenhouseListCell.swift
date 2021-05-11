@@ -25,9 +25,9 @@ private extension UICellConfigurationState {
         get { return self[.secondaryText] as? String }
     }
 
-    var icon: GHIcon? {
+    var icon: SproutIcon? {
         set { self[.icon] = newValue }
-        get { return self[.icon] as? GHIcon }
+        get { return self[.icon] as? SproutIcon }
     }
 
     var daysLate: Int? {
@@ -39,10 +39,10 @@ private extension UICellConfigurationState {
 class GreenHouseListCell: UICollectionViewListCell {
     private var text: String?
     private var secondaryText: String?
-    private var icon: GHIcon?
+    private var icon: SproutIcon?
     private var daysLate: Int?
     
-    func updateWithText(_ text: String?, secondaryText: String?, icon: GHIcon?, daysLate: Int? = nil) {
+    func updateWithText(_ text: String?, secondaryText: String?, icon: SproutIcon?, daysLate: Int? = nil) {
         var updated = false
         if self.text != text {
             self.text = text

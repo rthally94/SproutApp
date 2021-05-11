@@ -8,8 +8,8 @@
 import Foundation
 
 extension GHPlant {
-    var tasks: Set<GHTask> {
-        get { tasks_ as? Set<GHTask> ?? [] }
-        set { tasks_ = newValue as NSSet }
+    var tasks: Set<CareInfo> {
+        get { careInfoItems as? Set<CareInfo> ?? [] }
+        set { careInfoItems = newValue as NSSet }
     }
 }

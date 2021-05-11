@@ -42,10 +42,10 @@ class UpNextViewModel {
                         var itemsToReload = [Item]()
 
                         taskIDs.forEach { taskID in
-                            if let task = self.tasksProvider.object(withID: taskID) as? GHTask,
+                            if let task = self.tasksProvider.object(withID: taskID) as? CareInfo,
                                let plantID = task.plant?.objectID,
                                let plant = self.tasksProvider.object(withID: plantID) as? GHPlant {
-                                let item = Item(task: task, plant: plant)
+                                let item = Item(careInfo: task, plant: plant)
                                 items.append(item)
                                 if task.isUpdated {
                                     itemsToReload.append(item)
@@ -63,7 +63,7 @@ class UpNextViewModel {
     }
 
     // MARK: - Task Methods
-    func markTaskAsComplete(_ task: GHTask) {
+    func markTaskAsComplete(_ task: CareInfo) {
         task.markAsComplete()
     }
 }

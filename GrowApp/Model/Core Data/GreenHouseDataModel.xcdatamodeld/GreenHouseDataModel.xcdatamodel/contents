@@ -1,51 +1,72 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20E232" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="GHIcon" representedClassName="GHIcon" syncable="YES" codeGenerationType="class">
-        <attribute name="hexColor" optional="YES" attributeType="String"/>
-        <attribute name="imageData" optional="YES" attributeType="Binary" valueTransformerName="UIImageValueTransformer"/>
-        <attribute name="symbolName" optional="YES" attributeType="String"/>
-        <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="icon" inverseEntity="GHPlant"/>
-        <relationship name="taskType" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="icon" inverseEntity="GHTaskType"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20E241" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CareCategory" representedClassName=".CareCategory" syncable="YES" codeGenerationType="category">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastModifiedDate" optional="YES" attributeType="Date" derived="YES" derivationExpression="now()" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="value" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="careInfoItems" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="CareInfo" inverseName="careCategory" inverseEntity="CareInfo"/>
+        <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SproutIcon" inverseName="careCategory" inverseEntity="SproutIcon"/>
+    </entity>
+    <entity name="CareInfo" representedClassName=".CareInfo" syncable="YES" codeGenerationType="category">
+        <attribute name="careNotes" optional="YES" attributeType="String"/>
+        <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastLogDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastModifiedDate" optional="YES" attributeType="Date" derived="YES" derivationExpression="now()" usesScalarValueType="NO"/>
+        <attribute name="nextCareDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="careCategory" maxCount="1" deletionRule="Nullify" destinationEntity="CareCategory" inverseName="careInfoItems" inverseEntity="CareCategory"/>
+        <relationship name="careSchedule" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CareSchedule" inverseName="careInfo" inverseEntity="CareSchedule"/>
+        <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="careInfoItems" inverseEntity="GHPlant"/>
+    </entity>
+    <entity name="CareRecurrenceRule" representedClassName=".CareRecurrenceRule" syncable="YES" codeGenerationType="category">
+        <attribute name="creationDate" optional="YES" attributeType="Date" valueTransformerName="" usesScalarValueType="NO" customClassName="Set&lt;Int&gt;"/>
+        <attribute name="id" optional="YES" attributeType="UUID" defaultValueString="never" usesScalarValueType="NO"/>
+        <attribute name="lastModifiedDate" optional="YES" attributeType="Date" derived="YES" derivationExpression="now()" usesScalarValueType="NO"/>
+        <attribute name="recurrenceDaysOfMonth" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="Set&lt;Int&gt;"/>
+        <attribute name="recurrenceDaysOfWeek" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="Set&lt;Int&gt;"/>
+        <attribute name="recurrenceFirstDayOfWeek" attributeType="Integer 16" defaultValueString="1" usesScalarValueType="YES"/>
+        <attribute name="recurrenceFrequency" attributeType="String"/>
+        <attribute name="recurrenceInterval" attributeType="Integer 16" defaultValueString="1" usesScalarValueType="YES"/>
+        <relationship name="careSchedule" maxCount="1" deletionRule="Nullify" destinationEntity="CareSchedule" inverseName="recurrenceRule" inverseEntity="CareSchedule"/>
+    </entity>
+    <entity name="CareSchedule" representedClassName=".CareSchedule" syncable="YES" codeGenerationType="category">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastModifiedDate" optional="YES" attributeType="Date" derived="YES" derivationExpression="now()" usesScalarValueType="NO"/>
+        <attribute name="startingDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="careInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CareInfo" inverseName="careSchedule" inverseEntity="CareInfo"/>
+        <relationship name="recurrenceRule" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CareRecurrenceRule" inverseName="careSchedule" inverseEntity="CareRecurrenceRule"/>
     </entity>
     <entity name="GHPlant" representedClassName=".GHPlant" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHIcon" inverseName="plant" inverseEntity="GHIcon"/>
-        <relationship name="tasks_" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="GHTask" inverseName="plant" inverseEntity="GHTask"/>
+        <relationship name="careInfoItems" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CareInfo" inverseName="plant" inverseEntity="CareInfo"/>
+        <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SproutIcon" inverseName="plant" inverseEntity="SproutIcon"/>
         <relationship name="type" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlantType" inverseName="plants" inverseEntity="GHPlantType"/>
     </entity>
-    <entity name="GHPlantType" representedClassName="GHPlantType" syncable="YES" codeGenerationType="class">
+    <entity name="GHPlantType" representedClassName=".GHPlantType" syncable="YES" codeGenerationType="class">
         <attribute name="commonName" optional="YES" attributeType="String"/>
         <attribute name="plantCount" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="plants.@count" usesScalarValueType="YES"/>
         <attribute name="scientificName" optional="YES" attributeType="String"/>
         <relationship name="plants" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="GHPlant" inverseName="type" inverseEntity="GHPlant"/>
     </entity>
-    <entity name="GHTask" representedClassName=".GHTask" syncable="YES" codeGenerationType="category">
-        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="lastLogDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="nextCareDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="interval" maxCount="1" deletionRule="Cascade" destinationEntity="GHTaskInterval" inverseName="task" inverseEntity="GHTaskInterval"/>
-        <relationship name="plant" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="tasks_" inverseEntity="GHPlant"/>
-        <relationship name="taskType" maxCount="1" deletionRule="Nullify" destinationEntity="GHTaskType" inverseName="tasks" inverseEntity="GHTaskType"/>
-    </entity>
-    <entity name="GHTaskInterval" representedClassName=".GHTaskInterval" syncable="YES" codeGenerationType="category">
-        <attribute name="repeatsFrequency" optional="YES" attributeType="String" defaultValueString="never"/>
-        <attribute name="repeatsValues" optional="YES" attributeType="Transformable" valueTransformerName="" customClassName="Set&lt;Int&gt;"/>
-        <attribute name="startDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="task" maxCount="1" deletionRule="Nullify" destinationEntity="GHTask" inverseName="interval" inverseEntity="GHTask"/>
-    </entity>
-    <entity name="GHTaskType" representedClassName=".GHTaskType" syncable="YES" codeGenerationType="category">
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="GHIcon" inverseName="taskType" inverseEntity="GHIcon"/>
-        <relationship name="tasks" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="GHTask" inverseName="taskType" inverseEntity="GHTask"/>
+    <entity name="SproutIcon" representedClassName=".SproutIcon" syncable="YES" codeGenerationType="category">
+        <attribute name="hexColor" optional="YES" attributeType="String"/>
+        <attribute name="imageData" optional="YES" attributeType="Binary" valueTransformerName="UIImageValueTransformer"/>
+        <attribute name="symbolName" optional="YES" attributeType="String"/>
+        <relationship name="careCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CareCategory" inverseName="icon" inverseEntity="CareCategory"/>
+        <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="icon" inverseEntity="GHPlant"/>
     </entity>
     <elements>
-        <element name="GHIcon" positionX="-36" positionY="36" width="128" height="104"/>
-        <element name="GHPlant" positionX="-63" positionY="-18" width="128" height="119"/>
-        <element name="GHPlantType" positionX="0" positionY="108" width="128" height="89"/>
-        <element name="GHTask" positionX="-54" positionY="18" width="128" height="119"/>
-        <element name="GHTaskInterval" positionX="-27" positionY="63" width="128" height="89"/>
-        <element name="GHTaskType" positionX="-18" positionY="99" width="128" height="74"/>
+        <element name="CareCategory" positionX="-988.0540771484375" positionY="-268.4907531738281" width="128" height="148"/>
+        <element name="CareInfo" positionX="-644.3951416015625" positionY="-348.2300415039062" width="128" height="178"/>
+        <element name="CareRecurrenceRule" positionX="-93.0709228515625" positionY="-243.5444946289062" width="128" height="178"/>
+        <element name="CareSchedule" positionX="-418.740966796875" positionY="-191.1141662597656" width="128" height="133"/>
+        <element name="SproutIcon" positionX="-1169.499877929688" positionY="-572.4897766113281" width="128" height="118"/>
+        <element name="GHPlant" positionX="-922.06689453125" positionY="-618.9916687011719" width="128" height="119"/>
+        <element name="GHPlantType" positionX="-651.091796875" positionY="-524.2915649414062" width="128" height="103"/>
     </elements>
 </model>

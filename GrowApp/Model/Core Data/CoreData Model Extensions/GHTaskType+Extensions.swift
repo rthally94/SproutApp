@@ -1,5 +1,5 @@
 //
-//  GHTaskType+Extensions.swift
+//  CareInfoType+Extensions.swift
 //  GrowApp
 //
 //  Created by Ryan Thally on 4/7/21.
@@ -8,12 +8,12 @@
 import CoreData
 import UIKit
 
-extension GHTaskType {
-    static func wateringTaskType(context: NSManagedObjectContext) -> GHTaskType {
-        let wateringTask = GHTaskType(context: context)
+extension CareCategory {
+    static func wateringTaskType(context: NSManagedObjectContext) -> CareCategory {
+        let wateringTask = CareCategory(context: context)
         wateringTask.name = "Watering"
         
-        let wateringIcon = GHIcon(context: context)
+        let wateringIcon = SproutIcon(context: context)
         wateringIcon.symbolName = "drop.fill"
         wateringIcon.color = UIColor(named: "ghBlue")
         wateringTask.icon = wateringIcon
@@ -21,11 +21,11 @@ extension GHTaskType {
         return wateringTask
     }
     
-    static func fertilizingTaskType(context: NSManagedObjectContext) -> GHTaskType {
-        let fertilizingTask = GHTaskType(context: context)
+    static func fertilizingTaskType(context: NSManagedObjectContext) -> CareCategory {
+        let fertilizingTask = CareCategory(context: context)
         fertilizingTask.name = "Fertilizing"
         
-        let fertilizingIcon = GHIcon(context: context)
+        let fertilizingIcon = SproutIcon(context: context)
         fertilizingIcon.symbolName = "leaf.fill"
         fertilizingIcon.color = UIColor(named: "ghOrange")
         fertilizingTask.icon = fertilizingIcon
@@ -33,11 +33,11 @@ extension GHTaskType {
         return fertilizingTask
     }
     
-    static func pruningTaskType(context: NSManagedObjectContext) -> GHTaskType {
-        let pruningTask = GHTaskType(context: context)
+    static func pruningTaskType(context: NSManagedObjectContext) -> CareCategory {
+        let pruningTask = CareCategory(context: context)
         pruningTask.name = "Watering"
         
-        let pruningIcon = GHIcon(context: context)
+        let pruningIcon = SproutIcon(context: context)
         pruningIcon.symbolName = "scissors"
         pruningIcon.color = UIColor(named: "ghGreen")
         pruningTask.icon = pruningIcon
@@ -45,11 +45,11 @@ extension GHTaskType {
         return pruningTask
     }
     
-    static func pottingTaskType(context: NSManagedObjectContext) -> GHTaskType {
-        let pottingTask = GHTaskType(context: context)
+    static func pottingTaskType(context: NSManagedObjectContext) -> CareCategory {
+        let pottingTask = CareCategory(context: context)
         pottingTask.name = "Re-Potting"
         
-        let pottingIcon = GHIcon(context: context)
+        let pottingIcon = SproutIcon(context: context)
         pottingIcon.symbolName = "rectangle.roundedbottom.fill"
         pottingIcon.color = UIColor(named: "ghRed")
         pottingTask.icon = pottingIcon

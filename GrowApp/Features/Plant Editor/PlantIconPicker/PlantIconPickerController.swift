@@ -17,7 +17,7 @@ enum PlantIconPickerSection: Hashable, CaseIterable {
 class PlantIconPickerController: StaticCollectionViewController<PlantIconPickerSection> {
     // MARK: - Properties
 
-    var icon: GHIcon? {
+    var icon: SproutIcon? {
         didSet {
             if icon != oldValue {
                 dataSource?.apply(makeSnapshot())

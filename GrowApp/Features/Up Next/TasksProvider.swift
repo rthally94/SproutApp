@@ -13,20 +13,20 @@ class TasksProvider: NSObject {
     typealias Item = NSManagedObjectID
 
     let moc: NSManagedObjectContext
-    fileprivate let fetchedResultsController: NSFetchedResultsController<GHTask>
+    fileprivate let fetchedResultsController: NSFetchedResultsController<CareInfo>
 
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
 
     init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext
 
-        let request: NSFetchRequest<GHTask> = GHTask.fetchRequest()
-        let sortByNextTaskDate = NSSortDescriptor(keyPath: \GHTask.nextCareDate, ascending: true)
-        let sortByTaskName = NSSortDescriptor(keyPath: \GHTask.taskType?.name, ascending: true)
-        let sortByPlantName = NSSortDescriptor(keyPath: \GHTask.plant?.name, ascending: true)
+        let request: NSFetchRequest<CareInfo> = CareInfo.fetchRequest()
+        let sortByNextTaskDate = NSSortDescriptor(keyPath: \CareInfo.nextCareDate, ascending: true)
+        let sortByTaskName = NSSortDescriptor(keyPath: \CareInfo.careCategory?.name, ascending: true)
+        let sortByPlantName = NSSortDescriptor(keyPath: \CareInfo.plant?.name, ascending: true)
         request.sortDescriptors = [sortByNextTaskDate, sortByTaskName, sortByPlantName]
 
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(GHTask.nextCareDate), cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(CareInfo.nextCareDate), cacheName: nil)
 
         super.init()
 
@@ -34,7 +34,7 @@ class TasksProvider: NSObject {
         try! fetchedResultsController.performFetch()
     }
 
-    func object(at indexPath: IndexPath) -> GHTask {
+    func object(at indexPath: IndexPath) -> CareInfo {
         return fetchedResultsController.object(at: indexPath)
     }
 

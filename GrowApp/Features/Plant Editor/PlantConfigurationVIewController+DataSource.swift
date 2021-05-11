@@ -36,18 +36,19 @@ extension PlantEditorControllerController {
         
         // Plant Tasks
         let tasks: [Item] = plant.tasks.compactMap { task in
-            Item.compactCardCell(title: task.taskType?.name, value: task.interval?.intervalText(), image: task.taskType?.icon?.image, tapAction: {[unowned self] in
-                print(task.taskType?.name ?? "Unknown")
+            Item.compactCardCell(title: task.careCategory?.name, value: task.careSchedule?.recurrenceRule?.intervalText(), image: task.careCategory?.icon?.image, tapAction: {[unowned self] in
+                print(task.careCategory?.name ?? "Unknown")
                 showTaskEditor(for: task)
             })
         }
         snapshot.appendItems(tasks, toSection: .plantCare)
 
-        let unassignedTasks: [Item] = GHTaskType.TaskTypeName.allCases.compactMap { type in
-            if !plant.tasks.contains(where: { $0.taskType?.name == type.description }), let task = try? GHTask.defaultTask(in: persistentContainer.viewContext, ofType: type) {
-                return Item.compactCardCell(title: task.taskType?.name, value: "Tap to configure", image: task.taskType?.icon?.image, tapAction: {[unowned self] in
-                    print(task.taskType?.name ?? "Unknown")
-                    plant.addToTasks_(task)
+        let unassignedTasks: [Item] = CareCategory.TaskTypeName.allCases.compactMap { type in
+            if !plant.tasks.contains(where: { $0.careCategory?.name == type.description }), let task = try? CareInfo.createDefaultInfoItem(in: persistentContainer.viewContext, ofType: type) {
+                task.careSchedule = CareSchedule.dailySchedule(interval: 1, context: persistentContainer.viewContext)
+                return Item.compactCardCell(title: task.careCategory?.name, value: "Tap to configure", image: task.careCategory?.icon?.image, tapAction: {[unowned self] in
+                    print(task.careCategory?.name ?? "Unknown")
+                    plant.addToCareInfoItems(task)
                     showTaskEditor(for: task)
                 })
             } else {

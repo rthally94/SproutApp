@@ -1,5 +1,5 @@
 //
-//  GHIcon+Extensions.swift
+//  SproutIcon+Extensions.swift
 //  GrowApp
 //
 //  Created by Ryan Thally on 4/1/21.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-extension GHIcon {
+extension SproutIcon {
     var color: UIColor? {
         get {
             if let hexColor = hexColor {
