@@ -40,7 +40,8 @@ extension Utility {
 
     static let careScheduleFormatter: CareScheduleFormatter = {
         let formatter = CareScheduleFormatter()
-        formatter.frequencyStyle = .full
+        formatter.frequencyStyle = .short
+        formatter.valuesStyle = .short
         formatter.formattingContext = .standalone
         return formatter
     }()

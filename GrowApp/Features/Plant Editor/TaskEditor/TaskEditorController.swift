@@ -212,6 +212,8 @@ private extension TaskEditorController {
         let visibleSections = TaskEditorSection.allCases.filter { sectionType in
             // Show the value picker only if the frequency is .weekly or .monthly
             switch sectionType {
+            case .notes:
+                return false
             case .recurrenceWeekly:
                 return task?.careSchedule?.recurrenceRule?.frequency == .weekly
             case .recurrenceMonthly:
@@ -223,16 +225,17 @@ private extension TaskEditorController {
         dataSourceSnapshot.appendSections(visibleSections)
         
         // Header Row
+        let careScheduleFormatter = Utility.careScheduleFormatter
         dataSourceSnapshot.appendItems([
-            Item.largeHeader(title: task?.careCategory?.name, value: task?.careSchedule?.recurrenceRule?.intervalText(), image: task?.careCategory?.icon?.image, tintColor: task?.careCategory?.icon?.color)
+            Item.largeHeader(title: task?.careCategory?.name, value: careScheduleFormatter.string(for: task?.careSchedule), image: task?.careCategory?.icon?.image, tintColor: task?.careCategory?.icon?.color)
         ], toSection: .header)
 
-        dataSourceSnapshot.appendItems([
-            Item.textField(placeholder: "Add Note", initialValue: "", onChange: {[unowned self] sender in
-                guard let textField = sender as? UITextField else { return }
-                task?.careNotes = textField.text
-            })
-        ], toSection: .notes)
+//        dataSourceSnapshot.appendItems([
+//            Item.textField(placeholder: "Add Note", initialValue: "", onChange: {[unowned self] sender in
+//                guard let textField = sender as? UITextField else { return }
+//                task?.careNotes = textField.text
+//            })
+//        ], toSection: .notes)
 
         let intervalType = task?.careSchedule?.recurrenceRule?.frequency
         let items = repeatFrequencyChoices.map { type in
@@ -404,7 +407,7 @@ private extension TaskEditorController {
 
     func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
         return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
-            guard let section = TaskEditorSection(rawValue: indexPath.section) else { return }
+            let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             var config = UIListContentConfiguration.largeGroupedHeader()
             config.text = section.headerTitle
             supplementaryView.contentConfiguration = config
