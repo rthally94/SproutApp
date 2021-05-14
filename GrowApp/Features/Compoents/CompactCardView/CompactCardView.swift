@@ -8,8 +8,8 @@
 import UIKit
 
 class CompactCardView: UIView {
-    static let titleFont = UIFont.preferredFont(forTextStyle: .subheadline)
-    static let valueFont = UIFont.preferredFont(forTextStyle: .footnote)
+    static let titleFont = UIFont.preferredFont(forTextStyle: .headline)
+    static let valueFont = UIFont.preferredFont(forTextStyle: .subheadline)
 
     lazy var imageView: UIImageView = {
         let view = UIImageView()
