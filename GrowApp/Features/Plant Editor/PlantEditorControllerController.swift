@@ -112,7 +112,7 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     // MARK: - Actions
     @objc private func applyChanges() {
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
-        cleanupUnusuedTasks()
+//        cleanupUnusuedTasks()
         delegate?.plantEditor(self, didUpdatePlant: plant)
         dismiss(animated: true)
     }
@@ -120,7 +120,7 @@ class PlantEditorControllerController: StaticCollectionViewController<PlantEdito
     @objc private func discardChanges() {
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
         persistentContainer.viewContext.undoManager?.undoNestedGroup()
-        cleanupUnusuedTasks()
+//        cleanupUnusuedTasks()
         delegate?.plantEditorDidCancel(self)
         dismiss(animated: true)
     }
@@ -188,7 +188,7 @@ private extension PlantEditorControllerController {
                 section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: edgeInset, bottom: 0, trailing: edgeInset )
                 return section
             case .plantCare, .unconfiguredCare:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48), heightDimension: .estimated(64))
+                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))

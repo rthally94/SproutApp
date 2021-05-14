@@ -20,7 +20,7 @@
 		FB263878263C9B8300180B54 /* GHPlant.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB263877263C9B8300180B54 /* GHPlant.swift */; };
 		FB28A8E82649A2DE00B1206E /* ChipLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8E72649A2DE00B1206E /* ChipLabel.swift */; };
 		FB28A8EA2649B6A600B1206E /* SpacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8E92649B6A600B1206E /* SpacerView.swift */; };
-		FB28A8ED264AB7D700B1206E /* SproutIntervalFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8EC264AB7D700B1206E /* SproutIntervalFormatter.swift */; };
+		FB28A8ED264AB7D700B1206E /* CareScheduleFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */; };
 		FB28A8F0264ABCB700B1206E /* SproutIntervalProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8EF264ABCB700B1206E /* SproutIntervalProtocol.swift */; };
 		FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348425B4C2AD00CCE6BC /* TaskCalendarViewController.swift */; };
 		FB5F348925B63E6900CCE6BC /* GreenhouseListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */; };
@@ -146,7 +146,7 @@
 		FB263877263C9B8300180B54 /* GHPlant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHPlant.swift; sourceTree = "<group>"; };
 		FB28A8E72649A2DE00B1206E /* ChipLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipLabel.swift; sourceTree = "<group>"; };
 		FB28A8E92649B6A600B1206E /* SpacerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacerView.swift; sourceTree = "<group>"; };
-		FB28A8EC264AB7D700B1206E /* SproutIntervalFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIntervalFormatter.swift; sourceTree = "<group>"; };
+		FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareScheduleFormatter.swift; sourceTree = "<group>"; };
 		FB28A8EF264ABCB700B1206E /* SproutIntervalProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIntervalProtocol.swift; sourceTree = "<group>"; };
 		FB5F348425B4C2AD00CCE6BC /* TaskCalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCalendarViewController.swift; sourceTree = "<group>"; };
 		FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenhouseListCell.swift; sourceTree = "<group>"; };
@@ -345,7 +345,7 @@
 			isa = PBXGroup;
 			children = (
 				FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */,
-				FB28A8EC264AB7D700B1206E /* SproutIntervalFormatter.swift */,
+				FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */,
 			);
 			path = Formatters;
 			sourceTree = "<group>";
@@ -921,7 +921,7 @@
 				FB28A8EA2649B6A600B1206E /* SpacerView.swift in Sources */,
 				FB6661A1261DEB9900DC8B04 /* GHTaskType+Extensions.swift in Sources */,
 				FB6C461C25F1C332009ED947 /* CareDetailViewController.swift in Sources */,
-				FB28A8ED264AB7D700B1206E /* SproutIntervalFormatter.swift in Sources */,
+				FB28A8ED264AB7D700B1206E /* CareScheduleFormatter.swift in Sources */,
 				FBC7333025E404CC0048999C /* PlantIconPickerController.swift in Sources */,
 				FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */,
 				FB82CDF926444F7400E32F16 /* UpNextSection.swift in Sources */,

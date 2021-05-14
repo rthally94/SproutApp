@@ -16,8 +16,15 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
     override func loadView() {
         super.loadView()
 
-        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: makeLayout())
-        self.view = collectionView
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(collectionView)
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
 
         collectionView.backgroundColor = .systemGroupedBackground
     }
