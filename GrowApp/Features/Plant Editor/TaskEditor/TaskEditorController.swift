@@ -101,7 +101,8 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
 
     override func makeLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            guard let sectionKind = TaskEditorSection(rawValue: sectionIndex) else { fatalError("Section index not available: \(sectionIndex)") }
+            let sectionKind = self.dataSource.snapshot().sectionIdentifiers[sectionIndex]
+            let section: NSCollectionLayoutSection
             switch sectionKind {
             case .header:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
@@ -110,10 +111,9 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
                 let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
 
-                let section = NSCollectionLayoutSection(group: group)
+                section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = .init(top: 16, leading: 16, bottom: 0, trailing: 16)
-                return section
-            case .recurrenceValue:
+            case .recurrenceWeekly, .recurrenceMonthly:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/7), heightDimension: .fractionalHeight(1.0))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
                 item.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 3, bottom: 3, trailing: 3)
@@ -121,17 +121,19 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
                 let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(1/7))
                 let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
-                let section = NSCollectionLayoutSection(group: group)
+                section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 24, bottom: 6, trailing: 24)
                 section.decorationItems = [
                     NSCollectionLayoutDecorationItem.background(elementKind: RoundedRectBackgroundView.ElementKind)
                 ]
-                return section
+
             default:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
                 config.headerMode = sectionKind.headerTitle != nil ? .supplementary : .none
-                return NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
+                section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
             }
+
+            return section
         }
 
         layout.register(RoundedRectBackgroundView.self, forDecorationViewOfKind: RoundedRectBackgroundView.ElementKind)
