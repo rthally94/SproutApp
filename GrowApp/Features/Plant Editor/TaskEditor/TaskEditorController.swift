@@ -43,7 +43,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     private lazy var imageView = UIImageView(image: UIImage(systemName: "circle"))
 
     private func makeWeekdayPicker() -> [Item] {
-        let values = task?.careSchedule?.recurrenceRule?.daysOfTheWeek ?? []
+        let values = task?.currentSchedule?.recurrenceRule?.daysOfTheWeek ?? []
         let items: [Item] = Array(1...7).map { value in
             let title = Calendar.current.veryShortStandaloneWeekdaySymbols[value-1]
 
@@ -58,7 +58,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     }
 
     private func makeDayPicker() -> [Item] {
-        let values = task?.careSchedule?.recurrenceRule?.daysOfTheMonth ?? []
+        let values = task?.currentSchedule?.recurrenceRule?.daysOfTheMonth ?? []
         let items: [Item] = Array(1...31).map { value in
             let title = String(value)
 
@@ -170,7 +170,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         // TODO: Add support for updating values
 
         var oldValues: Set<Int>
-        let rule = task?.careSchedule?.recurrenceRule
+        let rule = task?.currentSchedule?.recurrenceRule
         switch rule?.frequency {
         case .weekly:
             oldValues = rule?.daysOfTheWeek ?? []
@@ -215,9 +215,9 @@ private extension TaskEditorController {
             case .notes:
                 return false
             case .recurrenceWeekly:
-                return task?.careSchedule?.recurrenceRule?.frequency == .weekly
+                return task?.currentSchedule?.recurrenceRule?.frequency == .weekly
             case .recurrenceMonthly:
-                return task?.careSchedule?.recurrenceRule?.frequency == .monthly
+                return task?.currentSchedule?.recurrenceRule?.frequency == .monthly
             default:
                 return true
             }
@@ -225,9 +225,9 @@ private extension TaskEditorController {
         dataSourceSnapshot.appendSections(visibleSections)
         
         // Header Row
-        let careScheduleFormatter = Utility.careScheduleFormatter
+        let currentScheduleFormatter = Utility.currentScheduleFormatter
         dataSourceSnapshot.appendItems([
-            Item.largeHeader(title: task?.careCategory?.name, value: careScheduleFormatter.string(for: task?.careSchedule), image: task?.careCategory?.icon?.image, tintColor: task?.careCategory?.icon?.color)
+            Item.largeHeader(title: task?.careCategory?.name, value: currentScheduleFormatter.string(for: task?.currentSchedule), image: task?.careCategory?.icon?.image, tintColor: task?.careCategory?.icon?.color)
         ], toSection: .header)
 
 //        dataSourceSnapshot.appendItems([
@@ -237,7 +237,7 @@ private extension TaskEditorController {
 //            })
 //        ], toSection: .notes)
 
-        let intervalType = task?.careSchedule?.recurrenceRule?.frequency
+        let intervalType = task?.currentSchedule?.recurrenceRule?.frequency
         let items = repeatFrequencyChoices.map { type in
             Item.pickerRow(title: type.rawValue.capitalized, isSelected: intervalType == type, tapAction: {[unowned self] in
                 selectFrequency(type)
@@ -263,7 +263,7 @@ private extension TaskEditorController {
     }
 
     private func selectFrequency(_ newValue: SproutRecurrenceFrequency) {
-        guard let schedule = task?.careSchedule else { return }
+        guard let schedule = task?.currentSchedule else { return }
         let oldType = schedule.recurrenceRule?.frequency
         // Prevent reloading if the values are the same
         guard oldType != newValue else { return }
@@ -355,7 +355,7 @@ private extension TaskEditorController {
 
     func setIntervalValue(to newValue: Set<Int>) {
         var valuesToChange: Set<Int> = []
-        let rule = task?.careSchedule?.recurrenceRule
+        let rule = task?.currentSchedule?.recurrenceRule
 
         if case .weekly = rule?.frequency {
             if let currentValues = rule?.daysOfTheWeek {

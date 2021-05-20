@@ -53,7 +53,6 @@ class TaskCalendarViewController: UIViewController {
     // MARK: - View Life Cycle
     override func loadView() {
         super.loadView()
-        
         configureHiearchy()
     }
 

@@ -29,14 +29,11 @@ class ScheduleViewController: UIViewController {
     }()
     
     override func loadView() {
-        super.loadView()
-        
         configureHiearchy()
     }
     
     func configureHiearchy() {
-        header.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(header)
+        view = header
         header.pinToLayoutMarginsOf(view)
     }
 }

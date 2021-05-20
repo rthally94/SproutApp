@@ -5,9 +5,12 @@
 //  Created by Ryan Thally on 5/6/21.
 //
 
-import Foundation
+import CoreData
 
 struct UpNextItem: Hashable {
+    static let reloadInterval = 2.0
+    let scheduleFormatter = Utility.currentScheduleFormatter
+
     var careInfo: CareInfo
     var plant: GHPlant
 
@@ -16,7 +19,7 @@ struct UpNextItem: Hashable {
     }
 
     var subtitle: String? {
-        return careInfo.careSchedule?.recurrenceRule?.intervalText()
+        return scheduleFormatter.string(for: careInfo.nextReminder.schedule)
     }
 
     var icon: SproutIcon? {
@@ -34,7 +37,11 @@ struct UpNextItem: Hashable {
 
     var isChecked: Bool {
         guard let lastLogDate = careInfo.lastLogDate, let nextCareDate = careInfo.nextCareDate else { return false }
-        return Calendar.current.startOfDay(for: lastLogDate) == Calendar.current.startOfDay(for: nextCareDate)
+        if let secondsSinceLastLog = Calendar.current.dateComponents([.second], from: Date(), to: lastLogDate).second, Double(secondsSinceLastLog) < Self.reloadInterval {
+            return true
+        } else {
+            return Calendar.current.startOfDay(for: lastLogDate) == Calendar.current.startOfDay(for: nextCareDate)
+        }
     }
 
     // MARK: - Task Actions

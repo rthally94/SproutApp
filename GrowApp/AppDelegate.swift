@@ -10,12 +10,21 @@ import UIKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    static var hasLaunched: Bool {
+        get { UserDefaults.standard.bool(forKey: "hasLaunched") }
+        set { UserDefaults.standard.setValue(newValue, forKey: "hasLaunched") }
+    }
+
+    static var storageProvider: StorageProvider {
+        (UIApplication.shared.delegate as! AppDelegate).storageProvider
+    }
+
     static var persistentContainer: NSPersistentContainer {
-        (UIApplication.shared.delegate as! AppDelegate).storageProvider.persistentContainer
+        storageProvider.persistentContainer
     }
 
     static var viewContext: NSManagedObjectContext {
-        AppDelegate.persistentContainer.viewContext
+        persistentContainer.viewContext
     }
 
     var storageProvider = StorageProvider()

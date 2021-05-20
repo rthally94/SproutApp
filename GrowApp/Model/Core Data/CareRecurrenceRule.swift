@@ -8,10 +8,18 @@
 import CoreData
 
 public class CareRecurrenceRule: NSManagedObject {
+    static let RepeatsNeverFrequency = "never"
+    static let RepeatsDailyFrequency = "daily"
+    static let RepeatsWeeklyFrequency = "weekly"
+    static let RepeatsMonthlyFrequency = "monthly"
+
     private static func defaultRecurrenceRule(context: NSManagedObjectContext) -> CareRecurrenceRule {
         let recurrenceRule = CareRecurrenceRule(context: context)
         recurrenceRule.id = UUID()
         recurrenceRule.creationDate = Date()
+        recurrenceRule.frequency = .never
+
+        assert(recurrenceRule.isValid())
         return recurrenceRule
     }
 
@@ -20,6 +28,8 @@ public class CareRecurrenceRule: NSManagedObject {
         recurrenceRule.frequency = .daily
         recurrenceRule.interval = interval
         recurrenceRule.firstDayOfTheWeek = Calendar.current.firstWeekday
+
+        assert(recurrenceRule.isValid())
         return recurrenceRule
     }
 
@@ -28,6 +38,8 @@ public class CareRecurrenceRule: NSManagedObject {
         recurrenceRule.frequency = .weekly
         recurrenceRule.interval = interval
         recurrenceRule.firstDayOfTheWeek = Calendar.current.firstWeekday
+
+        assert(recurrenceRule.isValid())
         return recurrenceRule
     }
 
@@ -37,6 +49,8 @@ public class CareRecurrenceRule: NSManagedObject {
         recurrenceRule.interval = 1
         recurrenceRule.daysOfTheWeek = daysOfTheWeek
         recurrenceRule.firstDayOfTheWeek = Calendar.current.firstWeekday
+
+        assert(recurrenceRule.isValid())
         return recurrenceRule
     }
 
@@ -45,6 +59,8 @@ public class CareRecurrenceRule: NSManagedObject {
         recurrenceRule.frequency = .monthly
         recurrenceRule.interval = interval
         recurrenceRule.firstDayOfTheWeek = Calendar.current.firstWeekday
+
+        assert(recurrenceRule.isValid())
         return recurrenceRule
     }
 
@@ -54,14 +70,30 @@ public class CareRecurrenceRule: NSManagedObject {
         recurrenceRule.interval = 1
         recurrenceRule.daysOfTheMonth = daysOfTheMonth
         recurrenceRule.firstDayOfTheWeek = Calendar.current.firstWeekday
+
+        assert(recurrenceRule.isValid())
         return recurrenceRule
     }
 
-    static let RepeatsNeverFrequency = "never"
-    static let RepeatsDailyFrequency = "daily"
-    static let RepeatsWeeklyFrequency = "weekly"
-    static let RepeatsMonthlyFrequency = "monthly"
-    
+    func isValid() -> Bool {
+        switch (frequency, interval, daysOfTheWeek, daysOfTheMonth) {
+        // Weekly frequency on specific weekdays
+        case let (.weekly, interval, weekdays, nil) where interval > 0 && weekdays?.isEmpty == false:
+            return true
+
+        // Monthly frquency on specific days
+        case let (.monthly, interval, nil, days) where interval > 0 && days?.isEmpty == false :
+            return true
+
+        // Any frequency with an interval (every 2 days, every 3 weeks, etc)
+        case let (_, interval, nil, nil) where interval > 0:
+            return true
+
+        default:
+            return false
+        }
+    }
+
     func nextDate(after testDate: Date) -> Date? {
         var returnDate: Date? = nil
 

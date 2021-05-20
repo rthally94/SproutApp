@@ -48,8 +48,13 @@ class UpNextViewController: UIViewController {
 
     private func setupViews() {
         view.addSubview(collectionView)
-        collectionView.frame = view.bounds
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+        ])
     }
 }
 
@@ -61,7 +66,7 @@ private extension UpNextViewController {
     }
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
-        UICollectionView.CellRegistration<TaskCalendarListCell, Item> {[weak self] cell, indexPath, item in
+        UICollectionView.CellRegistration<TaskCalendarListCell, Item> { cell, indexPath, item in
             cell.updateWithText(item.title, secondaryText: item.subtitle, icon: item.icon, daysLate: item.daysLate)
 
             if item.isChecked {
@@ -69,7 +74,7 @@ private extension UpNextViewController {
             } else {
                 cell.accessories = [
                     .todoAccessory(actionHandler: {_ in
-                        self?.viewModel.markTaskAsComplete(item.careInfo)
+                        item.markAsComplete()
                     })
                 ]
             }

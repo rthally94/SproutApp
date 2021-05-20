@@ -29,7 +29,6 @@ class PlantGroupViewController: UIViewController {
     
     // MARK: - View Life Cycle
     override func loadView() {
-        super.loadView()
         configureHiearchy()
     }
     
@@ -67,9 +66,7 @@ class PlantGroupViewController: UIViewController {
     }
 
     func configureHiearchy() {
-        view.addSubview(collectionView)
-        collectionView.frame = view.bounds
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view = collectionView
     }
 
     // MARK: - Actions

@@ -172,9 +172,9 @@ private extension PlantDetailViewController {
         ], toSection: .plantHero)
         
         // All Tasks
-        let careScheduleFormatter = Utility.careScheduleFormatter
+        let currentScheduleFormatter = Utility.currentScheduleFormatter
         let items: [Item] = plant.tasks.map { task in
-            return Item.compactCardCell(title: task.careCategory?.name, value: careScheduleFormatter.string(for: task.careSchedule), image: task.careCategory?.icon?.image, tapAction: { [unowned self] in
+            return Item.compactCardCell(title: task.careCategory?.name, value: currentScheduleFormatter.string(for: task.currentSchedule), image: task.careCategory?.icon?.image, tapAction: { [unowned self] in
                 print(task.careCategory?.name ?? "Unknown")
             })
         }

@@ -71,6 +71,7 @@
 		FB82CDF526444EBE00E32F16 /* UpNextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDF426444EBD00E32F16 /* UpNextViewModel.swift */; };
 		FB82CDF926444F7400E32F16 /* UpNextSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDF826444F7400E32F16 /* UpNextSection.swift */; };
 		FB82CDFD26444F7D00E32F16 /* UpNextItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDFC26444F7D00E32F16 /* UpNextItem.swift */; };
+		FB8480FC2652C24B00D820D3 /* SproutReminder.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8480FB2652C24B00D820D3 /* SproutReminder.swift */; };
 		FB8E0D40262B324400F0FA09 /* StatisticCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */; };
 		FB8E0D45262B5B0E00F0FA09 /* StaticCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */; };
 		FB8E0D4A262B75B200F0FA09 /* CompactCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */; };
@@ -199,6 +200,7 @@
 		FB82CDF426444EBD00E32F16 /* UpNextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewModel.swift; sourceTree = "<group>"; };
 		FB82CDF826444F7400E32F16 /* UpNextSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextSection.swift; sourceTree = "<group>"; };
 		FB82CDFC26444F7D00E32F16 /* UpNextItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextItem.swift; sourceTree = "<group>"; };
+		FB8480FB2652C24B00D820D3 /* SproutReminder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutReminder.swift; sourceTree = "<group>"; };
 		FB8E0D3F262B324400F0FA09 /* StatisticCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticCell.swift; sourceTree = "<group>"; };
 		FB8E0D44262B5B0E00F0FA09 /* StaticCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticCollectionView.swift; sourceTree = "<group>"; };
 		FB8E0D49262B75B200F0FA09 /* CompactCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCardCell.swift; sourceTree = "<group>"; };
@@ -439,6 +441,7 @@
 				FBB75BBA264ADE70000CC823 /* CareSchedule.swift */,
 				FB263877263C9B8300180B54 /* GHPlant.swift */,
 				FBB75BBC264AF285000CC823 /* SproutIcon.swift */,
+				FB8480FB2652C24B00D820D3 /* SproutReminder.swift */,
 			);
 			path = "Core Data";
 			sourceTree = "<group>";
@@ -861,6 +864,7 @@
 				FBB75BBF264AFBB3000CC823 /* PlantType.swift in Sources */,
 				FB28A8F0264ABCB700B1206E /* SproutIntervalProtocol.swift in Sources */,
 				FB7ED5052614B53D008FD1BE /* GreenHouseDataModel.xcdatamodeld in Sources */,
+				FB8480FC2652C24B00D820D3 /* SproutReminder.swift in Sources */,
 				FBC7335025E708790048999C /* TaskCalendarViewController+DataSource.swift in Sources */,
 				FB76D341262A592500D00036 /* LargeHeaderView.swift in Sources */,
 				FBC7331125DECCC20048999C /* RoundedRect.swift in Sources */,

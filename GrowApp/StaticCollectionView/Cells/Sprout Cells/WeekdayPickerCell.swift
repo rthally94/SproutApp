@@ -7,7 +7,7 @@
 
 import UIKit
 
-class WeekdatPickerCell: UICollectionViewCell {
+class WeekdayPickerCell: UICollectionViewCell {
     var weekPicker = ImagePicker()
 
     private var customConstraints: (

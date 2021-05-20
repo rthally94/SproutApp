@@ -18,6 +18,8 @@ class CardView: UIView {
     lazy var textLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .headline)
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         return label
     }()
 
@@ -60,13 +62,21 @@ class CardView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         textStack.translatesAutoresizingMaskIntoConstraints = false
 
+        let textStackTrailing = textStack.trailingAnchor.constraint(equalTo: trailingAnchor)
+        textStackTrailing.priority-=1
+        let textStackMinHeight = textStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
+        textStackMinHeight.priority-=1
+        let textStackTop = textStack.topAnchor.constraint(greaterThanOrEqualTo: topAnchor)
+        textStackTop.priority-=1
+
+
         imageView.pinToBoundsOf(self)
         NSLayoutConstraint.activate([
             textStack.leadingAnchor.constraint(equalTo: leadingAnchor),
             textStack.bottomAnchor.constraint(equalTo: bottomAnchor),
-            textStack.trailingAnchor.constraint(equalTo: trailingAnchor),
-            textStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 44),
-            textStack.topAnchor.constraint(greaterThanOrEqualTo: topAnchor)
+            textStackTrailing,
+            textStackMinHeight,
+            textStackTop
         ])
     }
 }

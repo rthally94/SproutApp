@@ -17,6 +17,6 @@ class SproutTaskCompactCardView: CompactCardView {
     private func populateCardProperties() {
         imageView.image = careInfo?.careCategory?.icon?.image
         titleLabel.text = careInfo?.careCategory?.name
-        valueLabel.text = careInfo?.careSchedule?.recurrenceRule?.intervalText()
+        valueLabel.text = careInfo?.currentSchedule?.recurrenceRule?.intervalText()
     }
 }

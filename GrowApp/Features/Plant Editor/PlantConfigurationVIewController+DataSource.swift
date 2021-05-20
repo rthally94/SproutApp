@@ -36,7 +36,7 @@ extension PlantEditorControllerController {
         
         // Plant Tasks
         let tasks: [Item] = plant.tasks.compactMap { task in
-            Item.compactCardCell(title: task.careCategory?.name, value: task.careSchedule?.recurrenceRule?.intervalText(), image: task.careCategory?.icon?.image, tapAction: {[unowned self] in
+            Item.compactCardCell(title: task.careCategory?.name, value: task.currentSchedule?.recurrenceRule?.intervalText(), image: task.careCategory?.icon?.image, tapAction: {[unowned self] in
                 print(task.careCategory?.name ?? "Unknown")
                 showTaskEditor(for: task)
             })
@@ -45,7 +45,7 @@ extension PlantEditorControllerController {
 
         let unassignedTasks: [Item] = CareCategory.TaskTypeName.allCases.compactMap { type in
             if !plant.tasks.contains(where: { $0.careCategory?.name == type.description }), let task = try? CareInfo.createDefaultInfoItem(in: persistentContainer.viewContext, ofType: type) {
-                task.careSchedule = CareSchedule.dailySchedule(interval: 1, context: persistentContainer.viewContext)
+                task.currentSchedule = CareSchedule.dailySchedule(interval: 1, context: persistentContainer.viewContext)
                 return Item.compactCardCell(title: task.careCategory?.name, value: "Tap to configure", image: task.careCategory?.icon?.image, tapAction: {[unowned self] in
                     print(task.careCategory?.name ?? "Unknown")
                     plant.addToCareInfoItems(task)

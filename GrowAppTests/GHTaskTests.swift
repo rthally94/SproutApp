@@ -16,38 +16,36 @@ class CareInfoTests: XCTestCase {
     }
 
     func testWateringTaskInitalState() throws {
-        let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
+        let careInfoItem = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
 
-        XCTAssertNotNil(task.id)
-        XCTAssertNotNil(task.creationDate)
+        XCTAssertNotNil(careInfoItem.id)
+        XCTAssertNotNil(careInfoItem.creationDate)
 
-        XCTAssertNil(task.lastLogDate)
-        XCTAssertNil(task.nextCareDate)
-        XCTAssertNil(task.careSchedule)
-        XCTAssertNotNil(task.careCategory)
+        XCTAssertNotNil(careInfoItem.nextReminder)
+        XCTAssertNil(careInfoItem.lastCompletedReminder)
+
+        XCTAssertNil(careInfoItem.currentSchedule)
+        XCTAssertNotNil(careInfoItem.careCategory)
     }
 
     func testUpdateNextCareDate_whenTaskIsNew_andIntervalIsDaily_NextDateIsToday() throws {
-        let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
+        let careInfoItem = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
         let dailySchedule = CareSchedule.dailySchedule(interval: 1, context: storageProvider.persistentContainer.viewContext)
-        task.careSchedule = dailySchedule
-        task.updateNextCareDate()
+        try careInfoItem.setSchedule(to: dailySchedule)
 
         let today = Calendar.current.startOfDay(for: Date())
 
-        XCTAssertNotNil(task.nextCareDate)
-        XCTAssertEqual(task.nextCareDate, today)
+        XCTAssertNotNil(careInfoItem.nextCareDate)
+        XCTAssertEqual(careInfoItem.nextCareDate, today)
     }
 
     func testUpdateNextCareDate_whenTaskIsNew_andIntervalIsWeekly_NextDateIsNextInInterval() throws {
-        let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
+        let careInfoItem = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
         let weekday = 1
         let weeklySchedule = CareSchedule.weeklySchedule(daysOfTheWeek: [weekday], context: storageProvider.persistentContainer.viewContext)
-        task.careSchedule = weeklySchedule
+        try careInfoItem.setSchedule(to: weeklySchedule)
 
-        task.updateNextCareDate()
-
-        let nextCareDate = try XCTUnwrap(task.nextCareDate)
+        let nextCareDate = try XCTUnwrap(careInfoItem.nextCareDate)
         let today = Calendar.current.startOfDay(for: Date())
         XCTAssertTrue(nextCareDate >= today)
 
@@ -60,10 +58,9 @@ class CareInfoTests: XCTestCase {
         let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
 
         let dailySchedule = CareSchedule.dailySchedule(interval: 1, context: storageProvider.persistentContainer.viewContext).self
-        task.careSchedule = dailySchedule
-        task.updateNextCareDate()
+        try task.setSchedule(to: dailySchedule)
 
-        task.markAsComplete() {
+        try task.markAsComplete() {
             expectation.fulfill()
         }
 
@@ -79,25 +76,26 @@ class CareInfoTests: XCTestCase {
     func testUpdateNextCareDate_whenTaskHasALog_andNextDateAfterLogDateIsBeforeToday_NextDateIsToday() throws {
         let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
         let dailySchedule = CareSchedule.dailySchedule(interval: 1, context: storageProvider.persistentContainer.viewContext)
-        task.careSchedule = dailySchedule
+        try task.setSchedule(to: dailySchedule)
 
         let lastDate = Date().addingTimeInterval(-4*24*60*60)
-        task.lastLogDate = lastDate
-        task.nextCareDate = task.careSchedule?.recurrenceRule?.nextDate(after: lastDate)
+        task.nextReminder.markAs(.complete)
+        task.lastCompletedReminder?.statusDate = lastDate
+        task.nextReminder.scheduledDate = task.currentSchedule?.recurrenceRule?.nextDate(after: lastDate)
 
         let today = Calendar.current.startOfDay(for: Date())
         XCTAssertTrue(task.nextCareDate! < today)
 
-        task.updateNextCareDate()
-        XCTAssertEqual(task.nextCareDate!, today)
+        let nextDate = today.addingTimeInterval(1*24*60*60)
+        task.markAsComplete()
+        XCTAssertEqual(task.nextCareDate!, nextDate)
     }
 
     func testMarkAsCompleted() throws {
         let firstUpdateExpectation = expectation(description: "Update task completion status")
         let task = try CareInfo.createDefaultInfoItem(in: storageProvider.persistentContainer.viewContext, ofType: .wateringTaskType)
         let dailySchedule = CareSchedule.dailySchedule(interval: 1, context: storageProvider.persistentContainer.viewContext)
-        task.careSchedule = dailySchedule
-        task.updateNextCareDate()
+        try task.setSchedule(to: dailySchedule)
 
         XCTAssertNil(task.lastLogDate)
 
