@@ -64,8 +64,18 @@ class UpNextViewModel {
             .eraseToAnyPublisher()
     }
 
+    var tasksNeedingCare: AnyPublisher<Int, Never> {
+        snapshot
+            .map {
+                $0.itemIdentifiers.reduce(0) { result, item in
+                    result + (item.isChecked ? 0 : 1)
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+
     // MARK: - Task Methods
     func markItemAsComplete(_ item: UpNextItem) {
-        
+        item.markAsComplete()
     }
 }

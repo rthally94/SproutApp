@@ -64,7 +64,6 @@ extension PlantTypePickerViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
 
-
         collectionView.delegate = self
     }
 

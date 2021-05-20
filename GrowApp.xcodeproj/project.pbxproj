@@ -45,6 +45,7 @@
 		FB6C461C25F1C332009ED947 /* CareDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461B25F1C332009ED947 /* CareDetailViewController.swift */; };
 		FB6C464325F58E01009ED947 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C464225F58E01009ED947 /* ScheduleView.swift */; };
 		FB6C464B25F591FD009ED947 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C464A25F591FD009ED947 /* ScheduleViewController.swift */; };
+		FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */; };
 		FB76D33C262A576500D00036 /* SproutIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D33B262A576500D00036 /* SproutIconView.swift */; };
 		FB76D341262A592500D00036 /* LargeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D340262A592500D00036 /* LargeHeaderView.swift */; };
 		FB76D347262A5AF500D00036 /* SproutTaskLargeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D346262A5AF500D00036 /* SproutTaskLargeHeaderView.swift */; };
@@ -172,6 +173,7 @@
 		FB6C461B25F1C332009ED947 /* CareDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareDetailViewController.swift; sourceTree = "<group>"; };
 		FB6C464225F58E01009ED947 /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
 		FB6C464A25F591FD009ED947 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationManager.swift; sourceTree = "<group>"; };
 		FB7490E825B1E71200925C29 /* GrowAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB76D33B262A576500D00036 /* SproutIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIconView.swift; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 				FB6661C72620938200DC8B04 /* Core Data */,
 				FB6C45FA25EFE9F0009ED947 /* Extensions */,
 				FB6661CA2620938F00DC8B04 /* Utility.swift */,
+				FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -885,6 +888,7 @@
 				FB92AF71262EF6130062DE47 /* CustomViewCell.swift in Sources */,
 				FBC7330325DDB4F00048999C /* IconCell.swift in Sources */,
 				FB263870263C821E00180B54 /* CareRecurrenceRule.swift in Sources */,
+				FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */,
 				FBF8AC5225DD80AC00E7E8EB /* IconView.swift in Sources */,
 				FB7ED53A26167484008FD1BE /* GHPlant+Extensions.swift in Sources */,
 				FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */,

@@ -38,11 +38,19 @@ class UpNextViewController: UIViewController {
         dataSource = makeDataSource()
 
         title = "Up Next"
+        navigationController?.navigationBar.prefersLargeTitles = true
 
         viewModel.snapshot
             .sink {[weak self] snapshot in
                 self?.dataSource.apply(snapshot)
             }
+            .store(in: &cancellables)
+
+        viewModel.tasksNeedingCare
+            .map { itemCount in
+                itemCount > 0 ? "\(itemCount)" : nil
+            }
+            .assign(to: \.tabBarItem.badgeValue, on: self.parent!)
             .store(in: &cancellables)
     }
 
@@ -74,7 +82,7 @@ private extension UpNextViewController {
             } else {
                 cell.accessories = [
                     .todoAccessory(actionHandler: {_ in
-                        item.markAsComplete()
+                        self.viewModel.markItemAsComplete(item)
                     })
                 ]
             }
