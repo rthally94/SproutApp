@@ -56,11 +56,38 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         present()
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        let isFirstLaunch = !AppDelegate.hasLaunched
+        if isFirstLaunch {
+            showInitialConfiguration()
+        }
+    }
     
     private func present() {
         addChild(tabBarVC)
         view.addSubview(tabBarVC.view)
         didMove(toParent: self)
+    }
+
+    private func showInitialConfiguration() {
+        let alertController = UIAlertController(title: "Load Sample Data", message: "Would you like to load sample data to demonstrate application functionality?", preferredStyle: .alert)
+
+        let loadSampleDataAction = UIAlertAction(title: "Load Data", style: .default, handler: { sender in
+            AppDelegate.storageProvider.loadSampleData()
+            AppDelegate.hasLaunched = true
+        })
+
+        let skipConfigAction = UIAlertAction(title: "Skip Setup", style: .cancel, handler: { sender in
+            AppDelegate.hasLaunched = true
+        })
+
+        alertController.addAction(skipConfigAction)
+        alertController.addAction(loadSampleDataAction)
+
+        present(alertController, animated: true)
     }
 }
 

@@ -18,79 +18,65 @@ public class CareInfo: NSManagedObject {
         info.id = UUID()
         info.creationDate = Date()
 
-        info.lastLogDate = nil
-        info.nextCareDate = nil
-
         info.careCategory = try CareCategory.fetchOrCreateCategory(withName: type, inContext: context)
-        info.updateNextCareDate()
 
         return info
     }
+
 
     public override func willSave() {
         if plant == nil {
             managedObjectContext?.delete(self)
             print("Unusued CareInfo Deleted")
         }
-
-        if !isDeleted {
-            print("TaskWillSave: Interval Updated:", careSchedule?.isUpdated ?? false, "| Inserted:", careSchedule?.isInserted ?? false, "| Deleted:", careSchedule?.isDeleted ?? false)
-            if (careSchedule?.isUpdated == true || careSchedule?.isInserted == true) {
-                updateNextCareDate()
-            }
-        }
-
+        
         super.willSave()
     }
 
-    /// Marks a task as complete. Increments lastLogDate and nextCareDate.
-    func markAsComplete(completion: (() -> Void)? = nil) {
-        managedObjectContext?.perform {
-            let markedDate = Date()
-            self.lastLogDate = markedDate
-            self.updateNextCareDate()
-            completion?()
+    var nextReminder: SproutReminder {
+        guard let context = managedObjectContext else { fatalError("Unable to get nextReminder for CareInfoItem without a set managedObjectContext") }
+        return SproutReminder.fetchOrCreateIncompleteReminder(for: self, inContext: context)
+    }
+
+    var lastCompletedReminder: SproutReminder? {
+        guard let context = managedObjectContext else { fatalError("unable to get lastCompletedReminder for CareInfoItem weithout a set managedObjectContext") }
+        let request = SproutReminder.completedRemindersFetchRequest(for: self, startingOn: nil, endingBefore: nil)
+        do {
+            return try context.fetch(request).first
+        } catch {
+            print("Unable to fetch lastCompletedReminder for \(self): \(error)")
+            return nil
         }
     }
 
-    func updateNextCareDate() {
-        enum TaskStatus {
-            case isNew, isOnTimeOrEarly, isLate
-        }
+    @objc var nextCareDate: Date? {
+        nextReminder.scheduledDate
+    }
 
-        let today = Calendar.current.startOfDay(for: Date())
-        let tomorrow = today.addingTimeInterval(1*24*60*60)
-        var taskStatus: TaskStatus?
+    @objc var lastLogDate: Date? {
+        lastCompletedReminder?.statusDate
+    }
 
-        if lastLogDate == nil {
-            // Task is late
-            taskStatus = .isNew
-        } else if let lastLogDate = lastLogDate, let nextDate = careSchedule?.recurrenceRule?.nextDate(after: lastLogDate), nextDate < today {
-            taskStatus = .isLate
-        } else if let lastLogDate = lastLogDate, lastLogDate < tomorrow {
-            taskStatus = .isOnTimeOrEarly
-        }
+    /// Marks a task as complete. Increments lastLogDate and nextCareDate.
+    func markAsComplete(inContext context: NSManagedObjectContext? = nil, completion: (() -> Void)? = nil) {
+        guard let context = context ?? self.managedObjectContext else { fatalError("Unable to mark CareInfoItem as complete without a managedObjectContext.")}
 
-        let newDate: Date?
-        switch taskStatus {
-        case .isNew:
-            // Placeholder date is the day prior
-            let placeholderDate = today.addingTimeInterval(-1 * 24 * 60 * 60)
-            newDate = careSchedule?.recurrenceRule?.nextDate(after: placeholderDate)
-        case .isOnTimeOrEarly:
-            // date is the date after the last log date
-            guard let date = lastLogDate else { fatalError("Case isOnTimeOrEarly used without a lastLogDate value set.") }
-            newDate = careSchedule?.recurrenceRule?.nextDate(after: date)
-        case .isLate:
-            // date is today
-            newDate = Calendar.current.startOfDay(for: Date())
-        default:
-            fatalError("Unknown task state")
-            break
-        }
+        // Mark the current reminder as complete
+        let markedDate = Date()
+        let completedReminder = nextReminder
+        completedReminder.markAs(.complete, date: markedDate)
 
-        guard newDate != nil &&
-                newDate != nextCareDate else { return }
-        nextCareDate = newDate
+        // Create and append a new reminder with the next date
+        let nextReminder = SproutReminder.createDefaultReminder(inContext: context)
+        nextReminder.schedule = self.currentSchedule
+        nextReminder.scheduledDate = currentSchedule?.recurrenceRule?.nextDate(after: markedDate)
+        addToReminders(nextReminder)
+
+        completion?()
+    }
+
+    func setSchedule(to newSchedule: CareSchedule?) throws {
+        try nextReminder.updateSchedule(to: newSchedule)
+        currentSchedule = newSchedule
     }
 }

@@ -5,8 +5,8 @@
 //  Created by Ryan Thally on 3/31/21.
 //
 
-import Foundation
 import CoreData
+import UIKit
 
 class StorageProvider {
     static var managedObjectModel: NSManagedObjectModel = {
@@ -43,8 +43,8 @@ class StorageProvider {
         persistentContainer.viewContext.undoManager = UndoManager()
 
         let request: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlantType.plantCount, ascending: true)]
-        if let types = try? persistentContainer.viewContext.fetch(request), types.isEmpty {
+        let typeCount = (try? persistentContainer.viewContext.count(for: request)) ?? 0
+        if typeCount == 0 {
             loadPlantTypes()
         }
     }
@@ -54,13 +54,42 @@ class StorageProvider {
     }
     
     func loadPlantTypes() {
-        PlantType.allTypes.forEach { type in
-            let newType = GHPlantType(context: persistentContainer.viewContext)
-            newType.scientificName = type.scientificName
-            newType.commonName = type.commonName
+        persistentContainer.performBackgroundTask { context in
+            PlantType.allTypes.forEach { type in
+                let newType = GHPlantType(context: context)
+                newType.scientificName = type.scientificName
+                newType.commonName = type.commonName
+            }
+
+            try? context.save()
         }
-        
-        try? persistentContainer.viewContext.save()
+    }
+
+    func loadSampleData() {
+        persistentContainer.performBackgroundTask { context in
+            do {
+                // General Plant Config
+                let plant = try GHPlant.createDefaultPlant(inContext: context)
+                plant.name = "My Sample Plant"
+
+                // Task Type
+                let taskTypeRequest: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
+                taskTypeRequest.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlantType.commonName, ascending: true)]
+                plant.type = try context.fetch(taskTypeRequest).first
+
+                // Plant Care Info
+                let wateringInfo = try CareInfo.createDefaultInfoItem(in: context, ofType: .wateringTaskType)
+                let currentWeekday = Calendar.current.component(.weekday, from: Date())
+                let wateringSchedule = CareSchedule.weeklySchedule(daysOfTheWeek: [currentWeekday], context: context)
+                try wateringInfo.setSchedule(to: wateringSchedule)
+                plant.addToCareInfoItems(wateringInfo)
+
+                try context.save()
+            } catch {
+                print("Unable to load sample data. ")
+                context.rollback()
+            }
+        }
     }
 }
 

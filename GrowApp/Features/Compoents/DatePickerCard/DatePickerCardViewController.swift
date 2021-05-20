@@ -24,8 +24,6 @@ class DatePickerCardViewController: UIViewController {
     var datePickerCard = DatePickerCard()
     
     override func loadView() {
-        super.loadView()
-        
         datePickerCard.delegate = self
         view = datePickerCard
     }

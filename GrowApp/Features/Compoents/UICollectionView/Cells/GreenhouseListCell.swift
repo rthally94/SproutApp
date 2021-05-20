@@ -88,12 +88,6 @@ class TaskCalendarListCell: GreenHouseListCell {
     
     private lazy var plantIconView = IconView()
     private lazy var taskStatusView = SproutChipView()
-    private lazy var accessoryStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [taskStatusView])
-        stack.axis = .horizontal
-        stack.alignment = .center
-        return stack
-    }()
 
     private var customViewConstraints: (plantIconTop: NSLayoutConstraint, plantIconLeading: NSLayoutConstraint, plantIconWidth: NSLayoutConstraint, plantIconHeight: NSLayoutConstraint)?
     
@@ -101,11 +95,9 @@ class TaskCalendarListCell: GreenHouseListCell {
         guard customViewConstraints == nil else { return }
         contentView.addSubview(listContentView)
         contentView.addSubview(plantIconView)
-        contentView.addSubview(accessoryStack)
         
         listContentView.translatesAutoresizingMaskIntoConstraints = false
         plantIconView.translatesAutoresizingMaskIntoConstraints = false
-        accessoryStack.translatesAutoresizingMaskIntoConstraints = false
         
         let constraints = (
             plantIconTop: plantIconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
@@ -124,15 +116,11 @@ class TaskCalendarListCell: GreenHouseListCell {
             constraints.plantIconLeading,
             constraints.plantIconHeight,
             constraints.plantIconWidth,
+            plantIconView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
 
             listContentView.centerYAnchor.constraint(equalTo: plantIconView.centerYAnchor),
             listContentView.leadingAnchor.constraint(equalToSystemSpacingAfter: plantIconView.trailingAnchor, multiplier: 2.0),
             listContentView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-
-            accessoryStack.topAnchor.constraint(equalToSystemSpacingBelow: plantIconView.bottomAnchor, multiplier: 0.5),
-            accessoryStack.leadingAnchor.constraint(equalTo: listContentView.leadingAnchor),
-            accessoryStack.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
-            accessoryStack.trailingAnchor.constraint(lessThanOrEqualTo: listContentView.trailingAnchor),
         ])
         customViewConstraints = constraints
     }

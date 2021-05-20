@@ -66,8 +66,6 @@ class CareDetailViewController: UIViewController {
     lazy var dataSource = makeDataSource()
     
     override func loadView() {
-        super.loadView()
-        
         configureHiearchy()
     }
     
@@ -103,9 +101,7 @@ extension CareDetailViewController {
     }
     
     func configureHiearchy() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(collectionView)
-        collectionView.pinToBoundsOf(view)
+        view = collectionView
     }
 }
 
@@ -122,11 +118,11 @@ extension CareDetailViewController {
         if let selectedTask = selectedTask, let icon = selectedTask.careCategory?.icon {
             snapshot.appendSections(Section.allCases)
             snapshot.appendItems([
-                Item(icon: icon, text: selectedTask.careCategory?.name, secondaryText: selectedTask.careSchedule?.recurrenceRule?.intervalText())
+                Item(icon: icon, text: selectedTask.careCategory?.name, secondaryText: selectedTask.currentSchedule?.recurrenceRule?.intervalText())
             ], toSection: .header)
         
-            let image = selectedTask.careSchedule?.recurrenceRule?.frequency == .none ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
-            let item = Item(image: image, tintColor: .systemBlue, text: nil, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.careSchedule?.startingDate ?? Date()))")
+            let image = selectedTask.currentSchedule?.recurrenceRule?.frequency == .none ? UIImage(systemName: "bell.slash") : UIImage(systemName: "bell")
+            let item = Item(image: image, tintColor: .systemBlue, text: nil, secondaryText: "Starting on \(CareDetailViewController.dateFormatter.string(from: selectedTask.currentSchedule?.startingDate ?? Date()))")
             
             snapshot.appendItems([
                 item

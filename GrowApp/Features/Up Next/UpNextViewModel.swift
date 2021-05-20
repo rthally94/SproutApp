@@ -31,8 +31,7 @@ class UpNextViewModel {
                 var newSnapshot = Snapshot()
                 if let oldSnapshot = snapshot {
                     let sections: [Section] = oldSnapshot.sectionIdentifiers.compactMap {
-                        guard let date = self.stringToDateFormatter.date(from: $0) else { return nil }
-                        return Section(title: self.headerDateFormatter.string(from: date))
+                        return Section(title: $0)
                     }
                     newSnapshot.appendSections(sections)
 
@@ -42,12 +41,15 @@ class UpNextViewModel {
                         var itemsToReload = [Item]()
 
                         taskIDs.forEach { taskID in
-                            if let task = self.tasksProvider.object(withID: taskID) as? CareInfo,
-                               let plantID = task.plant?.objectID,
-                               let plant = self.tasksProvider.object(withID: plantID) as? GHPlant {
-                                let item = Item(careInfo: task, plant: plant)
+                            if let reminder = self.tasksProvider.object(withID: taskID) as? SproutReminder,
+                               let careInfoID = reminder.careInfo?.objectID,
+                               let careInfo = self.tasksProvider.object(withID: careInfoID) as? CareInfo,
+                               let plantID = reminder.careInfo?.plant?.objectID,
+                               let plant = self.tasksProvider.object(withID: plantID) as? GHPlant
+                            {
+                                let item = Item(careInfo: careInfo, plant: plant)
                                 items.append(item)
-                                if task.isUpdated {
+                                if reminder.isUpdated {
                                     itemsToReload.append(item)
                                 }
                             }
@@ -63,7 +65,7 @@ class UpNextViewModel {
     }
 
     // MARK: - Task Methods
-    func markTaskAsComplete(_ task: CareInfo) {
-        task.markAsComplete()
+    func markItemAsComplete(_ item: UpNextItem) {
+        
     }
 }

@@ -37,4 +37,12 @@ extension Utility {
         formatter.formattingContext = .middleOfSentence
         return formatter
     }()
+
+    static let currentScheduleFormatter: CareScheduleFormatter = {
+        let formatter = CareScheduleFormatter()
+        formatter.frequencyStyle = .short
+        formatter.valuesStyle = .short
+        formatter.formattingContext = .standalone
+        return formatter
+    }()
 }

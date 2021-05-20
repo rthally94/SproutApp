@@ -13,20 +13,22 @@ class TasksProvider: NSObject {
     typealias Item = NSManagedObjectID
 
     let moc: NSManagedObjectContext
-    fileprivate let fetchedResultsController: NSFetchedResultsController<CareInfo>
+    fileprivate let fetchedResultsController: NSFetchedResultsController<SproutReminder>
 
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
 
     init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext
 
-        let request: NSFetchRequest<CareInfo> = CareInfo.fetchRequest()
-        let sortByNextTaskDate = NSSortDescriptor(keyPath: \CareInfo.nextCareDate, ascending: true)
-        let sortByTaskName = NSSortDescriptor(keyPath: \CareInfo.careCategory?.name, ascending: true)
-        let sortByPlantName = NSSortDescriptor(keyPath: \CareInfo.plant?.name, ascending: true)
-        request.sortDescriptors = [sortByNextTaskDate, sortByTaskName, sortByPlantName]
+        let today = Calendar.current.startOfDay(for: Date())
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)
 
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(CareInfo.nextCareDate), cacheName: nil)
+        let request: NSFetchRequest<SproutReminder> = SproutReminder.allRemindersFetchRequest(startingOn: today, endingBefore: tomorrow)
+        let sortByCareInfoCategoryName = NSSortDescriptor(keyPath: \SproutReminder.careInfo?.careCategory?.name, ascending: true)
+        let sortByPlantName = NSSortDescriptor(keyPath: \SproutReminder.careInfo?.plant?.name, ascending: true)
+        request.sortDescriptors = [sortByCareInfoCategoryName, sortByPlantName]
+
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutReminder.careInfo.careCategory.name), cacheName: nil)
 
         super.init()
 
@@ -34,7 +36,7 @@ class TasksProvider: NSObject {
         try! fetchedResultsController.performFetch()
     }
 
-    func object(at indexPath: IndexPath) -> CareInfo {
+    func object(at indexPath: IndexPath) -> SproutReminder {
         return fetchedResultsController.object(at: indexPath)
     }
 

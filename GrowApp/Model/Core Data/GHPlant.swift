@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import UIKit
 
 public class GHPlant: NSManagedObject {
     private static let DefaultPlantName = "My New Plant"
@@ -19,6 +20,8 @@ public class GHPlant: NSManagedObject {
         let defaultPlantCount = (try? context.count(for: defaultPlantsCountRequest)) ?? 0
         newPlant.name = GHPlant.DefaultPlantName + " \(defaultPlantCount+1)"
         newPlant.creationDate = Date()
+
+        newPlant.icon = SproutIcon.createIconWithImage(UIImage(named: "SamplePlantImage"), inContext: context)
 
         return newPlant
     }

@@ -18,6 +18,6 @@ class SproutTaskLargeHeaderView: LargeHeaderView {
         guard let careInfo = careInfo else { return }
         imageView.image = careInfo.careCategory?.icon?.image
         titleLabel.text = careInfo.careCategory?.name?.capitalized
-        subtitleLabel.text = careInfo.careSchedule?.recurrenceRule?.intervalText()
+        subtitleLabel.text = careInfo.currentSchedule?.recurrenceRule?.intervalText()
     }
 }
