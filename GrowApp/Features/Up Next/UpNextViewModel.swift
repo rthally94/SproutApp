@@ -77,5 +77,6 @@ class UpNextViewModel {
     // MARK: - Task Methods
     func markItemAsComplete(_ item: UpNextItem) {
         item.markAsComplete()
+        persistentContainer.saveContextIfNeeded()
     }
 }

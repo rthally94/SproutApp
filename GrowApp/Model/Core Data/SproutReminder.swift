@@ -99,7 +99,9 @@ extension SproutReminder {
         let request: NSFetchRequest<SproutReminder> = SproutReminder.fetchRequest()
 
         let sortByDueDate = NSSortDescriptor(keyPath: \SproutReminder.scheduledDate, ascending: true)
-        request.sortDescriptors = [sortByDueDate]
+        let sortByPlantName = NSSortDescriptor(keyPath: \SproutReminder.careInfo?.plant?.name, ascending: true)
+        
+        request.sortDescriptors = [sortByDueDate, sortByPlantName]
 
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [statusPredicate, infoItemPredicate, startDatePredicate, endDatePredicate])
 

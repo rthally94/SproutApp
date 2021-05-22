@@ -45,6 +45,8 @@
 		FB6C461C25F1C332009ED947 /* CareDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461B25F1C332009ED947 /* CareDetailViewController.swift */; };
 		FB6C464325F58E01009ED947 /* ScheduleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C464225F58E01009ED947 /* ScheduleView.swift */; };
 		FB6C464B25F591FD009ED947 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C464A25F591FD009ED947 /* ScheduleViewController.swift */; };
+		FB6CD6582657E17500D7DE82 /* RemindersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6CD6572657E17500D7DE82 /* RemindersProvider.swift */; };
+		FB6CD65A2657EADD00D7DE82 /* TaskNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6CD6592657EADD00D7DE82 /* TaskNotificationManager.swift */; };
 		FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */; };
 		FB76D33C262A576500D00036 /* SproutIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D33B262A576500D00036 /* SproutIconView.swift */; };
 		FB76D341262A592500D00036 /* LargeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D340262A592500D00036 /* LargeHeaderView.swift */; };
@@ -173,6 +175,8 @@
 		FB6C461B25F1C332009ED947 /* CareDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareDetailViewController.swift; sourceTree = "<group>"; };
 		FB6C464225F58E01009ED947 /* ScheduleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleView.swift; sourceTree = "<group>"; };
 		FB6C464A25F591FD009ED947 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
+		FB6CD6572657E17500D7DE82 /* RemindersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersProvider.swift; sourceTree = "<group>"; };
+		FB6CD6592657EADD00D7DE82 /* TaskNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskNotificationManager.swift; sourceTree = "<group>"; };
 		FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationManager.swift; sourceTree = "<group>"; };
 		FB7490E825B1E71200925C29 /* GrowAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -314,6 +318,8 @@
 				FB6C45FA25EFE9F0009ED947 /* Extensions */,
 				FB6661CA2620938F00DC8B04 /* Utility.swift */,
 				FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */,
+				FB6CD6572657E17500D7DE82 /* RemindersProvider.swift */,
+				FB6CD6592657EADD00D7DE82 /* TaskNotificationManager.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -869,6 +875,7 @@
 				FB7ED5052614B53D008FD1BE /* GreenHouseDataModel.xcdatamodeld in Sources */,
 				FB8480FC2652C24B00D820D3 /* SproutReminder.swift in Sources */,
 				FBC7335025E708790048999C /* TaskCalendarViewController+DataSource.swift in Sources */,
+				FB6CD6582657E17500D7DE82 /* RemindersProvider.swift in Sources */,
 				FB76D341262A592500D00036 /* LargeHeaderView.swift in Sources */,
 				FBC7331125DECCC20048999C /* RoundedRect.swift in Sources */,
 				FBD549AB262B224600640A8F /* HeaderCell.swift in Sources */,
@@ -898,6 +905,7 @@
 				FBD5499E262B19F900640A8F /* SproutTaskCompactCardView.swift in Sources */,
 				FBC7330D25DEBACB0048999C /* Circle.swift in Sources */,
 				FB7ED5132614F5AC008FD1BE /* TaskCalendarProvider.swift in Sources */,
+				FB6CD65A2657EADD00D7DE82 /* TaskNotificationManager.swift in Sources */,
 				FB6661C12620925D00DC8B04 /* GHDatePickerListCell.swift in Sources */,
 				FB7B815B25BE19060053E543 /* OutlineImageCell.swift in Sources */,
 				FB92AF6B262E50510062DE47 /* ImagePicker.swift in Sources */,
