@@ -23,7 +23,7 @@ class TasksProvider: NSObject {
         let today = Calendar.current.startOfDay(for: Date())
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)
 
-        let request: NSFetchRequest<SproutReminder> = SproutReminder.allRemindersFetchRequest(startingOn: today, endingBefore: tomorrow)
+        let request: NSFetchRequest<SproutReminder> = SproutReminder.allRemindersFetchRequest(startingOn: nil, endingBefore: tomorrow)
         let sortByCareInfoCategoryName = NSSortDescriptor(keyPath: \SproutReminder.careInfo?.careCategory?.name, ascending: true)
         let sortByPlantName = NSSortDescriptor(keyPath: \SproutReminder.careInfo?.plant?.name, ascending: true)
         request.sortDescriptors = [sortByCareInfoCategoryName, sortByPlantName]

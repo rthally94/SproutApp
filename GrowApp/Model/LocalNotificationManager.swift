@@ -82,17 +82,7 @@ class LocalNotificationManager: NSObject, ObservableObject {
             }
         }
     }
-    
-    func removeScheduledNotification(id: String) {
-        UNUserNotificationCenter.current()
-            .removePendingNotificationRequests(withIdentifiers: [id])
-    }
-    
-    func removeAllScheduledNotifications() {
-        UNUserNotificationCenter.current()
-            .removeAllPendingNotificationRequests()
-    }
-    
+
     func scheduleNotifications(_ notifications: [LocalNotification]) {
         notifications.forEach { notification in
             let request = notification.makeRequest()
@@ -103,14 +93,33 @@ class LocalNotificationManager: NSObject, ObservableObject {
                     print("Scheduled")
                 }
             }
-            
+
             if let calendarTrigger = request.trigger as? UNCalendarNotificationTrigger,
                let nextDate = calendarTrigger.nextTriggerDate(),
                Calendar.current.isDateInToday(nextDate) {
                 UIApplication.shared.applicationIconBadgeNumber = request.content.userInfo["badgeValue"] as? Int ?? 0
             }
         }
-        
+    }
+    
+    func removeScheduledNotification(id: String) {
+        UNUserNotificationCenter.current().getPendingNotificationRequests { pendingNotifications in
+            guard let matchingNotification = pendingNotifications.first(where: { $0.identifier == id }) else { return }
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])
+
+            if let trigger = matchingNotification.trigger as? UNCalendarNotificationTrigger,
+               let nextDate = trigger.nextTriggerDate(),
+               Calendar.current.isDateInToday(nextDate) {
+                UIApplication.shared.applicationIconBadgeNumber-=1
+            }
+        }
+    }
+    
+    func removeAllScheduledNotifications() {
+        UNUserNotificationCenter.current()
+            .removeAllPendingNotificationRequests()
+
+        UIApplication.shared.applicationIconBadgeNumber = 0
     }
     
     func getNotifications(completion: @escaping ([LocalNotification]) -> Void ) {

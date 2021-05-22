@@ -32,7 +32,9 @@ final class TaskNotificationManager {
                     let reminderItems = reminderData.value
                     
                     let reminderPlantNames = reminderItems.compactMap { $0.careInfo?.plant?.name }
-                    let reminderCount = reminderItems.count
+                    let reminderCount = reminderItems.reduce(0) { currentCount, reminder in
+                        reminder.status == .incomplete ? currentCount + 1 : currentCount
+                    }
                     
                     let notificationTitle = "Plant Care Due Today"
                     var notificationBody: String?
