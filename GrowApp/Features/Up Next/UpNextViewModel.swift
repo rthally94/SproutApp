@@ -20,6 +20,8 @@ class UpNextViewModel {
         return formatter
     }()
 
+    let relativeDateFormatter = Utility.relativeDateFormatter
+
     let headerDateFormatter = Utility.relativeDateFormatter
 
     private lazy var tasksProvider = TasksProvider(managedObjectContext: persistentContainer.viewContext)
@@ -30,8 +32,15 @@ class UpNextViewModel {
             .map { snapshot in
                 var newSnapshot = Snapshot()
                 if let oldSnapshot = snapshot {
-                    let sections: [Section] = oldSnapshot.sectionIdentifiers.compactMap {
-                        return Section(title: $0)
+                    let midnightToday = Calendar.current.startOfDay(for: Date())
+                    let sections: [Section] = oldSnapshot.sectionIdentifiers.reduce(into: [Section]()) { sections, sectionIdentifier in
+                        if let date = self.stringToDateFormatter.date(from: sectionIdentifier), date >= midnightToday {
+                            let dateString = self.relativeDateFormatter.string(from: date)
+                            sections.append(Section(title: dateString))
+                        } else {
+                            print("Unable to extract date from: \(sectionIdentifier)")
+                            sections.append(Section(title: sectionIdentifier))
+                        }
                     }
                     newSnapshot.appendSections(sections)
 
@@ -55,7 +64,13 @@ class UpNextViewModel {
                             }
                         }
 
-                        newSnapshot.appendItems(items)
+                        if let date = self.stringToDateFormatter.date(from: oldSection), date < midnightToday {
+                            let midnightTodayString = self.relativeDateFormatter.string(from: midnightToday)
+                            let todaySection = newSnapshot.sectionIdentifiers.first(where: { $0.title == midnightTodayString })
+                            newSnapshot.appendItems(items, toSection: todaySection)
+                        } else {
+                            newSnapshot.appendItems(items, toSection: newSection)
+                        }
                         newSnapshot.reloadItems(itemsToReload)
                     }
                 }

@@ -52,6 +52,7 @@ extension SproutReminder {
     }
 
     func updateSchedule(to newSchedule: CareSchedule?) throws {
+        guard schedule != newSchedule else { return }
         guard !isLocked else { throw SproutReminderError.reminderLockedError }
 
         schedule = newSchedule
@@ -79,13 +80,24 @@ extension SproutReminder {
     static func fetchOrCreateIncompleteReminder(for careInfoItem: CareInfo, inContext context: NSManagedObjectContext) -> SproutReminder {
         // Try and find an existing incomplte task for the info item
         if let task = try? context.fetch(Self.incompleteRemindersFetchRequest(for: careInfoItem, startingOn: nil, endingBefore: nil)).first {
+            do {
+                try task.updateSchedule(to: careInfoItem.currentSchedule)
+            } catch {
+                print("\(#function) - Unable to update schedule for existing reminder")
+            }
+
             return task
         }
 
         // Create a new reminder item
         let newReminder = Self.createDefaultReminder(inContext: context)
         newReminder.careInfo = careInfoItem
-        newReminder.schedule = careInfoItem.currentSchedule
+
+        do {
+            try newReminder.updateSchedule(to: careInfoItem.currentSchedule)
+        } catch {
+            print("\(#function) - Unable to update schedule for new reminder")
+        }
 
         return newReminder
     }

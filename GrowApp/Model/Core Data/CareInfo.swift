@@ -50,7 +50,9 @@ public class CareInfo: NSManagedObject {
     }
 
     @objc var nextCareDate: Date? {
-        nextReminder.scheduledDate
+        let midnightToday = Calendar.current.startOfDay(for: Date())
+        guard let scheduledDate = nextReminder.scheduledDate else { return nil }
+        return scheduledDate < midnightToday ? midnightToday : scheduledDate
     }
 
     @objc var lastLogDate: Date? {
@@ -78,5 +80,18 @@ public class CareInfo: NSManagedObject {
     func setSchedule(to newSchedule: CareSchedule?) throws {
         try nextReminder.updateSchedule(to: newSchedule)
         currentSchedule = newSchedule
+    }
+}
+
+extension CareInfo: Comparable {
+    public static func < (lhs: CareInfo, rhs: CareInfo) -> Bool {
+        switch(lhs.careCategory?.name, rhs.careCategory?.name) {
+        case (.some, .some):
+            return lhs.careCategory!.name! < rhs.careCategory!.name!
+        case (.some, .none):
+            return true
+        case (.none, _):
+            return false
+        }
     }
 }

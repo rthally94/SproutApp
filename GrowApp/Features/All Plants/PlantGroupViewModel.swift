@@ -26,7 +26,7 @@ class PlantGroupViewModel {
     @Published private(set) var presentedView: PlantGroupView = .initial
     private(set) var selectedPlant: GHPlant?
 
-    @Published private(set) var title: String? = "Your Plants"
+    @Published private(set) var navigationTitle: String? = "Your Plants"
 
     var snapshot: AnyPublisher<Snapshot, Never> {
         plantsProvider.$snapshot

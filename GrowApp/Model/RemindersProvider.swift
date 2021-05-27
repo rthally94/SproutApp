@@ -32,11 +32,11 @@ class IncompleteRemindersProvider: NSObject {
     
     func updateData() {
         let reminders = fetchedResultsController.fetchedObjects
-        let today = Calendar.current.startOfDay(for: Date())
+        let midnightToday = Calendar.current.startOfDay(for: Date())
         data = reminders?.reduce(into: [Date: [SproutReminder]](), { result, reminder in
             if let scheduledDate = reminder.scheduledDate {
                 // Any tasks that scheduled care before today, will be grouped in today
-                let date = Calendar.current.startOfDay(for: scheduledDate < today ? today : scheduledDate)
+                let date = Calendar.current.startOfDay(for: scheduledDate < midnightToday ? midnightToday : scheduledDate)
                 result[date, default: []].append(reminder)
             }
         })

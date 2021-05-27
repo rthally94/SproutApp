@@ -20,15 +20,16 @@ class TasksProvider: NSObject {
     init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext
 
-        let today = Calendar.current.startOfDay(for: Date())
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)
+//        let today = Calendar.current.startOfDay(for: Date())
+//        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)
 
-        let request: NSFetchRequest<SproutReminder> = SproutReminder.allRemindersFetchRequest(startingOn: nil, endingBefore: tomorrow)
+        let request: NSFetchRequest<SproutReminder> = SproutReminder.allRemindersFetchRequest(startingOn: nil, endingBefore: nil)
+        let sortByScheduledDate = NSSortDescriptor(keyPath: \SproutReminder.scheduledDate, ascending: true)
         let sortByCareInfoCategoryName = NSSortDescriptor(keyPath: \SproutReminder.careInfo?.careCategory?.name, ascending: true)
         let sortByPlantName = NSSortDescriptor(keyPath: \SproutReminder.careInfo?.plant?.name, ascending: true)
-        request.sortDescriptors = [sortByCareInfoCategoryName, sortByPlantName]
+        request.sortDescriptors = [sortByScheduledDate, sortByCareInfoCategoryName, sortByPlantName]
 
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutReminder.careInfo.careCategory.name), cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutReminder.scheduledDate), cacheName: nil)
 
         super.init()
 

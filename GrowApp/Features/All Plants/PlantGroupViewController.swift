@@ -45,7 +45,7 @@ class PlantGroupViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.$title
+        viewModel.$navigationTitle
             .assign(to: \.title, on: self)
             .store(in: &cancellables)
 
@@ -82,7 +82,7 @@ class PlantGroupViewController: UIViewController {
     }
 
     func showPlantEditor(for plant: GHPlant) {
-        let vc = PlantEditorControllerController()
+        let vc = AddEditPlantViewController()
         vc.plant = plant
         vc.persistentContainer = viewModel.persistentContainer
         vc.delegate = self
@@ -133,15 +133,15 @@ extension PlantGroupViewController: UICollectionViewDelegate {
 }
 
 // MARK: - PlantEditorDelegate
-extension PlantGroupViewController: PlantEditorDelegate {
-    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
+extension PlantGroupViewController: AddEditPlantViewControllerDelegate {
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: GHPlant) {
         viewModel.showList()
 
         viewModel.persistentContainer.viewContext.refresh(plant, mergeChanges: true)
         viewModel.persistentContainer.saveContextIfNeeded()
     }
 
-    func plantEditorDidCancel(_ editor: PlantEditorControllerController) {
+    func plantEditorDidCancel(_ editor: AddEditPlantViewController) {
         viewModel.showList()
     }
 }

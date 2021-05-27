@@ -39,10 +39,8 @@ final class TaskNotificationManager {
                     let notificationTitle = "Plant Care Due Today"
                     var notificationBody: String?
                     var notificationComponents = Calendar.current.dateComponents([.year, .month, .day], from: reminderDate)
-                    let todayComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: Date().addingTimeInterval(10))
-                    notificationComponents.hour = todayComponents.hour
-                    notificationComponents.minute = todayComponents.minute
-                    notificationComponents.second = todayComponents.second
+                    notificationComponents.hour = 7
+                    notificationComponents.minute = 30
                     
                     switch reminderCount {
                     case 1:

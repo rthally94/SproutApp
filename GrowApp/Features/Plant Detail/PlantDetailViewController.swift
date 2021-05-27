@@ -74,7 +74,7 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
     
     //MARK: - Actions
     @objc private func editPlant() {
-        let vc = PlantEditorControllerController()
+        let vc = AddEditPlantViewController()
         vc.plant = plant
         vc.persistentContainer = persistentContainer
         vc.delegate = self
@@ -141,8 +141,8 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
     }
 }
 
-extension PlantDetailViewController: PlantEditorDelegate {
-    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
+extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: GHPlant) {
         
         if plant.isDeleted {
             navigationController?.popViewController(animated: false)

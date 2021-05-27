@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sVM-4I-yyX">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Add Edit Plant Collection View Controller-->
+        <scene sceneID="cUY-mK-uoH">
+            <objects>
+                <collectionViewController id="RCW-ns-039" customClass="AddEditPlantCollectionViewController" customModule="GrowApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="Mn4-IF-TtT">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <collectionViewLayout key="collectionViewLayout" id="SEC-hF-YnB"/>
+                        <cells/>
+                        <connections>
+                            <outlet property="dataSource" destination="RCW-ns-039" id="9ae-yw-LLD"/>
+                            <outlet property="delegate" destination="RCW-ns-039" id="z2L-xX-m4L"/>
+                        </connections>
+                    </collectionView>
+                    <navigationItem key="navigationItem" id="TWu-5g-Kh7"/>
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nGy-Pk-nhk" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-417" y="42"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="x7P-U0-qwR">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="sVM-4I-yyX" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="7m5-Ga-0hT">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="RCW-ns-039" kind="relationship" relationship="rootViewController" id="Va6-0y-h95"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VMl-aQ-Y5q" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1328" y="42"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
