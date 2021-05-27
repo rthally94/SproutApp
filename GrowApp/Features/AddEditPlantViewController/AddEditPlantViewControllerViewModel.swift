@@ -22,7 +22,7 @@ class AddEditPlantViewControllerViewModel: ObservableObject {
 
     // MARK: - Properties
     private var plant: GHPlant
-    var persistentContainer: NSPersistentContainer
+    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
     private var editingContext: NSManagedObjectContext
 
     @Published private(set) var presentedView: AddEditPlantView = .initial
@@ -57,8 +57,7 @@ class AddEditPlantViewControllerViewModel: ObservableObject {
     }
 
     // MARK: - Initializers
-    init(plant: GHPlant? = nil, persistentContainer: NSPersistentContainer) {
-        self.persistentContainer = persistentContainer
+    init(plant: GHPlant? = nil) {
         self.editingContext = persistentContainer.viewContext
 
         if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? GHPlant {
@@ -103,7 +102,7 @@ class AddEditPlantViewControllerViewModel: ObservableObject {
     }
 
     func setPlantName(to newValue: String) {
-        plant.name = value
+        plant.name = newValue
     }
 
     func setPlantType(to newValue: GHPlantType) {
@@ -211,6 +210,7 @@ class AddEditPlantViewControllerViewModel: ObservableObject {
             })
             snapshot.appendItems([deleteItem], toSection: .actions)
         }
+        return snapshot
     }
 
     private func updatePlantIconIfNeeded(in editingSnapshot: NSDiffableDataSourceSnapshot<Section, Item>) -> NSDiffableDataSourceSnapshot<Section, Item> {
