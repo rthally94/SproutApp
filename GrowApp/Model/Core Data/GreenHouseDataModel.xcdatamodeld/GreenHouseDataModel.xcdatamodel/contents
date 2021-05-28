@@ -2,10 +2,10 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20E241" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="CareCategory" representedClassName=".CareCategory" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="String"/>
         <attribute name="lastModifiedDate" optional="YES" attributeType="Date" derived="YES" derivationExpression="now()" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="value" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="value_" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <relationship name="careInfoItems" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="CareInfoItem" inverseName="careCategory" inverseEntity="CareInfoItem"/>
         <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SproutIcon" inverseName="careCategory" inverseEntity="SproutIcon"/>
     </entity>
@@ -74,7 +74,7 @@
         <relationship name="schedule" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CareSchedule" inverseName="reminders" inverseEntity="CareSchedule"/>
     </entity>
     <elements>
-        <element name="CareCategory" positionX="-1204.2392578125" positionY="-335.0547180175781" width="128" height="148"/>
+        <element name="CareCategory" positionX="-1204.2392578125" positionY="-335.0547180175781" width="128" height="134"/>
         <element name="CareInfoItem" positionX="-650.4622802734375" positionY="-358.1851196289062" width="128" height="163"/>
         <element name="CareRecurrenceRule" positionX="-13.403076171875" positionY="-191.1738281249999" width="128" height="178"/>
         <element name="CareSchedule" positionX="-227.006591796875" positionY="-148.6032409667968" width="128" height="176"/>

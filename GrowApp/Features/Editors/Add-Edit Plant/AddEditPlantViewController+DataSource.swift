@@ -58,7 +58,7 @@ extension AddEditPlantViewController {
 
         snapshot.appendItems(unassignedTasks, toSection: .unconfiguredCare)
 
-        if !isNew {
+        if !viewModel.isNew {
             let deleteItem = Item.button(context: .destructive, title: "Delete Plant", image: UIImage(systemName: "trash.fill"), onTap: {[unowned self] in
                 deletePlant()
             })
@@ -85,9 +85,9 @@ extension AddEditPlantViewController {
         // initial data
         let snapshot: NSDiffableDataSourceSnapshot<PlantEditorSection, Item>
 
-        snapshot = makeSnapshot(from: plant)
+//        snapshot = makeSnapshot(from: plant)
 
-        dataSource.apply(snapshot, animatingDifferences: false)
+//        dataSource.apply(snapshot, animatingDifferences: false)
     }
 
     func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {

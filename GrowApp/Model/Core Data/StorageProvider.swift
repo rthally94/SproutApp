@@ -23,6 +23,13 @@ class StorageProvider {
     }()
 
     let persistentContainer: NSPersistentContainer
+    lazy var editingContext: NSManagedObjectContext = {
+        let viewContext = persistentContainer.viewContext
+        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        editingContext.parent = viewContext
+        editingContext.undoManager = UndoManager()
+        return editingContext
+    }()
     
     init(storeType: StoreType = .persisted) {
         ValueTransformer.setValueTransformer(UIImageTransformer(), forName: NSValueTransformerName("UIImageValueTransformer"))
@@ -40,7 +47,6 @@ class StorageProvider {
         
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         persistentContainer.viewContext.shouldDeleteInaccessibleFaults = true
-        persistentContainer.viewContext.undoManager = UndoManager()
 
         let request: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
         let typeCount = (try? persistentContainer.viewContext.count(for: request)) ?? 0
@@ -95,6 +101,14 @@ class StorageProvider {
 
 extension StorageProvider {
     func saveContext() {
+        if editingContext.hasChanges {
+            do {
+                try editingContext.save()
+            } catch {
+                editingContext.rollback()
+            }
+        }
+
         persistentContainer.saveContextIfNeeded()
     }
 }

@@ -83,6 +83,30 @@ public class CareInfo: NSManagedObject {
     }
 }
 
+extension CareInfo: SproutCareDetail {
+    var notes: String? {
+        get {
+            self.careNotes
+        }
+        set {
+            self.careNotes = newValue
+        }
+    }
+
+    var careType: SproutCareDetailType? {
+        get {
+            self.careCategory
+        }
+        set {
+            if newValue == nil {
+                self.careCategory = nil
+            } else if let newCategory = newValue as? CareCategory {
+                self.careCategory = newCategory
+            }
+        }
+    }
+}
+
 extension CareInfo: Comparable {
     public static func < (lhs: CareInfo, rhs: CareInfo) -> Bool {
         switch(lhs.careCategory?.name, rhs.careCategory?.name) {
@@ -93,5 +117,18 @@ extension CareInfo: Comparable {
         case (.none, _):
             return false
         }
+    }
+}
+
+extension CareInfo {
+    static func unassignedCareInfoItemsFetchRequest() -> NSFetchRequest<CareInfo> {
+        let request: NSFetchRequest<CareInfo> = CareInfo.fetchRequest()
+        let sortByName = NSSortDescriptor(keyPath: \CareInfo.careCategory?.name, ascending: true)
+        let sortByCreationDate = NSSortDescriptor(keyPath: \CareInfo.creationDate, ascending: true)
+        request.sortDescriptors = [sortByName, sortByCreationDate]
+
+        let plantFilterPredicate = NSPredicate(format: "%K == nil", #keyPath(CareInfo.plant))
+        request.predicate = plantFilterPredicate
+        return request
     }
 }

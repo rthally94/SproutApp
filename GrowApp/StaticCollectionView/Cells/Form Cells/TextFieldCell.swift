@@ -8,10 +8,11 @@
 import UIKit
 
 private extension UIConfigurationStateCustomKey {
-    static let image = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseTextFieldCell.image")
-    static let title = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseTextFieldCell.title")
-    static let placeholder = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseTextFieldCell.placeholder")
-    static let value = UIConfigurationStateCustomKey("net.thally.ryan.GreenHouseTextFieldCell.initalValue")
+    static let image = UIConfigurationStateCustomKey("net.thally.ryan.TextFieldCell.image")
+    static let title = UIConfigurationStateCustomKey("net.thally.ryan.TextFieldCell.title")
+    static let placeholder = UIConfigurationStateCustomKey("net.thally.ryan.TextFieldCell.placeholder")
+    static let value = UIConfigurationStateCustomKey("net.thally.ryan.TextFieldCell.initalValue")
+    static let autocapitalizationType = UIConfigurationStateCustomKey("net.thally.ryan.TextFieldCell.autocapitalizationType")
 }
 
 private extension UICellConfigurationState {
@@ -34,50 +35,62 @@ private extension UICellConfigurationState {
         set { self[.value] = newValue }
         get { return self[.value] as? String }
     }
+
+    var autocapitalizationType: UITextAutocapitalizationType {
+        set { self[.autocapitalizationType] = value }
+        get { return self[.autocapitalizationType] as? UITextAutocapitalizationType ?? .none }
+    }
 }
 
 class TextFieldCell: UICollectionViewListCell {
-    private var image: UIImage?
-    private var title: String?
-    private var placeholder: String?
-    private var value: String?
-    internal var onChange: ((String?) -> Void)?
-
-    func updateWith(image: UIImage?, title: String?, placeholder: String?, value: String?, onChange: ((String?) -> Void)? = nil) {
-        var updated = false
-
-        if self.image != image {
-            self.image = image
-            updated = true
-        }
-
-        if self.title != title {
-            self.title = title
-            updated = true
-        }
-
-        if self.placeholder != placeholder {
-            self.placeholder = placeholder
-            updated = true
-        }
-
-        if self.value != value {
-            self.value = value
-            updated = true
-        }
-
-        self.onChange = onChange
-
-        if updated {
-            setNeedsUpdateConfiguration()
+    var image: UIImage? {
+        didSet {
+            if image != oldValue {
+                setNeedsUpdateConfiguration()
+            }
         }
     }
+
+    var title: String? {
+        didSet {
+            if title != oldValue {
+                setNeedsUpdateConfiguration()
+            }
+        }
+    }
+
+    var placeholder: String? {
+        didSet {
+            if placeholder != oldValue {
+                setNeedsUpdateConfiguration()
+            }
+        }
+    }
+
+    var value: String? {
+        didSet {
+            if value != oldValue {
+                setNeedsUpdateConfiguration()
+            }
+        }
+    }
+
+    var autocapitalizationType: UITextAutocapitalizationType = .none {
+        didSet {
+            if autocapitalizationType != oldValue {
+                setNeedsUpdateConfiguration()
+            }
+        }
+    }
+
+    var onChange: ((String?) -> Void)?
 
     override var configurationState: UICellConfigurationState {
         var state = super.configurationState
         state.image = image
         state.title = title
         state.placeholder = placeholder
+        state.autocapitalizationType = autocapitalizationType
         state.value = value
         return state
     }
@@ -109,6 +122,9 @@ class SproutTextFieldCell: TextFieldCell {
             stackTrailing: stack.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
         )
 
+        constraints.stackTop.priority-=1
+        constraints.stackLeading.priority-=1
+        
         NSLayoutConstraint.activate([
             constraints.stackTop,
             constraints.stackLeading,
@@ -119,6 +135,7 @@ class SproutTextFieldCell: TextFieldCell {
         customViewConstraints = constraints
 
         textField.delegate = self
+        textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         setupTextField()
     }
 
@@ -133,6 +150,8 @@ class SproutTextFieldCell: TextFieldCell {
 
         textField.placeholder = state.placeholder
         textField.text = state.value
+        textField.returnKeyType = .done
+        textField.autocapitalizationType = state.autocapitalizationType
     }
 
     private func setupTextField() {
@@ -142,14 +161,14 @@ class SproutTextFieldCell: TextFieldCell {
             textField.textAlignment = effectiveUserInterfaceLayoutDirection == .leftToRight ? .right : .left
         }
     }
+
+    @objc private func textFieldDidChange(_ sender: UITextField) {
+        onChange?(textField.text)
+    }
 }
 
 extension SproutTextFieldCell: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
-    }
-
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        self.onChange?(textField.text)
     }
 }

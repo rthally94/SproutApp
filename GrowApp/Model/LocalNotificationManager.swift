@@ -51,7 +51,7 @@ struct LocalNotification: Hashable {
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
         
         print("Local:", datetime, " | Trigger:", trigger.dateComponents)
-        print(trigger.nextTriggerDate())
+        print("nextTriggerDate: \(trigger.nextTriggerDate())")
         return request
     }
 }

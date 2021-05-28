@@ -22,7 +22,7 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
 
@@ -118,7 +118,11 @@ extension StaticCollectionViewController {
     // MARK: - Form Cell Registraion
     private func makeTextFieldCellRegistration() -> UICollectionView.CellRegistration<SproutTextFieldCell, Item> {
         UICollectionView.CellRegistration<SproutTextFieldCell, Item> { cell, indexPath, item in
-            cell.updateWith(image: item.image, title: item.text, placeholder: item.secondaryText, value: item.tertiaryText, onChange: item.valueChangedAction)
+            cell.image = item.image
+            cell.title = item.text
+            cell.placeholder = item.secondaryText
+            cell.value = item.tertiaryText
+            cell.onChange = item.valueChangedAction
         }
     }
 

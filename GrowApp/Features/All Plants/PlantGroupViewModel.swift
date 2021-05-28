@@ -12,7 +12,8 @@ import UIKit
 enum PlantGroupView {
     case initial
     case newPlant
-    case plantDetail
+    case editPlant(GHPlant)
+    case plantDetail(GHPlant)
 }
 
 class PlantGroupViewModel {
@@ -24,7 +25,6 @@ class PlantGroupViewModel {
     var persistentContainer = AppDelegate.persistentContainer
 
     @Published private(set) var presentedView: PlantGroupView = .initial
-    private(set) var selectedPlant: GHPlant?
 
     @Published private(set) var navigationTitle: String? = "Your Plants"
 
@@ -63,24 +63,15 @@ class PlantGroupViewModel {
 
     // MARK: - Task Methods
     func addNewPlant() {
-        let viewContext = persistentContainer.viewContext
-
-        do {
-            let newPlant = try GHPlant.createDefaultPlant(inContext: viewContext)
-            selectedPlant = newPlant
-            presentedView = .newPlant
-        } catch {
-            fatalError("Unable to create new plant with default template: \(error)")
-        }
+        presentedView = .newPlant
     }
 
     func selectPlant(at indexPath: IndexPath) {
-        selectedPlant = plantsProvider.object(at: indexPath)
-        presentedView = .plantDetail
+        let selectedPlant = plantsProvider.object(at: indexPath)
+        presentedView = .plantDetail(selectedPlant)
     }
 
     func showList() {
-        selectedPlant = nil
         presentedView = .initial
     }
 }

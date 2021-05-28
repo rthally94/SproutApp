@@ -53,10 +53,8 @@ class PlantGroupViewController: UIViewController {
             .sink { view in
                 switch view {
                 case .newPlant:
-                    guard let plant = self.viewModel.selectedPlant else { return }
-                    self.showPlantEditor(for: plant)
-                case .plantDetail:
-                    guard let plant = self.viewModel.selectedPlant else { return }
+                    self.showNewPlantEditor()
+                case let .plantDetail(plant):
                     self.showPlantDetail(for: plant)
                 default:
                     break
@@ -81,10 +79,8 @@ class PlantGroupViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    func showPlantEditor(for plant: GHPlant) {
-        let vc = AddEditPlantViewController()
-        vc.plant = plant
-        vc.persistentContainer = viewModel.persistentContainer
+    func showNewPlantEditor() {
+        let vc = AddEditPlantCollectionViewController(storageProvider: AppDelegate.storageProvider)
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }
@@ -146,6 +142,7 @@ extension PlantGroupViewController: AddEditPlantViewControllerDelegate {
     }
 }
 
+// MARK: - UINavigationControllerDelegate
 extension PlantGroupViewController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         if viewController == self {

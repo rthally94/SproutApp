@@ -42,11 +42,26 @@ public class CareCategory: NSManagedObject {
         }
 
         let newType = CareCategory(context: context)
-        newType.id = UUID()
+        newType.id = name.rawValue
         newType.creationDate = Date()
         newType.name = name.description
         newType.icon = CareCategory.Icon(inContext: context, forType: name)
 
         return newType
+    }
+}
+
+extension CareCategory: SproutCareDetailType {
+    var value: Int {
+        get {
+            return Int(self.value_)
+        }
+        set {
+            self.value_ = Int64(newValue)
+        }
+    }
+
+    var allCareDetail: [SproutCareDetail] {
+        return []
     }
 }

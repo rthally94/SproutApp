@@ -81,8 +81,8 @@ class SproutButtonCell: ButtonCell {
         let HCHP = view.contentHuggingPriority(for: .horizontal)
         let VCHP = view.contentHuggingPriority(for: .vertical)
 
-        view.setContentHuggingPriority(HCHP+1, for: .horizontal)
-        view.setContentHuggingPriority(VCHP+1, for: .vertical)
+        view.setContentHuggingPriority(HCHP+2, for: .horizontal)
+        view.setContentHuggingPriority(VCHP+2, for: .vertical)
         return view
     }()
 
@@ -96,7 +96,7 @@ class SproutButtonCell: ButtonCell {
         let view = UIStackView(arrangedSubviews: [imageView, textLabel])
         view.axis = .horizontal
         view.alignment = .center
-        view.spacing = 4
+        view.spacing = 8.0
         return view
     }()
 
@@ -115,7 +115,8 @@ class SproutButtonCell: ButtonCell {
             stackWidth: stack.widthAnchor.constraint(lessThanOrEqualTo: contentView.layoutMarginsGuide.widthAnchor)
         )
 
-//        constraints.stackWidth.priority-=1
+        constraints.stackTop.priority-=1
+        constraints.stackWidth.priority-=1
 
         NSLayoutConstraint.activate([
             constraints.stackTop,

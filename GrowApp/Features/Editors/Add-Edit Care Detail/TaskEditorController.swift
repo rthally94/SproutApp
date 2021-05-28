@@ -30,7 +30,9 @@ enum TaskEditorSection: Int, Hashable, CaseIterable {
 
 class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     let dateFormatter = Utility.dateFormatter
-    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+    var storageProvider: StorageProvider = AppDelegate.storageProvider
+    var editingContext: NSManagedObjectContext { storageProvider.editingContext }
+
     var delegate: TaskEditorDelegate?
     var task: CareInfo?
 
@@ -75,9 +77,6 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        persistentContainer.viewContext.undoManager?.beginUndoGrouping()
-
         assert(task != nil, "TaskEditorViewController --- Task cannot be \"nil\". Set the property before presenting.")
 
         collectionView.delegate = self
@@ -96,7 +95,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         applyDefaultSnapshot()
 
         title = "Edit Task"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
     }
 
     override func makeLayout() -> UICollectionViewLayout {
@@ -146,22 +145,20 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
         if let task = task {
             delegate?.taskEditor(self, didUpdateTask: task)
         }
-
-        persistentContainer.viewContext.undoManager?.endUndoGrouping()
+        storageProvider.saveContext()
         dismiss(animated: true)
     }
 
     @objc private func cancelButtonPressed(_ sender: AnyObject) {
         delegate?.taskEditorDidCancel(self)
-        persistentContainer.viewContext.undoManager?.endUndoGrouping()
-        persistentContainer.viewContext.undoManager?.undoNestedGroup()
+        storageProvider.editingContext.rollback()
+        storageProvider.saveContext()
         dismiss(animated: true)
     }
 
-    private func unassignTask() {
+    @objc private func unassignTask(sender: AnyObject) {
         if let task = task {
-            persistentContainer.viewContext.delete(task)
-            //            self.task = nil
+            editingContext.delete(task)
         }
         doneButtonPressed(self)
     }
@@ -189,6 +186,7 @@ class TaskEditorController: StaticCollectionViewController<TaskEditorSection> {
     }
 }
 
+// MARK: - Collection View Delegate
 extension TaskEditorController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let item = dataSource.itemIdentifier(for: indexPath)
@@ -255,7 +253,7 @@ private extension TaskEditorController {
 
         dataSourceSnapshot.appendItems([
             Item.button(context: .destructive, title: "Remove", image: UIImage(systemName: "trash"), onTap: {
-                self.unassignTask()
+                self.unassignTask(sender: self)
             })
         ], toSection: .actions)
 
@@ -289,6 +287,10 @@ private extension TaskEditorController {
             schedule.recurrenceRule?.interval = 1
             schedule.recurrenceRule?.daysOfTheWeek = nil
             schedule.recurrenceRule?.daysOfTheMonth = nil
+        }
+
+        if let strongTask = task {
+            delegate?.taskEditor(self, didUpdateTask: strongTask)
         }
 
         // Update header without animation
@@ -368,6 +370,10 @@ private extension TaskEditorController {
                 valuesToChange = currentValues.symmetricDifference(newValue)
             }
             rule?.daysOfTheMonth = newValue
+        }
+
+        if let strongTask = task {
+            delegate?.taskEditor(self, didUpdateTask: strongTask)
         }
 
         var headerSnapshot = dataSource.snapshot(for: .header)

@@ -61,7 +61,7 @@ class AddEditPlantViewController: StaticCollectionViewController<PlantEditorSect
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
     weak var delegate: AddEditPlantViewControllerDelegate?
 
-    lazy var viewModel = AddEditPlantViewControllerViewModel(persistentContainer: persistentContainer)
+    var viewModel: AddEditPlantViewControllerViewModel!
 
     private var selectedIndexPath: IndexPath?
 
@@ -76,6 +76,8 @@ class AddEditPlantViewController: StaticCollectionViewController<PlantEditorSect
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        assert(viewModel != nil, "The viewModel property must be assigned before presenting \(self)")
+        
         persistentContainer.viewContext.undoManager?.beginUndoGrouping()
 
         title = viewModel.navigationTitle
@@ -98,7 +100,7 @@ class AddEditPlantViewController: StaticCollectionViewController<PlantEditorSect
     // MARK: - UI Configuration
     private func updateUI() {
         guard dataSource != nil else { return }
-        dataSource.apply(makeSnapshot(from: plant))
+//        dataSource.apply(makeSnapshot(from: plant))
     }
 
     override func makeLayout() -> UICollectionViewLayout {
@@ -109,7 +111,7 @@ class AddEditPlantViewController: StaticCollectionViewController<PlantEditorSect
     @objc private func applyChanges() {
         persistentContainer.viewContext.undoManager?.endUndoGrouping()
 //        cleanupUnusuedTasks()
-        delegate?.plantEditor(self, didUpdatePlant: plant)
+//        delegate?.plantEditor(self, didUpdatePlant: plant)
         dismiss(animated: true)
     }
     
@@ -124,21 +126,20 @@ class AddEditPlantViewController: StaticCollectionViewController<PlantEditorSect
     func showIconEditor() {
         let vc = PlantIconPickerController()
         vc.persistentContainer = persistentContainer
-        vc.icon = icon
+//        vc.icon = icon
         vc.delegate = self
         navigateTo(vc.wrappedInNavigationController(), modal: true)
     }
 
     func showTaskEditor(for task: CareInfo) {
         let vc = TaskEditorController()
-        vc.persistentContainer = persistentContainer
         vc.task = task
         vc.delegate = self
         navigateTo(vc.wrappedInNavigationController(), modal: true)
     }
 
     func deletePlant() {
-        persistentContainer.viewContext.delete(plant)
+//        persistentContainer.viewContext.delete(plant)
         applyChanges()
     }
 
