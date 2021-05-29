@@ -94,6 +94,7 @@
 		FB98B93126628ABD00629C1B /* CareInfo+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */; };
 		FB98B93326628BA200629C1B /* CareRecurrenceRule+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93226628BA200629C1B /* CareRecurrenceRule+Validation.swift */; };
 		FB98B93526628E7400629C1B /* CareSchedule+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93426628E7400629C1B /* CareSchedule+Validation.swift */; };
+		FB98B937266293BD00629C1B /* GHPlant+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B936266293BD00629C1B /* GHPlant+Validation.swift */; };
 		FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* CardView.swift */; };
 		FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */; };
 		FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* TasksProvider.swift */; };
@@ -241,6 +242,7 @@
 		FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareInfo+Validation.swift"; sourceTree = "<group>"; };
 		FB98B93226628BA200629C1B /* CareRecurrenceRule+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareRecurrenceRule+Validation.swift"; sourceTree = "<group>"; };
 		FB98B93426628E7400629C1B /* CareSchedule+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareSchedule+Validation.swift"; sourceTree = "<group>"; };
+		FB98B936266293BD00629C1B /* GHPlant+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GHPlant+Validation.swift"; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
 		FB9C66B4263AE76900CDC15A /* TasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksProvider.swift; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 			isa = PBXGroup;
 			children = (
 				FB7ED53926167484008FD1BE /* GHPlant+Extensions.swift */,
+				FB98B936266293BD00629C1B /* GHPlant+Validation.swift */,
 				FB7ED51C2615FF3C008FD1BE /* GHTask+Extensions.swift */,
 				FB6661A0261DEB9900DC8B04 /* GHTaskType+Extensions.swift */,
 				FB7ED5412616A235008FD1BE /* GHIcon+Extensions.swift */,
@@ -515,7 +518,6 @@
 				FB98B92D2662871500629C1B /* Models */,
 				FB6661A6261DEBA700DC8B04 /* CoreData Model Extensions */,
 				FB7ED5202615FFD3008FD1BE /* SproutRecurrenceFrequency.swift */,
-				FB263877263C9B8300180B54 /* GHPlant.swift */,
 				FBB75BBC264AF285000CC823 /* SproutIcon.swift */,
 				FB8480FB2652C24B00D820D3 /* SproutReminder.swift */,
 			);
@@ -672,6 +674,7 @@
 				FB263863263C7F3100180B54 /* CareInfo.swift */,
 				FB26386F263C821E00180B54 /* CareRecurrenceRule.swift */,
 				FBB75BBA264ADE70000CC823 /* CareSchedule.swift */,
+				FB263877263C9B8300180B54 /* GHPlant.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1000,6 +1003,7 @@
 				FB98B93126628ABD00629C1B /* CareInfo+Validation.swift in Sources */,
 				FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */,
 				FB7ED536261671EB008FD1BE /* PlantDetailItems.swift in Sources */,
+				FB98B937266293BD00629C1B /* GHPlant+Validation.swift in Sources */,
 				FB76D33C262A576500D00036 /* SproutIconView.swift in Sources */,
 				FB8E0D4A262B75B200F0FA09 /* CompactCardCell.swift in Sources */,
 				FBD5499E262B19F900640A8F /* SproutTaskCompactCardView.swift in Sources */,

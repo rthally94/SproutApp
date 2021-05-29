@@ -33,27 +33,3 @@ public class GHPlant: NSManagedObject {
             || tasks.contains(where: { $0.isUpdated })
     }
 }
-
-extension GHPlant {
-    func isMetadataValid() -> Bool {
-        id != nil
-        && creationDate != nil
-    }
-
-    func isNameValid() -> Bool {
-        guard let name = name else { return false }
-        return !name.isEmpty
-    }
-
-    func isIconValid() -> Bool {
-        guard let icon = icon else { return false }
-        // TODO: Check validity of icon
-        return true
-    }
-
-    func isTypeValid() -> Bool {
-        guard let type = type else { return false }
-        // TODO: Check validity of type
-        return true
-    }
-}
