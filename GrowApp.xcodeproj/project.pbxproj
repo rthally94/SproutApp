@@ -92,6 +92,8 @@
 		FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */; };
 		FB98B92F2662875700629C1B /* CareCategory+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B92E2662875700629C1B /* CareCategory+Validation.swift */; };
 		FB98B93126628ABD00629C1B /* CareInfo+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */; };
+		FB98B93326628BA200629C1B /* CareRecurrenceRule+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93226628BA200629C1B /* CareRecurrenceRule+Validation.swift */; };
+		FB98B93526628E7400629C1B /* CareSchedule+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93426628E7400629C1B /* CareSchedule+Validation.swift */; };
 		FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* CardView.swift */; };
 		FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */; };
 		FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* TasksProvider.swift */; };
@@ -237,6 +239,8 @@
 		FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+DismissKeyboardGesture.swift"; sourceTree = "<group>"; };
 		FB98B92E2662875700629C1B /* CareCategory+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareCategory+Validation.swift"; sourceTree = "<group>"; };
 		FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareInfo+Validation.swift"; sourceTree = "<group>"; };
+		FB98B93226628BA200629C1B /* CareRecurrenceRule+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareRecurrenceRule+Validation.swift"; sourceTree = "<group>"; };
+		FB98B93426628E7400629C1B /* CareSchedule+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareSchedule+Validation.swift"; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
 		FB9C66B4263AE76900CDC15A /* TasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksProvider.swift; sourceTree = "<group>"; };
@@ -487,6 +491,8 @@
 				FB7ED5412616A235008FD1BE /* GHIcon+Extensions.swift */,
 				FB98B92E2662875700629C1B /* CareCategory+Validation.swift */,
 				FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */,
+				FB98B93226628BA200629C1B /* CareRecurrenceRule+Validation.swift */,
+				FB98B93426628E7400629C1B /* CareSchedule+Validation.swift */,
 			);
 			path = "CoreData Model Extensions";
 			sourceTree = "<group>";
@@ -509,9 +515,6 @@
 				FB98B92D2662871500629C1B /* Models */,
 				FB6661A6261DEBA700DC8B04 /* CoreData Model Extensions */,
 				FB7ED5202615FFD3008FD1BE /* SproutRecurrenceFrequency.swift */,
-				FB263863263C7F3100180B54 /* CareInfo.swift */,
-				FB26386F263C821E00180B54 /* CareRecurrenceRule.swift */,
-				FBB75BBA264ADE70000CC823 /* CareSchedule.swift */,
 				FB263877263C9B8300180B54 /* GHPlant.swift */,
 				FBB75BBC264AF285000CC823 /* SproutIcon.swift */,
 				FB8480FB2652C24B00D820D3 /* SproutReminder.swift */,
@@ -666,6 +669,9 @@
 			isa = PBXGroup;
 			children = (
 				FB263869263C7FD200180B54 /* CareCategory.swift */,
+				FB263863263C7F3100180B54 /* CareInfo.swift */,
+				FB26386F263C821E00180B54 /* CareRecurrenceRule.swift */,
+				FBB75BBA264ADE70000CC823 /* CareSchedule.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1006,6 +1012,7 @@
 				FB92AF6B262E50510062DE47 /* ImagePicker.swift in Sources */,
 				FB6C461325F11BC4009ED947 /* CareInfoCell.swift in Sources */,
 				FB28A8E82649A2DE00B1206E /* ChipLabel.swift in Sources */,
+				FB98B93526628E7400629C1B /* CareSchedule+Validation.swift in Sources */,
 				FB92AF66262E093D0062DE47 /* LargeHeaderCell.swift in Sources */,
 				FB6C460D25F11BA0009ED947 /* IconHeaderCell.swift in Sources */,
 				FB6661CB2620938F00DC8B04 /* Utility.swift in Sources */,
@@ -1029,6 +1036,7 @@
 				FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */,
 				FB8E0D40262B324400F0FA09 /* StatisticCell.swift in Sources */,
 				FBEB4972260CBEF800F6060C /* CardCell.swift in Sources */,
+				FB98B93326628BA200629C1B /* CareRecurrenceRule+Validation.swift in Sources */,
 				FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */,
 				FB28A8EA2649B6A600B1206E /* SpacerView.swift in Sources */,
 				FB6661A1261DEB9900DC8B04 /* GHTaskType+Extensions.swift in Sources */,

@@ -40,3 +40,18 @@ public class CareSchedule: NSManagedObject {
         return schedule
     }
 }
+
+extension CareSchedule {
+    func sortedRemidners() -> [SproutReminder] {
+        guard careInfo != nil else { return [] }
+        let request = SproutReminder.allRemindersFetchRequest(for: careInfo, startingOn: nil, endingBefore: nil)
+
+        return (try? self.managedObjectContext?.fetch(request)) ?? []
+    }
+
+    func pastReminders() -> [SproutReminder] {
+        guard careInfo != nil else { return [] }
+        let request = SproutReminder.completedRemindersFetchRequest(for: self.careInfo, startingOn: nil, endingBefore: nil)
+        return (try? managedObjectContext?.fetch(request)) ?? []
+    }
+}

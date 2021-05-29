@@ -37,10 +37,7 @@
         <attribute name="startingDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="careInfo" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CareInfoItem" inverseName="currentSchedule" inverseEntity="CareInfoItem"/>
         <relationship name="recurrenceRule" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CareRecurrenceRule" inverseName="currentSchedule" inverseEntity="CareRecurrenceRule"/>
-        <relationship name="reminders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SproutReminder" inverseName="schedule" inverseEntity="SproutReminder"/>
-        <fetchedProperty name="pastReminders" optional="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="SproutReminder"/>
-        </fetchedProperty>
+        <relationship name="reminders" optional="YES" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="SproutReminder" inverseName="schedule" inverseEntity="SproutReminder"/>
     </entity>
     <entity name="GHPlant" representedClassName=".GHPlant" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -77,7 +74,7 @@
         <element name="CareCategory" positionX="-1204.2392578125" positionY="-335.0547180175781" width="128" height="134"/>
         <element name="CareInfoItem" positionX="-650.4622802734375" positionY="-358.1851196289062" width="128" height="163"/>
         <element name="CareRecurrenceRule" positionX="-13.403076171875" positionY="-191.1738281249999" width="128" height="178"/>
-        <element name="CareSchedule" positionX="-227.006591796875" positionY="-148.6032409667968" width="128" height="176"/>
+        <element name="CareSchedule" positionX="-227.006591796875" positionY="-148.6032409667968" width="128" height="134"/>
         <element name="GHPlant" positionX="-903.2777099609375" positionY="-608.8129272460938" width="128" height="133"/>
         <element name="GHPlantType" positionX="-514.7445068359375" positionY="-623.9147644042969" width="128" height="103"/>
         <element name="SproutIcon" positionX="-1191.598388671875" positionY="-613.1111450195312" width="128" height="118"/>
