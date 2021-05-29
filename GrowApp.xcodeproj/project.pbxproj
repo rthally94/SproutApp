@@ -496,14 +496,7 @@
 				FB7ED53926167484008FD1BE /* SproutPlant+Extensions.swift */,
 				FB6661A0261DEB9900DC8B04 /* CareCategory+Extensions.swift */,
 				FB7ED5412616A235008FD1BE /* SproutIcon+Extensions.swift */,
-				FB98B92E2662875700629C1B /* CareCategory+Validation.swift */,
-				FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */,
-				FB98B93226628BA200629C1B /* CareRecurrenceRule+Validation.swift */,
-				FB98B93426628E7400629C1B /* CareSchedule+Validation.swift */,
-				FB98B936266293BD00629C1B /* SproutPlant+Validation.swift */,
-				FB98B93A2662974500629C1B /* SproutPlantType+Validation.swift */,
-				FB98B93C2662984B00629C1B /* SproutIcon+Validation.swift */,
-				FB98B93E26629A3B00629C1B /* SproutReminder+Validation.swift */,
+				FB98B94126629CFE00629C1B /* Validation */,
 			);
 			path = "Model Extensions";
 			sourceTree = "<group>";
@@ -522,12 +515,10 @@
 			children = (
 				FB7ED5182615260F008FD1BE /* StorageProvider.swift */,
 				FB7ED5032614B53D008FD1BE /* GreenHouseDataModel.xcdatamodeld */,
-				FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */,
 				FB98B92D2662871500629C1B /* Models */,
 				FB6661A6261DEBA700DC8B04 /* Model Extensions */,
+				FB98B94026629CDB00629C1B /* Value Transformers */,
 				FB7ED5202615FFD3008FD1BE /* SproutRecurrenceFrequency.swift */,
-				FBB75BBC264AF285000CC823 /* SproutIcon.swift */,
-				FB8480FB2652C24B00D820D3 /* SproutReminder.swift */,
 			);
 			path = "Core Data";
 			sourceTree = "<group>";
@@ -684,8 +675,33 @@
 				FBB75BBA264ADE70000CC823 /* CareSchedule.swift */,
 				FB263877263C9B8300180B54 /* SproutPlant.swift */,
 				FB98B9382662945D00629C1B /* SproutPlantType.swift */,
+				FBB75BBC264AF285000CC823 /* SproutIcon.swift */,
+				FB8480FB2652C24B00D820D3 /* SproutReminder.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		FB98B94026629CDB00629C1B /* Value Transformers */ = {
+			isa = PBXGroup;
+			children = (
+				FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */,
+			);
+			path = "Value Transformers";
+			sourceTree = "<group>";
+		};
+		FB98B94126629CFE00629C1B /* Validation */ = {
+			isa = PBXGroup;
+			children = (
+				FB98B92E2662875700629C1B /* CareCategory+Validation.swift */,
+				FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */,
+				FB98B93226628BA200629C1B /* CareRecurrenceRule+Validation.swift */,
+				FB98B93426628E7400629C1B /* CareSchedule+Validation.swift */,
+				FB98B936266293BD00629C1B /* SproutPlant+Validation.swift */,
+				FB98B93A2662974500629C1B /* SproutPlantType+Validation.swift */,
+				FB98B93C2662984B00629C1B /* SproutIcon+Validation.swift */,
+				FB98B93E26629A3B00629C1B /* SproutReminder+Validation.swift */,
+			);
+			path = Validation;
 			sourceTree = "<group>";
 		};
 		FB9C66A8263A538D00CDC15A /* CardView */ = {
