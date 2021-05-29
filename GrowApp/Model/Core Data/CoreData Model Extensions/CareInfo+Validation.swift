@@ -1,5 +1,5 @@
 //
-//  CareCategory+Validators.swift
+//  CareInfo+Validation.swift
 //  GrowApp
 //
 //  Created by Ryan Thally on 5/29/21.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension CareCategory {
+extension CareInfo {
     func isIDValid() -> Bool {
         id != nil
     }
@@ -17,24 +17,21 @@ extension CareCategory {
     }
 
     func isLastModifiedDateValid() -> Bool {
-        lastModifiedDate != nil
+        if !isInserted {
+            return lastModifiedDate != nil
+        } else {
+            return true
+        }
     }
 
-    func isNameValid() -> Bool {
-        guard let name = name else { return false }
-        return !name.isEmpty
-    }
-
-    func isIconValid() -> Bool {
-        icon != nil
+    func isCareCategoryValid() -> Bool {
+        careCategory != nil
     }
 
     func isValid() -> Bool {
         isIDValid()
         && isCreationDateValid()
         && isLastModifiedDateValid()
-        && isNameValid()
-        && isIconValid()
+        && isCareCategoryValid()
     }
 }
-

@@ -90,7 +90,8 @@
 		FB92AF71262EF6130062DE47 /* CustomViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF70262EF6130062DE47 /* CustomViewCell.swift */; };
 		FB92AF75262EF8A70062DE47 /* WeekdayPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */; };
 		FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */; };
-		FB98B92F2662875700629C1B /* CareCategory+Validators.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B92E2662875700629C1B /* CareCategory+Validators.swift */; };
+		FB98B92F2662875700629C1B /* CareCategory+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B92E2662875700629C1B /* CareCategory+Validation.swift */; };
+		FB98B93126628ABD00629C1B /* CareInfo+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */; };
 		FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* CardView.swift */; };
 		FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */; };
 		FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* TasksProvider.swift */; };
@@ -234,7 +235,8 @@
 		FB92AF70262EF6130062DE47 /* CustomViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomViewCell.swift; sourceTree = "<group>"; };
 		FB92AF74262EF8A70062DE47 /* WeekdayPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekdayPickerCell.swift; sourceTree = "<group>"; };
 		FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+DismissKeyboardGesture.swift"; sourceTree = "<group>"; };
-		FB98B92E2662875700629C1B /* CareCategory+Validators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareCategory+Validators.swift"; sourceTree = "<group>"; };
+		FB98B92E2662875700629C1B /* CareCategory+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareCategory+Validation.swift"; sourceTree = "<group>"; };
+		FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CareInfo+Validation.swift"; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
 		FB9C66B4263AE76900CDC15A /* TasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksProvider.swift; sourceTree = "<group>"; };
@@ -483,7 +485,8 @@
 				FB7ED51C2615FF3C008FD1BE /* GHTask+Extensions.swift */,
 				FB6661A0261DEB9900DC8B04 /* GHTaskType+Extensions.swift */,
 				FB7ED5412616A235008FD1BE /* GHIcon+Extensions.swift */,
-				FB98B92E2662875700629C1B /* CareCategory+Validators.swift */,
+				FB98B92E2662875700629C1B /* CareCategory+Validation.swift */,
+				FB98B93026628ABD00629C1B /* CareInfo+Validation.swift */,
 			);
 			path = "CoreData Model Extensions";
 			sourceTree = "<group>";
@@ -988,6 +991,7 @@
 				FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */,
 				FBF8AC5225DD80AC00E7E8EB /* IconView.swift in Sources */,
 				FB7ED53A26167484008FD1BE /* GHPlant+Extensions.swift in Sources */,
+				FB98B93126628ABD00629C1B /* CareInfo+Validation.swift in Sources */,
 				FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */,
 				FB7ED536261671EB008FD1BE /* PlantDetailItems.swift in Sources */,
 				FB76D33C262A576500D00036 /* SproutIconView.swift in Sources */,
@@ -1057,7 +1061,7 @@
 				FB4FAB09265EDE7C001A9201 /* HashableClosure.swift in Sources */,
 				FB82CDE12642F35F00E32F16 /* PlantGroupViewModel.swift in Sources */,
 				FB7ED5092614D111008FD1BE /* UIImageTransformer.swift in Sources */,
-				FB98B92F2662875700629C1B /* CareCategory+Validators.swift in Sources */,
+				FB98B92F2662875700629C1B /* CareCategory+Validation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
