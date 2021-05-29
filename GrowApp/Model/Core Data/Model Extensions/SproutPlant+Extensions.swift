@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension GHPlant {
+extension SproutPlant {
     var tasks: Set<CareInfo> {
         get { careInfoItems as? Set<CareInfo> ?? [] }
         set { careInfoItems = newValue as NSSet }

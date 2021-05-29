@@ -9,7 +9,7 @@ import UIKit
 
 // MARK: - DataSource Configuration
 extension AddEditPlantViewController {
-    func makeSnapshot(from plant: GHPlant) -> NSDiffableDataSourceSnapshot<PlantEditorSection, Item> {
+    func makeSnapshot(from plant: SproutPlant) -> NSDiffableDataSourceSnapshot<PlantEditorSection, Item> {
         var snapshot = NSDiffableDataSourceSnapshot<PlantEditorSection, Item>()
         snapshot.appendSections(PlantEditorSection.allCases)
         // Header Image

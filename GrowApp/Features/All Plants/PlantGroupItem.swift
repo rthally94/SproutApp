@@ -8,7 +8,7 @@
 import UIKit
 
 struct PlantGroupItem: Hashable {
-    let plant: GHPlant
+    let plant: SproutPlant
 
     var image: UIImage? {
         return plant.icon?.image

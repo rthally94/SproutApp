@@ -8,11 +8,11 @@
 import Foundation
 
 protocol AddEditPlantViewControllerDelegate: AnyObject {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: GHPlant)
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlant)
     func plantEditorDidCancel(_ editor: AddEditPlantViewController)
 }
 
 extension AddEditPlantViewControllerDelegate {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: GHPlant) { }
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlant) { }
     func plantEditorDidCancel(_ editor: AddEditPlantViewController) { }
 }

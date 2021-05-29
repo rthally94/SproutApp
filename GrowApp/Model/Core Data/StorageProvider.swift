@@ -48,7 +48,7 @@ class StorageProvider {
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         persistentContainer.viewContext.shouldDeleteInaccessibleFaults = true
 
-        let request: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
+        let request: NSFetchRequest<SproutPlantType> = SproutPlantType.fetchRequest()
         let typeCount = (try? persistentContainer.viewContext.count(for: request)) ?? 0
         if typeCount == 0 {
             loadPlantTypes()
@@ -62,7 +62,7 @@ class StorageProvider {
     func loadPlantTypes() {
         persistentContainer.performBackgroundTask { context in
             PlantType.allTypes.forEach { type in
-                let newType = GHPlantType(context: context)
+                let newType = SproutPlantType(context: context)
                 newType.scientificName = type.scientificName
                 newType.commonName = type.commonName
             }
@@ -75,12 +75,12 @@ class StorageProvider {
         persistentContainer.performBackgroundTask { context in
             do {
                 // General Plant Config
-                let plant = try GHPlant.createDefaultPlant(inContext: context)
+                let plant = try SproutPlant.createDefaultPlant(inContext: context)
                 plant.name = "My Sample Plant"
 
                 // Task Type
-                let taskTypeRequest: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
-                taskTypeRequest.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlantType.commonName, ascending: true)]
+                let taskTypeRequest: NSFetchRequest<SproutPlantType> = SproutPlantType.fetchRequest()
+                taskTypeRequest.sortDescriptors = [NSSortDescriptor(keyPath: \SproutPlantType.commonName, ascending: true)]
                 plant.type = try context.fetch(taskTypeRequest).first
 
                 // Plant Care Info

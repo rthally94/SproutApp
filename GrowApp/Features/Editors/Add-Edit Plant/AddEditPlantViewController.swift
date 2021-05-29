@@ -249,7 +249,7 @@ extension AddEditPlantViewController: PlantIconPickerControllerDelegate {
 
 // MARK: - PlantTypePickerDelegate
 extension AddEditPlantViewController: PlantTypePickerDelegate {
-    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType) {
+    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantType) {
         viewModel.setPlantType(to: plantType)
         updateUI()
     }

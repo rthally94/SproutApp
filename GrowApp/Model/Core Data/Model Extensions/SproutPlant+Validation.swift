@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension GHPlant {
+extension SproutPlant {
     func isIDValid() -> Bool {
         id != nil
     }
@@ -35,5 +35,13 @@ extension GHPlant {
 
     func isTypeValid() -> Bool {
         type != nil
+    }
+
+    func isValid() -> Bool {
+        isIDValid()
+        && isCreationDateValid()
+        && isNameValid()
+        && isIconValid()
+        && isTypeValid()
     }
 }

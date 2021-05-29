@@ -16,7 +16,7 @@
         <attribute name="lastModifiedDate" optional="YES" attributeType="Date" derived="YES" derivationExpression="now()" usesScalarValueType="NO"/>
         <relationship name="careCategory" maxCount="1" deletionRule="Nullify" destinationEntity="CareCategory" inverseName="careInfoItems" inverseEntity="CareCategory"/>
         <relationship name="currentSchedule" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CareSchedule" inverseName="careInfo" inverseEntity="CareSchedule"/>
-        <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="careInfoItems" inverseEntity="GHPlant"/>
+        <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutPlant" inverseName="careInfoItems" inverseEntity="SproutPlant"/>
         <relationship name="reminders" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SproutReminder" inverseName="careInfo" inverseEntity="SproutReminder"/>
     </entity>
     <entity name="CareRecurrenceRule" representedClassName=".CareRecurrenceRule" syncable="YES" codeGenerationType="category">
@@ -39,26 +39,26 @@
         <relationship name="recurrenceRule" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="CareRecurrenceRule" inverseName="currentSchedule" inverseEntity="CareRecurrenceRule"/>
         <relationship name="reminders" optional="YES" toMany="YES" minCount="1" deletionRule="Nullify" destinationEntity="SproutReminder" inverseName="schedule" inverseEntity="SproutReminder"/>
     </entity>
-    <entity name="GHPlant" representedClassName=".GHPlant" syncable="YES" codeGenerationType="category">
-        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="careInfoItems" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CareInfoItem" inverseName="plant" inverseEntity="CareInfoItem"/>
-        <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SproutIcon" inverseName="plant" inverseEntity="SproutIcon"/>
-        <relationship name="type" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlantType" inverseName="plants" inverseEntity="GHPlantType"/>
-    </entity>
-    <entity name="GHPlantType" representedClassName=".GHPlantType" syncable="YES" codeGenerationType="class">
-        <attribute name="commonName" optional="YES" attributeType="String"/>
-        <attribute name="plantCount" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="plants.@count" usesScalarValueType="YES"/>
-        <attribute name="scientificName" optional="YES" attributeType="String"/>
-        <relationship name="plants" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="GHPlant" inverseName="type" inverseEntity="GHPlant"/>
-    </entity>
     <entity name="SproutIcon" representedClassName=".SproutIcon" syncable="YES" codeGenerationType="category">
         <attribute name="hexColor" optional="YES" attributeType="String"/>
         <attribute name="imageData" optional="YES" attributeType="Binary" valueTransformerName="UIImageValueTransformer"/>
         <attribute name="symbolName" optional="YES" attributeType="String"/>
         <relationship name="careCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="CareCategory" inverseName="icon" inverseEntity="CareCategory"/>
-        <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="GHPlant" inverseName="icon" inverseEntity="GHPlant"/>
+        <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutPlant" inverseName="icon" inverseEntity="SproutPlant"/>
+    </entity>
+    <entity name="SproutPlant" representedClassName=".SproutPlant" syncable="YES" codeGenerationType="category">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="careInfoItems" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="CareInfoItem" inverseName="plant" inverseEntity="CareInfoItem"/>
+        <relationship name="icon" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SproutIcon" inverseName="plant" inverseEntity="SproutIcon"/>
+        <relationship name="type" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutPlantType" inverseName="plants" inverseEntity="SproutPlantType"/>
+    </entity>
+    <entity name="SproutPlantType" representedClassName=".SproutPlantType" syncable="YES" codeGenerationType="category">
+        <attribute name="commonName" optional="YES" attributeType="String"/>
+        <attribute name="plantCount" optional="YES" attributeType="Integer 64" derived="YES" derivationExpression="plants.@count" usesScalarValueType="YES"/>
+        <attribute name="scientificName" optional="YES" attributeType="String"/>
+        <relationship name="plants" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="SproutPlant" inverseName="type" inverseEntity="SproutPlant"/>
     </entity>
     <entity name="SproutReminder" representedClassName=".SproutReminder" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -75,8 +75,8 @@
         <element name="CareInfoItem" positionX="-650.4622802734375" positionY="-358.1851196289062" width="128" height="163"/>
         <element name="CareRecurrenceRule" positionX="-13.403076171875" positionY="-191.1738281249999" width="128" height="178"/>
         <element name="CareSchedule" positionX="-227.006591796875" positionY="-148.6032409667968" width="128" height="134"/>
-        <element name="GHPlant" positionX="-903.2777099609375" positionY="-608.8129272460938" width="128" height="133"/>
-        <element name="GHPlantType" positionX="-514.7445068359375" positionY="-623.9147644042969" width="128" height="103"/>
+        <element name="SproutPlant" positionX="-903.2777099609375" positionY="-608.8129272460938" width="128" height="133"/>
+        <element name="SproutPlantType" positionX="-514.7445068359375" positionY="-623.9147644042969" width="128" height="89"/>
         <element name="SproutIcon" positionX="-1191.598388671875" positionY="-613.1111450195312" width="128" height="118"/>
         <element name="SproutReminder" positionX="-429.9156494140625" positionY="38.84613037109375" width="128" height="163"/>
     </elements>

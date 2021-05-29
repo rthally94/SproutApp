@@ -54,7 +54,7 @@ class UpNextViewModel {
                                let careInfoID = reminder.careInfo?.objectID,
                                let careInfo = self.tasksProvider.object(withID: careInfoID) as? CareInfo,
                                let plantID = reminder.careInfo?.plant?.objectID,
-                               let plant = self.tasksProvider.object(withID: plantID) as? GHPlant
+                               let plant = self.tasksProvider.object(withID: plantID) as? SproutPlant
                             {
                                 let item = Item(careInfo: careInfo, plant: plant)
                                 items.append(item)

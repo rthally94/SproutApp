@@ -21,7 +21,7 @@ class AddEditPlantViewControllerViewModel: ObservableObject {
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     // MARK: - Properties
-    private var plant: GHPlant
+    private var plant: SproutPlant
 
     private(set) var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
     private(set) var editingContext: NSManagedObjectContext
@@ -46,7 +46,7 @@ class AddEditPlantViewControllerViewModel: ObservableObject {
         plant.name
     }
 
-    var plantType: GHPlantType? {
+    var plantType: SproutPlantType? {
         plant.type
     }
 
@@ -65,18 +65,18 @@ class AddEditPlantViewControllerViewModel: ObservableObject {
     }
 
     // MARK: - Initializers
-    init(plant: GHPlant? = nil, persistentContainer: NSPersistentContainer) {
+    init(plant: SproutPlant? = nil, persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
         self.editingContext = persistentContainer.viewContext
 
-        if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? GHPlant {
+        if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? SproutPlant {
             self.plant = editingPlant
         } else {
             // Make New Plant
             do {
                 isNew = true
 
-                let newPlant = try GHPlant.createDefaultPlant(inContext: editingContext)
+                let newPlant = try SproutPlant.createDefaultPlant(inContext: editingContext)
                 self.plant = newPlant
             } catch {
                 fatalError("Unable to initialize AddEditPlantViewController with new plant: \(error)")
@@ -119,10 +119,10 @@ class AddEditPlantViewControllerViewModel: ObservableObject {
         plant.name = newValue
     }
 
-    func setPlantType(to newValue: GHPlantType) {
+    func setPlantType(to newValue: SproutPlantType) {
         if let context = plant.managedObjectContext {
             context.perform { [unowned self] in
-                guard let type = context.object(with: newValue.objectID) as? GHPlantType else { return }
+                guard let type = context.object(with: newValue.objectID) as? SproutPlantType else { return }
                 self.plant.type = type
 
                 DispatchQueue.main.async {

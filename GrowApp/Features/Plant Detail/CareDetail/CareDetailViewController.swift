@@ -15,7 +15,7 @@ class CareDetailViewController: UIViewController {
         return formatter
     }()
     
-    var plant: GHPlant? {
+    var plant: SproutPlant? {
         didSet {
             applySnapshotIfAble()
         }

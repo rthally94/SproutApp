@@ -12,7 +12,7 @@ struct UpNextItem: Hashable {
     let scheduleFormatter = Utility.currentScheduleFormatter
 
     var careInfo: CareInfo
-    var plant: GHPlant
+    var plant: SproutPlant
 
     var title: String? {
         return plant.name

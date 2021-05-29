@@ -12,8 +12,8 @@ import UIKit
 enum PlantGroupView {
     case initial
     case newPlant
-    case editPlant(GHPlant)
-    case plantDetail(GHPlant)
+    case editPlant(SproutPlant)
+    case plantDetail(SproutPlant)
 }
 
 class PlantGroupViewModel {

@@ -22,7 +22,7 @@ class TaskCalendarViewController: UIViewController {
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
 
     private var taskCalendarProvider: TaskCalendarProvider?
-    private var data: [CareCategory: [GHPlant]] = [:]
+    private var data: [CareCategory: [SproutPlant]] = [:]
     
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellables = Set<AnyCancellable>()

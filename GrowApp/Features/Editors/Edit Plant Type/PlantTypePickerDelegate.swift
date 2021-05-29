@@ -8,11 +8,11 @@
 import Foundation
 
 protocol PlantTypePickerDelegate: AnyObject {
-    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType)
+    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantType)
     func plantTypePickerDidCancel(_ picker: PlantTypePickerViewController)
 }
 
 extension PlantTypePickerDelegate {
-    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType) { }
+    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantType) { }
     func plantTypePickerDidCancel(_ picker: PlantTypePickerViewController) { }
 }

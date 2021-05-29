@@ -72,7 +72,7 @@ class PlantGroupViewController: UIViewController {
         viewModel.addNewPlant()
     }
 
-    func showPlantDetail(for plant: GHPlant) {
+    func showPlantDetail(for plant: SproutPlant) {
         let vc = PlantDetailViewController()
         vc.persistentContainer = viewModel.persistentContainer
         vc.plant = plant
@@ -130,7 +130,7 @@ extension PlantGroupViewController: UICollectionViewDelegate {
 
 // MARK: - PlantEditorDelegate
 extension PlantGroupViewController: AddEditPlantViewControllerDelegate {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: GHPlant) {
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlant) {
         viewModel.showList()
 
         viewModel.persistentContainer.viewContext.refresh(plant, mergeChanges: true)

@@ -11,7 +11,7 @@ import UIKit
 class PlantTypesProvider: NSObject {    
     let moc: NSManagedObjectContext
     
-    private var allTypes: [NSManagedObjectID: GHPlantType] = [:]
+    private var allTypes: [NSManagedObjectID: SproutPlantType] = [:]
     private var selectedItem: Item?
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     
@@ -35,10 +35,10 @@ class PlantTypesProvider: NSObject {
         super.init()
         
         // Fetch plant types
-        let allTypesRequest: NSFetchRequest<GHPlantType> = GHPlantType.fetchRequest()
-        allTypesRequest.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlantType.commonName, ascending: true)]
+        let allTypesRequest: NSFetchRequest<SproutPlantType> = SproutPlantType.fetchRequest()
+        allTypesRequest.sortDescriptors = [NSSortDescriptor(keyPath: \SproutPlantType.commonName, ascending: true)]
         let types = (try? moc.fetch(allTypesRequest)) ?? []
-        allTypes = types.reduce(into: [NSManagedObjectID: GHPlantType]()) { dict, type in
+        allTypes = types.reduce(into: [NSManagedObjectID: SproutPlantType]()) { dict, type in
             dict[type.objectID] = type
         }
         
@@ -60,8 +60,8 @@ class PlantTypesProvider: NSObject {
         snapshot = newSnapshot
     }
     
-    func object(withID id: NSManagedObjectID) -> GHPlantType {
-        moc.object(with: id) as! GHPlantType
+    func object(withID id: NSManagedObjectID) -> SproutPlantType {
+        moc.object(with: id) as! SproutPlantType
     }
     
     func reloadItems(_ items: [Item]) {

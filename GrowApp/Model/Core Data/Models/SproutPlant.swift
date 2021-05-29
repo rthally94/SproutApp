@@ -8,11 +8,11 @@
 import CoreData
 import UIKit
 
-public class GHPlant: NSManagedObject {
+public class SproutPlant: NSManagedObject {
     private static let DefaultPlantName = "My New Plant"
 
-    static func createDefaultPlant(inContext context: NSManagedObjectContext) throws -> GHPlant {
-        let newPlant = GHPlant(context: context)
+    static func createDefaultPlant(inContext context: NSManagedObjectContext) throws -> SproutPlant {
+        let newPlant = SproutPlant(context: context)
         newPlant.id = UUID()
 
 //        let defaultPlantsCountRequest: NSFetchRequest<GHPlant> = GHPlant.fetchRequest()

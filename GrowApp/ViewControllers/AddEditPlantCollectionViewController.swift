@@ -19,7 +19,7 @@ class AddEditPlantCollectionViewController: UICollectionViewController {
         storageProvider.editingContext
     }
 
-    private(set) var plant: GHPlant
+    private(set) var plant: SproutPlant
     private var originalNameValue: String?
 
     private var unconfiguredCareDetailTypes: [CareCategory] {
@@ -40,17 +40,17 @@ class AddEditPlantCollectionViewController: UICollectionViewController {
     private var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
 
     // MARK: - Initializers
-    init(plant: GHPlant? = nil, storageProvider: StorageProvider = AppDelegate.storageProvider) {
+    init(plant: SproutPlant? = nil, storageProvider: StorageProvider = AppDelegate.storageProvider) {
         self.storageProvider = storageProvider
         let editingContext = storageProvider.editingContext
 
         // Fetch input plant in editing context or create a new one.
-        if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? GHPlant {
+        if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? SproutPlant {
             self.plant = editingPlant
         } else {
             // Make New Plant
             do {
-                let newPlant = try GHPlant.createDefaultPlant(inContext: editingContext)
+                let newPlant = try SproutPlant.createDefaultPlant(inContext: editingContext)
                 self.plant = newPlant
             } catch {
                 fatalError("Unable to initialize AddEditPlantViewController with new plant: \(error)")
@@ -241,11 +241,7 @@ extension AddEditPlantCollectionViewController {
     }
 
     private var canSave: Bool {
-        let isPlantValid = plant.isNameValid()
-            && plant.isIconValid()
-            && plant.isTypeValid()
-            && plant.isMetadataValid()
-
+        let isPlantValid = plant.isValid()
         return isPlantValid && hasChanges
     }
 }
@@ -569,8 +565,8 @@ extension AddEditPlantCollectionViewController: PlantIconPickerControllerDelegat
 
 // MARK: - Plant Type Picker Delegate
 extension AddEditPlantCollectionViewController: PlantTypePickerDelegate {
-    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: GHPlantType) {
-        guard let newType = editingContext.object(with: plantType.objectID) as? GHPlantType else {
+    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantType) {
+        guard let newType = editingContext.object(with: plantType.objectID) as? SproutPlantType else {
             print("Plant Type could not be saved because it does not exist in the editing context.")
             return
         }

@@ -48,7 +48,7 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
     let careDateFormatter = Utility.relativeDateFormatter
 
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
-    var plant: GHPlant?
+    var plant: SproutPlant?
     
     // MARK: - View Life Cycle
     
@@ -140,7 +140,7 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
 }
 
 extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: GHPlant) {
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlant) {
         
         if plant.isDeleted {
             navigationController?.popViewController(animated: false)
@@ -160,7 +160,7 @@ private extension PlantDetailViewController {
 
 private extension PlantDetailViewController {
     func makeSnapshot() -> NSDiffableDataSourceSnapshot<PlantDetailSection, Item> {
-        guard let id = plant?.objectID, let plant = persistentContainer.viewContext.object(with: id) as? GHPlant else { fatalError("Could not get plant from context") }
+        guard let id = plant?.objectID, let plant = persistentContainer.viewContext.object(with: id) as? SproutPlant else { fatalError("Could not get plant from context") }
         var snapshot = NSDiffableDataSourceSnapshot<PlantDetailSection, Item>()
         snapshot.appendSections([PlantDetailSection.plantHero, PlantDetailSection.careInfo])
         
