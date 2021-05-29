@@ -63,7 +63,7 @@
     <entity name="SproutReminder" representedClassName=".SproutReminder" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
-        <attribute name="modifiedDate" optional="YES" attributeType="Date" derived="YES" derivationExpression="now()" usesScalarValueType="NO"/>
+        <attribute name="lastModifiedDate" optional="YES" attributeType="Date" derived="YES" derivationExpression="now()" usesScalarValueType="NO"/>
         <attribute name="scheduledDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="statusDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="statusType" attributeType="String" defaultValueString="incomplete"/>
@@ -78,6 +78,6 @@
         <element name="SproutPlant" positionX="-903.2777099609375" positionY="-608.8129272460938" width="128" height="133"/>
         <element name="SproutPlantType" positionX="-514.7445068359375" positionY="-623.9147644042969" width="128" height="89"/>
         <element name="SproutIcon" positionX="-1191.598388671875" positionY="-613.1111450195312" width="128" height="118"/>
-        <element name="SproutReminder" positionX="-429.9156494140625" positionY="38.84613037109375" width="128" height="163"/>
+        <element name="SproutReminder" positionX="-429.9156494140625" positionY="38.84613037109375" width="128" height="149"/>
     </elements>
 </model>

@@ -97,6 +97,7 @@
 		FB98B9392662945D00629C1B /* SproutPlantType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B9382662945D00629C1B /* SproutPlantType.swift */; };
 		FB98B93B2662974500629C1B /* SproutPlantType+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93A2662974500629C1B /* SproutPlantType+Validation.swift */; };
 		FB98B93D2662984B00629C1B /* SproutIcon+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93C2662984B00629C1B /* SproutIcon+Validation.swift */; };
+		FB98B93F26629A3B00629C1B /* SproutReminder+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93E26629A3B00629C1B /* SproutReminder+Validation.swift */; };
 		FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* CardView.swift */; };
 		FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */; };
 		FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* TasksProvider.swift */; };
@@ -247,6 +248,7 @@
 		FB98B9382662945D00629C1B /* SproutPlantType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutPlantType.swift; sourceTree = "<group>"; };
 		FB98B93A2662974500629C1B /* SproutPlantType+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SproutPlantType+Validation.swift"; sourceTree = "<group>"; };
 		FB98B93C2662984B00629C1B /* SproutIcon+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SproutIcon+Validation.swift"; sourceTree = "<group>"; };
+		FB98B93E26629A3B00629C1B /* SproutReminder+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SproutReminder+Validation.swift"; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
 		FB9C66B4263AE76900CDC15A /* TasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksProvider.swift; sourceTree = "<group>"; };
@@ -501,6 +503,7 @@
 				FB98B936266293BD00629C1B /* SproutPlant+Validation.swift */,
 				FB98B93A2662974500629C1B /* SproutPlantType+Validation.swift */,
 				FB98B93C2662984B00629C1B /* SproutIcon+Validation.swift */,
+				FB98B93E26629A3B00629C1B /* SproutReminder+Validation.swift */,
 			);
 			path = "Model Extensions";
 			sourceTree = "<group>";
@@ -1070,6 +1073,7 @@
 				FB263878263C9B8300180B54 /* SproutPlant.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FB82CDFD26444F7D00E32F16 /* UpNextItem.swift in Sources */,
+				FB98B93F26629A3B00629C1B /* SproutReminder+Validation.swift in Sources */,
 				FB5F348525B4C2AD00CCE6BC /* TaskCalendarViewController.swift in Sources */,
 				FB98B9392662945D00629C1B /* SproutPlantType.swift in Sources */,
 				FB76D347262A5AF500D00036 /* SproutTaskLargeHeaderView.swift in Sources */,
