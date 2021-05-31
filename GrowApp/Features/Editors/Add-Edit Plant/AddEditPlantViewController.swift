@@ -132,8 +132,7 @@ class AddEditPlantViewController: StaticCollectionViewController<PlantEditorSect
     }
 
     func showTaskEditor(for task: CareInfo) {
-        let vc = TaskEditorController()
-        vc.task = task
+        let vc = TaskEditorController(task: task)
         vc.delegate = self
         navigateTo(vc.wrappedInNavigationController(), modal: true)
     }

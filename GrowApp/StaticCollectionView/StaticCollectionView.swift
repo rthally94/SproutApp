@@ -180,9 +180,9 @@ extension StaticCollectionViewController {
 
     func makeLargeHeaderCellRegistration() -> UICollectionView.CellRegistration<LargeHeaderCell, Item> {
         UICollectionView.CellRegistration<LargeHeaderCell, Item> { cell, indexPathm, item in
-            cell.image = item.image
-            cell.title = item.text
-            cell.value = item.secondaryText
+//            cell.image = item.image
+            cell.titleText = item.text
+            cell.valueText = item.secondaryText
             cell.tintColor = item.tintColor
 
             cell.layer.cornerRadius = 10

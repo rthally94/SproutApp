@@ -98,6 +98,7 @@
 		FB98B93B2662974500629C1B /* SproutPlantType+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93A2662974500629C1B /* SproutPlantType+Validation.swift */; };
 		FB98B93D2662984B00629C1B /* SproutIcon+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93C2662984B00629C1B /* SproutIcon+Validation.swift */; };
 		FB98B93F26629A3B00629C1B /* SproutReminder+Validation.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B93E26629A3B00629C1B /* SproutReminder+Validation.swift */; };
+		FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B94226645BD800629C1B /* SproutLabel.swift */; };
 		FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* CardView.swift */; };
 		FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */; };
 		FB9C66B5263AE76900CDC15A /* TasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* TasksProvider.swift */; };
@@ -249,6 +250,7 @@
 		FB98B93A2662974500629C1B /* SproutPlantType+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SproutPlantType+Validation.swift"; sourceTree = "<group>"; };
 		FB98B93C2662984B00629C1B /* SproutIcon+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SproutIcon+Validation.swift"; sourceTree = "<group>"; };
 		FB98B93E26629A3B00629C1B /* SproutReminder+Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SproutReminder+Validation.swift"; sourceTree = "<group>"; };
+		FB98B94226645BD800629C1B /* SproutLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutLabel.swift; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
 		FB9C66B4263AE76900CDC15A /* TasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksProvider.swift; sourceTree = "<group>"; };
@@ -604,6 +606,7 @@
 				FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */,
 				FB28A8E72649A2DE00B1206E /* ChipLabel.swift */,
 				FB28A8E92649B6A600B1206E /* SpacerView.swift */,
+				FB98B94226645BD800629C1B /* SproutLabel.swift */,
 			);
 			path = Compoents;
 			sourceTree = "<group>";
@@ -978,6 +981,7 @@
 				FB21B6FC25B1E5CC00D02384 /* ViewController.swift in Sources */,
 				FB82CDE52642F62B00E32F16 /* PlantGroupSection.swift in Sources */,
 				FB263864263C7F3100180B54 /* CareInfo.swift in Sources */,
+				FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */,
 				FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */,
 				FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */,
 				FBC7333425E478D20048999C /* CameraOverlayView.swift in Sources */,

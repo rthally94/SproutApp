@@ -16,7 +16,7 @@ class SproutTaskLargeHeaderView: LargeHeaderView {
 
     private func applyTaskPropertiesIfAble() {
         guard let careInfo = careInfo else { return }
-        imageView.image = careInfo.careCategory?.icon?.image
+        titleLabel.icon = careInfo.careCategory?.icon?.symbolName
         titleLabel.text = careInfo.careCategory?.name?.capitalized
         subtitleLabel.text = careInfo.currentSchedule?.recurrenceRule?.intervalText()
     }

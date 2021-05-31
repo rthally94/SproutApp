@@ -29,6 +29,10 @@ public class CareInfo: NSManagedObject {
             managedObjectContext?.delete(self)
             print("Unusued CareInfo Deleted")
         }
+
+        if isUpdated || isInserted || currentSchedule?.isInserted == true || currentSchedule?.isUpdated == true || currentSchedule?.recurrenceRule?.isInserted == true || currentSchedule?.recurrenceRule?.isUpdated == true {
+            let _ = nextReminder
+        }
         
         super.willSave()
     }

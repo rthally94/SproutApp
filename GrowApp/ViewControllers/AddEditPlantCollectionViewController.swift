@@ -124,7 +124,7 @@ class AddEditPlantCollectionViewController: UICollectionViewController {
     }
 
     private func showCareDetailEditor(for careDetail: CareInfo) {
-        let vc = TaskEditorController()
+        let vc = TaskEditorController(task: careDetail, storageProvider: storageProvider)
         vc.storageProvider = storageProvider
         vc.task = careDetail
         vc.delegate = self

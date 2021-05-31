@@ -21,6 +21,7 @@ public class CareSchedule: NSManagedObject {
 
         let schedule = defaultSchedule(context: context)
         schedule.recurrenceRule = recurrenceRule
+
         return schedule
     }
 

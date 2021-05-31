@@ -8,17 +8,22 @@
 import UIKit
 
 class LargeHeaderCell: UICollectionViewCell {
-    var image: UIImage? {
-        set { largeHeaderView.imageView.image = newValue }
-        get { largeHeaderView.imageView.image }
+    var titleIcon: String? {
+        set { largeHeaderView.titleLabel.icon = newValue }
+        get { largeHeaderView.titleLabel.icon }
     }
 
-    var title: String? {
+    var titleText: String? {
         set { largeHeaderView.titleLabel.text = newValue }
         get { largeHeaderView.titleLabel.text }
     }
 
-    var value: String? {
+    var valueIcon: String? {
+        set { largeHeaderView.subtitleLabel.icon = newValue }
+        get { largeHeaderView.subtitleLabel.icon }
+    }
+
+    var valueText: String? {
         set { largeHeaderView.subtitleLabel.text = newValue }
         get { largeHeaderView.subtitleLabel.text }
     }

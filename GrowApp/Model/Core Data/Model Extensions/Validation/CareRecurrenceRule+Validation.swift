@@ -58,4 +58,22 @@ extension CareRecurrenceRule {
             return daysOfTheMonth == nil
         }
     }
+
+    func isValid() -> Bool {
+        let id = isIDValid()
+        let creationDate = isCreationDateValid()
+        let lastModifiedDate =  isLastModifiedDateValid()
+        let frequency = isFrequencyValid()
+        let interval = isIntervalValid()
+        let daysOfWeek = isRecurrenceDaysOfWeekValid()
+        let daysOfMonth = isRecurrenceDaysOfMonthValid()
+        
+        return id
+            && creationDate
+            && lastModifiedDate
+            && frequency
+            && interval
+            && daysOfWeek
+            && daysOfMonth
+    }
 }

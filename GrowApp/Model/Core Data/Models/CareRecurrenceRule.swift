@@ -75,25 +75,6 @@ public class CareRecurrenceRule: NSManagedObject {
         return recurrenceRule
     }
 
-    func isValid() -> Bool {
-        switch (frequency, interval, daysOfTheWeek, daysOfTheMonth) {
-        // Weekly frequency on specific weekdays
-        case let (.weekly, interval, weekdays, nil) where interval > 0 && weekdays?.isEmpty == false:
-            return true
-
-        // Monthly frquency on specific days
-        case let (.monthly, interval, nil, days) where interval > 0 && days?.isEmpty == false :
-            return true
-
-        // Any frequency with an interval (every 2 days, every 3 weeks, etc)
-        case let (_, interval, nil, nil) where interval > 0:
-            return true
-
-        default:
-            return false
-        }
-    }
-
     func nextDate(after testDate: Date) -> Date? {
         var returnDate: Date? = nil
 
@@ -152,12 +133,12 @@ extension CareRecurrenceRule: SproutIntervalProtocol {
     
     var daysOfTheWeek: Set<Int>? {
         get { recurrenceDaysOfWeek }
-        set { recurrenceDaysOfWeek = newValue ?? [] }
+        set { recurrenceDaysOfWeek = newValue }
     }
     
     var daysOfTheMonth: Set<Int>? {
         get { recurrenceDaysOfMonth }
-        set { recurrenceDaysOfMonth = newValue ?? [] }
+        set { recurrenceDaysOfMonth = newValue }
     }
 }
 
