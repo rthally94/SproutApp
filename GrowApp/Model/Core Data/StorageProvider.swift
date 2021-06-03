@@ -33,7 +33,7 @@ class StorageProvider {
     
     init(storeType: StoreType = .persisted) {
         ValueTransformer.setValueTransformer(UIImageTransformer(), forName: NSValueTransformerName("UIImageValueTransformer"))
-        persistentContainer = NSPersistentContainer(name: "GreenHouseDataModel", managedObjectModel:  Self.managedObjectModel)
+        persistentContainer = NSPersistentContainer(name: "SproutDataModel", managedObjectModel:  Self.managedObjectModel)
 
         if storeType == .inMemory {
             persistentContainer.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
@@ -66,10 +66,22 @@ class StorageProvider {
                     newTemplate.scientificName = type.scientificName
                     newTemplate.commonName = type.commonName
                     newTemplate.isTemplate = true
+
+                    do {
+                        try newTemplate.setImage(UIImage(named: "SamplePlantImage"))
+                    } catch {
+                        print("Unable to set plant image: \(error)")
+                    }
                 }
             }
 
-            try? context.save()
+            if context.hasChanges {
+                do {
+                    try context.save()
+                } catch {
+                    print("Unable to save template plants: \(error)")
+                }
+            }
         }
     }
 
@@ -88,7 +100,9 @@ class StorageProvider {
                             newPlant.addToCareTasks(newTask)
 
                             do {
-                                try context.save()
+                                if context.hasChanges {
+                                    try context.save()
+                                }
                             } catch {
                                 print("Unable to save context: \(error)")
                                 context.rollback()

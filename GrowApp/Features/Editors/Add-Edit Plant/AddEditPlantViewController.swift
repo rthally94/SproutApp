@@ -320,7 +320,7 @@ extension AddEditPlantViewController {
         ], toSection: .plantInfo)
 
         // Care Details
-        let careScheduleFormatter = Utility.currentScheduleFormatter
+        let careScheduleFormatter = Utility.careScheduleFormatter
 
         let careDetailSet = plant.allTasks.filter { task in
             task.historyLog == nil
@@ -579,7 +579,7 @@ extension AddEditPlantViewController: PlantTypePickerDelegate {
 
 // MARK: - Plant Task Editor Delegate
 extension AddEditPlantViewController: TaskEditorDelegate {
-    private func taskEditor(_ editor: TaskEditorController, didUpdateTask newInfo: CareInfo) {
+    internal func taskEditor(_ editor: TaskEditorController, didUpdateTask newInfo: SproutCareTaskMO) {
         updateUI()
     }
 }

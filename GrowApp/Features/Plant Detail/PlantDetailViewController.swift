@@ -140,7 +140,7 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
 }
 
 extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlant) {
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
         
         if plant.isDeleted {
             navigationController?.popViewController(animated: false)
@@ -153,24 +153,26 @@ extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
 
 private extension PlantDetailViewController {
     func makeSnapshot() -> NSDiffableDataSourceSnapshot<PlantDetailSection, Item> {
-        guard let id = plant?.objectID, let plant = persistentContainer.viewContext.object(with: id) as? SproutPlant else { fatalError("Could not get plant from context") }
+        guard let id = plant?.objectID, let plant = persistentContainer.viewContext.object(with: id) as? SproutPlantMO else { fatalError("Could not get plant from context") }
         var snapshot = NSDiffableDataSourceSnapshot<PlantDetailSection, Item>()
         snapshot.appendSections([PlantDetailSection.plantHero, PlantDetailSection.careInfo])
         
         // Plant Info Header
-        snapshot.appendItems([
-            .hero(image: plant.icon?.image, title: plant.name, subtitle: plant.type?.commonName)
-        ], toSection: .plantHero)
-        
+//        snapshot.appendItems([
+//            .hero(image: plant.icon, title: plant.nickname ?? plant.commonName, subtitle: plant.commonName)
+//        ], toSection: .plantHero)
+//        
         // All Tasks
-        let currentScheduleFormatter = Utility.currentScheduleFormatter
-        let items: [Item] = plant.tasks.map { task in
-            return Item.compactCardCell(title: task.careCategory?.name, value: currentScheduleFormatter.string(for: task.currentSchedule), image: task.careCategory?.icon?.image, tapAction: { [unowned self] in
-                print(task.careCategory?.name ?? "Unknown")
-            })
-        }
-        
-        snapshot.appendItems(items, toSection: .careInfo)
+//        let currentScheduleFormatter = Utility.currentScheduleFormatter
+//        let items: [Item] = plant.allTasks.filter({ task in
+//            task.historyLog == nil
+//        }).map { task in
+//            return Item.compactCardCell(title: task.taskTypeProperties?.displayName, value: currentScheduleFormatter.string(for: task.schedule), image: task.taskTypeProperties?.icon, tapAction: { [unowned self] in
+//                print(task.taskType ?? "Unknown")
+//            })
+//        }
+//        
+//        snapshot.appendItems(items, toSection: .careInfo)
         return snapshot
     }
 

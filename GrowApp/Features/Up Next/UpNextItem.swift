@@ -10,7 +10,7 @@ import UIKit
 
 struct UpNextItem: Hashable {
     static let reloadInterval = 2.0
-    let dateFormatter = Utility.dateFormatter
+    let scheduleFormatter = Utility.careScheduleFormatter
 
     var task: SproutCareTaskMO
     var plant: SproutPlantMO
@@ -20,8 +20,8 @@ struct UpNextItem: Hashable {
     }
 
     var subtitle: String? {
-        if let date = task.dueDate {
-            return dateFormatter.string(from: date)
+        if let schedule = task.schedule {
+            return scheduleFormatter.string(from: schedule)
         } else {
             return nil
         }

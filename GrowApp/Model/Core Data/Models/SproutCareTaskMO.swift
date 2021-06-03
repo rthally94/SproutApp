@@ -37,12 +37,11 @@ class SproutCareTaskMO: NSManagedObject {
             let newTask = SproutCareTaskMO(context: context)
             newTask.id = UUID().uuidString
             newTask.creationDate = Date()
-
             newTask.taskType = type.rawValue
-
             newTask.hasSchedule = false
-
             newTask.hasRecurrenceRule = false
+
+            completion(newTask)
         }
     }
 
@@ -50,7 +49,7 @@ class SproutCareTaskMO: NSManagedObject {
         guard let context = existingTask.managedObjectContext else { throw NSManagedObjectError.noManagedObjectContextError }
         guard existingTask.historyLog != nil else { throw SproutCareTaskMOError.taskNotLoggedError }
 
-        context.perform {
+        context.performAndWait {
             let newTask = SproutCareTaskMO(context: context)
             newTask.id = UUID().uuidString
             newTask.creationDate = Date()

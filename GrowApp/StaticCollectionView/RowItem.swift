@@ -24,9 +24,7 @@ struct RowItem: Hashable {
         case textField, button, pickerRow
 
         // Sprout Cells
-        case compactCard
-        case icon, hero, header, largeHeader
-        case statistic
+        case icon, largeHeader
         case todo
         case circleButton
         case customView
@@ -34,7 +32,7 @@ struct RowItem: Hashable {
 
     typealias TapAction = () -> Void
     typealias ValueChangedAction = (_ sender: Any) -> Void
-    typealias Icon = SproutIcon
+    typealias Icon = UIImage
 
     enum DisplayContext: Int, Hashable {
         case plain, normal, primary, destructive
@@ -135,35 +133,8 @@ struct RowItem: Hashable {
         RowItem(id: id, rowType: .icon, image: image, tapAction: tapAction)
     }
 
-    static func hero(id: UUID = UUID(), image: UIImage?, title: String?, subtitle: String? = nil) -> RowItem {
-        RowItem(id: id, rowType: .hero, text: title, secondaryText: subtitle, image: image)
-    }
-
-    /// Creates a new RowItem for a large header
-    /// - Parameters:
-    ///   - id: Unique identifier for the item
-    ///   - title: The title
-    ///   - subtitle: The subtitle
-    /// - Returns: The configured RowItem
-    static func titleHeader(id: UUID = UUID(), title: String?, subtitle: String?) -> RowItem {
-        RowItem(id: id, rowType: .header, text: title, secondaryText: subtitle)
-    }
-
     static func largeHeader(id: UUID = UUID(), title: String?, value: String?, image: UIImage?, tintColor: UIColor?) -> RowItem {
         RowItem(id: id, rowType: .largeHeader, text: title, secondaryText: value, image: image, tintColor: tintColor)
-    }
-
-    /// Creates a new RowItem for a statistic cell
-    /// - Parameters:
-    ///   - id: Unique identifier for the item
-    ///   - title: The title
-    ///   - value: The value
-    ///   - unit: The unit
-    ///   - icon: The icon
-    ///   - tintColor: Primary tint color of the item
-    /// - Returns: The configured RowItem
-    static func statistic(id: UUID = UUID(), title: String?, value: String?, unit: String? = nil, image: UIImage? = nil, icon: Icon? = nil, tintColor: UIColor? = nil, tapAction: TapAction? = nil) -> RowItem {
-        RowItem(id: id, rowType: .statistic, text: title, secondaryText: value, tertiaryText: unit, image: image, icon: icon, tintColor: tintColor, tapAction: tapAction)
     }
 
     /// Creates a new RowItem for a todo cell
@@ -182,10 +153,6 @@ struct RowItem: Hashable {
 
     static func pickerRow(id: UUID = UUID(), title: String?, subtitle: String? = nil, image: UIImage? = nil, icon: Icon? = nil, isSelected: Bool, tapAction: TapAction? = nil) -> RowItem {
         RowItem(id: id, rowType: .pickerRow, text: title, secondaryText: subtitle, image: image, icon: icon, isOn: isSelected, tapAction: tapAction)
-    }
-
-    static func compactCardCell(id: UUID = UUID(), title: String?, value: String?, image: UIImage? = nil, tapAction: TapAction? = nil) -> RowItem {
-        RowItem(id: id, rowType: .compactCard, text: title, secondaryText: value, image: image, tapAction: tapAction)
     }
 
     static func circleButtonCell(id: UUID = UUID(), text: String? = nil, image: UIImage? = nil, isSelected: Bool, tintColor: UIColor? = nil, tapAction: TapAction? = nil) -> RowItem {

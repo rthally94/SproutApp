@@ -12,10 +12,6 @@ struct PlantType: Identifiable, Equatable, Hashable {
     var id: UUID = UUID()
     var scientificName: String
     var commonName: String
-
-    var careInfo: [CareCategory.TaskTypeName: String] = [
-        .wateringTaskType: "Top to Bottom"
-    ]
     
     static var previousChoices: Set<PlantType> = []
 }

@@ -14,7 +14,7 @@ enum IconImageError: Error {
 
 class SproutPlantMO: NSManagedObject {
     static func createNewPlant(in context: NSManagedObjectContext, completion: @escaping (SproutPlantMO) -> Void) {
-        context.perform {
+        context.performAndWait {
             let newPlant = SproutPlantMO(context: context)
             newPlant.id = UUID().uuidString
             newPlant.creationDate = Date()
@@ -25,7 +25,7 @@ class SproutPlantMO: NSManagedObject {
 
     static func createNewPlant(from existingPlant: SproutPlantMO, completion: @escaping (SproutPlantMO) -> Void) throws {
         guard let context = existingPlant.managedObjectContext else { throw NSManagedObjectError.noManagedObjectContextError }
-        context.perform {
+        context.performAndWait {
             let newPlant = SproutPlantMO(context: context)
             newPlant.id = UUID().uuidString
             newPlant.creationDate = Date()

@@ -30,7 +30,7 @@ struct SproutCareTaskSchedule {
     }
 
     var description: String {
-        let formatter = Utility.currentScheduleFormatter
+        let formatter = Utility.careScheduleFormatter
         return formatter.string(from: self)
     }
 }

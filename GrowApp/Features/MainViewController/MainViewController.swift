@@ -27,14 +27,6 @@ class MainViewController: UIViewController {
         }
         return nav
     }()
-
-    lazy var timelineVC: some UIViewController = {
-        let vc = TaskCalendarViewController()
-        vc.persistentContainer = persistentContainer
-        let nav = vc.wrappedInNavigationController()
-        nav.tabBarItem = UITabBarItem(title: "Calendar", image: UIImage(systemName: "calendar"), tag: 1)
-        return nav
-    }()
     
     lazy var plantGroupVC: some UIViewController = {
         let vc = PlantGroupViewController()

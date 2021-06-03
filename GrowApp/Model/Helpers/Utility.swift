@@ -38,7 +38,7 @@ extension Utility {
         return formatter
     }()
 
-    static let currentScheduleFormatter: CareScheduleFormatter = {
+    static let careScheduleFormatter: CareScheduleFormatter = {
         let formatter = CareScheduleFormatter()
         formatter.frequencyStyle = .short
         formatter.valuesStyle = .short

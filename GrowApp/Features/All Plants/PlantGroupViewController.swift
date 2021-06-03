@@ -130,7 +130,7 @@ extension PlantGroupViewController: UICollectionViewDelegate {
 
 // MARK: - PlantEditorDelegate
 extension PlantGroupViewController: AddEditPlantViewControllerDelegate {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlant) {
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
         viewModel.showList()
 
         viewModel.persistentContainer.viewContext.refresh(plant, mergeChanges: true)

@@ -268,7 +268,7 @@ extension TaskEditorController {
         }
 
         // Apply the new items to the frequency snapshot
-        let currentScheduleFormatter = Utility.currentScheduleFormatter
+        let currentScheduleFormatter = Utility.careScheduleFormatter
         let scheduleValue = currentScheduleFormatter.string(for: task.schedule) ?? "No schedule"
         let valueIcon = task.schedule == nil ? "bell.slash" : "bell.fill"
         let item = Item.detailHeader(titleImage: task.taskTypeProperties?.icon, titleText: task.taskTypeProperties?.displayName, valueIcon: valueIcon, valueText: scheduleValue, tintColor: .systemBlue)

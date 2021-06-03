@@ -21,8 +21,8 @@ class PlantsProvider: NSObject {
         self.moc = managedObjectContext
         
         let request: NSFetchRequest<SproutPlantMO> = SproutPlantMO.fetchRequest()
-        request.predicate = NSPredicate(format: "%k == false", #keyPath(SproutPlantMO.isTemplate))
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \SproutPlant.name, ascending: true)]
+        request.predicate = NSPredicate(format: "%K == false", #keyPath(SproutPlantMO.isTemplate))
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \SproutPlantMO.nickname, ascending: true)]
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         

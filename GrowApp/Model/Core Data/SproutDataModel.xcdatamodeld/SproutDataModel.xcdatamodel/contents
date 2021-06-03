@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="18154" systemVersion="20E241" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="SproutCareHistoryMO" representedClassName="SproutCareHistoryMO" syncable="YES" codeGenerationType="category">
+    <entity name="SproutCareHistoryMO" representedClassName=".SproutCareHistoryMO" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="hasNotes" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="String" minValueString="1"/>
@@ -11,13 +11,8 @@
         <attribute name="taskType" attributeType="String" minValueString="1"/>
         <relationship name="careTask" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutCareTaskMO" inverseName="historyLog" inverseEntity="SproutCareTaskMO"/>
         <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutPlantMO" inverseName="careHistory" inverseEntity="SproutPlantMO"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
-    <entity name="SproutCareTaskMO" representedClassName="SproutCareTaskMO" syncable="YES" codeGenerationType="category">
+    <entity name="SproutCareTaskMO" representedClassName=".SproutCareTaskMO" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="dueDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="hasNotes" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
@@ -36,13 +31,8 @@
         <attribute name="taskType" attributeType="String" minValueString="1"/>
         <relationship name="historyLog" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutCareHistoryMO" inverseName="careTask" inverseEntity="SproutCareHistoryMO"/>
         <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutPlantMO" inverseName="careTasks" inverseEntity="SproutPlantMO"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="id"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
-    <entity name="SproutPlantMO" representedClassName="SproutPlantMO" syncable="YES" codeGenerationType="category">
+    <entity name="SproutPlantMO" representedClassName=".SproutPlantMO" syncable="YES" codeGenerationType="category">
         <attribute name="commonName" attributeType="String" minValueString="1"/>
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="hexColor" optional="YES" attributeType="String" minValueString="6"/>
@@ -55,12 +45,6 @@
         <attribute name="symbolName" optional="YES" attributeType="String" minValueString="1"/>
         <relationship name="careHistory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutCareHistoryMO" inverseName="plant" inverseEntity="SproutCareHistoryMO"/>
         <relationship name="careTasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SproutCareTaskMO" inverseName="plant" inverseEntity="SproutCareTaskMO"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="scientificName"/>
-                <constraint value="isTemplate"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
     </entity>
     <elements>
         <element name="SproutPlantMO" positionX="-63" positionY="-18" width="128" height="209"/>
