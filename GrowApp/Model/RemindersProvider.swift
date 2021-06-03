@@ -9,7 +9,7 @@ import CoreData
 import Combine
 import Foundation
 
-class IncompleteRemindersProvider: NSObject {
+class ReminderNotificationProvider: NSObject {
     let moc: NSManagedObjectContext
     
     fileprivate let fetchedResultsController: NSFetchedResultsController<SproutReminder>
@@ -20,7 +20,11 @@ class IncompleteRemindersProvider: NSObject {
         self.moc = managedObjectContext
         
         let request: NSFetchRequest<SproutReminder> = SproutReminder.incompleteRemindersFetchRequest(startingOn: nil, endingBefore: nil)
-        
+        let incompletePredicate = request.predicate
+        let isScheduledPredicate = NSPredicate(format: "%K != nil", #keyPath(SproutReminder.scheduledDate))
+        let predicates = [incompletePredicate, isScheduledPredicate].compactMap { $0 }
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+
         fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         
         super.init()
@@ -43,7 +47,7 @@ class IncompleteRemindersProvider: NSObject {
     }
 }
 
-extension IncompleteRemindersProvider: NSFetchedResultsControllerDelegate {
+extension ReminderNotificationProvider: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateData()
     }

@@ -75,7 +75,7 @@ private extension UpNextViewController {
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
         UICollectionView.CellRegistration<TaskCalendarListCell, Item> { cell, indexPath, item in
-            cell.updateWithText(item.title, secondaryText: item.subtitle, icon: item.icon, daysLate: item.daysLate)
+            cell.updateWithText(item.title, secondaryText: item.subtitle, image: item.icon, daysLate: item.daysLate)
 
             if item.isChecked {
                 cell.accessories = [ .checkmark() ]
@@ -95,7 +95,7 @@ private extension UpNextViewController {
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             var configuration = UIListContentConfiguration.largeGroupedHeader()
-            configuration.text = section.title
+            configuration.text = section.headerTitle
             //            configuration.secondaryText = itemCount == 1 ? "\(itemCount) task" : "\(itemCount) tasks"
             cell.contentConfiguration = configuration
         }

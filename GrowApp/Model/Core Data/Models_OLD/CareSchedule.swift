@@ -5,6 +5,7 @@
 //  Created by Ryan Thally on 5/11/21.
 //
 
+import Combine
 import CoreData
 
 public class CareSchedule: NSManagedObject {
@@ -39,6 +40,28 @@ public class CareSchedule: NSManagedObject {
         let schedule = defaultSchedule(context: context)
         schedule.recurrenceRule = recurrenceRule
         return schedule
+    }
+
+    private var cancellables: Set<AnyCancellable> = []
+
+    public override func awakeFromInsert() {
+        super.awakeFromInsert()
+
+        subscribeToRecurrenceRule()
+    }
+
+    public override func awakeFromFetch() {
+        super.awakeFromFetch()
+
+        subscribeToRecurrenceRule()
+    }
+
+    private func subscribeToRecurrenceRule() {
+        recurrenceRule?.objectWillChange
+            .sink(receiveValue: { [weak self] _ in
+                self?.objectWillChange.send()
+            })
+            .store(in: &cancellables)
     }
 }
 

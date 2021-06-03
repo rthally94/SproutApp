@@ -30,16 +30,12 @@ public class CareInfo: NSManagedObject {
             print("Unusued CareInfo Deleted")
         }
 
-        if isUpdated || isInserted || currentSchedule?.isInserted == true || currentSchedule?.isUpdated == true || currentSchedule?.recurrenceRule?.isInserted == true || currentSchedule?.recurrenceRule?.isUpdated == true {
-            let _ = nextReminder
+        if nextReminder == nil {
+            guard let context = managedObjectContext else { fatalError("Unable to get nextReminder for CareInfoItem without a set managedObjectContext") }
+            nextReminder = SproutReminder.fetchOrCreateIncompleteReminder(for: self, inContext: context)
         }
         
         super.willSave()
-    }
-
-    var nextReminder: SproutReminder {
-        guard let context = managedObjectContext else { fatalError("Unable to get nextReminder for CareInfoItem without a set managedObjectContext") }
-        return SproutReminder.fetchOrCreateIncompleteReminder(for: self, inContext: context)
     }
 
     var lastCompletedReminder: SproutReminder? {
@@ -55,7 +51,7 @@ public class CareInfo: NSManagedObject {
 
     @objc var nextCareDate: Date? {
         let midnightToday = Calendar.current.startOfDay(for: Date())
-        guard let scheduledDate = nextReminder.scheduledDate else { return nil }
+        guard let scheduledDate = nextReminder?.scheduledDate else { return nil }
         return scheduledDate < midnightToday ? midnightToday : scheduledDate
     }
 
@@ -70,20 +66,22 @@ public class CareInfo: NSManagedObject {
         // Mark the current reminder as complete
         let markedDate = Date()
         let completedReminder = nextReminder
-        completedReminder.markAs(.complete, date: markedDate)
+        completedReminder?.markAs(.complete, date: markedDate)
 
         // Create and append a new reminder with the next date
-        let nextReminder = SproutReminder.createDefaultReminder(inContext: context)
-        nextReminder.schedule = self.currentSchedule
-        nextReminder.scheduledDate = currentSchedule?.recurrenceRule?.nextDate(after: markedDate)
-        addToReminders(nextReminder)
+        let newReminder = SproutReminder.createDefaultReminder(inContext: context)
+        newReminder.schedule = self.currentSchedule
+        newReminder.scheduledDate = currentSchedule?.recurrenceRule?.nextDate(after: markedDate)
+        addToReminders(newReminder)
+        nextReminder = newReminder
 
         completion?()
     }
 
-    func setSchedule(to newSchedule: CareSchedule?) throws {
-        try nextReminder.updateSchedule(to: newSchedule)
+    func setSchedule(to newSchedule: CareSchedule?) {
+        guard currentSchedule != newSchedule else { return }
         currentSchedule = newSchedule
+        nextReminder?.schedule = newSchedule
     }
 }
 

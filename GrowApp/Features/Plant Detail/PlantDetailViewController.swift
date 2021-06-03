@@ -74,7 +74,7 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
     
     //MARK: - Actions
     @objc private func editPlant() {
-        let vc = AddEditPlantCollectionViewController(plant: plant, storageProvider: AppDelegate.storageProvider)
+        let vc = AddEditPlantViewController(plant: plant, storageProvider: AppDelegate.storageProvider)
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }

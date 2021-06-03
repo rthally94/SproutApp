@@ -12,8 +12,8 @@ import UIKit
 enum PlantGroupView {
     case initial
     case newPlant
-    case editPlant(SproutPlant)
-    case plantDetail(SproutPlant)
+    case editPlant(SproutPlantMO)
+    case plantDetail(SproutPlantMO)
 }
 
 class PlantGroupViewModel {
@@ -47,7 +47,7 @@ class PlantGroupViewModel {
                             if let plant = self.plantsProvider.object(withID: plantID) {
                                 let item = Item(plant: plant)
                                 items.append(item)
-                                if plant.hasUpdates {
+                                if plant.isUpdated {
                                     itemsToReload.append(item)
                                 }
                             }

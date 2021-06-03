@@ -24,57 +24,38 @@ class UpNextViewModel {
 
     let headerDateFormatter = Utility.relativeDateFormatter
 
-    private lazy var tasksProvider = TasksProvider(managedObjectContext: persistentContainer.viewContext)
+    private lazy var tasksProvider = AllTasksProvider(managedObjectContext: persistentContainer.viewContext)
     var persistentContainer = AppDelegate.persistentContainer
 
     var snapshot: AnyPublisher<Snapshot, Never> {
-        tasksProvider.$snapshot
-            .map { snapshot in
-                var newSnapshot = Snapshot()
-                if let oldSnapshot = snapshot {
-                    let midnightToday = Calendar.current.startOfDay(for: Date())
-                    let sections: [Section] = oldSnapshot.sectionIdentifiers.reduce(into: [Section]()) { sections, sectionIdentifier in
-                        if let date = self.stringToDateFormatter.date(from: sectionIdentifier), date >= midnightToday {
-                            let dateString = self.relativeDateFormatter.string(from: date)
-                            sections.append(Section(title: dateString))
-                        } else {
-                            print("Unable to extract date from: \(sectionIdentifier)")
-                            sections.append(Section(title: sectionIdentifier))
-                        }
-                    }
-                    newSnapshot.appendSections(sections)
+        tasksProvider.$scheduledReminders
+            .combineLatest(tasksProvider.$unscheduledReminders)
+            .map { scheduledReminders, unscheduledReminders in
+                var upNextSnapshot = Snapshot()
 
-                    zip(oldSnapshot.sectionIdentifiers, newSnapshot.sectionIdentifiers).forEach { oldSection, newSection in
-                        let taskIDs = oldSnapshot.itemIdentifiers(inSection: oldSection)
-                        var items = [Item]()
-                        var itemsToReload = [Item]()
-
-                        taskIDs.forEach { taskID in
-                            if let reminder = self.tasksProvider.object(withID: taskID) as? SproutReminder,
-                               let careInfoID = reminder.careInfo?.objectID,
-                               let careInfo = self.tasksProvider.object(withID: careInfoID) as? CareInfo,
-                               let plantID = reminder.careInfo?.plant?.objectID,
-                               let plant = self.tasksProvider.object(withID: plantID) as? SproutPlant
-                            {
-                                let item = Item(careInfo: careInfo, plant: plant)
-                                items.append(item)
-                                if reminder.isUpdated {
-                                    itemsToReload.append(item)
-                                }
-                            }
-                        }
-
-                        if let date = self.stringToDateFormatter.date(from: oldSection), date < midnightToday {
-                            let midnightTodayString = self.relativeDateFormatter.string(from: midnightToday)
-                            let todaySection = newSnapshot.sectionIdentifiers.first(where: { $0.title == midnightTodayString })
-                            newSnapshot.appendItems(items, toSection: todaySection)
-                        } else {
-                            newSnapshot.appendItems(items, toSection: newSection)
-                        }
-                        newSnapshot.reloadItems(itemsToReload)
+                if let scheduledReminders = scheduledReminders {
+                    let sortedDates = scheduledReminders.keys.sorted()
+                    sortedDates.forEach { date in
+                        let section = Section.scheduled(date)
+                        upNextSnapshot.appendSections([section])
+                        let items = scheduledReminders[date]!.compactMap({ task -> Item? in
+                            guard let plant = task.plant else { return nil }
+                            return Item(task: task, plant: plant)
+                        })
+                        upNextSnapshot.appendItems(items, toSection: section)
                     }
                 }
-                return newSnapshot
+
+                if let unscheduledReminders = unscheduledReminders {
+                    upNextSnapshot.appendSections([.unscheduled])
+                    let items = unscheduledReminders.compactMap { task -> Item? in
+                        guard let plant = task.plant else { return nil }
+                        return Item(task: task, plant: plant)
+                    }
+                    upNextSnapshot.appendItems(items, toSection: .unscheduled)
+                }
+
+                return upNextSnapshot
             }
             .eraseToAnyPublisher()
     }

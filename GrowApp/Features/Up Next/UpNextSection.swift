@@ -7,6 +7,16 @@
 
 import Foundation
 
-struct UpNextSection: Hashable {
-    var title: String?
+enum UpNextSection: Hashable {
+    case scheduled(Date)
+    case unscheduled
+
+    var headerTitle: String? {
+        switch self {
+        case let .scheduled(date):
+            return Utility.relativeDateFormatter.string(from: date)
+        case .unscheduled:
+            return "Any Time"
+        }
+    }
 }

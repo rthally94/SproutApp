@@ -11,12 +11,12 @@ import UIKit
 class StorageProvider {
     static var managedObjectModel: NSManagedObjectModel = {
         let bundle = Bundle(for: StorageProvider.self)
-        guard let url = bundle.url(forResource: "GreenHouseDataModel", withExtension: "momd") else {
-            fatalError("Failed to load momd file for GreenHouseDataModel")
+        guard let url = bundle.url(forResource: "SproutDataModel", withExtension: "momd") else {
+            fatalError("Failed to load momd file for SproutDataModel")
         }
 
         guard let model = NSManagedObjectModel(contentsOf: url) else {
-            fatalError("Failed to load momd file for GreenHouseDataModel")
+            fatalError("Failed to load momd file for SproutDataModel")
         }
 
         return model
@@ -62,9 +62,11 @@ class StorageProvider {
     func loadPlantTypes() {
         persistentContainer.performBackgroundTask { context in
             PlantType.allTypes.forEach { type in
-                let newType = SproutPlantType(context: context)
-                newType.scientificName = type.scientificName
-                newType.commonName = type.commonName
+                SproutPlantMO.createNewPlant(in: context) { newTemplate in
+                    newTemplate.scientificName = type.scientificName
+                    newTemplate.commonName = type.commonName
+                    newTemplate.isTemplate = true
+                }
             }
 
             try? context.save()
@@ -75,22 +77,25 @@ class StorageProvider {
         persistentContainer.performBackgroundTask { context in
             do {
                 // General Plant Config
-                let plant = try SproutPlant.createDefaultPlant(inContext: context)
-                plant.name = "My Sample Plant"
+                let allTemplatesFetchRequest = SproutPlantMO.allTemplatesFetchRequest()
+                if let templates = try? context.fetch(allTemplatesFetchRequest), let template = templates.first {
+                    try SproutPlantMO.createNewPlant(from: template) { newPlant in
+                        newPlant.nickname = "My Sample Plant"
+                        SproutCareTaskMO.createNewTask(type: .watering, in: context, completion: { newTask in
+                            let schedule = SproutCareTaskSchedule(startDate: Date(), recurrenceRule: .weekly(1, [2,4,6]))
+                            newTask.schedule = schedule
 
-                // Task Type
-                let taskTypeRequest: NSFetchRequest<SproutPlantType> = SproutPlantType.fetchRequest()
-                taskTypeRequest.sortDescriptors = [NSSortDescriptor(keyPath: \SproutPlantType.commonName, ascending: true)]
-                plant.type = try context.fetch(taskTypeRequest).first
+                            newPlant.addToCareTasks(newTask)
 
-                // Plant Care Info
-                let wateringInfo = try CareInfo.createDefaultInfoItem(in: context, ofType: .wateringTaskType)
-                let currentWeekday = Calendar.current.component(.weekday, from: Date())
-                let wateringSchedule = CareSchedule.weeklySchedule(daysOfTheWeek: [currentWeekday], context: context)
-                try wateringInfo.setSchedule(to: wateringSchedule)
-                plant.addToCareInfoItems(wateringInfo)
-
-                try context.save()
+                            do {
+                                try context.save()
+                            } catch {
+                                print("Unable to save context: \(error)")
+                                context.rollback()
+                            }
+                        })
+                    }
+                }
             } catch {
                 print("Unable to load sample data. ")
                 context.rollback()

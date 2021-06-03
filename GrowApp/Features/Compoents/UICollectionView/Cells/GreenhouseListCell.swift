@@ -10,7 +10,7 @@ import UIKit
 private extension UIConfigurationStateCustomKey {
     static let text = UIConfigurationStateCustomKey("net.thally.ryan.SproutListCell.text")
     static let secondaryText = UIConfigurationStateCustomKey("net.thally.ryan.SproutListCell.secondaryText")
-    static let icon = UIConfigurationStateCustomKey("net.thally.ryan.SproutListCell.icon")
+    static let image = UIConfigurationStateCustomKey("net.thally.ryan.SproutListCell.icon")
     static let daysLate = UIConfigurationStateCustomKey("net.thally.ryan.SproutListCell.daysLate")
 }
 
@@ -25,9 +25,9 @@ private extension UICellConfigurationState {
         get { return self[.secondaryText] as? String }
     }
 
-    var icon: SproutIcon? {
-        set { self[.icon] = newValue }
-        get { return self[.icon] as? SproutIcon }
+    var image: UIImage? {
+        set { self[.image] = newValue }
+        get { return self[.image] as? UIImage }
     }
 
     var daysLate: Int? {
@@ -39,10 +39,10 @@ private extension UICellConfigurationState {
 class GreenHouseListCell: UICollectionViewListCell {
     private var text: String?
     private var secondaryText: String?
-    private var icon: SproutIcon?
+    private var image: UIImage?
     private var daysLate: Int?
     
-    func updateWithText(_ text: String?, secondaryText: String?, icon: SproutIcon?, daysLate: Int? = nil) {
+    func updateWithText(_ text: String?, secondaryText: String?, image: UIImage?, daysLate: Int? = nil) {
         var updated = false
         if self.text != text {
             self.text = text
@@ -54,8 +54,8 @@ class GreenHouseListCell: UICollectionViewListCell {
             updated = true
         }
 
-        if self.icon != icon {
-            self.icon = icon
+        if self.image != image {
+            self.image = image
             updated = true
         }
 
@@ -73,7 +73,7 @@ class GreenHouseListCell: UICollectionViewListCell {
         var state = super.configurationState
         state.text = text
         state.secondaryText = secondaryText
-        state.icon = icon
+        state.image = image
         state.daysLate = daysLate
         return state
     }
@@ -148,8 +148,7 @@ class TaskCalendarListCell: GreenHouseListCell {
         content.secondaryText = state.secondaryText
             
         var iconConfig = plantIconView.defaultConfiguration()
-        iconConfig.image = state.icon?.image
-        iconConfig.tintColor = state.icon?.color
+        iconConfig.image = state.image
         iconConfig.cornerStyle = .circle
         plantIconView.configuration = iconConfig
         

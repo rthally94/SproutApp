@@ -10,7 +10,7 @@ import CoreData
 
 final class TaskNotificationManager {
     lazy var persistentContainer = AppDelegate.persistentContainer
-    private lazy var remindersProvider = IncompleteRemindersProvider(managedObjectContext: persistentContainer.viewContext)
+    private lazy var remindersProvider = AllTasksProvider(managedObjectContext: persistentContainer.viewContext)
     private lazy var notificationsManager = LocalNotificationManager()
     
     private var cancellables = Set<AnyCancellable>()
@@ -25,35 +25,35 @@ final class TaskNotificationManager {
     }
     
     func startNotifications() {
-        remindersProvider.$data
+        remindersProvider.$scheduledReminders
             .map { data in
-                data?.reduce(into: [LocalNotification](), { notifications, reminderData in
-                    let reminderDate = reminderData.key
-                    let reminderItems = reminderData.value
+                data?.reduce(into: [LocalNotification](), { notifications, taskData in
+                    let dueDate = taskData.key
+                    let tasks = taskData.value
                     
-                    let reminderPlantNames = reminderItems.compactMap { $0.careInfo?.plant?.name }
-                    let reminderCount = reminderItems.reduce(0) { currentCount, reminder in
-                        reminder.status == .incomplete ? currentCount + 1 : currentCount
+                    let taskPlantNames = tasks.compactMap { $0.plant?.nickname ?? $0.plant?.commonName }
+                    let taskCount = tasks.reduce(0) { currentCount, task in
+                        task.historyLog == nil ? currentCount + 1 : currentCount
                     }
                     
                     let notificationTitle = "Plant Care Due Today"
                     var notificationBody: String?
-                    var notificationComponents = Calendar.current.dateComponents([.year, .month, .day], from: reminderDate)
+                    var notificationComponents = Calendar.current.dateComponents([.year, .month, .day], from: dueDate)
                     notificationComponents.hour = 7
                     notificationComponents.minute = 30
                     
-                    switch reminderCount {
+                    switch taskCount {
                     case 1:
-                        if let reminderList = ListFormatter().string(from: reminderPlantNames) {
+                        if let reminderList = ListFormatter().string(from: taskPlantNames) {
                             notificationBody = reminderList + " needs care today."
                         }
                     case 2, 3:
-                        if let reminderList = ListFormatter().string(from: reminderPlantNames) {
+                        if let reminderList = ListFormatter().string(from: taskPlantNames) {
                             notificationBody = reminderList + " need care today."
                         }
                     case 4...:
-                        let remainingItemsCount = reminderCount - 3
-                        var items = Array(reminderPlantNames.prefix(3))
+                        let remainingItemsCount = taskCount - 3
+                        var items = Array(taskPlantNames.prefix(3))
                         items.append("\(remainingItemsCount) other plants need care today.")
                         
                         notificationBody = ListFormatter().string(from: items)
@@ -61,7 +61,7 @@ final class TaskNotificationManager {
                         break
                     }
                     
-                    let notification = LocalNotification(id: UUID().uuidString, title: notificationTitle, body: notificationBody, badgeValue: reminderCount, datetime: notificationComponents)
+                    let notification = LocalNotification(id: UUID().uuidString, title: notificationTitle, body: notificationBody, badgeValue: taskCount, datetime: notificationComponents)
                     notifications.append(notification)
                 }) ?? []
             }

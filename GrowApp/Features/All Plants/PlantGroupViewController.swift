@@ -72,7 +72,7 @@ class PlantGroupViewController: UIViewController {
         viewModel.addNewPlant()
     }
 
-    func showPlantDetail(for plant: SproutPlant) {
+    func showPlantDetail(for plant: SproutPlantMO) {
         let vc = PlantDetailViewController()
         vc.persistentContainer = viewModel.persistentContainer
         vc.plant = plant
@@ -80,7 +80,7 @@ class PlantGroupViewController: UIViewController {
     }
 
     func showNewPlantEditor() {
-        let vc = AddEditPlantCollectionViewController(storageProvider: AppDelegate.storageProvider)
+        let vc = AddEditPlantViewController(storageProvider: AppDelegate.storageProvider)
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }
