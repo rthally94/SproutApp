@@ -38,6 +38,14 @@ class SproutLabel: UIView {
 
     var icon: String? {
         didSet {
+            image = nil
+            updateView()
+        }
+    }
+
+    var image: UIImage? {
+        didSet {
+            icon = nil
             updateView()
         }
     }
@@ -93,11 +101,14 @@ class SproutLabel: UIView {
         imageView.preferredSymbolConfiguration = .init(font: font)
         textLabel.font = font
 
-        var image: UIImage?
+        var newImage: UIImage?
         if let icon = icon {
-            image = UIImage(named: icon) ?? UIImage(systemName: icon)
+            newImage = UIImage(named: icon) ?? UIImage(systemName: icon)
+        } else if let image = image {
+            newImage = image
         }
-        imageView.image = image
+
+        imageView.image = newImage
         textLabel.text = text
 
         switch style {

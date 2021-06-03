@@ -9,8 +9,13 @@
         <attribute name="status" attributeType="String" minValueString="1"/>
         <attribute name="statusDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="taskType" attributeType="String" minValueString="1"/>
-        <relationship name="careTask" maxCount="1" deletionRule="Nullify" destinationEntity="SproutCareTaskMO" inverseName="historyLog" inverseEntity="SproutCareTaskMO"/>
+        <relationship name="careTask" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutCareTaskMO" inverseName="historyLog" inverseEntity="SproutCareTaskMO"/>
         <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutPlantMO" inverseName="careHistory" inverseEntity="SproutPlantMO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="SproutCareTaskMO" representedClassName="SproutCareTaskMO" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
@@ -31,6 +36,11 @@
         <attribute name="taskType" attributeType="String" minValueString="1"/>
         <relationship name="historyLog" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutCareHistoryMO" inverseName="careTask" inverseEntity="SproutCareHistoryMO"/>
         <relationship name="plant" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutPlantMO" inverseName="careTasks" inverseEntity="SproutPlantMO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="id"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <entity name="SproutPlantMO" representedClassName="SproutPlantMO" syncable="YES" codeGenerationType="category">
         <attribute name="commonName" attributeType="String" minValueString="1"/>

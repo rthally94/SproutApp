@@ -8,26 +8,6 @@
 import CoreData
 import UIKit
 
-//enum TaskEditorSection: Int, Hashable, CaseIterable {
-//    case header, notes, recurrenceFrequency, recurrenceWeekly, recurrenceMonthly, actions
-//
-//    var headerTitle: String? {
-//        switch self {
-//        case .notes:
-//            return "Notes"
-//        case .recurrenceFrequency:
-//            return "Repeats"
-//        case .recurrenceWeekly:
-//            return "On Specific Days"
-//        case .recurrenceMonthly:
-//            return "On Specific Days"
-//
-//        default:
-//            return nil
-//        }
-//    }
-//}
-
 class TaskEditorController: UIViewController {
     // MARK: - Properties
     fileprivate typealias Section = ViewModel.Section
@@ -38,13 +18,13 @@ class TaskEditorController: UIViewController {
     var storageProvider: StorageProvider
     var editingContext: NSManagedObjectContext { storageProvider.editingContext }
 
-    var task: CareInfo?
+    var task: SproutCareTaskMO
     var delegate: TaskEditorDelegate?
 
     private let repeatFrequencyChoices = [
-        SproutRecurrenceFrequency.daily,
-        SproutRecurrenceFrequency.weekly,
-        SproutRecurrenceFrequency.monthly
+        "Daily",
+        "Weekly",
+        "Montly"
     ]
 
     private var collectionView: UICollectionView!
@@ -53,7 +33,7 @@ class TaskEditorController: UIViewController {
     private lazy var imageView = UIImageView(image: UIImage(systemName: "circle"))
 
     private func makeWeekdayPicker() -> [Item] {
-        let values = task?.currentSchedule?.recurrenceRule?.daysOfTheWeek ?? []
+        let values = task.recurrenceDaysOfWeek ?? []
         let items: [Item] = Array(1...7).map { value in
             let title = Calendar.current.veryShortStandaloneWeekdaySymbols[value-1]
             let item = Item.circlePickerButton(text: title, isSelected: values.contains(value), tapAction: HashableClosure<Void>(handler: { [weak self] in
@@ -66,7 +46,7 @@ class TaskEditorController: UIViewController {
     }
 
     private func makeDayPicker() -> [Item] {
-        let values = task?.currentSchedule?.recurrenceRule?.daysOfTheMonth ?? []
+        let values = task.recurrenceDaysOfMonth ?? []
         let items: [Item] = Array(1...31).map { value in
             let title = String(value)
             let item = Item.circlePickerButton(text: title, isSelected: values.contains(value), tapAction: HashableClosure<Void>(handler: {
@@ -79,7 +59,7 @@ class TaskEditorController: UIViewController {
     }
 
     //MARK: - Initializers
-    init(task: CareInfo, storageProvider: StorageProvider = AppDelegate.storageProvider) {
+    init(task: SproutCareTaskMO, storageProvider: StorageProvider = AppDelegate.storageProvider) {
         self.task = task
         self.storageProvider = storageProvider
 
@@ -109,7 +89,6 @@ class TaskEditorController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        assert(task != nil, "TaskEditorViewController --- Task cannot be \"nil\". Set the property before presenting.")
 
         collectionView.delegate = self
         dataSource = makeDataSource()
@@ -122,9 +101,7 @@ class TaskEditorController: UIViewController {
 
     // MARK: - Actions
     @objc private func doneButtonPressed(_ sender: AnyObject) {
-        if let task = task {
-            delegate?.taskEditor(self, didUpdateTask: task)
-        }
+        delegate?.taskEditor(self, didUpdateTask: task)
         storageProvider.saveContext()
         dismiss(animated: true)
     }
@@ -137,9 +114,7 @@ class TaskEditorController: UIViewController {
     }
 
     @objc private func unassignTask(sender: AnyObject) {
-        if let task = task {
-            editingContext.delete(task)
-        }
+        editingContext.delete(task)
         doneButtonPressed(self)
     }
 
@@ -147,12 +122,12 @@ class TaskEditorController: UIViewController {
         // TODO: Add support for updating values
 
         var oldValues: Set<Int>
-        let rule = task?.currentSchedule?.recurrenceRule
-        switch rule?.frequency {
-        case .weekly:
-            oldValues = rule?.daysOfTheWeek ?? []
-        case .monthly:
-            oldValues = rule?.daysOfTheMonth ?? []
+        let rule = task.recurrenceRule
+        switch rule {
+        case let .weekly(interval, weekdays) where interval == 1 && weekdays?.isEmpty == false:
+            oldValues = weekdays!
+        case let .monthly(interval, days) where interval == 1 && days?.isEmpty == false:
+            oldValues = days!
         default:
             oldValues = []
         }
@@ -247,11 +222,13 @@ extension TaskEditorController {
             // Show the value picker only if the frequency is .weekly or .monthly
             switch sectionType {
             case .recurrenceFrequency:
-                return task?.currentSchedule != nil
+                return task.hasSchedule == true
             case .recurrenceWeekly:
-                return task?.currentSchedule?.recurrenceRule?.frequency == .weekly
+                guard case .weekly = task.recurrenceRule else { return false }
+                return true
             case .recurrenceMonthly:
-                return task?.currentSchedule?.recurrenceRule?.frequency == .monthly
+                guard case .monthly = task.recurrenceRule else { return false }
+                return true
             default:
                 return true
             }
@@ -292,9 +269,9 @@ extension TaskEditorController {
 
         // Apply the new items to the frequency snapshot
         let currentScheduleFormatter = Utility.currentScheduleFormatter
-        let scheduleValue = currentScheduleFormatter.string(for: task?.currentSchedule) ?? "No schedule"
-        let valueIcon = task?.currentSchedule == nil ? "bell.slash" : "bell.fill"
-        let item = Item.detailHeader(titleIcon: task?.careCategory?.icon?.symbolName, titleText: task?.careCategory?.name, valueIcon: valueIcon, valueText: scheduleValue, tintColor: .systemBlue)
+        let scheduleValue = currentScheduleFormatter.string(for: task.schedule) ?? "No schedule"
+        let valueIcon = task.schedule == nil ? "bell.slash" : "bell.fill"
+        let item = Item.detailHeader(titleImage: task.taskTypeProperties?.icon, titleText: task.taskTypeProperties?.displayName, valueIcon: valueIcon, valueText: scheduleValue, tintColor: .systemBlue)
 
         detailHeaderSnapshot.append([item])
 
@@ -322,7 +299,7 @@ extension TaskEditorController {
         }
 
         scheduleGeneralSnapshot.append([
-            .switchRow(icon: nil, title: "Reminders", isEnabled: task?.currentSchedule != nil, tapAction: HashableClosure<Bool>(handler: {[weak self] newValue in
+            .switchRow(icon: nil, title: "Reminders", isEnabled: task.hasSchedule, tapAction: HashableClosure<Bool>(handler: {[weak self] newValue in
                 self?.setCareScheduleEnabled(to: newValue)
             }))
         ])
@@ -351,9 +328,9 @@ extension TaskEditorController {
         }
 
         // Apply the new items to the frequency snapshot
-        let intervalType = task?.currentSchedule?.recurrenceRule?.frequency
+        let intervalType = task.recurrenceFrequency ?? ""
         let items: [Item] = repeatFrequencyChoices.map { type in
-            .pickerRow(image: nil, title: type.rawValue.capitalized, isSelected: intervalType == type, tapAction: HashableClosure<Void>(handler: { [weak self] in
+            .pickerRow(image: nil, title: type, isSelected: type.caseInsensitiveCompare(intervalType) == .orderedSame, tapAction: HashableClosure<Void>(handler: { [weak self] in
                 self?.selectFrequency(type)
             }))
         }
@@ -427,173 +404,49 @@ extension TaskEditorController {
 
     private func setCareScheduleEnabled(to isEnabled: Bool) {
         if isEnabled {
-            let defaultSchedule = CareSchedule.dailySchedule(interval: 1, context: editingContext)
-            task?.currentSchedule = defaultSchedule
+            let defaultSchedule = SproutCareTaskSchedule(startDate: Date(), recurrenceRule: .daily(1))
+            task.schedule = defaultSchedule
         } else {
-            if let schedule = task?.currentSchedule {
-                task?.currentSchedule = nil
-                editingContext.delete(schedule)
+            if task.schedule != nil {
+                task.schedule = nil
             }
         }
 
         updateUI()
     }
 
-    private func selectFrequency(_ newValue: SproutRecurrenceFrequency) {
-        guard let schedule = task?.currentSchedule else { return }
-
-        let oldType = schedule.recurrenceRule?.frequency
-        // Prevent reloading if the values are the same
-        guard oldType != newValue else { return }
+    private func selectFrequency(_ newValue: String) {
+        guard newValue.caseInsensitiveCompare(task.recurrenceFrequency ?? "") != .orderedSame else { return }
 
         // Update the task interval parameters
-        schedule.recurrenceRule?.recurrenceFrequency = newValue.rawValue
-        switch schedule.recurrenceRule?.frequency {
-        case .daily:
-            schedule.recurrenceRule?.interval = 1
-            schedule.recurrenceRule?.daysOfTheWeek = nil
-            schedule.recurrenceRule?.daysOfTheMonth = nil
-        case .weekly:
-            schedule.recurrenceRule?.interval = 1
-            schedule.recurrenceRule?.daysOfTheWeek = [1]
-            schedule.recurrenceRule?.daysOfTheMonth = nil
-        case .monthly:
-            schedule.recurrenceRule?.interval = 1
-            schedule.recurrenceRule?.daysOfTheWeek = nil
-            schedule.recurrenceRule?.daysOfTheMonth = [1]
-
+        switch newValue {
+        case "Daily":
+            task.schedule = .init(startDate: Date(), recurrenceRule: .daily(1))
+        case "Weekly":
+            task.schedule = .init(startDate: Date(), recurrenceRule: .weekly(1, [1]))
+        case "Monthly":
+            task.schedule = .init(startDate: Date(), recurrenceRule: .monthly(1, [1]))
         default:
-            // TODO: Update to delete recurrence rule for future use
-            schedule.recurrenceRule?.interval = 1
-            schedule.recurrenceRule?.daysOfTheWeek = nil
-            schedule.recurrenceRule?.daysOfTheMonth = nil
+            print("Unknown frequency value: \(newValue)")
+            task.schedule = nil
         }
 
-        assert(schedule.recurrenceRule != nil)
-        assert(schedule.recurrenceRule!.isValid(), "Recurrence rule is not valid. Check values and try again.")
-
-        if let strongTask = task {
-            delegate?.taskEditor(self, didUpdateTask: strongTask)
-        }
-
+        delegate?.taskEditor(self, didUpdateTask: task)
         updateUI()
-        //        // Update header without animation
-        //        var headerSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-        //        headerSnapshot.append([
-        //            Item.largeHeader(title: task?.careCategory?.name, value: schedule.recurrenceRule?.intervalText(), image: task?.careCategory?.icon?.image, tintColor: task?.careCategory?.icon?.color)
-        //        ])
-        //        dataSource.apply(headerSnapshot, to: .header, animatingDifferences: false)
-        //
-        //        // Update interval picker without animation
-        //        var intervalSnapshot = dataSource.snapshot(for: .recurrenceFrequency)
-        //        guard let itemToDeselect = intervalSnapshot.items.first(where: { $0.text == oldType?.rawValue.capitalized}),
-        //              let itemToSelect = intervalSnapshot.items.first(where: { $0.text == newValue.rawValue.capitalized})
-        //        else { return }
-        //
-        //        intervalSnapshot.insert([
-        //            Item.pickerRow(title: itemToDeselect.text, isSelected: !itemToDeselect.isOn, tapAction: itemToDeselect.tapAction)
-        //        ], after: itemToDeselect)
-        //        intervalSnapshot.delete([itemToDeselect])
-        //
-        //        intervalSnapshot.insert([
-        //            Item.pickerRow(title: itemToSelect.text, isSelected: !itemToSelect.isOn, tapAction: itemToSelect.tapAction)
-        //        ], after: itemToSelect)
-        //        intervalSnapshot.delete([itemToSelect])
-        //        dataSource.apply(intervalSnapshot, to: .recurrenceFrequency, animatingDifferences: false)
-        //
-        //        // Update the values picker for the appropriate interval
-        //
-        //        var snapshot = dataSource.snapshot()
-        //        switch schedule.recurrenceRule?.frequency {
-        //        case .weekly:
-        //            let weekdayItems = makeWeekdayPicker()
-        //            if snapshot.sectionIdentifiers.contains(.recurrenceMonthly) {
-        //                snapshot.deleteSections([.recurrenceMonthly])
-        //            }
-        //
-        //            if !snapshot.sectionIdentifiers.contains(.recurrenceWeekly) {
-        //                snapshot.insertSections([.recurrenceWeekly], afterSection: .recurrenceFrequency)
-        //                snapshot.appendItems(weekdayItems, toSection: .recurrenceWeekly)
-        //            }
-        //        case .monthly:
-        //            let dayItems = makeDayPicker()
-        //
-        //            if snapshot.sectionIdentifiers.contains(.recurrenceWeekly) {
-        //                snapshot.deleteSections([.recurrenceWeekly])
-        //            }
-        //
-        //            if !snapshot.sectionIdentifiers.contains(.recurrenceMonthly) {
-        //                snapshot.insertSections([.recurrenceMonthly], afterSection: .recurrenceFrequency)
-        //                snapshot.appendItems(dayItems, toSection: .recurrenceMonthly)
-        //            }
-        //        default:
-        //            if snapshot.sectionIdentifiers.contains(.recurrenceWeekly) {
-        //                snapshot.deleteSections([.recurrenceWeekly])
-        //            }
-        //
-        //            if snapshot.sectionIdentifiers.contains(.recurrenceMonthly) {
-        //                snapshot.deleteSections([.recurrenceMonthly])
-        //            }
-        //        }
-        //
-        //        dataSource.apply(snapshot)
     }
 
     func setIntervalValue(to newValue: Set<Int>) {
-        var valuesToChange: Set<Int> = []
-        let rule = task?.currentSchedule?.recurrenceRule
-
-        if case .weekly = rule?.frequency {
-            if let currentValues = rule?.daysOfTheWeek {
-                valuesToChange = currentValues.symmetricDifference(newValue)
-            }
-            rule?.daysOfTheWeek = newValue
-
-        } else if case .monthly = rule?.frequency {
-            if let currentValues = rule?.daysOfTheMonth {
-                valuesToChange = currentValues.symmetricDifference(newValue)
-            }
-            rule?.daysOfTheMonth = newValue
+        switch task.recurrenceRule {
+        case .weekly(let interval, _):
+            task.recurrenceRule = .weekly(interval, newValue)
+        case .monthly(let interval, _):
+            task.recurrenceRule = .monthly(interval, newValue)
+        default:
+            return
         }
 
-        if let strongTask = task {
-            delegate?.taskEditor(self, didUpdateTask: strongTask)
-        }
-
+        delegate?.taskEditor(self, didUpdateTask: task)
         updateUI()
-        //        var headerSnapshot = dataSource.snapshot(for: .header)
-        //        let newHeaderItem = Item.largeHeader(title: task?.careCategory?.name, value: rule?.intervalText(), image: task?.careCategory?.icon?.image, tintColor: task?.careCategory?.icon?.color)
-        //        guard let oldItem = headerSnapshot.items.first(where: {$0.text == newHeaderItem.text}) else { return }
-        //        headerSnapshot.insert([newHeaderItem], after: oldItem)
-        //        headerSnapshot.delete([oldItem])
-        //
-        //        dataSource.apply(headerSnapshot, to: .header, animatingDifferences: false)
-        //
-        //        let valueSectionKind: TaskEditorSection?
-        //        switch rule?.frequency {
-        //        case .weekly:
-        //            valueSectionKind = TaskEditorSection.recurrenceWeekly
-        //        case .monthly:
-        //            valueSectionKind = TaskEditorSection.recurrenceMonthly
-        //        default:
-        //            valueSectionKind = nil
-        //        }
-        //
-        //        if let valueSectionKind = valueSectionKind {
-        //            var recurrenceValuesSnapshot = dataSource.snapshot(for: valueSectionKind)
-        //            for value in valuesToChange {
-        //                guard let oldItem = recurrenceValuesSnapshot.items.first(where: { $0.tag == value }) else { continue }
-        //                var newItem = Item.circleButtonCell(text: oldItem.text, isSelected: !oldItem.isOn, tapAction: {
-        //                    self.repeatValueButtonTapped(value)
-        //                })
-        //                newItem.tag = value
-        //
-        //                recurrenceValuesSnapshot.insert([newItem], after: oldItem)
-        //                recurrenceValuesSnapshot.delete([oldItem])
-        //            }
-        //
-        //            dataSource.apply(recurrenceValuesSnapshot, to: valueSectionKind, animatingDifferences: false)
-        //        }
     }
 }
 
@@ -632,8 +485,8 @@ private extension TaskEditorController {
 
     func makeDetailHeaderRegistration() -> UICollectionView.CellRegistration<LargeHeaderCell, Item> {
         UICollectionView.CellRegistration<LargeHeaderCell, Item> { cell, indexPath, item in
-            guard case let .detailHeader(titleIcon, titleText, valueIcon, valueText, tintColor) = item else { return }
-            cell.titleIcon = titleIcon
+            guard case let .detailHeader(titleImage, titleText, valueIcon, valueText, tintColor) = item else { return }
+            cell.titleImage = titleImage
             cell.titleText = titleText
             cell.valueIcon = valueIcon
             cell.valueText = valueText
@@ -742,7 +595,7 @@ private extension TaskEditorController {
         }
 
         enum Item: Hashable {
-            case detailHeader(titleIcon: String?, titleText: String?, valueIcon: String?, valueText: String?, tintColor: UIColor?)
+            case detailHeader(titleImage: UIImage?, titleText: String?, valueIcon: String?, valueText: String?, tintColor: UIColor?)
             case pickerRow(image: UIImage?, title: String?, isSelected: Bool, tapAction: HashableClosure<Void>)
             case switchRow(icon: String?, title: String?, isEnabled: Bool, tapAction: HashableClosure<Bool>)
             case circlePickerButton(text: String, isSelected: Bool, tapAction: HashableClosure<Void>)

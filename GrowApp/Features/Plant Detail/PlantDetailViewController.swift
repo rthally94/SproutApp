@@ -48,7 +48,7 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
     let careDateFormatter = Utility.relativeDateFormatter
 
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
-    var plant: SproutPlant?
+    var plant: SproutPlantMO?
     
     // MARK: - View Life Cycle
     
@@ -148,13 +148,6 @@ extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
         
         persistentContainer.saveContextIfNeeded()
         updateUI()
-    }
-}
-
-private extension PlantDetailViewController {
-    func nextTaskDateString() -> String {
-        let nextTaskDate = plant?.tasks.map { $0.nextCareDate ?? Date() }.min() ?? Date()
-        return careDateFormatter.string(from: nextTaskDate)
     }
 }
 

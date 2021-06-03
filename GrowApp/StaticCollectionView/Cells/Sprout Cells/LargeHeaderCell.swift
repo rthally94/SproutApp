@@ -13,6 +13,11 @@ class LargeHeaderCell: UICollectionViewCell {
         get { largeHeaderView.titleLabel.icon }
     }
 
+    var titleImage: UIImage? {
+        set { largeHeaderView.titleLabel.image = newValue }
+        get { largeHeaderView.titleLabel.image }
+    }
+
     var titleText: String? {
         set { largeHeaderView.titleLabel.text = newValue }
         get { largeHeaderView.titleLabel.text }

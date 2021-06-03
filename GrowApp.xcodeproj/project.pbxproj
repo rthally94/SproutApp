@@ -103,6 +103,7 @@
 		FB98B94D2668590000629C1B /* SproutCareTaskMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B94C2668590000629C1B /* SproutCareTaskMO.swift */; };
 		FB98B94F2668591100629C1B /* SproutPlantMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B94E2668591100629C1B /* SproutPlantMO.swift */; };
 		FB98B95126691E7500629C1B /* SproutCareTaskSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B95026691E7500629C1B /* SproutCareTaskSchedule.swift */; };
+		FB98B95326695C3200629C1B /* Optional+Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B95226695C3200629C1B /* Optional+Comparable.swift */; };
 		FB9C66AA263A539D00CDC15A /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* CardView.swift */; };
 		FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */; };
 		FB9C66B5263AE76900CDC15A /* AllTasksProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* AllTasksProvider.swift */; };
@@ -258,6 +259,7 @@
 		FB98B94C2668590000629C1B /* SproutCareTaskMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTaskMO.swift; sourceTree = "<group>"; };
 		FB98B94E2668591100629C1B /* SproutPlantMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutPlantMO.swift; sourceTree = "<group>"; };
 		FB98B95026691E7500629C1B /* SproutCareTaskSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTaskSchedule.swift; sourceTree = "<group>"; };
+		FB98B95226695C3200629C1B /* Optional+Comparable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Comparable.swift"; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
 		FB9C66B4263AE76900CDC15A /* AllTasksProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTasksProvider.swift; sourceTree = "<group>"; };
@@ -545,6 +547,7 @@
 				FB6661B5261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift */,
 				FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */,
 				FB98B9442667C1C500629C1B /* Notification+CustomNames.swift */,
+				FB98B95226695C3200629C1B /* Optional+Comparable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1091,6 +1094,7 @@
 				FBEB4972260CBEF800F6060C /* CardCell.swift in Sources */,
 				FB98B93326628BA200629C1B /* CareRecurrenceRule+Validation.swift in Sources */,
 				FB5F349B25B8829300CCE6BC /* DatePickerCard.swift in Sources */,
+				FB98B95326695C3200629C1B /* Optional+Comparable.swift in Sources */,
 				FB28A8EA2649B6A600B1206E /* SpacerView.swift in Sources */,
 				FB6661A1261DEB9900DC8B04 /* CareCategory+Extensions.swift in Sources */,
 				FB6C461C25F1C332009ED947 /* CareDetailViewController.swift in Sources */,

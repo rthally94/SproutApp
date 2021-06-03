@@ -37,6 +37,16 @@ class CareScheduleFormatter: Formatter {
         return string(for: obj)
     }
 
+    func string(from schedule: SproutCareTaskSchedule) -> String {
+        let frequencyText: String
+        if let rule = schedule.recurrenceRule {
+            frequencyText = recurrenceRuleFormatter.string(from: rule)
+        } else {
+            frequencyText = ""
+        }
+        return frequencyText
+    }
+
     func string(for interval: CareSchedule) -> String {
         let frequencyText = recurrenceRuleFormatter.string(for: interval.recurrenceRule) ?? ""
         return frequencyText
@@ -55,6 +65,48 @@ class CareRecurrenceRuleFormatter: Formatter {
     override func string(for obj: Any?) -> String? {
         guard let obj = obj as? CareRecurrenceRule else { return nil }
         return string(for: obj)
+    }
+
+    func string(from rule: SproutCareTaskRecurrenceRule) -> String {
+        let frequencyText: String
+        let valueText: String
+
+        switch rule {
+        case .daily(let interval):
+            frequencyText = frequencySymbol(for: .daily, style: frequencyStyle, context: formattingContext)
+            valueText = intervalSymbol(for: interval, frequency: .daily, style: frequencyStyle, context: formattingContext)
+
+        case .weekly(let interval, let weekdays) where interval == 1 && weekdays?.isEmpty == false:
+            frequencyText = frequencySymbol(for: .weekly, style: frequencyStyle, context: formattingContext)
+            valueText = daysOfTheWeekSymbol(for: weekdays!, style: frequencyStyle, context: formattingContext)
+
+        case .weekly(let interval, _):
+            frequencyText = frequencySymbol(for: .weekly, style: frequencyStyle, context: formattingContext)
+            valueText = intervalSymbol(for: interval, frequency: .weekly, style: frequencyStyle, context: formattingContext)
+
+        case .monthly(let interval, let days) where interval == 1 && days?.isEmpty == false:
+            frequencyText = frequencySymbol(for: .monthly, style: frequencyStyle, context: formattingContext)
+            valueText = daysOfTheMonthSymbol(for: days!, style: frequencyStyle, context: formattingContext)
+
+        case .monthly(let interval, _):
+            frequencyText = frequencySymbol(for: .monthly, style: frequencyStyle, context: formattingContext)
+            valueText = intervalSymbol(for: interval, frequency: .monthly, style: frequencyStyle, context: formattingContext)
+        }
+
+        let ruleString: String
+
+        switch formattingContext {
+        case .standalone:
+            if !frequencyText.isEmpty, !valueText.isEmpty {
+                ruleString = frequencyText + " • " + valueText
+            } else {
+                ruleString = frequencyText + valueText
+            }
+        default:
+            ruleString = "Not Implemented"
+        }
+
+        return ruleString
     }
 
     func string(for rule: CareRecurrenceRule) -> String {

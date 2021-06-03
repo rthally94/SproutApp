@@ -28,6 +28,11 @@ struct SproutCareTaskSchedule {
         self.dueDate = dueDate
         self.recurrenceRule = recurrenceRule
     }
+
+    var description: String {
+        let formatter = Utility.currentScheduleFormatter
+        return formatter.string(from: self)
+    }
 }
 
 enum SproutCareTaskRecurrenceRule {

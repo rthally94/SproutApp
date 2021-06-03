@@ -19,45 +19,42 @@ class AddEditPlantViewController: UICollectionViewController {
         storageProvider.editingContext
     }
 
-    private(set) var plant: SproutPlant
+    private(set) var plant: SproutPlantMO
     private var originalNameValue: String?
 
-    private var unconfiguredCareDetailTypes: [CareCategory] {
-        let plantCareInfoItems = (plant.careInfoItems as? Set<CareInfo>) ?? []
-        let unconfiguredTypeNames = CareCategory.TaskTypeName.allCases.filter { detailTypeName in
-            !plantCareInfoItems.contains(where: { plantCareDetailItem in
-                plantCareDetailItem.careCategory?.id == detailTypeName.rawValue
-            })
-        }
+    private var unconfiguredCareDetailTypes: [SproutCareTaskMO] {
+        let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == true", #keyPath(SproutCareTaskMO.isTemplate))
+        let allTemplates = try? editingContext.fetch(request)
 
-        let context = editingContext
-        return unconfiguredTypeNames.compactMap { name in
-            try? CareCategory.fetchOrCreateCategory(withName: name, inContext: context)
-        }
+        return allTemplates?.filter({ template in
+            plant.allTasks.contains { task in
+                template.taskType == task.taskType
+            }
+        }) ?? []
     }
 
     weak var delegate: AddEditPlantViewControllerDelegate?
     private var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
 
     // MARK: - Initializers
-    init(plant: SproutPlant? = nil, storageProvider: StorageProvider = AppDelegate.storageProvider) {
+    init(plant: SproutPlantMO? = nil, storageProvider: StorageProvider = AppDelegate.storageProvider) {
         self.storageProvider = storageProvider
         let editingContext = storageProvider.editingContext
 
         // Fetch input plant in editing context or create a new one.
-        if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? SproutPlant {
+        if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? SproutPlantMO {
             self.plant = editingPlant
         } else {
             // Make New Plant
-            do {
-                let newPlant = try SproutPlant.createDefaultPlant(inContext: editingContext)
-                self.plant = newPlant
-            } catch {
-                fatalError("Unable to initialize AddEditPlantViewController with new plant: \(error)")
+            SproutPlantMO.createNewPlant(in: editingContext) { [weak self] newPlant in
+                DispatchQueue.main.async {
+                    self?.plant = newPlant
+                }
             }
         }
 
-        originalNameValue = plant?.name
+        originalNameValue = plant?.nickname
 
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.collectionViewLayout = makeLayout()
@@ -107,14 +104,6 @@ class AddEditPlantViewController: UICollectionViewController {
         dismiss(animated: true)
     }
 
-    private func showPlantIconEditor() {
-        let vc = PlantIconPickerController()
-        vc.persistentContainer = storageProvider.persistentContainer
-        vc.icon = plant.icon
-        vc.delegate = self
-        present(vc.wrappedInNavigationController(), animated: true)
-    }
-
     private func showPlantTypePicker() {
         let vc = PlantTypePickerViewController()
         vc.persistentContainer = storageProvider.persistentContainer
@@ -123,10 +112,9 @@ class AddEditPlantViewController: UICollectionViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    private func showCareDetailEditor(for careDetail: CareInfo) {
-        let vc = TaskEditorController(task: careDetail, storageProvider: storageProvider)
+    private func showCareTaskEditor(for task: SproutCareTaskMO) {
+        let vc = TaskEditorController(task: task, storageProvider: storageProvider)
         vc.storageProvider = storageProvider
-        vc.task = careDetail
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -172,17 +160,17 @@ class AddEditPlantViewController: UICollectionViewController {
         applySnapshot(animatingDifferences: animated)
     }
 
-    private func createNewDetailItem(for detailTypeName: CareCategory.TaskTypeName) -> CareInfo? {
-        do {
-            let newCareDetailItem = try CareInfo.createDefaultInfoItem(in: editingContext, ofType: detailTypeName)
-            plant.addToCareInfoItems(newCareDetailItem)
-            let _ = newCareDetailItem.nextReminder
-            return newCareDetailItem
-        } catch {
-            print("Unable to create new detail item of type: \(detailTypeName.rawValue) - \(error)")
-            return nil
-        }
-    }
+//    private func createNewDetailItem(for detailTypeName: CareCategory.TaskTypeName) -> CareInfo? {
+//        do {
+//            let newCareDetailItem = try CareInfo.createDefaultInfoItem(in: editingContext, ofType: detailTypeName)
+//            plant.addToCareInfoItems(newCareDetailItem)
+//            let _ = newCareDetailItem.nextReminder
+//            return newCareDetailItem
+//        } catch {
+//            print("Unable to create new detail item of type: \(detailTypeName.rawValue) - \(error)")
+//            return nil
+//        }
+//    }
 
     // MARK: - Collection View Delegate
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -231,18 +219,29 @@ extension AddEditPlantViewController {
 
     private var hasChanges: Bool {
         let areObjectsUpdated = !editingContext.updatedObjects.isEmpty
-        let isNameUpdated = originalNameValue != plant.name
+        let isNameUpdated = originalNameValue != plant.nickname
 
         print("isNameUpdated: \(isNameUpdated), areObjectsUpdated: \(areObjectsUpdated)")
         if isNameUpdated {
-            print("originalNameValue: \(originalNameValue), plantNameValue: \(plant.name)")
+            print("originalNameValue: \(originalNameValue), plantNameValue: \(plant.nickname)")
         }
 
         return areObjectsUpdated || isNameUpdated
     }
 
     private var canSave: Bool {
-        let isPlantValid = plant.isValid()
+        var isPlantValid = true
+        do {
+            if isNew {
+                try plant.validateForInsert()
+            } else {
+                try plant.validateForUpdate()
+            }
+        } catch {
+            print("Validation Error: \(error)")
+            isPlantValid = false
+        }
+
         return isPlantValid && hasChanges
     }
 }
@@ -291,7 +290,7 @@ extension AddEditPlantViewController {
 
         // Plant Icon
         snapshot.appendItems([
-            .plantIcon(image: plant.icon?.image)
+            .plantIcon(image: plant.icon)
         ], toSection: .plantIcon)
 
         // Icon Editor Buttons
@@ -308,12 +307,12 @@ extension AddEditPlantViewController {
 
         // Plant Info
         snapshot.appendItems([
-            .nameTextField(placeholder: "Plant Name", initialText: plant.name, onChange: .init(handler: { [weak self] newName in
-                print("Plant name changed: Old(\(self?.plant.name ?? "No Value")) | New(\(newName ?? "No Value"))")
-                self?.plant.name = newName
+            .nameTextField(placeholder: "Plant Name", initialText: plant.nickname, onChange: .init(handler: { [weak self] newName in
+                print("Plant name changed: Old(\(self?.plant.nickname ?? "No Value")) | New(\(newName ?? "No Value"))")
+                self?.plant.nickname = newName
                 self?.updateNavButtons()
             })),
-            .valueCell(image: nil, text: "Plant Type", secondaryText: plant.type?.commonName ?? "Configure", accessories: [.disclosureIndicator], tapAction: .init(handler: { [weak self] in
+            .valueCell(image: nil, text: "Plant Type", secondaryText: plant.commonName ?? "Configure", accessories: [.disclosureIndicator], tapAction: .init(handler: { [weak self] in
                 print("Plant Type Item Tapped.")
                 self?.showPlantTypePicker()
             }))
@@ -322,25 +321,35 @@ extension AddEditPlantViewController {
         // Care Details
         let careScheduleFormatter = Utility.currentScheduleFormatter
 
-        let careDetailSet = (plant.careInfoItems as? Set<CareInfo>) ?? []
-        let careDetailItems = careDetailSet.sorted().map { infoItem in
-            Item.careDetail(image: infoItem.careCategory?.icon?.image, text: infoItem.careCategory?.name, secondaryText: careScheduleFormatter.string(for: infoItem.currentSchedule), tapAction: .init(handler: { [weak self] in
-                print("\(infoItem.careCategory?.name ?? "") Item Tapped.")
+        let careDetailSet = plant.allTasks.filter { task in
+            task.historyLog == nil
+        }
+
+        let careDetailItems: [Item] = careDetailSet.sorted().map { infoItem in
+            let scheduleText = infoItem.schedule != nil ? careScheduleFormatter.string(from: infoItem.schedule!) : nil
+
+            return Item.careDetail(image: infoItem.taskTypeProperties?.icon, text: infoItem.taskTypeProperties?.displayName, secondaryText: scheduleText, tapAction: .init(handler: { [weak self] in
+                print("\(infoItem.taskType ?? "") Item Tapped.")
                 // TODO: Call method to present care detail editor
-                self?.showCareDetailEditor(for: infoItem)
+                self?.showCareTaskEditor(for: infoItem)
             }))
         }
         snapshot.appendItems(careDetailItems, toSection: .plantCareDetails)
 
         // Unconfigured Care Details
-        let unconfiguredCareItems = unconfiguredCareDetailTypes.map { careDetailType in
-            Item.careDetail(image: careDetailType.icon?.image, text: careDetailType.name, secondaryText: "Configure", tapAction: .init(handler: { [weak self] in
-                print("Unconfigured \(careDetailType.name ?? "") Item Tapped.")
+        let unconfiguredCareItems = unconfiguredCareDetailTypes.map { templateTask in
+            Item.careDetail(image: templateTask.taskTypeProperties?.icon, text: templateTask.taskTypeProperties?.displayName, secondaryText: "Configure", tapAction: .init(handler: { [weak self] in
+                print("Unconfigured \(templateTask.taskType ?? "") Item Tapped.")
                 guard let strongSelf = self else { return }
-                guard let detailTypeName = CareCategory.TaskTypeName(rawValue: careDetailType.id ?? ""),
-                      let newItem = strongSelf.createNewDetailItem(for: detailTypeName)
-                else { return }
-                strongSelf.showCareDetailEditor(for: newItem)
+
+                do {
+                    try SproutCareTaskMO.createNewTask(from: templateTask) { newTask in
+                        strongSelf.plant.addToCareTasks(newTask)
+                        strongSelf.showCareTaskEditor(for: newTask)
+                    }
+                } catch {
+                    print("Unable to duplicate template task: \(error)")
+                }
             }))
         }
         snapshot.appendItems(unconfiguredCareItems, toSection: .unconfiguredCareDetails)
@@ -542,25 +551,17 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
     }
 
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        guard let image = info[.editedImage] as? UIImage else { return }
-
-        if plant.icon == nil {
-            // If no icon exists, create a new icon
-            plant.icon = SproutIcon(context: editingContext)
-        }
+        guard let image = info[.originalImage] as? UIImage else { return }
 
         // Apply the new selected image
-        plant.icon?.imageData = image.pngData()
-        updateUI()
+        do {
+            try plant.setImage(image)
+        } catch {
+            print("Error setting image: \(error)")
+        }
 
+        updateUI()
         dismiss(animated: true)
-    }
-}
-
-extension AddEditPlantViewController: PlantIconPickerControllerDelegate {
-    func plantIconPicker(_ picker: PlantIconPickerController, didSelectIcon icon: SproutIcon) {
-        plant.icon = icon
-        updateUI()
     }
 }
 
@@ -583,7 +584,9 @@ extension AddEditPlantViewController: TaskEditorDelegate {
     }
 }
 
+// MARK: - UIAdaptivePresentationControllerDelegate
 extension AddEditPlantViewController: UIAdaptivePresentationControllerDelegate {
+    // Decides if a pull down gesture should dismiss the editor
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
         discardChangesIfAble { [weak self] success in
             if success {

@@ -19,6 +19,17 @@ enum SproutCareTaskMOError: Error {
 class SproutCareTaskMO: NSManagedObject {
     enum SproutCareTaskType: String {
         case watering
+
+        var displayName: String {
+            return self.rawValue.capitalized
+        }
+
+        var icon: UIImage? {
+            switch self {
+            case .watering:
+                return UIImage(systemName: "drop.fill")
+            }
+        }
     }
 
     static func createNewTask(type: SproutCareTaskType, in context: NSManagedObjectContext, completion: @escaping (SproutCareTaskMO) -> Void) {
@@ -67,21 +78,41 @@ class SproutCareTaskMO: NSManagedObject {
             guard hasSchedule, let startDate = startDate, let dueDate = dueDate else { return nil }
             return SproutCareTaskSchedule(startDate: startDate, dueDate: dueDate, recurrenceRule: recurrenceRule)
         }
-        set { }
+        set {
+            hasSchedule = newValue != nil
+            startDate = newValue?.startDate
+            dueDate = newValue?.dueDate
+
+            recurrenceRule = newValue?.recurrenceRule
+        }
     }
 
     var recurrenceRule: SproutCareTaskRecurrenceRule? {
-        guard hasRecurrenceRule else { return nil }
-        switch recurrenceFrequency {
-        case SproutCareTaskRecurrenceRule.daily(0).frequency:
-            return SproutCareTaskRecurrenceRule.daily(Int(recurrenceInterval))
-        case SproutCareTaskRecurrenceRule.weekly(0).frequency:
-            return SproutCareTaskRecurrenceRule.weekly(Int(recurrenceInterval), recurrenceDaysOfWeek)
-        case SproutCareTaskRecurrenceRule.monthly(0).frequency:
-            return SproutCareTaskRecurrenceRule.monthly(Int(recurrenceInterval), recurrenceDaysOfMonth)
-        default:
-            return nil
+        get {
+            guard hasRecurrenceRule else { return nil }
+            switch recurrenceFrequency {
+            case SproutCareTaskRecurrenceRule.daily(0).frequency:
+                return SproutCareTaskRecurrenceRule.daily(Int(recurrenceInterval))
+            case SproutCareTaskRecurrenceRule.weekly(0).frequency:
+                return SproutCareTaskRecurrenceRule.weekly(Int(recurrenceInterval), recurrenceDaysOfWeek)
+            case SproutCareTaskRecurrenceRule.monthly(0).frequency:
+                return SproutCareTaskRecurrenceRule.monthly(Int(recurrenceInterval), recurrenceDaysOfMonth)
+            default:
+                return nil
+            }
         }
+        set {
+            hasRecurrenceRule = newValue != nil
+            recurrenceDaysOfWeek = newValue?.daysOfWeek
+            recurrenceDaysOfMonth = newValue?.daysOfMonth
+            recurrenceFirstDayOfWeek = Int16(Calendar.current.firstWeekday)
+            recurrenceFrequency = newValue?.frequency
+            recurrenceInterval = Int16(newValue?.interval ?? 1)
+        }
+    }
+
+    var taskTypeProperties: SproutCareTaskType? {
+        return SproutCareTaskType(rawValue: taskType ?? "")
     }
 }
 
@@ -113,5 +144,12 @@ extension SproutCareTaskMO {
                 context.rollback()
             }
         }
+    }
+}
+
+extension SproutCareTaskMO: Comparable {
+    static func < (lhs: SproutCareTaskMO, rhs: SproutCareTaskMO) -> Bool {
+        lhs.creationDate < rhs.creationDate
+         && lhs.taskType < rhs.taskType
     }
 }
