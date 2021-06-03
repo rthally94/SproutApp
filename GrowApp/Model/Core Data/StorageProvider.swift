@@ -48,7 +48,7 @@ class StorageProvider {
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         persistentContainer.viewContext.shouldDeleteInaccessibleFaults = true
 
-        let request: NSFetchRequest<SproutPlantType> = SproutPlantType.fetchRequest()
+        let request: NSFetchRequest<SproutPlantMO> = SproutPlantMO.allTemplatesFetchRequest()
         let typeCount = (try? persistentContainer.viewContext.count(for: request)) ?? 0
         if typeCount == 0 {
             loadPlantTypes()

@@ -104,7 +104,7 @@ extension SproutPlantMO {
 extension SproutPlantMO {
     static func allTemplatesFetchRequest() -> NSFetchRequest<SproutPlantMO> {
         let request: NSFetchRequest<SproutPlantMO> = SproutPlantMO.fetchRequest()
-        request.predicate = NSPredicate(format: "%k == true", #keyPath(SproutPlantMO.isTemplate))
+        request.predicate = NSPredicate(format: "%K == true", #keyPath(SproutPlantMO.isTemplate))
 
         let sortByCommonName = NSSortDescriptor(keyPath: \SproutPlantMO.commonName, ascending: true)
         request.sortDescriptors = [sortByCommonName]

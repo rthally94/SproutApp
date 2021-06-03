@@ -11,7 +11,7 @@ import UIKit
 class PlantTypesProvider: NSObject {    
     let moc: NSManagedObjectContext
     
-    private var allTypes: [NSManagedObjectID: SproutPlantType] = [:]
+    private var allTypes: [NSManagedObjectID: SproutPlantMO] = [:]
     private var selectedItem: Item?
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     
@@ -35,10 +35,12 @@ class PlantTypesProvider: NSObject {
         super.init()
         
         // Fetch plant types
-        let allTypesRequest: NSFetchRequest<SproutPlantType> = SproutPlantType.fetchRequest()
-        allTypesRequest.sortDescriptors = [NSSortDescriptor(keyPath: \SproutPlantType.commonName, ascending: true)]
+        let allTypesRequest: NSFetchRequest<SproutPlantMO> = SproutPlantMO.allTemplatesFetchRequest()
+        allTypesRequest.propertiesToFetch = ["scientificName", "commonName"]
+
         let types = (try? moc.fetch(allTypesRequest)) ?? []
-        allTypes = types.reduce(into: [NSManagedObjectID: SproutPlantType]()) { dict, type in
+
+        allTypes = types.reduce(into: [NSManagedObjectID: SproutPlantMO]()) { dict, type in
             dict[type.objectID] = type
         }
         
@@ -47,6 +49,7 @@ class PlantTypesProvider: NSObject {
         newSnapshot.appendSections([.allPlants])
         
         let items = allTypes.sorted(by: { lhs, rhs in
+
             if let lName = lhs.value.commonName, let rName = rhs.value.commonName {
                 return lName < rName
             } else if lhs.value.commonName != nil {
@@ -60,8 +63,8 @@ class PlantTypesProvider: NSObject {
         snapshot = newSnapshot
     }
     
-    func object(withID id: NSManagedObjectID) -> SproutPlantType {
-        moc.object(with: id) as! SproutPlantType
+    func object(withID id: NSManagedObjectID) -> SproutPlantMO {
+        moc.object(with: id) as! SproutPlantMO
     }
     
     func reloadItems(_ items: [Item]) {

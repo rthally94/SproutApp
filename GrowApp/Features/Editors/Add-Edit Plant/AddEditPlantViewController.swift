@@ -19,7 +19,7 @@ class AddEditPlantViewController: UICollectionViewController {
         storageProvider.editingContext
     }
 
-    private(set) var plant: SproutPlantMO
+    private(set) var plant: SproutPlantMO!
     private var originalNameValue: String?
 
     private var unconfiguredCareDetailTypes: [SproutCareTaskMO] {
@@ -42,21 +42,22 @@ class AddEditPlantViewController: UICollectionViewController {
         self.storageProvider = storageProvider
         let editingContext = storageProvider.editingContext
 
+        super.init(collectionViewLayout: UICollectionViewFlowLayout())
+        
         // Fetch input plant in editing context or create a new one.
         if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? SproutPlantMO {
             self.plant = editingPlant
         } else {
             // Make New Plant
-            SproutPlantMO.createNewPlant(in: editingContext) { [weak self] newPlant in
+            SproutPlantMO.createNewPlant(in: editingContext) { [unowned self] newPlant in
                 DispatchQueue.main.async {
-                    self?.plant = newPlant
+                    self.plant = newPlant
                 }
             }
         }
 
         originalNameValue = plant?.nickname
 
-        super.init(collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.collectionViewLayout = makeLayout()
     }
 
@@ -107,7 +108,7 @@ class AddEditPlantViewController: UICollectionViewController {
     private func showPlantTypePicker() {
         let vc = PlantTypePickerViewController()
         vc.persistentContainer = storageProvider.persistentContainer
-        vc.selectedType = plant.type
+        vc.selectedType = plant
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -120,7 +121,7 @@ class AddEditPlantViewController: UICollectionViewController {
     }
 
     private func saveChanges() {
-//        delegate?.plantEditor(self, didUpdatePlant: plant)
+        //        delegate?.plantEditor(self, didUpdatePlant: plant)
         self.storageProvider.saveContext()
     }
 
@@ -160,17 +161,17 @@ class AddEditPlantViewController: UICollectionViewController {
         applySnapshot(animatingDifferences: animated)
     }
 
-//    private func createNewDetailItem(for detailTypeName: CareCategory.TaskTypeName) -> CareInfo? {
-//        do {
-//            let newCareDetailItem = try CareInfo.createDefaultInfoItem(in: editingContext, ofType: detailTypeName)
-//            plant.addToCareInfoItems(newCareDetailItem)
-//            let _ = newCareDetailItem.nextReminder
-//            return newCareDetailItem
-//        } catch {
-//            print("Unable to create new detail item of type: \(detailTypeName.rawValue) - \(error)")
-//            return nil
-//        }
-//    }
+    //    private func createNewDetailItem(for detailTypeName: CareCategory.TaskTypeName) -> CareInfo? {
+    //        do {
+    //            let newCareDetailItem = try CareInfo.createDefaultInfoItem(in: editingContext, ofType: detailTypeName)
+    //            plant.addToCareInfoItems(newCareDetailItem)
+    //            let _ = newCareDetailItem.nextReminder
+    //            return newCareDetailItem
+    //        } catch {
+    //            print("Unable to create new detail item of type: \(detailTypeName.rawValue) - \(error)")
+    //            return nil
+    //        }
+    //    }
 
     // MARK: - Collection View Delegate
     override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
@@ -567,19 +568,18 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
 
 // MARK: - Plant Type Picker Delegate
 extension AddEditPlantViewController: PlantTypePickerDelegate {
-    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantType) {
-        guard let newType = editingContext.object(with: plantType.objectID) as? SproutPlantType else {
-            print("Plant Type could not be saved because it does not exist in the editing context.")
-            return
+    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantMO) {
+        editingContext.performAndWait { [unowned self] in
+            plant.scientificName = plantType.scientificName
+            plant.commonName = plantType.commonName
         }
-        plant.type = newType
         updateUI()
     }
 }
 
 // MARK: - Plant Task Editor Delegate
 extension AddEditPlantViewController: TaskEditorDelegate {
-    func taskEditor(_ editor: TaskEditorController, didUpdateTask newInfo: CareInfo) {
+    private func taskEditor(_ editor: TaskEditorController, didUpdateTask newInfo: CareInfo) {
         updateUI()
     }
 }

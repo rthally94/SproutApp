@@ -55,6 +55,12 @@
         <attribute name="symbolName" optional="YES" attributeType="String" minValueString="1"/>
         <relationship name="careHistory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SproutCareHistoryMO" inverseName="plant" inverseEntity="SproutCareHistoryMO"/>
         <relationship name="careTasks" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SproutCareTaskMO" inverseName="plant" inverseEntity="SproutCareTaskMO"/>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="scientificName"/>
+                <constraint value="isTemplate"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
     </entity>
     <elements>
         <element name="SproutPlantMO" positionX="-63" positionY="-18" width="128" height="209"/>

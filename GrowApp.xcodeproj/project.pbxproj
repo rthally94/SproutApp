@@ -61,7 +61,6 @@
 		FB7B813225BA25740053E543 /* WeekPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B813125BA25740053E543 /* WeekPicker.swift */; };
 		FB7B813E25BA6CA50053E543 /* WeekPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B813D25BA6CA50053E543 /* WeekPickerCell.swift */; };
 		FB7B815B25BE19060053E543 /* OutlineImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7B815A25BE19060053E543 /* OutlineImageCell.swift */; };
-		FB7ED5052614B53D008FD1BE /* GreenHouseDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5032614B53D008FD1BE /* GreenHouseDataModel.xcdatamodeld */; };
 		FB7ED5092614D111008FD1BE /* UIImageTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */; };
 		FB7ED5132614F5AC008FD1BE /* TaskCalendarProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5122614F5AC008FD1BE /* TaskCalendarProvider.swift */; };
 		FB7ED5192615260F008FD1BE /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5182615260F008FD1BE /* StorageProvider.swift */; };
@@ -217,7 +216,6 @@
 		FB7B813125BA25740053E543 /* WeekPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekPicker.swift; sourceTree = "<group>"; };
 		FB7B813D25BA6CA50053E543 /* WeekPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeekPickerCell.swift; sourceTree = "<group>"; };
 		FB7B815A25BE19060053E543 /* OutlineImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutlineImageCell.swift; sourceTree = "<group>"; };
-		FB7ED5042614B53D008FD1BE /* GreenHouseDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GreenHouseDataModel.xcdatamodel; sourceTree = "<group>"; };
 		FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageTransformer.swift; sourceTree = "<group>"; };
 		FB7ED5122614F5AC008FD1BE /* TaskCalendarProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCalendarProvider.swift; sourceTree = "<group>"; };
 		FB7ED5182615260F008FD1BE /* StorageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProvider.swift; sourceTree = "<group>"; };
@@ -527,7 +525,6 @@
 				FB7ED5182615260F008FD1BE /* StorageProvider.swift */,
 				FB98B94626681F3600629C1B /* SproutDataModel.xcdatamodeld */,
 				FB98B949266858D700629C1B /* Models */,
-				FB7ED5032614B53D008FD1BE /* GreenHouseDataModel.xcdatamodeld */,
 				FB98B92D2662871500629C1B /* Models_OLD */,
 				FB6661A6261DEBA700DC8B04 /* Model Extensions */,
 				FB98B94026629CDB00629C1B /* Value Transformers */,
@@ -1022,7 +1019,6 @@
 				FBB75BBF264AFBB3000CC823 /* PlantType.swift in Sources */,
 				FB28A8F0264ABCB700B1206E /* SproutIntervalProtocol.swift in Sources */,
 				FBE73CAE265C3938007106AE /* AddEditPlantViewController.swift in Sources */,
-				FB7ED5052614B53D008FD1BE /* GreenHouseDataModel.xcdatamodeld in Sources */,
 				FB8480FC2652C24B00D820D3 /* SproutReminder.swift in Sources */,
 				FBC7335025E708790048999C /* TaskCalendarViewController+DataSource.swift in Sources */,
 				FB6CD6582657E17500D7DE82 /* RemindersProvider.swift in Sources */,
@@ -1396,16 +1392,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		FB7ED5032614B53D008FD1BE /* GreenHouseDataModel.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				FB7ED5042614B53D008FD1BE /* GreenHouseDataModel.xcdatamodel */,
-			);
-			currentVersion = FB7ED5042614B53D008FD1BE /* GreenHouseDataModel.xcdatamodel */;
-			path = GreenHouseDataModel.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
 		FB98B94626681F3600629C1B /* SproutDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
