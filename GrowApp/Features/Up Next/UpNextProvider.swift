@@ -8,7 +8,7 @@
 import CoreData
 import UIKit
 
-class AllTasksProvider: NSObject {
+class UpNextProvider: NSObject {
     let moc: NSManagedObjectContext
     fileprivate let fetchedResultsController: NSFetchedResultsController<SproutCareTaskMO>
 
@@ -44,6 +44,7 @@ class AllTasksProvider: NSObject {
 
         fetchedResultsController.delegate = self
         try! fetchedResultsController.performFetch()
+        updateProperties()
     }
 
     func object(at indexPath: IndexPath) -> SproutCareTaskMO {
@@ -72,7 +73,7 @@ class AllTasksProvider: NSObject {
     }
 }
 
-extension AllTasksProvider: NSFetchedResultsControllerDelegate {
+extension UpNextProvider: NSFetchedResultsControllerDelegate {
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         updateProperties()
     }

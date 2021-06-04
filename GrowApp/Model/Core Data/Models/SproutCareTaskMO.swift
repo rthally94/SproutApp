@@ -148,7 +148,8 @@ extension SproutCareTaskMO {
 
 extension SproutCareTaskMO: Comparable {
     static func < (lhs: SproutCareTaskMO, rhs: SproutCareTaskMO) -> Bool {
-        lhs.creationDate < rhs.creationDate
-         && lhs.taskType < rhs.taskType
+        lhs.historyLog < rhs.historyLog
+            && lhs.taskType < rhs.taskType
+            && lhs.plant < rhs.plant
     }
 }

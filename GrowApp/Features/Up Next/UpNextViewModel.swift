@@ -21,32 +21,47 @@ class UpNextViewModel {
     }()
 
     let relativeDateFormatter = Utility.relativeDateFormatter
-
     let headerDateFormatter = Utility.relativeDateFormatter
 
-    private lazy var tasksProvider = AllTasksProvider(managedObjectContext: persistentContainer.viewContext)
+    @Published private(set) var doesShowAllCompletedTasks = true
+    @Published private(set) var taskMarkerDate: Date = Date()
+
+    private lazy var tasksProvider = UpNextProvider(managedObjectContext: persistentContainer.viewContext)
     var persistentContainer = AppDelegate.persistentContainer
 
     var snapshot: AnyPublisher<Snapshot, Never> {
         tasksProvider.$scheduledReminders
-            .combineLatest(tasksProvider.$unscheduledReminders)
-            .map { scheduledReminders, unscheduledReminders in
+            .combineLatest(tasksProvider.$unscheduledReminders, $doesShowAllCompletedTasks, $taskMarkerDate)
+            .map { scheduledReminders, unscheduledReminders, doesShowAllCompletedTasks, taskMarkerDate in
                 var upNextSnapshot = Snapshot()
 
-                if let scheduledReminders = scheduledReminders {
+                if let scheduledReminders = scheduledReminders, !scheduledReminders.isEmpty {
                     let sortedDates = scheduledReminders.keys.sorted()
                     sortedDates.forEach { date in
-                        let section = Section.scheduled(date)
-                        upNextSnapshot.appendSections([section])
-                        let items = scheduledReminders[date]!.compactMap({ task -> Item? in
+                        let items = scheduledReminders[date]!
+                            .filter({ task in
+                                if let log = task.historyLog {
+                                    // Is a completed task. Set inclusion based on view parameters
+                                    return doesShowAllCompletedTasks ? true : log.statusDate > taskMarkerDate
+                                } else {
+                                    return true
+                                }
+                            })
+                            .sorted(by: <)
+                            .compactMap({ task -> Item? in
                             guard let plant = task.plant else { return nil }
                             return Item(task: task, plant: plant)
                         })
-                        upNextSnapshot.appendItems(items, toSection: section)
+
+                        if !items.isEmpty {
+                            let section = Section.scheduled(date)
+                            upNextSnapshot.appendSections([section])
+                            upNextSnapshot.appendItems(items, toSection: section)
+                        }
                     }
                 }
 
-                if let unscheduledReminders = unscheduledReminders {
+                if let unscheduledReminders = unscheduledReminders, !unscheduledReminders.isEmpty {
                     upNextSnapshot.appendSections([.unscheduled])
                     let items = unscheduledReminders.compactMap { task -> Item? in
                         guard let plant = task.plant else { return nil }
@@ -74,5 +89,14 @@ class UpNextViewModel {
     func markItemAsComplete(_ item: UpNextItem) {
         item.markAsComplete()
         persistentContainer.saveContextIfNeeded()
+    }
+
+    func showAllCompletedTasks() {
+        doesShowAllCompletedTasks = true
+    }
+
+    func hidePreviousCompletedTasks() {
+        doesShowAllCompletedTasks = false
+        taskMarkerDate = Date()
     }
 }

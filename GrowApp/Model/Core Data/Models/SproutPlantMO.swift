@@ -80,6 +80,21 @@ class SproutPlantMO: NSManagedObject {
             return nil
         }
     }
+
+    var primaryDisplayName: String? {
+        return nickname ?? commonName ?? id
+    }
+
+    var secondaryDisplayName: String? {
+        switch primaryDisplayName {
+        case nickname:
+            return commonName
+        case commonName:
+            return scientificName
+        default:
+            return nil
+        }
+    }
 }
 
 extension SproutPlantMO {
@@ -109,5 +124,12 @@ extension SproutPlantMO {
         let sortByCommonName = NSSortDescriptor(keyPath: \SproutPlantMO.commonName, ascending: true)
         request.sortDescriptors = [sortByCommonName]
         return request
+    }
+}
+
+extension SproutPlantMO: Comparable {
+    static func < (lhs: SproutPlantMO, rhs: SproutPlantMO) -> Bool {
+        lhs.nickname < rhs.nickname
+        && lhs.commonName < rhs.commonName
     }
 }

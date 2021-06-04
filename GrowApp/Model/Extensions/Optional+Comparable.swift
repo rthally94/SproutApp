@@ -13,9 +13,9 @@ extension Optional: Comparable where Wrapped: Comparable {
         case (.some, .some):
             return lhs! < rhs!
         case (.none, .some):
-            return false
-        case (_, .none):
             return true
+        case (_, .none):
+            return false
         }
     }
 }

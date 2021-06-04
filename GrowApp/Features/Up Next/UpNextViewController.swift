@@ -27,6 +27,22 @@ class UpNextViewController: UIViewController {
         return cv
     }()
 
+    private func makeOptionsMenu(showsAllTasks: Bool) -> UIMenu {
+        let completedRemindersAction: UIAction
+        if showsAllTasks {
+            completedRemindersAction = UIAction(title: "Hide Completed", image: UIImage(systemName: "eye.slash")) { [unowned self] _ in
+                self.viewModel.hidePreviousCompletedTasks()
+            }
+        } else {
+            completedRemindersAction = UIAction(title: "Show Completed", image: UIImage(systemName: "eye")) { [unowned self] _ in
+                self.viewModel.showAllCompletedTasks()
+            }
+        }
+
+        let newMenu = UIMenu(options: .displayInline, children: [completedRemindersAction])
+        return newMenu
+    }
+
     // MARK: - View Life Cycle
     override func loadView() {
         super.loadView()
@@ -36,9 +52,6 @@ class UpNextViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         dataSource = makeDataSource()
-
-        title = "Up Next"
-        navigationController?.navigationBar.prefersLargeTitles = true
 
         viewModel.snapshot
             .sink {[weak self] snapshot in
@@ -52,6 +65,20 @@ class UpNextViewController: UIViewController {
             }
             .assign(to: \.tabBarItem.badgeValue, on: self.parent!)
             .store(in: &cancellables)
+
+        viewModel.$doesShowAllCompletedTasks
+            .sink { [unowned self] showsAllTasks in
+                self.configureNavBar(showsAllTasks: showsAllTasks)
+            }
+            .store(in: &cancellables)
+
+//        configureNavBar()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        viewModel.hidePreviousCompletedTasks()
     }
 
     private func setupViews() {
@@ -63,6 +90,13 @@ class UpNextViewController: UIViewController {
             collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
+    }
+
+    private func configureNavBar(showsAllTasks: Bool) {
+        title = "Up Next"
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), menu: makeOptionsMenu(showsAllTasks: showsAllTasks))
     }
 }
 

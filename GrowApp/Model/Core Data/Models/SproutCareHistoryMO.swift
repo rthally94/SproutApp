@@ -28,3 +28,9 @@ class SproutCareHistoryMO: NSManagedObject {
         }
     }
 }
+
+extension SproutCareHistoryMO: Comparable {
+    static func < (lhs: SproutCareHistoryMO, rhs: SproutCareHistoryMO) -> Bool {
+        lhs.statusDate < rhs.statusDate
+    }
+}

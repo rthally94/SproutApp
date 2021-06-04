@@ -10,7 +10,7 @@ import CoreData
 
 final class TaskNotificationManager {
     lazy var persistentContainer = AppDelegate.persistentContainer
-    private lazy var remindersProvider = AllTasksProvider(managedObjectContext: persistentContainer.viewContext)
+    private lazy var remindersProvider = UpNextProvider(managedObjectContext: persistentContainer.viewContext)
     private lazy var notificationsManager = LocalNotificationManager()
     
     private var cancellables = Set<AnyCancellable>()
