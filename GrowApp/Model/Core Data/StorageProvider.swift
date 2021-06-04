@@ -48,10 +48,19 @@ class StorageProvider {
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         persistentContainer.viewContext.shouldDeleteInaccessibleFaults = true
 
-        let request: NSFetchRequest<SproutPlantMO> = SproutPlantMO.allTemplatesFetchRequest()
-        let typeCount = (try? persistentContainer.viewContext.count(for: request)) ?? 0
+        let templatePlantRequest: NSFetchRequest<SproutPlantMO> = SproutPlantMO.allTemplatesFetchRequest()
+        let typeCount = (try? persistentContainer.viewContext.count(for: templatePlantRequest)) ?? 0
+        print("Template Plant Count: \(typeCount)")
         if typeCount == 0 {
             loadPlantTypes()
+        }
+
+        let templateTaskRequest: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
+        templateTaskRequest.predicate = NSPredicate(format: "%K == true", #keyPath(SproutCareTaskMO.isTemplate))
+        let taskCount = (try? persistentContainer.viewContext.count(for: templateTaskRequest)) ?? 0
+        print("Template Task Count: \(taskCount)")
+        if taskCount == 0 {
+            loadTemplateTasks()
         }
     }
 
@@ -80,6 +89,21 @@ class StorageProvider {
                     try context.save()
                 } catch {
                     print("Unable to save template plants: \(error)")
+                }
+            }
+        }
+    }
+
+    func loadTemplateTasks() {
+        persistentContainer.performBackgroundTask { context in
+            SproutCareTaskMO.SproutCareTaskType.allCases.forEach { type in
+                SproutCareTaskMO.createNewTask(type: type, in: context) { newTask in
+                    newTask.isTemplate = true
+                    do {
+                        try context.save()
+                    } catch {
+                        print("Unable to save new template task, \(type.displayName), to context: \(error)")
+                    }
                 }
             }
         }

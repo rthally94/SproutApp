@@ -34,7 +34,7 @@ class CareScheduleFormatter: Formatter {
 
     override func string(for obj: Any?) -> String? {
         guard let obj = obj as? SproutCareTaskSchedule else { return nil }
-        return string(for: obj)
+        return string(from: obj)
     }
 
     func string(from schedule: SproutCareTaskSchedule) -> String {
@@ -59,7 +59,7 @@ class CareRecurrenceRuleFormatter: Formatter {
 
     override func string(for obj: Any?) -> String? {
         guard let obj = obj as? SproutCareTaskRecurrenceRule else { return nil }
-        return string(for: obj)
+        return string(from: obj)
     }
 
     func string(from rule: SproutCareTaskRecurrenceRule) -> String {

@@ -38,15 +38,19 @@ class SproutLabel: UIView {
 
     var icon: String? {
         didSet {
-            image = nil
-            updateView()
+            if icon != oldValue {
+                image = nil
+                updateView()
+            }
         }
     }
 
     var image: UIImage? {
         didSet {
-            icon = nil
-            updateView()
+            if image != oldValue {
+                icon = nil
+                updateView()
+            }
         }
     }
 

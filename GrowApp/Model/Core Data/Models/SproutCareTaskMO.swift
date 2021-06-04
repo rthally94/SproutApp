@@ -17,7 +17,7 @@ enum SproutCareTaskMOError: Error {
 }
 
 class SproutCareTaskMO: NSManagedObject {
-    enum SproutCareTaskType: String {
+    enum SproutCareTaskType: String, CaseIterable {
         case watering
 
         var displayName: String {
@@ -47,7 +47,7 @@ class SproutCareTaskMO: NSManagedObject {
 
     static func createNewTask(from existingTask: SproutCareTaskMO, completion: @escaping (SproutCareTaskMO) -> Void ) throws {
         guard let context = existingTask.managedObjectContext else { throw NSManagedObjectError.noManagedObjectContextError }
-        guard existingTask.historyLog != nil else { throw SproutCareTaskMOError.taskNotLoggedError }
+        guard existingTask.isTemplate || existingTask.historyLog != nil else { throw SproutCareTaskMOError.taskNotLoggedError }
 
         context.performAndWait {
             let newTask = SproutCareTaskMO(context: context)

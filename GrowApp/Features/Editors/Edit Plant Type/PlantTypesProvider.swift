@@ -49,7 +49,6 @@ class PlantTypesProvider: NSObject {
         newSnapshot.appendSections([.allPlants])
         
         let items = allTypes.sorted(by: { lhs, rhs in
-
             if let lName = lhs.value.commonName, let rName = rhs.value.commonName {
                 return lName < rName
             } else if lhs.value.commonName != nil {
@@ -62,7 +61,14 @@ class PlantTypesProvider: NSObject {
         newSnapshot.appendItems(items)
         snapshot = newSnapshot
     }
-    
+
+    func template(for plant: SproutPlantMO) -> SproutPlantMO? {
+        guard !plant.isTemplate else { return plant }
+        return allTypes.values.first(where: {
+            $0.scientificName == plant.scientificName
+        })
+    }
+
     func object(withID id: NSManagedObjectID) -> SproutPlantMO {
         moc.object(with: id) as! SproutPlantMO
     }

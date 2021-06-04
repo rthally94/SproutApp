@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FB21B6F325B1E5CC00D02384"
-               BuildableName = "GrowApp.app"
-               BlueprintName = "GrowApp"
-               ReferencedContainer = "container:GrowApp.xcodeproj">
+               BuildableName = "Sprout.app"
+               BlueprintName = "Sprout"
+               ReferencedContainer = "container:Sprout.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "FB7490E725B1E71200925C29"
-               BuildableName = "GrowAppTests.xctest"
-               BlueprintName = "GrowAppTests"
-               ReferencedContainer = "container:GrowApp.xcodeproj">
+               BuildableName = "SproutTests.xctest"
+               BlueprintName = "SproutTests"
+               ReferencedContainer = "container:Sprout.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FB21B6F325B1E5CC00D02384"
-            BuildableName = "GrowApp.app"
-            BlueprintName = "GrowApp"
-            ReferencedContainer = "container:GrowApp.xcodeproj">
+            BuildableName = "Sprout.app"
+            BlueprintName = "Sprout"
+            ReferencedContainer = "container:Sprout.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -82,9 +82,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "FB21B6F325B1E5CC00D02384"
-            BuildableName = "GrowApp.app"
-            BlueprintName = "GrowApp"
-            ReferencedContainer = "container:GrowApp.xcodeproj">
+            BuildableName = "Sprout.app"
+            BlueprintName = "Sprout"
+            ReferencedContainer = "container:Sprout.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -14,7 +14,13 @@ class PlantTypePickerViewController: UIViewController {
     typealias Section = PlantTypesProvider.Section
     typealias Item = PlantTypesProvider.Item
 
-    var selectedType: SproutPlantMO?
+    var selectedType: SproutPlantMO? {
+        didSet {
+            if let newType = selectedType, newType.isTemplate == false {
+                selectedType = plantTypesProvider.template(for: newType)
+            }
+        }
+    }
     lazy var plantTypesProvider: PlantTypesProvider = PlantTypesProvider(managedObjectContext: persistentContainer.viewContext)
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer {
         didSet {

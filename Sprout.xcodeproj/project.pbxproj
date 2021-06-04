@@ -93,7 +93,6 @@
 		FBD20AE8260FDB44008915E1 /* SymbolIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE7260FDB44008915E1 /* SymbolIconView.swift */; };
 		FBD54996262A5F0500640A8F /* CompactCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD54995262A5F0500640A8F /* CompactCardView.swift */; };
 		FBD549A5262B1C9A00640A8F /* StatisticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD549A4262B1C9A00640A8F /* StatisticView.swift */; };
-		FBE73CAB265C38EF007106AE /* AddEditPlantStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBE73CAA265C38EF007106AE /* AddEditPlantStoryboard.storyboard */; };
 		FBE73CAE265C3938007106AE /* AddEditPlantViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE73CAD265C3938007106AE /* AddEditPlantViewController.swift */; };
 		FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */; };
 		FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */; };
@@ -115,7 +114,7 @@
 
 /* Begin PBXFileReference section */
 		FB0A9F3525DC5D7E0084AED8 /* TextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCell.swift; sourceTree = "<group>"; };
-		FB21B6F425B1E5CC00D02384 /* GrowApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GrowApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB21B6F425B1E5CC00D02384 /* Sprout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sprout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FB21B6F925B1E5CC00D02384 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FB21B6FB25B1E5CC00D02384 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -148,7 +147,7 @@
 		FB6CD6572657E17500D7DE82 /* RemindersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersProvider.swift; sourceTree = "<group>"; };
 		FB6CD6592657EADD00D7DE82 /* TaskNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskNotificationManager.swift; sourceTree = "<group>"; };
 		FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationManager.swift; sourceTree = "<group>"; };
-		FB7490E825B1E71200925C29 /* GrowAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GrowAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB7490E825B1E71200925C29 /* SproutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SproutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB76D340262A592500D00036 /* LargeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LargeHeaderView.swift; sourceTree = "<group>"; };
 		FB7B812025B9D4AC0053E543 /* CapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapsuleButton.swift; sourceTree = "<group>"; };
@@ -204,7 +203,6 @@
 		FBD20AE7260FDB44008915E1 /* SymbolIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolIconView.swift; sourceTree = "<group>"; };
 		FBD54995262A5F0500640A8F /* CompactCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompactCardView.swift; sourceTree = "<group>"; };
 		FBD549A4262B1C9A00640A8F /* StatisticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticView.swift; sourceTree = "<group>"; };
-		FBE73CAA265C38EF007106AE /* AddEditPlantStoryboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = AddEditPlantStoryboard.storyboard; sourceTree = "<group>"; };
 		FBE73CAD265C3938007106AE /* AddEditPlantViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditPlantViewController.swift; sourceTree = "<group>"; };
 		FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
 		FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICellAccessory+Extensions.swift"; sourceTree = "<group>"; };
@@ -244,8 +242,8 @@
 		FB21B6F525B1E5CC00D02384 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				FB21B6F425B1E5CC00D02384 /* GrowApp.app */,
-				FB7490E825B1E71200925C29 /* GrowAppTests.xctest */,
+				FB21B6F425B1E5CC00D02384 /* Sprout.app */,
+				FB7490E825B1E71200925C29 /* SproutTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -262,7 +260,6 @@
 				FB21B70025B1E5CC00D02384 /* Assets.xcassets */,
 				FB21B70225B1E5CC00D02384 /* LaunchScreen.storyboard */,
 				FB21B70525B1E5CC00D02384 /* Info.plist */,
-				FBE73CAA265C38EF007106AE /* AddEditPlantStoryboard.storyboard */,
 			);
 			path = GrowApp;
 			sourceTree = "<group>";
@@ -691,9 +688,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		FB21B6F325B1E5CC00D02384 /* GrowApp */ = {
+		FB21B6F325B1E5CC00D02384 /* Sprout */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FB21B70825B1E5CC00D02384 /* Build configuration list for PBXNativeTarget "GrowApp" */;
+			buildConfigurationList = FB21B70825B1E5CC00D02384 /* Build configuration list for PBXNativeTarget "Sprout" */;
 			buildPhases = (
 				FB21B6F025B1E5CC00D02384 /* Sources */,
 				FB21B6F125B1E5CC00D02384 /* Frameworks */,
@@ -703,14 +700,14 @@
 			);
 			dependencies = (
 			);
-			name = GrowApp;
+			name = Sprout;
 			productName = GrowApp;
-			productReference = FB21B6F425B1E5CC00D02384 /* GrowApp.app */;
+			productReference = FB21B6F425B1E5CC00D02384 /* Sprout.app */;
 			productType = "com.apple.product-type.application";
 		};
-		FB7490E725B1E71200925C29 /* GrowAppTests */ = {
+		FB7490E725B1E71200925C29 /* SproutTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FB7490F125B1E71200925C29 /* Build configuration list for PBXNativeTarget "GrowAppTests" */;
+			buildConfigurationList = FB7490F125B1E71200925C29 /* Build configuration list for PBXNativeTarget "SproutTests" */;
 			buildPhases = (
 				FB7490E425B1E71200925C29 /* Sources */,
 				FB7490E525B1E71200925C29 /* Frameworks */,
@@ -721,9 +718,9 @@
 			dependencies = (
 				FB7490EE25B1E71200925C29 /* PBXTargetDependency */,
 			);
-			name = GrowAppTests;
+			name = SproutTests;
 			productName = GrowAppTests;
-			productReference = FB7490E825B1E71200925C29 /* GrowAppTests.xctest */;
+			productReference = FB7490E825B1E71200925C29 /* SproutTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -745,7 +742,7 @@
 					};
 				};
 			};
-			buildConfigurationList = FB21B6EF25B1E5CC00D02384 /* Build configuration list for PBXProject "GrowApp" */;
+			buildConfigurationList = FB21B6EF25B1E5CC00D02384 /* Build configuration list for PBXProject "Sprout" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -758,8 +755,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				FB21B6F325B1E5CC00D02384 /* GrowApp */,
-				FB7490E725B1E71200925C29 /* GrowAppTests */,
+				FB21B6F325B1E5CC00D02384 /* Sprout */,
+				FB7490E725B1E71200925C29 /* SproutTests */,
 			);
 		};
 /* End PBXProject section */
@@ -770,7 +767,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB21B70425B1E5CC00D02384 /* LaunchScreen.storyboard in Resources */,
-				FBE73CAB265C38EF007106AE /* AddEditPlantStoryboard.storyboard in Resources */,
 				FB21B70125B1E5CC00D02384 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -895,7 +891,7 @@
 /* Begin PBXTargetDependency section */
 		FB7490EE25B1E71200925C29 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = FB21B6F325B1E5CC00D02384 /* GrowApp */;
+			target = FB21B6F325B1E5CC00D02384 /* Sprout */;
 			targetProxy = FB7490ED25B1E71200925C29 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1031,7 +1027,7 @@
 		FB21B70925B1E5CC00D02384 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Gradient Icon";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
@@ -1051,7 +1047,7 @@
 		FB21B70A25B1E5CC00D02384 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Gradient Icon";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
@@ -1086,7 +1082,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GrowApp.app/GrowApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Sprout.app/Sprout";
 			};
 			name = Debug;
 		};
@@ -1107,14 +1103,14 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GrowApp.app/GrowApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Sprout.app/Sprout";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		FB21B6EF25B1E5CC00D02384 /* Build configuration list for PBXProject "GrowApp" */ = {
+		FB21B6EF25B1E5CC00D02384 /* Build configuration list for PBXProject "Sprout" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FB21B70625B1E5CC00D02384 /* Debug */,
@@ -1123,7 +1119,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FB21B70825B1E5CC00D02384 /* Build configuration list for PBXNativeTarget "GrowApp" */ = {
+		FB21B70825B1E5CC00D02384 /* Build configuration list for PBXNativeTarget "Sprout" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FB21B70925B1E5CC00D02384 /* Debug */,
@@ -1132,7 +1128,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		FB7490F125B1E71200925C29 /* Build configuration list for PBXNativeTarget "GrowAppTests" */ = {
+		FB7490F125B1E71200925C29 /* Build configuration list for PBXNativeTarget "SproutTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				FB7490EF25B1E71200925C29 /* Debug */,

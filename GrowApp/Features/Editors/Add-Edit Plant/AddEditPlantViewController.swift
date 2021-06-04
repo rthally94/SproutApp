@@ -19,19 +19,31 @@ class AddEditPlantViewController: UICollectionViewController {
         storageProvider.editingContext
     }
 
-    private(set) var plant: SproutPlantMO!
+    private(set) var plant: SproutPlantMO?
     private var originalNameValue: String?
 
     private var unconfiguredCareDetailTypes: [SproutCareTaskMO] {
         let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
         request.predicate = NSPredicate(format: "%K == true", #keyPath(SproutCareTaskMO.isTemplate))
-        let allTemplates = try? editingContext.fetch(request)
 
-        return allTemplates?.filter({ template in
-            plant.allTasks.contains { task in
+        print(String((try? editingContext.count(for: request)) ?? -1))
+
+        let allTemplates: [SproutCareTaskMO]
+        do {
+            allTemplates = try editingContext.fetch(request)
+        } catch {
+            print("Unable to fetch all task templates: \(error)")
+            allTemplates = []
+        }
+
+        let filtered = allTemplates.filter({ template in
+            let plantTasks = plant?.allTasks ?? []
+            return !plantTasks.contains { task in
                 template.taskType == task.taskType
             }
-        }) ?? []
+        })
+
+        return filtered
     }
 
     weak var delegate: AddEditPlantViewControllerDelegate?
@@ -41,17 +53,18 @@ class AddEditPlantViewController: UICollectionViewController {
     init(plant: SproutPlantMO? = nil, storageProvider: StorageProvider = AppDelegate.storageProvider) {
         self.storageProvider = storageProvider
         let editingContext = storageProvider.editingContext
-
-        super.init(collectionViewLayout: UICollectionViewFlowLayout())
         
         // Fetch input plant in editing context or create a new one.
         if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? SproutPlantMO {
             self.plant = editingPlant
-        } else {
-            // Make New Plant
-            SproutPlantMO.createNewPlant(in: editingContext) { [unowned self] newPlant in
+        }
+
+        super.init(collectionViewLayout: UICollectionViewFlowLayout())
+
+        if plant == nil {
+            SproutPlantMO.createNewPlant(in: editingContext) {[weak self] newPlant in
                 DispatchQueue.main.async {
-                    self.plant = newPlant
+                    self?.plant = newPlant
                 }
             }
         }
@@ -68,6 +81,7 @@ class AddEditPlantViewController: UICollectionViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+
         title = navigationTitle
         if isNew {
             navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonPressed))
@@ -211,7 +225,7 @@ class AddEditPlantViewController: UICollectionViewController {
 // MARK: Computed Properties
 extension AddEditPlantViewController {
     private var isNew: Bool {
-        plant.isInserted
+        plant?.isInserted ?? true
     }
 
     private var navigationTitle: String? {
@@ -220,11 +234,11 @@ extension AddEditPlantViewController {
 
     private var hasChanges: Bool {
         let areObjectsUpdated = !editingContext.updatedObjects.isEmpty
-        let isNameUpdated = originalNameValue != plant.nickname
+        let isNameUpdated = originalNameValue != plant?.nickname
 
         print("isNameUpdated: \(isNameUpdated), areObjectsUpdated: \(areObjectsUpdated)")
         if isNameUpdated {
-            print("originalNameValue: \(originalNameValue), plantNameValue: \(plant.nickname)")
+            print("originalNameValue: \(originalNameValue), plantNameValue: \(plant?.nickname)")
         }
 
         return areObjectsUpdated || isNameUpdated
@@ -234,9 +248,9 @@ extension AddEditPlantViewController {
         var isPlantValid = true
         do {
             if isNew {
-                try plant.validateForInsert()
+                try plant?.validateForInsert()
             } else {
-                try plant.validateForUpdate()
+                try plant?.validateForUpdate()
             }
         } catch {
             print("Validation Error: \(error)")
@@ -291,7 +305,7 @@ extension AddEditPlantViewController {
 
         // Plant Icon
         snapshot.appendItems([
-            .plantIcon(image: plant.icon)
+            .plantIcon(image: plant?.icon)
         ], toSection: .plantIcon)
 
         // Icon Editor Buttons
@@ -308,12 +322,12 @@ extension AddEditPlantViewController {
 
         // Plant Info
         snapshot.appendItems([
-            .nameTextField(placeholder: "Plant Name", initialText: plant.nickname, onChange: .init(handler: { [weak self] newName in
-                print("Plant name changed: Old(\(self?.plant.nickname ?? "No Value")) | New(\(newName ?? "No Value"))")
-                self?.plant.nickname = newName
+            .nameTextField(placeholder: "Plant Name", initialText: plant?.nickname, onChange: .init(handler: { [weak self] newName in
+                print("Plant name changed: Old(\(self?.plant?.nickname ?? "No Value")) | New(\(newName ?? "No Value"))")
+                self?.plant?.nickname = newName
                 self?.updateNavButtons()
             })),
-            .valueCell(image: nil, text: "Plant Type", secondaryText: plant.commonName ?? "Configure", accessories: [.disclosureIndicator], tapAction: .init(handler: { [weak self] in
+            .valueCell(image: nil, text: "Plant Type", secondaryText: plant?.commonName ?? "Configure", accessories: [.disclosureIndicator], tapAction: .init(handler: { [weak self] in
                 print("Plant Type Item Tapped.")
                 self?.showPlantTypePicker()
             }))
@@ -322,9 +336,9 @@ extension AddEditPlantViewController {
         // Care Details
         let careScheduleFormatter = Utility.careScheduleFormatter
 
-        let careDetailSet = plant.allTasks.filter { task in
+        let careDetailSet = plant?.allTasks.filter { task in
             task.historyLog == nil
-        }
+        } ?? []
 
         let careDetailItems: [Item] = careDetailSet.sorted().map { infoItem in
             let scheduleText = infoItem.schedule != nil ? careScheduleFormatter.string(from: infoItem.schedule!) : nil
@@ -345,7 +359,7 @@ extension AddEditPlantViewController {
 
                 do {
                     try SproutCareTaskMO.createNewTask(from: templateTask) { newTask in
-                        strongSelf.plant.addToCareTasks(newTask)
+                        strongSelf.plant?.addToCareTasks(newTask)
                         strongSelf.showCareTaskEditor(for: newTask)
                     }
                 } catch {
@@ -556,7 +570,7 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
 
         // Apply the new selected image
         do {
-            try plant.setImage(image)
+            try plant?.setImage(image)
         } catch {
             print("Error setting image: \(error)")
         }
@@ -570,8 +584,8 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
 extension AddEditPlantViewController: PlantTypePickerDelegate {
     func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantMO) {
         editingContext.performAndWait { [unowned self] in
-            plant.scientificName = plantType.scientificName
-            plant.commonName = plantType.commonName
+            plant?.scientificName = plantType.scientificName
+            plant?.commonName = plantType.commonName
         }
         updateUI()
     }
