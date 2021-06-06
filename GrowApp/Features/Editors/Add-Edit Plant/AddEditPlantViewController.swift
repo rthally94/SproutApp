@@ -548,7 +548,6 @@ private extension AddEditPlantViewController {
 extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func showImagePicker(preferredType: UIImagePickerController.SourceType = .photoLibrary) {
         let imagePicker = UIImagePickerController()
-        imagePicker.allowsEditing = true
         
         imagePicker.delegate = self
 
