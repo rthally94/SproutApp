@@ -27,13 +27,15 @@ class UpNextProvider: NSObject {
         let sortByTaskType = NSSortDescriptor(keyPath: \SproutCareTaskMO.taskType, ascending: true)
         request.sortDescriptors = [sortByDueDate, sortByPlantName, sortByTaskType]
 
+        let isNotTemplatePredicate = NSPredicate(format: "%K == false", #keyPath(SproutCareTaskMO.isTemplate))
         let isIncompletePredicate = NSPredicate(format: "%K == nil", #keyPath(SproutCareTaskMO.historyLog))
 
         let midnightToday = Calendar.current.startOfDay(for: Date())
         let midnightTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: midnightToday)!
         let isCompletedToday = NSPredicate(format: "%K >= %@ && %K < %@", #keyPath(SproutCareTaskMO.historyLog.statusDate), midnightToday as NSDate, #keyPath(SproutCareTaskMO.historyLog.statusDate), midnightTomorrow as NSDate)
 
-        request.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [isIncompletePredicate, isCompletedToday])
+        let taskTypePredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [isIncompletePredicate, isCompletedToday])
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [isNotTemplatePredicate, taskTypePredicate])
 
         let count = try? moc.count(for: request)
         print("Objects: \(count ?? -1)")
@@ -59,7 +61,10 @@ class UpNextProvider: NSObject {
     private func updateProperties() {
         print("FRC: Updating...")
         scheduledReminders = fetchedResultsController.fetchedObjects?.reduce(into: [Date: [SproutCareTaskMO]](), { scheduledReminders, reminder in
-            if let date = reminder.dueDate, reminder.hasSchedule {
+            if let log = reminder.historyLog, let date = log.statusDate {
+                let midnightOfDate = Calendar.current.startOfDay(for: date)
+                scheduledReminders[midnightOfDate, default: [] ].append(reminder)
+            } else if let date = reminder.dueDate, reminder.hasSchedule {
                 scheduledReminders[date, default: [] ].append(reminder)
             }
         })
