@@ -27,6 +27,22 @@ class UpNextViewController: UIViewController {
         return cv
     }()
 
+    private func makeOptionsMenu(showsAllTasks: Bool) -> UIMenu {
+        let completedRemindersAction: UIAction
+        if showsAllTasks {
+            completedRemindersAction = UIAction(title: "Hide Completed", image: UIImage(systemName: "eye.slash")) { [unowned self] _ in
+                self.viewModel.hidePreviousCompletedTasks()
+            }
+        } else {
+            completedRemindersAction = UIAction(title: "Show Completed", image: UIImage(systemName: "eye")) { [unowned self] _ in
+                self.viewModel.showAllCompletedTasks()
+            }
+        }
+
+        let newMenu = UIMenu(options: .displayInline, children: [completedRemindersAction])
+        return newMenu
+    }
+
     // MARK: - View Life Cycle
     override func loadView() {
         super.loadView()
@@ -37,13 +53,32 @@ class UpNextViewController: UIViewController {
         super.viewDidLoad()
         dataSource = makeDataSource()
 
-        title = "Up Next"
-
         viewModel.snapshot
             .sink {[weak self] snapshot in
                 self?.dataSource.apply(snapshot)
             }
             .store(in: &cancellables)
+
+        viewModel.tasksNeedingCare
+            .map { itemCount in
+                itemCount > 0 ? "\(itemCount)" : nil
+            }
+            .assign(to: \.tabBarItem.badgeValue, on: self.parent!)
+            .store(in: &cancellables)
+
+        viewModel.$doesShowAllCompletedTasks
+            .sink { [unowned self] showsAllTasks in
+                self.configureNavBar(showsAllTasks: showsAllTasks)
+            }
+            .store(in: &cancellables)
+
+//        configureNavBar()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        viewModel.hidePreviousCompletedTasks()
     }
 
     private func setupViews() {
@@ -56,6 +91,13 @@ class UpNextViewController: UIViewController {
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
     }
+
+    private func configureNavBar(showsAllTasks: Bool) {
+        title = "Up Next"
+        navigationController?.navigationBar.prefersLargeTitles = true
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), menu: makeOptionsMenu(showsAllTasks: showsAllTasks))
+    }
 }
 
 private extension UpNextViewController {
@@ -67,14 +109,14 @@ private extension UpNextViewController {
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
         UICollectionView.CellRegistration<TaskCalendarListCell, Item> { cell, indexPath, item in
-            cell.updateWithText(item.title, secondaryText: item.subtitle, icon: item.icon, daysLate: item.daysLate)
+            cell.updateWithText(item.title, secondaryText: item.subtitle, image: item.icon, daysLate: item.daysLate)
 
             if item.isChecked {
                 cell.accessories = [ .checkmark() ]
             } else {
                 cell.accessories = [
                     .todoAccessory(actionHandler: {_ in
-                        item.markAsComplete()
+                        self.viewModel.markItemAsComplete(item)
                     })
                 ]
             }
@@ -87,7 +129,7 @@ private extension UpNextViewController {
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             var configuration = UIListContentConfiguration.largeGroupedHeader()
-            configuration.text = section.title
+            configuration.text = section.headerTitle
             //            configuration.secondaryText = itemCount == 1 ? "\(itemCount) task" : "\(itemCount) tasks"
             cell.contentConfiguration = configuration
         }

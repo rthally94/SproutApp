@@ -20,52 +20,83 @@ class UpNextViewModel {
         return formatter
     }()
 
+    let relativeDateFormatter = Utility.relativeDateFormatter
     let headerDateFormatter = Utility.relativeDateFormatter
 
-    private lazy var tasksProvider = TasksProvider(managedObjectContext: persistentContainer.viewContext)
+    @Published private(set) var doesShowAllCompletedTasks = true
+    @Published private(set) var taskMarkerDate: Date = Date()
+
+    private lazy var tasksProvider = UpNextProvider(managedObjectContext: persistentContainer.viewContext)
     var persistentContainer = AppDelegate.persistentContainer
 
     var snapshot: AnyPublisher<Snapshot, Never> {
-        tasksProvider.$snapshot
-            .map { snapshot in
-                var newSnapshot = Snapshot()
-                if let oldSnapshot = snapshot {
-                    let sections: [Section] = oldSnapshot.sectionIdentifiers.compactMap {
-                        return Section(title: $0)
-                    }
-                    newSnapshot.appendSections(sections)
+        tasksProvider.$scheduledReminders
+            .combineLatest(tasksProvider.$unscheduledReminders, $doesShowAllCompletedTasks, $taskMarkerDate)
+            .map { scheduledReminders, unscheduledReminders, doesShowAllCompletedTasks, taskMarkerDate in
+                var upNextSnapshot = Snapshot()
 
-                    zip(oldSnapshot.sectionIdentifiers, newSnapshot.sectionIdentifiers).forEach { oldSection, newSection in
-                        let taskIDs = oldSnapshot.itemIdentifiers(inSection: oldSection)
-                        var items = [Item]()
-                        var itemsToReload = [Item]()
-
-                        taskIDs.forEach { taskID in
-                            if let reminder = self.tasksProvider.object(withID: taskID) as? SproutReminder,
-                               let careInfoID = reminder.careInfo?.objectID,
-                               let careInfo = self.tasksProvider.object(withID: careInfoID) as? CareInfo,
-                               let plantID = reminder.careInfo?.plant?.objectID,
-                               let plant = self.tasksProvider.object(withID: plantID) as? GHPlant
-                            {
-                                let item = Item(careInfo: careInfo, plant: plant)
-                                items.append(item)
-                                if reminder.isUpdated {
-                                    itemsToReload.append(item)
+                if let scheduledReminders = scheduledReminders, !scheduledReminders.isEmpty {
+                    let sortedDates = scheduledReminders.keys.sorted()
+                    sortedDates.forEach { date in
+                        let items = scheduledReminders[date]!
+                            .filter({ task in
+                                if let log = task.historyLog {
+                                    // Is a completed task. Set inclusion based on view parameters
+                                    return doesShowAllCompletedTasks ? true : log.statusDate > taskMarkerDate
+                                } else {
+                                    return true
                                 }
-                            }
-                        }
+                            })
+                            .sorted(by: <)
+                            .compactMap({ task -> Item? in
+                            guard let plant = task.plant else { return nil }
+                            return Item(task: task, plant: plant)
+                        })
 
-                        newSnapshot.appendItems(items)
-                        newSnapshot.reloadItems(itemsToReload)
+                        if !items.isEmpty {
+                            let section = Section.scheduled(date)
+                            upNextSnapshot.appendSections([section])
+                            upNextSnapshot.appendItems(items, toSection: section)
+                        }
                     }
                 }
-                return newSnapshot
+
+                if let unscheduledReminders = unscheduledReminders, !unscheduledReminders.isEmpty {
+                    upNextSnapshot.appendSections([.unscheduled])
+                    let items = unscheduledReminders.compactMap { task -> Item? in
+                        guard let plant = task.plant else { return nil }
+                        return Item(task: task, plant: plant)
+                    }
+                    upNextSnapshot.appendItems(items, toSection: .unscheduled)
+                }
+
+                return upNextSnapshot
+            }
+            .eraseToAnyPublisher()
+    }
+
+    var tasksNeedingCare: AnyPublisher<Int, Never> {
+        snapshot
+            .map {
+                $0.itemIdentifiers.reduce(0) { result, item in
+                    result + (item.isChecked ? 0 : 1)
+                }
             }
             .eraseToAnyPublisher()
     }
 
     // MARK: - Task Methods
     func markItemAsComplete(_ item: UpNextItem) {
-        
+        item.markAsComplete()
+        persistentContainer.saveContextIfNeeded()
+    }
+
+    func showAllCompletedTasks() {
+        doesShowAllCompletedTasks = true
+    }
+
+    func hidePreviousCompletedTasks() {
+        doesShowAllCompletedTasks = false
+        taskMarkerDate = Date()
     }
 }

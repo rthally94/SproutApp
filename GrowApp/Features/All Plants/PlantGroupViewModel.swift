@@ -12,7 +12,8 @@ import UIKit
 enum PlantGroupView {
     case initial
     case newPlant
-    case plantDetail
+    case editPlant(SproutPlantMO)
+    case plantDetail(SproutPlantMO)
 }
 
 class PlantGroupViewModel {
@@ -24,9 +25,8 @@ class PlantGroupViewModel {
     var persistentContainer = AppDelegate.persistentContainer
 
     @Published private(set) var presentedView: PlantGroupView = .initial
-    private(set) var selectedPlant: GHPlant?
 
-    @Published private(set) var title: String? = "Your Plants"
+    @Published private(set) var navigationTitle: String? = "Your Plants"
 
     var snapshot: AnyPublisher<Snapshot, Never> {
         plantsProvider.$snapshot
@@ -47,7 +47,7 @@ class PlantGroupViewModel {
                             if let plant = self.plantsProvider.object(withID: plantID) {
                                 let item = Item(plant: plant)
                                 items.append(item)
-                                if plant.hasUpdates {
+                                if plant.isUpdated {
                                     itemsToReload.append(item)
                                 }
                             }
@@ -63,24 +63,15 @@ class PlantGroupViewModel {
 
     // MARK: - Task Methods
     func addNewPlant() {
-        let viewContext = persistentContainer.viewContext
-
-        do {
-            let newPlant = try GHPlant.createDefaultPlant(inContext: viewContext)
-            selectedPlant = newPlant
-            presentedView = .newPlant
-        } catch {
-            fatalError("Unable to create new plant with default template: \(error)")
-        }
+        presentedView = .newPlant
     }
 
     func selectPlant(at indexPath: IndexPath) {
-        selectedPlant = plantsProvider.object(at: indexPath)
-        presentedView = .plantDetail
+        let selectedPlant = plantsProvider.object(at: indexPath)
+        presentedView = .plantDetail(selectedPlant)
     }
 
     func showList() {
-        selectedPlant = nil
         presentedView = .initial
     }
 }

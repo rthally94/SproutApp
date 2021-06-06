@@ -33,12 +33,17 @@ class CareScheduleFormatter: Formatter {
     }
 
     override func string(for obj: Any?) -> String? {
-        guard let obj = obj as? CareSchedule else { return nil }
-        return string(for: obj)
+        guard let obj = obj as? SproutCareTaskSchedule else { return nil }
+        return string(from: obj)
     }
 
-    func string(for interval: CareSchedule) -> String {
-        let frequencyText = recurrenceRuleFormatter.string(for: interval.recurrenceRule) ?? ""
+    func string(from schedule: SproutCareTaskSchedule) -> String {
+        let frequencyText: String
+        if let rule = schedule.recurrenceRule {
+            frequencyText = recurrenceRuleFormatter.string(from: rule)
+        } else {
+            frequencyText = ""
+        }
         return frequencyText
     }
 }
@@ -53,23 +58,34 @@ class CareRecurrenceRuleFormatter: Formatter {
     var formattingContext: Context = .dynamic
 
     override func string(for obj: Any?) -> String? {
-        guard let obj = obj as? CareRecurrenceRule else { return nil }
-        return string(for: obj)
+        guard let obj = obj as? SproutCareTaskRecurrenceRule else { return nil }
+        return string(from: obj)
     }
 
-    func string(for rule: CareRecurrenceRule) -> String {
-        let frequencyText = frequencySymbol(for: rule.frequency, style: frequencyStyle, context: formattingContext)
-
+    func string(from rule: SproutCareTaskRecurrenceRule) -> String {
+        let frequencyText: String
         let valueText: String
-        if rule.frequency == .weekly, let daysOfTheWeek = rule.daysOfTheWeek, !daysOfTheWeek.isEmpty {
-            // weekday values
-            valueText = daysOfTheWeekSymbol(for: daysOfTheWeek, style: valuesStyle, context: formattingContext)
-        } else if rule.frequency == .weekly, let daysOfTheMonth = rule.daysOfTheMonth, !daysOfTheMonth.isEmpty {
-            // day values
-            valueText = daysOfTheMonthSymbol(for: daysOfTheMonth, style: valuesStyle, context: formattingContext)
-        } else {
-            // interval value
-            valueText = intervalSymbol(for: rule.interval, frequency: rule.frequency, style: valuesStyle, context: formattingContext)
+
+        switch rule {
+        case .daily(let interval):
+            frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
+            valueText = intervalSymbol(for: interval, frequency: rule, style: frequencyStyle, context: formattingContext)
+
+        case .weekly(let interval, let weekdays) where interval == 1 && weekdays?.isEmpty == false:
+            frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
+            valueText = daysOfTheWeekSymbol(for: weekdays!, style: frequencyStyle, context: formattingContext)
+
+        case .weekly(let interval, _):
+            frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
+            valueText = intervalSymbol(for: interval, frequency: rule, style: frequencyStyle, context: formattingContext)
+
+        case .monthly(let interval, let days) where interval == 1 && days?.isEmpty == false:
+            frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
+            valueText = daysOfTheMonthSymbol(for: days!, style: frequencyStyle, context: formattingContext)
+
+        case .monthly(let interval, _):
+            frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
+            valueText = intervalSymbol(for: interval, frequency: rule, style: frequencyStyle, context: formattingContext)
         }
 
         let ruleString: String
@@ -89,7 +105,7 @@ class CareRecurrenceRuleFormatter: Formatter {
     }
 
     // MARK: - Frequency
-    private func frequencySymbol(for frequency: SproutRecurrenceFrequency, style: Style, context: Context) -> String {
+    private func frequencySymbol(for frequency: SproutCareTaskRecurrenceRule, style: Style, context: Context) -> String {
         let parameters = (style, context)
         switch parameters {
         case (.short, .standalone):
@@ -105,7 +121,7 @@ class CareRecurrenceRuleFormatter: Formatter {
         }
     }
 
-    func regularFrequencySymbol(for frequency: SproutRecurrenceFrequency) -> String {
+    func regularFrequencySymbol(for frequency: SproutCareTaskRecurrenceRule) -> String {
         switch frequency {
         case .daily:
             return "Every day"
@@ -113,12 +129,10 @@ class CareRecurrenceRuleFormatter: Formatter {
             return "Every week"
         case .monthly:
             return "Every month"
-        case .never:
-            return "Not scheduled"
         }
     }
 
-    func shortFrequencySymbol(for frequency: SproutRecurrenceFrequency) -> String {
+    func shortFrequencySymbol(for frequency: SproutCareTaskRecurrenceRule) -> String {
         switch frequency {
         case .daily:
             return "Daily"
@@ -126,21 +140,19 @@ class CareRecurrenceRuleFormatter: Formatter {
             return "Weekly"
         case .monthly:
             return "Monthly"
-        case .never:
-            return "Never"
         }
     }
 
-    func regularStandaloneFrequencySymbol(for frequency: SproutRecurrenceFrequency) -> String {
+    func regularStandaloneFrequencySymbol(for frequency: SproutCareTaskRecurrenceRule) -> String {
         return regularFrequencySymbol(for: frequency).capitalized
     }
 
-    func shortStandaloneFrequencySymbol(for frequency: SproutRecurrenceFrequency) -> String {
+    func shortStandaloneFrequencySymbol(for frequency: SproutCareTaskRecurrenceRule) -> String {
         return shortFrequencySymbol(for: frequency).capitalized
     }
 
     // MARK: - Interval
-    private func intervalSymbol(for interval: Int, frequency: SproutRecurrenceFrequency, style: Style, context: Context) -> String {
+    private func intervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule, style: Style, context: Context) -> String {
         let parameters = (style, context)
         switch parameters {
         case (.short, .standalone):
@@ -156,11 +168,11 @@ class CareRecurrenceRuleFormatter: Formatter {
         }
     }
 
-    private func regularIntervalSymbol(for interval: Int, frequency: SproutRecurrenceFrequency) -> String {
+    private func regularIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {
         return "Every " + shortIntervalSymbol(for: interval, frequency: frequency)
     }
 
-    private func shortIntervalSymbol(for interval: Int, frequency: SproutRecurrenceFrequency) -> String {
+    private func shortIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {
         let dateComponents: DateComponents
         switch frequency {
         case .daily:
@@ -177,11 +189,11 @@ class CareRecurrenceRuleFormatter: Formatter {
         return returnString ?? ""
     }
 
-    private func regularStandaloneIntervalSymbol(for interval: Int, frequency: SproutRecurrenceFrequency) -> String {
+    private func regularStandaloneIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {
         return regularIntervalSymbol(for: interval, frequency: frequency).capitalized
     }
 
-    private func shortStandaloneIntervalSymbol(for interval: Int, frequency: SproutRecurrenceFrequency) -> String {
+    private func shortStandaloneIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {
         return shortIntervalSymbol(for: interval, frequency: frequency).capitalized
     }
 

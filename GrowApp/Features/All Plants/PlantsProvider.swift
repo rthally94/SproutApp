@@ -13,15 +13,16 @@ class PlantsProvider: NSObject {
     typealias Item = NSManagedObjectID
     
     let moc: NSManagedObjectContext
-    fileprivate let fetchedResultsController: NSFetchedResultsController<GHPlant>
+    fileprivate let fetchedResultsController: NSFetchedResultsController<SproutPlantMO>
     
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
     
     init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext
         
-        let request: NSFetchRequest<GHPlant> = GHPlant.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(keyPath: \GHPlant.name, ascending: true)]
+        let request: NSFetchRequest<SproutPlantMO> = SproutPlantMO.fetchRequest()
+        request.predicate = NSPredicate(format: "%K == false", #keyPath(SproutPlantMO.isTemplate))
+        request.sortDescriptors = [NSSortDescriptor(keyPath: \SproutPlantMO.nickname, ascending: true)]
         
         fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
         
@@ -31,12 +32,12 @@ class PlantsProvider: NSObject {
         try! fetchedResultsController.performFetch()
     }
     
-    func object(at indexPath: IndexPath) -> GHPlant {
+    func object(at indexPath: IndexPath) -> SproutPlantMO {
         return fetchedResultsController.object(at: indexPath)
     }
 
-    func object(withID id: NSManagedObjectID) -> GHPlant? {
-        return moc.object(with: id) as? GHPlant
+    func object(withID id: NSManagedObjectID) -> SproutPlantMO? {
+        return moc.object(with: id) as? SproutPlantMO
     }
 
     func reload() {

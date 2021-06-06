@@ -45,7 +45,7 @@ class PlantGroupViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.$title
+        viewModel.$navigationTitle
             .assign(to: \.title, on: self)
             .store(in: &cancellables)
 
@@ -53,10 +53,8 @@ class PlantGroupViewController: UIViewController {
             .sink { view in
                 switch view {
                 case .newPlant:
-                    guard let plant = self.viewModel.selectedPlant else { return }
-                    self.showPlantEditor(for: plant)
-                case .plantDetail:
-                    guard let plant = self.viewModel.selectedPlant else { return }
+                    self.showNewPlantEditor()
+                case let .plantDetail(plant):
                     self.showPlantDetail(for: plant)
                 default:
                     break
@@ -74,17 +72,15 @@ class PlantGroupViewController: UIViewController {
         viewModel.addNewPlant()
     }
 
-    func showPlantDetail(for plant: GHPlant) {
+    func showPlantDetail(for plant: SproutPlantMO) {
         let vc = PlantDetailViewController()
         vc.persistentContainer = viewModel.persistentContainer
         vc.plant = plant
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    func showPlantEditor(for plant: GHPlant) {
-        let vc = PlantEditorControllerController()
-        vc.plant = plant
-        vc.persistentContainer = viewModel.persistentContainer
+    func showNewPlantEditor() {
+        let vc = AddEditPlantViewController(storageProvider: AppDelegate.storageProvider)
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }
@@ -133,19 +129,20 @@ extension PlantGroupViewController: UICollectionViewDelegate {
 }
 
 // MARK: - PlantEditorDelegate
-extension PlantGroupViewController: PlantEditorDelegate {
-    func plantEditor(_ editor: PlantEditorControllerController, didUpdatePlant plant: GHPlant) {
+extension PlantGroupViewController: AddEditPlantViewControllerDelegate {
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
         viewModel.showList()
 
         viewModel.persistentContainer.viewContext.refresh(plant, mergeChanges: true)
         viewModel.persistentContainer.saveContextIfNeeded()
     }
 
-    func plantEditorDidCancel(_ editor: PlantEditorControllerController) {
+    func plantEditorDidCancel(_ editor: AddEditPlantViewController) {
         viewModel.showList()
     }
 }
 
+// MARK: - UINavigationControllerDelegate
 extension PlantGroupViewController: UINavigationControllerDelegate {
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         if viewController == self {

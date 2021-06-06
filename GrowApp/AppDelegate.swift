@@ -28,9 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     var storageProvider = StorageProvider()
+    var taskNotificationManager = TaskNotificationManager()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        taskNotificationManager.registerForNotifications()
         return true
     }
 

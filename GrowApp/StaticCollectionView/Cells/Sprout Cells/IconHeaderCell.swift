@@ -8,7 +8,7 @@
 import UIKit
 
 class IconHeaderCell: UICollectionViewCell {
-    lazy var iconView = SproutIconView()
+    lazy var iconView = IconView()
 
     override func layoutSubviews() {
         super.layoutSubviews()

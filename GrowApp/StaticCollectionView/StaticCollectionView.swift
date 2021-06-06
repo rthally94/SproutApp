@@ -22,7 +22,7 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: view.topAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
         ])
 
@@ -38,12 +38,8 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
         let pickerRowCellRegistration = makePickerCellRegistration()
 
         let iconRegistration = makeIconCellRegistration()
-        let heroRegistration = makeHeroCellRegistration()
-        let headerCellRegistration = makeHeaderCellRegistration()
         let largeHeaderCellRegistration = makeLargeHeaderCellRegistration()
-        let statisticCellRegistration = makeStatisticCellRegistration()
         let todoCellRegistration = makeTodoCellRegistration()
-        let compactCardRegistration = makeCompactCardRegistration()
         let customViewCellRegistration = makeCustomViewCellRegistration()
 
 
@@ -62,18 +58,10 @@ class StaticCollectionViewController<Section: Hashable>: UIViewController {
             // Sprout Cell
             case .icon:
                 return collectionView.dequeueConfiguredReusableCell(using: iconRegistration, for: indexPath, item: item)
-            case .hero:
-                return collectionView.dequeueConfiguredReusableCell(using: heroRegistration, for: indexPath, item: item)
-            case .header:
-                return collectionView.dequeueConfiguredReusableCell(using: headerCellRegistration, for: indexPath, item: item)
             case .largeHeader:
                 return collectionView.dequeueConfiguredReusableCell(using: largeHeaderCellRegistration, for: indexPath, item: item)
-            case .statistic:
-                return collectionView.dequeueConfiguredReusableCell(using: statisticCellRegistration, for: indexPath, item: item)
             case .todo:
                 return collectionView.dequeueConfiguredReusableCell(using: todoCellRegistration, for: indexPath, item: item)
-            case .compactCard:
-                return collectionView.dequeueConfiguredReusableCell(using: compactCardRegistration, for: indexPath, item: item)
             case .customView:
                 return collectionView.dequeueConfiguredReusableCell(using: customViewCellRegistration, for: indexPath, item: item)
             }
@@ -118,7 +106,11 @@ extension StaticCollectionViewController {
     // MARK: - Form Cell Registraion
     private func makeTextFieldCellRegistration() -> UICollectionView.CellRegistration<SproutTextFieldCell, Item> {
         UICollectionView.CellRegistration<SproutTextFieldCell, Item> { cell, indexPath, item in
-            cell.updateWith(image: item.image, title: item.text, placeholder: item.secondaryText, value: item.tertiaryText, onChange: item.valueChangedAction)
+            cell.image = item.image
+            cell.title = item.text
+            cell.placeholder = item.secondaryText
+            cell.value = item.tertiaryText
+            cell.onChange = item.valueChangedAction
         }
     }
 
@@ -159,42 +151,13 @@ extension StaticCollectionViewController {
         }
     }
 
-    func makeHeroCellRegistration() -> UICollectionView.CellRegistration<HeroCell, Item> {
-        UICollectionView.CellRegistration<HeroCell, Item> { cell, indexPath, item in
-            cell.image = item.image
-            cell.headerTitle = item.text
-            cell.headerSubtitle = item.secondaryText
-        }
-    }
-
-    func makeHeaderCellRegistration() -> UICollectionView.CellRegistration<HeaderCell, Item> {
-        UICollectionView.CellRegistration<HeaderCell, Item> { cell, indexPath, item in
-            cell.titleLabel.text = item.text
-            cell.subtitleLabel.text = item.secondaryText
-        }
-    }
-
     func makeLargeHeaderCellRegistration() -> UICollectionView.CellRegistration<LargeHeaderCell, Item> {
         UICollectionView.CellRegistration<LargeHeaderCell, Item> { cell, indexPathm, item in
-            cell.image = item.image
-            cell.title = item.text
-            cell.value = item.secondaryText
+//            cell.image = item.image
+            cell.titleText = item.text
+            cell.valueText = item.secondaryText
             cell.tintColor = item.tintColor
 
-            cell.layer.cornerRadius = 10
-            cell.clipsToBounds = true
-        }
-    }
-
-    func makeStatisticCellRegistration() -> UICollectionView.CellRegistration<StatisticCell, Item> {
-        UICollectionView.CellRegistration<StatisticCell, Item> { cell, indexPath, item in
-            cell.image = item.image
-            cell.title = item.text
-            cell.value = item.secondaryText
-            cell.unit = item.tertiaryText
-            cell.tintColor = item.tintColor
-
-            cell.contentView.backgroundColor = .secondarySystemGroupedBackground
             cell.layer.cornerRadius = 10
             cell.clipsToBounds = true
         }
@@ -236,15 +199,6 @@ extension StaticCollectionViewController {
 
             cell.contentConfiguration = config
             cell.accessories = item.isOn ? [ .checkmark() ] : []
-        }
-    }
-
-    func makeCompactCardRegistration() -> UICollectionView.CellRegistration<CompactCardCell, Item> {
-        UICollectionView.CellRegistration<CompactCardCell, Item> { cell, indexPath, item in
-            cell.image = item.image
-            cell.title = item.text
-            cell.value = item.secondaryText
-            cell.tintColor = item.tintColor
         }
     }
 

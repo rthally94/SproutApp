@@ -6,46 +6,81 @@
 //
 
 import CoreData
+import UIKit
 
 struct UpNextItem: Hashable {
     static let reloadInterval = 2.0
-    let scheduleFormatter = Utility.currentScheduleFormatter
+    let scheduleFormatter = Utility.careScheduleFormatter
 
-    var careInfo: CareInfo
-    var plant: GHPlant
+    var task: SproutCareTaskMO
+    var plant: SproutPlantMO
 
     var title: String? {
-        return plant.name
+        return plant.primaryDisplayName
     }
 
     var subtitle: String? {
-        return scheduleFormatter.string(for: careInfo.nextReminder.schedule)
+        if let schedule = task.schedule {
+            return scheduleFormatter.string(from: schedule)
+        } else {
+            return nil
+        }
     }
 
-    var icon: SproutIcon? {
+    var icon: UIImage? {
         return plant.icon
     }
 
     var daysLate: Int? {
-        guard let lastLogDate = careInfo.lastLogDate,
-              let nextCareDate = careInfo.nextCareDate,
-              let daysLate = Calendar.current.dateComponents([.day], from: nextCareDate, to: lastLogDate).day
+        guard task.hasSchedule == false,
+              let dueDate = task.dueDate,
+              let daysLate = Calendar.current.dateComponents([.day], from: dueDate, to: Date()).day
         else { return nil }
 
         return daysLate < 0 ? 0 : daysLate
     }
 
     var isChecked: Bool {
-        guard let lastLogDate = careInfo.lastLogDate, let nextCareDate = careInfo.nextCareDate else { return false }
-        if let secondsSinceLastLog = Calendar.current.dateComponents([.second], from: Date(), to: lastLogDate).second, Double(secondsSinceLastLog) < Self.reloadInterval {
-            return true
-        } else {
-            return Calendar.current.startOfDay(for: lastLogDate) == Calendar.current.startOfDay(for: nextCareDate)
-        }
+        task.historyLog != nil
     }
 
     // MARK: - Task Actions
     func markAsComplete() {
-        careInfo.markAsComplete()
+        do {
+            try task.markAs(.complete) {
+                do {
+                    if task.managedObjectContext?.hasChanges == true {
+                        try task.managedObjectContext?.save()
+                    }
+                } catch {
+                    print("Error saving context: \(error)")
+                    task.managedObjectContext?.rollback()
+                }
+            }
+        } catch {
+            print("Error marking task as complete: \(error)")
+        }
+    }
+}
+
+extension UpNextItem {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(title)
+        hasher.combine(subtitle)
+        hasher.combine(isChecked)
+        hasher.combine(icon)
+        hasher.combine(daysLate)
+        hasher.combine(plant.id)
+        hasher.combine(task.id)
+    }
+
+    static func ==(lhs: UpNextItem, rhs: UpNextItem) -> Bool {
+        lhs.title == rhs.title
+            && lhs.subtitle == rhs.subtitle
+            && lhs.isChecked == rhs.isChecked
+            && lhs.icon == rhs.icon
+            && lhs.daysLate == rhs.daysLate
+            && lhs.plant.id == rhs.plant.id
+            && lhs.task.id == rhs.task.id
     }
 }

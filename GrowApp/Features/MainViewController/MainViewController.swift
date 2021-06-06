@@ -9,6 +9,10 @@ import CoreData
 import UIKit
 
 class MainViewController: UIViewController {
+    var plantsNeedingCare: Int {
+        return 1
+    }
+
     lazy var upNextVC: some UIViewController = {
         let vc = UpNextViewController()
         let viewModel = UpNextViewModel()
@@ -17,14 +21,10 @@ class MainViewController: UIViewController {
 
         let nav = vc.wrappedInNavigationController()
         nav.tabBarItem = UITabBarItem(title: "Up Next", image: UIImage(systemName: "text.badge.checkmark"), tag: 0)
-        return nav
-    }()
-
-    lazy var timelineVC: some UIViewController = {
-        let vc = TaskCalendarViewController()
-        vc.persistentContainer = persistentContainer
-        let nav = vc.wrappedInNavigationController()
-        nav.tabBarItem = UITabBarItem(title: "Calendar", image: UIImage(systemName: "calendar"), tag: 1)
+        if plantsNeedingCare > 0 {
+//            nav.tabBarItem.badgeValue = "\(plantsNeedingCare)"
+            nav.tabBarItem.badgeColor = UIColor.systemGreen
+        }
         return nav
     }()
     
