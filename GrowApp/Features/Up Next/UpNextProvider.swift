@@ -65,7 +65,8 @@ class UpNextProvider: NSObject {
                 let midnightOfDate = Calendar.current.startOfDay(for: date)
                 scheduledReminders[midnightOfDate, default: [] ].append(reminder)
             } else if let date = reminder.dueDate, reminder.hasSchedule {
-                scheduledReminders[date, default: [] ].append(reminder)
+                let midnightOfDate = Calendar.current.startOfDay(for: date)
+                scheduledReminders[midnightOfDate, default: [] ].append(reminder)
             }
         })
         print("FRC: scheduledReminder Updated: \(scheduledReminders)")

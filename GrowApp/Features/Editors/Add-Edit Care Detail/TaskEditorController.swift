@@ -24,7 +24,7 @@ class TaskEditorController: UIViewController {
     private let repeatFrequencyChoices = [
         "Daily",
         "Weekly",
-        "Montly"
+        "Monthly"
     ]
 
     private var collectionView: UICollectionView!

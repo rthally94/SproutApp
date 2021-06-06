@@ -553,9 +553,9 @@
 		FB98B9552669794F00629C1B /* Local Notifications */ = {
 			isa = PBXGroup;
 			children = (
-				FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */,
 				FB6CD6572657E17500D7DE82 /* RemindersProvider.swift */,
 				FB6CD6592657EADD00D7DE82 /* TaskNotificationManager.swift */,
+				FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */,
 			);
 			path = "Local Notifications";
 			sourceTree = "<group>";
