@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @AppStorage(UserDefaults.Keys.dailyDigestIsEnabled.rawValue) var isDailyDigestEnabled = false
-    @AppStorage(UserDefaults.Keys.dailyDigestDate.rawValue) var dailyDigestDate = Date()
+    @AppStorage(UserDefaults.Keys.dailyDigestDate.rawValue) var dailyDigestDate = Calendar.current.date(bySettingHour: 7, minute: 30, second: 0, of: Date())!
 
     var body: some View {
         NavigationView {
@@ -21,6 +21,7 @@ struct SettingsView: View {
 
                     if isDailyDigestEnabled {
                         DatePicker("Time", selection: $dailyDigestDate, displayedComponents: [.hourAndMinute])
+                            .datePickerStyle(GraphicalDatePickerStyle())
                     }
                 }
 
