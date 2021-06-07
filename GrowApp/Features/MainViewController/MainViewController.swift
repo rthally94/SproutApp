@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import SwiftUI
 import UIKit
 
 class MainViewController: UIViewController {
@@ -22,7 +23,7 @@ class MainViewController: UIViewController {
         let nav = vc.wrappedInNavigationController()
         nav.tabBarItem = UITabBarItem(title: "Up Next", image: UIImage(systemName: "text.badge.checkmark"), tag: 0)
         if plantsNeedingCare > 0 {
-//            nav.tabBarItem.badgeValue = "\(plantsNeedingCare)"
+            //            nav.tabBarItem.badgeValue = "\(plantsNeedingCare)"
             nav.tabBarItem.badgeColor = UIColor.systemGreen
         }
         return nav
@@ -40,12 +41,21 @@ class MainViewController: UIViewController {
         nav.tabBarItem.tag = 2
         return nav
     }()
-        
+
+    lazy var settingsVC: some UIViewController = {
+        let view = SettingsView()
+        let hostedView = UIHostingController(rootView: view)
+        hostedView.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gear"), selectedImage: UIImage(systemName: "gear"))
+        hostedView.tabBarItem.tag = 3
+        return hostedView
+    }()
+
     lazy var tabBarVC: UITabBarController = {
         let vc = UITabBarController(nibName: nil, bundle: nil)
         vc.setViewControllers([
             upNextVC,
-            plantGroupVC
+            plantGroupVC,
+            settingsVC
         ], animated: false)
         return vc
     }()
@@ -96,4 +106,4 @@ extension UIViewController {
         return UINavigationController(rootViewController: self)
     }
 }
-    
+

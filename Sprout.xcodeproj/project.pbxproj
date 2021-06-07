@@ -17,6 +17,12 @@
 		FB28A8E82649A2DE00B1206E /* ChipLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8E72649A2DE00B1206E /* ChipLabel.swift */; };
 		FB28A8EA2649B6A600B1206E /* SpacerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8E92649B6A600B1206E /* SpacerView.swift */; };
 		FB28A8ED264AB7D700B1206E /* CareScheduleFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */; };
+		FB43D63A266D680600FA9FA1 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D639266D680600FA9FA1 /* HeaderView.swift */; };
+		FB43D63D266D919E00FA9FA1 /* SproutHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D63C266D919E00FA9FA1 /* SproutHeaderCell.swift */; };
+		FB43D640266DB4BE00FA9FA1 /* DetailHeroReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D63F266DB4BE00FA9FA1 /* DetailHeroReusableView.swift */; };
+		FB43D643266E603E00FA9FA1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D642266E603E00FA9FA1 /* SettingsView.swift */; };
+		FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D644266E665E00FA9FA1 /* UserDefaults+Extensions.swift */; };
+		FB43D647266E70BD00FA9FA1 /* Date+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */; };
 		FB4FAB09265EDE7C001A9201 /* HashableClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4FAB08265EDE7C001A9201 /* HashableClosure.swift */; };
 		FB5F348925B63E6900CCE6BC /* GreenhouseListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */; };
 		FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348C25B6411F00CCE6BC /* DividerView.swift */; };
@@ -125,6 +131,12 @@
 		FB28A8E72649A2DE00B1206E /* ChipLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChipLabel.swift; sourceTree = "<group>"; };
 		FB28A8E92649B6A600B1206E /* SpacerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpacerView.swift; sourceTree = "<group>"; };
 		FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareScheduleFormatter.swift; sourceTree = "<group>"; };
+		FB43D639266D680600FA9FA1 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		FB43D63C266D919E00FA9FA1 /* SproutHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutHeaderCell.swift; sourceTree = "<group>"; };
+		FB43D63F266DB4BE00FA9FA1 /* DetailHeroReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeroReusableView.swift; sourceTree = "<group>"; };
+		FB43D642266E603E00FA9FA1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		FB43D644266E665E00FA9FA1 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
+		FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+RawRepresentable.swift"; sourceTree = "<group>"; };
 		FB4FAB08265EDE7C001A9201 /* HashableClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableClosure.swift; sourceTree = "<group>"; };
 		FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenhouseListCell.swift; sourceTree = "<group>"; };
 		FB5F348C25B6411F00CCE6BC /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
@@ -314,6 +326,38 @@
 			path = Formatters;
 			sourceTree = "<group>";
 		};
+		FB43D638266D67F000FA9FA1 /* HeaderView */ = {
+			isa = PBXGroup;
+			children = (
+				FB43D639266D680600FA9FA1 /* HeaderView.swift */,
+			);
+			path = HeaderView;
+			sourceTree = "<group>";
+		};
+		FB43D63B266D918E00FA9FA1 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FB43D63C266D919E00FA9FA1 /* SproutHeaderCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		FB43D63E266DB40A00FA9FA1 /* ReusableViews */ = {
+			isa = PBXGroup;
+			children = (
+				FB43D63F266DB4BE00FA9FA1 /* DetailHeroReusableView.swift */,
+			);
+			path = ReusableViews;
+			sourceTree = "<group>";
+		};
+		FB43D641266E601D00FA9FA1 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				FB43D642266E603E00FA9FA1 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		FB4FAB07265EDE68001A9201 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -344,6 +388,7 @@
 		FB5F348225B4C28300CCE6BC /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				FB43D641266E601D00FA9FA1 /* Settings */,
 				FB7B812425B9D4B80053E543 /* Compoents */,
 				FB9C66AF263AE63800CDC15A /* Up Next */,
 				FBC5D60A25EC2BE0005BF6B1 /* MainViewController */,
@@ -402,6 +447,8 @@
 				FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */,
 				FB98B9442667C1C500629C1B /* Notification+CustomNames.swift */,
 				FB98B95226695C3200629C1B /* Optional+Comparable.swift */,
+				FB43D644266E665E00FA9FA1 /* UserDefaults+Extensions.swift */,
+				FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -445,6 +492,9 @@
 		FB7B812425B9D4B80053E543 /* Compoents */ = {
 			isa = PBXGroup;
 			children = (
+				FB43D63E266DB40A00FA9FA1 /* ReusableViews */,
+				FB43D63B266D918E00FA9FA1 /* Cells */,
+				FB43D638266D67F000FA9FA1 /* HeaderView */,
 				FB9C66A8263A538D00CDC15A /* CardView */,
 				FBB03C102637780B00F7F364 /* PlantHero */,
 				FB92AF69262E50370062DE47 /* ImagePicker */,
@@ -795,6 +845,7 @@
 				FB5F348925B63E6900CCE6BC /* GreenhouseListCell.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
 				FB7ED54E2617B8F4008FD1BE /* PlantTypePickerDelegate.swift in Sources */,
+				FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */,
 				FBC5D63825EEA269005BF6B1 /* PlantDetailViewController.swift in Sources */,
 				FB5F34A325B8FA3900CCE6BC /* SlideInPresentationManager.swift in Sources */,
 				FB9E8C51262CCD7700514AAB /* RowItem.swift in Sources */,
@@ -817,6 +868,7 @@
 				FB7ED5192615260F008FD1BE /* StorageProvider.swift in Sources */,
 				FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */,
 				FBC7332925E307DF0048999C /* PlantTypePickerViewController.swift in Sources */,
+				FB43D647266E70BD00FA9FA1 /* Date+RawRepresentable.swift in Sources */,
 				FB7B813E25BA6CA50053E543 /* WeekPickerCell.swift in Sources */,
 				FB98B94B266858F100629C1B /* SproutCareHistoryMO.swift in Sources */,
 				FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */,
@@ -840,13 +892,16 @@
 				FB7B813225BA25740053E543 /* WeekPicker.swift in Sources */,
 				FB9E8C59262D08B400514AAB /* ButtonCell.swift in Sources */,
 				FB7ED52B26164290008FD1BE /* PlantsProvider.swift in Sources */,
+				FB43D63A266D680600FA9FA1 /* HeaderView.swift in Sources */,
 				FBD54996262A5F0500640A8F /* CompactCardView.swift in Sources */,
 				FBD20AE4260FC6B7008915E1 /* String+Extensions.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
 				FB82CDE92642F6BE00E32F16 /* PlantGroupItem.swift in Sources */,
+				FB43D643266E603E00FA9FA1 /* SettingsView.swift in Sources */,
 				FB6C464B25F591FD009ED947 /* ScheduleViewController.swift in Sources */,
 				FB6661BB261FD09800DC8B04 /* TaskEditorController.swift in Sources */,
 				FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */,
+				FB43D640266DB4BE00FA9FA1 /* DetailHeroReusableView.swift in Sources */,
 				FB0A9F3625DC5D7E0084AED8 /* TextFieldCell.swift in Sources */,
 				FBD549A5262B1C9A00640A8F /* StatisticView.swift in Sources */,
 				FB6C464325F58E01009ED947 /* ScheduleView.swift in Sources */,
@@ -867,6 +922,7 @@
 				FB6661D52620BF5300DC8B04 /* GHToggleListCell.swift in Sources */,
 				FBEB496C260CBED300F6060C /* PlantGroupViewController.swift in Sources */,
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
+				FB43D63D266D919E00FA9FA1 /* SproutHeaderCell.swift in Sources */,
 				FBFAECB92617D93300F0C67D /* AddEditPlantViewControllerDelegate.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FB82CDFD26444F7D00E32F16 /* UpNextItem.swift in Sources */,

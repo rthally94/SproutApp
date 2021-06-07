@@ -8,68 +8,38 @@
 import CoreData
 import UIKit
 
-enum PlantDetailSection: Int, CaseIterable {
-    case plantHero
-    case taskSummary
-    case upNext
-    case careInfo
+class PlantDetailViewController: UIViewController {
+    private typealias Section = ViewModel.Section
+    private typealias Item = ViewModel.Item
 
-    func headerTitle() -> String? {
-        switch self {
-        case .upNext:
-            return "Up Next"
-        case .careInfo:
-            return "Care Info"
-        default:
-            return nil
-        }
-    }
-
-    func headerSubtitle() -> String? {
-        switch self {
-        case .careInfo:
-            return ""
-        default:
-            return nil
-        }
-    }
-
-    func headerIcon() -> UIImage? {
-        switch self {
-        default:
-            return nil
-        }
-    }
-}
-
-class PlantDetailViewController: StaticCollectionViewController<PlantDetailSection> {
     // MARK: - Properties
     let dateComponentsFormatter = Utility.dateComponentsFormatter
     let careDateFormatter = Utility.relativeDateFormatter
 
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
     var plant: SproutPlantMO?
+
+    private var collectionView: UICollectionView!
+    private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     
     // MARK: - View Life Cycle
-    
+    override func loadView() {
+        configureCollectionView()
+        view = collectionView
+
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let headerRegistration = makeInsetGroupedSectionHeaderRegistration()
-        dataSource.supplementaryViewProvider = { (collectionView, elementKind, indexPath) -> UICollectionReusableView? in
-            switch elementKind {
-            case UICollectionView.elementKindSectionHeader:
-                return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
-            default:
-                return nil
-            }
-        }
+        dataSource = makeDataSource()
 
         collectionView.delegate = self
-        updateUI()
         
         title = "Plant Details"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPlant))
+
+        dataSource.apply(makeSnapshot())
     }
     
     //MARK: - Actions
@@ -78,56 +48,51 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }
+}
 
-    internal override func makeLayout() -> UICollectionViewLayout {
+// MARK: Static Collection View Model
+private extension PlantDetailViewController {
+    enum ViewModel {
+        enum Section: Hashable, CaseIterable {
+            case tasks
+
+            var headerText: String? {
+                switch self {
+                case .tasks:
+                    return "All Tasks"
+                default:
+                    return nil
+                }
+            }
+        }
+
+        enum Item: Hashable {
+            case careTask(image: UIImage? = nil, taskName: String, taskSchedule: String?)
+        }
+    }
+}
+
+// MARK: Collection View Setup
+private extension PlantDetailViewController {
+    func configureCollectionView() {
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        collectionView.backgroundColor = .systemGroupedBackground
+    }
+
+    func makeLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            let sectionKind = self.dataSource.snapshot().sectionIdentifiers[sectionIndex]
+            let sectionKind = Section.allCases[sectionIndex]
             let section: NSCollectionLayoutSection
 
             switch sectionKind {
-            case .plantHero:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.85))
-                let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-
-                section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
-            case .taskSummary:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.48), heightDimension: .estimated(64))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                group.interItemSpacing = .flexible(6)
-
-                section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 20, leading: 16, bottom: 0, trailing: 16)
-            case .careInfo:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(64))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                group.interItemSpacing = .flexible(6)
-
-                section = NSCollectionLayoutSection(group: group)
-                if sectionKind.headerTitle() != nil {
-                    let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
-                    let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                    section.boundarySupplementaryItems = [headerItem]
-                }
-                section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
-            case .upNext:
+            case .tasks:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-                if sectionKind.headerTitle() != nil {
-                    config.headerMode = .supplementary
-                }
+                config.headerMode = sectionKind.headerText != nil ? .supplementary : .none
                 section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
             }
 
-            if sectionKind.headerTitle() != nil {
+            if sectionKind.headerText != nil {
                 let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
                 let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
                 section.boundarySupplementaryItems = [headerItem]
@@ -135,54 +100,110 @@ class PlantDetailViewController: StaticCollectionViewController<PlantDetailSecti
             return section
         }
 
+        let detailHeroSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.35))
+        let detailHeroSupplementary = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: detailHeroSize, elementKind: UICollectionView.elementKindLayoutHeader, alignment: .top)
+
+        let configuration = layout.configuration
+        configuration.boundarySupplementaryItems = [
+            detailHeroSupplementary
+        ]
+
+        layout.configuration = configuration
+
         return layout
     }
 }
 
-extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
-        
-        if plant.isDeleted {
-            navigationController?.popViewController(animated: false)
+// MARK: - Data Source Setup
+private extension PlantDetailViewController {
+    private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
+        let taskCellRegistraion = makeUICollectionListCellRegistration()
+
+        let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) { collectionView, indexPath, item in
+            switch item {
+            case .careTask:
+                return collectionView.dequeueConfiguredReusableCell(using: taskCellRegistraion, for: indexPath, item: item)
+            }
         }
-        
-        persistentContainer.saveContextIfNeeded()
-        updateUI()
+
+        let headerRegistration = makeInsetGroupedSectionHeaderRegistration()
+        let layoutHeaderRegistration = makeDetailHeroRegistration()
+
+        dataSource.supplementaryViewProvider = { (collectionView, elementKind, indexPath) -> UICollectionReusableView? in
+            switch elementKind {
+            case UICollectionView.elementKindSectionHeader:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: headerRegistration, for: indexPath)
+            case UICollectionView.elementKindLayoutHeader:
+                return collectionView.dequeueConfiguredReusableSupplementary(using: layoutHeaderRegistration, for: indexPath)
+            default:
+                return nil
+            }
+        }
+
+        return dataSource
     }
 }
 
+// MARK: Snapshots
 private extension PlantDetailViewController {
-    func makeSnapshot() -> NSDiffableDataSourceSnapshot<PlantDetailSection, Item> {
-        guard let id = plant?.objectID, let plant = persistentContainer.viewContext.object(with: id) as? SproutPlantMO else { fatalError("Could not get plant from context") }
-        var snapshot = NSDiffableDataSourceSnapshot<PlantDetailSection, Item>()
-        snapshot.appendSections([PlantDetailSection.plantHero, PlantDetailSection.careInfo])
-        
-        // Plant Info Header
-//        snapshot.appendItems([
-//            .hero(image: plant.icon, title: plant.nickname ?? plant.commonName, subtitle: plant.commonName)
-//        ], toSection: .plantHero)
-//        
+    private func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
+        guard let plant = plant else { fatalError("Unable to show detail view for plant - \(plant)") }
+
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections(Section.allCases)
+
         // All Tasks
-//        let currentScheduleFormatter = Utility.currentScheduleFormatter
-//        let items: [Item] = plant.allTasks.filter({ task in
-//            task.historyLog == nil
-//        }).map { task in
-//            return Item.compactCardCell(title: task.taskTypeProperties?.displayName, value: currentScheduleFormatter.string(for: task.schedule), image: task.taskTypeProperties?.icon, tapAction: { [unowned self] in
-//                print(task.taskType ?? "Unknown")
-//            })
-//        }
-//        
-//        snapshot.appendItems(items, toSection: .careInfo)
+        let currentScheduleFormatter = Utility.careScheduleFormatter
+        let items: [Item] = plant.allTasks.filter({ task in
+            task.historyLog == nil
+        }).map { task in
+            return Item.careTask(image: task.taskTypeProperties?.icon, taskName: task.taskTypeProperties?.displayName ?? "Unknown Task Name", taskSchedule: currentScheduleFormatter.string(for: task.schedule))
+        }
+
+        snapshot.appendItems(items, toSection: .tasks)
         return snapshot
     }
+}
 
-    func makeInsetGroupedSectionHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
-        UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { cell, elementKind, indexPath in
+// MARK: Cell Registrations
+private extension PlantDetailViewController {
+    private func makeUICollectionListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
+            switch item {
+            case let .careTask(image, taskName, taskSchedule):
+                var config = UIListContentConfiguration.valueCell()
+                config.image = image
+                config.text = taskName
+                config.secondaryText = taskSchedule
+                config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
+                config.prefersSideBySideTextAndSecondaryText = false
+                cell.contentConfiguration = config
+            default:
+                return
+            }
+        }
+    }
+
+    private func makeDetailHeroRegistration() -> UICollectionView.SupplementaryRegistration<DetailHeroReusableView> {
+        UICollectionView.SupplementaryRegistration<DetailHeroReusableView>(elementKind: UICollectionView.elementKindLayoutHeader) { [unowned self] view, elementKind, indexPath in
+            view.titleText = plant?.primaryDisplayName
+            view.subtitleText = plant?.secondaryDisplayName
+
+            var iconConfig = view.defaultIconConfiguration()
+            iconConfig.image = plant?.icon
+            view.iconConfiguration = iconConfig
+
+            view.backgroundImage = plant?.icon
+        }
+    }
+
+    private func makeInsetGroupedSectionHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
+        UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { [unowned self] cell, elementKind, indexPath in
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             var config = UIListContentConfiguration.largeGroupedHeader()
 
-            guard let section = PlantDetailSection(rawValue: indexPath.section) else { return }
-            config.text = section.headerTitle()?.capitalized
+            let section = dataSource.snapshot().sectionIdentifiers[indexPath.section]
+            config.text = section.headerText?.capitalized
 
             cell.contentConfiguration = config
             cell.contentView.backgroundColor = .systemGroupedBackground
@@ -190,27 +211,37 @@ private extension PlantDetailViewController {
     }
 }
 
-extension PlantDetailViewController {
-    func configureHiearchy() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(collectionView)
-        collectionView.pinToBoundsOf(view)
-    }
-    
-    func updateUI() {
-        let snapshot = makeSnapshot()
-        dataSource.apply(snapshot)
-    }
-}
-
+// MARK: - Collection View Delegate
 extension PlantDetailViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let item = dataSource.itemIdentifier(for: indexPath)
-        return item?.isTappable ?? false
+        switch item {
+        default:
+            return false
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = dataSource.itemIdentifier(for: indexPath)
-        item?.tapAction?()
+        switch item {
+        default:
+            break
+        }
     }
+}
+
+// MARK: - Plant Editor Delegate
+extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
+    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
+
+        if plant.isDeleted {
+            navigationController?.popViewController(animated: false)
+        }
+
+        persistentContainer.saveContextIfNeeded()
+    }
+}
+
+extension UICollectionView {
+    static let elementKindLayoutHeader = "element-kind-layout-header"
 }
