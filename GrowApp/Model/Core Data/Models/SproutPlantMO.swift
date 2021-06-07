@@ -108,7 +108,7 @@ extension SproutPlantMO {
     }
 
     func setImage(_ image: UIImage?) throws {
-        guard let data = image?.pngData() else { throw IconImageError.invalidParametersError }
+        guard let data = image?.jpegData(compressionQuality: 80) else { throw IconImageError.invalidParametersError }
 
         symbolName = nil
         hexColor = nil

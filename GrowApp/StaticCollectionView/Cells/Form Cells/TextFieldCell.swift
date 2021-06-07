@@ -36,9 +36,9 @@ private extension UICellConfigurationState {
         get { return self[.value] as? String }
     }
 
-    var autocapitalizationType: UITextAutocapitalizationType {
-        set { self[.autocapitalizationType] = value }
-        get { return self[.autocapitalizationType] as? UITextAutocapitalizationType ?? .none }
+    var autocapitalizationType: UITextAutocapitalizationType? {
+        set { self[.autocapitalizationType] = newValue }
+        get { return self[.autocapitalizationType] as? UITextAutocapitalizationType }
     }
 }
 
@@ -75,7 +75,7 @@ class TextFieldCell: UICollectionViewListCell {
         }
     }
 
-    var autocapitalizationType: UITextAutocapitalizationType = .none {
+    var autocapitalizationType: UITextAutocapitalizationType? {
         didSet {
             if autocapitalizationType != oldValue {
                 setNeedsUpdateConfiguration()
@@ -151,7 +151,7 @@ class SproutTextFieldCell: TextFieldCell {
         textField.placeholder = state.placeholder
         textField.text = state.value
         textField.returnKeyType = .done
-        textField.autocapitalizationType = state.autocapitalizationType
+        textField.autocapitalizationType = state.autocapitalizationType ?? .none
     }
 
     private func setupTextField() {

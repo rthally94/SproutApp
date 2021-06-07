@@ -20,7 +20,7 @@ class AddEditPlantViewController: UICollectionViewController {
     }
 
     private(set) var plant: SproutPlantMO?
-    private var originalNameValue: String?
+    private var originalNickname: String?
 
     private var unconfiguredCareDetailTypes: [SproutCareTaskMO] {
         let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
@@ -69,7 +69,7 @@ class AddEditPlantViewController: UICollectionViewController {
             }
         }
 
-        originalNameValue = plant?.nickname
+        originalNickname = plant?.nickname
 
         collectionView.collectionViewLayout = makeLayout()
     }
@@ -234,11 +234,11 @@ extension AddEditPlantViewController {
 
     private var hasChanges: Bool {
         let areObjectsUpdated = !editingContext.updatedObjects.isEmpty
-        let isNameUpdated = originalNameValue != plant?.nickname
+        let isNameUpdated = originalNickname != plant?.nickname
 
         print("isNameUpdated: \(isNameUpdated), areObjectsUpdated: \(areObjectsUpdated)")
         if isNameUpdated {
-            print("originalNameValue: \(originalNameValue), plantNameValue: \(plant?.nickname)")
+            print("originalNameValue: \(originalNickname), plantNameValue: \(plant?.nickname)")
         }
 
         return areObjectsUpdated || isNameUpdated
@@ -548,7 +548,6 @@ private extension AddEditPlantViewController {
 extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func showImagePicker(preferredType: UIImagePickerController.SourceType = .photoLibrary) {
         let imagePicker = UIImagePickerController()
-        imagePicker.allowsEditing = true
         
         imagePicker.delegate = self
 
@@ -602,12 +601,15 @@ extension AddEditPlantViewController: TaskEditorDelegate {
 extension AddEditPlantViewController: UIAdaptivePresentationControllerDelegate {
     // Decides if a pull down gesture should dismiss the editor
     func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-        discardChangesIfAble { [weak self] success in
-            if success {
-                self?.dismiss(animated: true)
+
+        if hasChanges {
+            discardChangesIfAble { [weak self] success in
+                if success {
+                    self?.dismiss(animated: true)
+                }
             }
         }
 
-        return false
+        return !hasChanges
     }
 }

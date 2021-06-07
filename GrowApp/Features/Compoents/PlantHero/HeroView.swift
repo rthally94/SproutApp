@@ -8,40 +8,19 @@
 import UIKit
 
 class HeroView: UIView {
-    lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-        return label
-    }()
+    var iconView = IconView()
+    var headerTextView = HeaderView()
 
-    lazy var subtitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 18)
-        return label
-    }()
-
-    lazy private var headerStack: UIStackView = {
-        let view = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
-        view.axis = .vertical
-        view.distribution = .fill
-        view.alignment = .center
-
-        view.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
-        view.isLayoutMarginsRelativeArrangement = true
-
-        view.blurBackground(style: .prominent)
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 10
-
-        return view
-    }()
-
-    var imageView: UIImageView = {
+    var backgroundImageView: UIImageView = {
         var imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
+        imageView.contentScaleFactor = 2.0
+        imageView.blurBackground(style: .systemChromeMaterial)
         return imageView
     }()
+
+    private var needsLayout = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,19 +33,25 @@ class HeroView: UIView {
     }
 
     private func setupViews() {
-        addSubview(imageView)
-        addSubview(headerStack)
+        addSubview(backgroundImageView)
+        addSubview(iconView)
+        addSubview(headerTextView)
 
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        headerStack.translatesAutoresizingMaskIntoConstraints = false
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        headerTextView.translatesAutoresizingMaskIntoConstraints = false
 
-        imageView.pinToBoundsOf(self)
+        backgroundImageView.pinToBoundsOf(self)
+
         NSLayoutConstraint.activate([
-            headerStack.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 2/3),
-            headerStack.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
-            headerStack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, constant: -16),
-            headerStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 40),
-            headerStack.topAnchor.constraint(greaterThanOrEqualToSystemSpacingBelow: layoutMarginsGuide.topAnchor, multiplier: 1.0)
+            iconView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            iconView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
+            iconView.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 0.5),
+
+            headerTextView.topAnchor.constraint(equalToSystemSpacingBelow: iconView.bottomAnchor, multiplier: 1.0),
+            headerTextView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
+            headerTextView.widthAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.widthAnchor),
+            headerTextView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
         ])
     }
 }

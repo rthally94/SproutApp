@@ -41,10 +41,15 @@ enum SproutCareTaskRecurrenceRule {
     case monthly(Int, Set<Int>? = nil)
 
     func nextDate(after targetDate: Date) -> Date? {
-        let upcomingDates = dateComponents?.compactMap({ dateComponents in
-            Calendar.current.nextDate(after: targetDate, matching: dateComponents, matchingPolicy: .nextTime)
-        }).sorted()
-        return upcomingDates?.first
+        switch self {
+        case .daily(interval):
+            return Calendar.current.date(byAdding: .day, value: interval, to: targetDate)
+        default:
+            let upcomingDates = dateComponents?.compactMap({ dateComponents in
+                Calendar.current.nextDate(after: targetDate, matching: dateComponents, matchingPolicy: .nextTime)
+            }).sorted()
+            return upcomingDates?.first
+        }
     }
 
     var dateComponents: Set<DateComponents>? {

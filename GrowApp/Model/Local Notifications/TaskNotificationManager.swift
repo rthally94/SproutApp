@@ -14,7 +14,14 @@ final class TaskNotificationManager {
     private lazy var notificationsManager = LocalNotificationManager()
     
     private var cancellables = Set<AnyCancellable>()
-    
+
+
+    var areNotificationsEnabled: Bool {
+        !cancellables.isEmpty
+    }
+
+    var scheduledTimeComponents = DateComponents()
+
     func registerForNotifications() {
         notificationsManager.requestAuthorization { [weak self] granted in
             print("Granted: \(granted)")
@@ -28,9 +35,17 @@ final class TaskNotificationManager {
         remindersProvider.$data
             .map { data in
                 data?.reduce(into: [LocalNotification](), { notifications, taskData in
-                    let dueDate = taskData.key
+                    let dueDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: taskData.key)
+                    let timeComponents: DateComponents
+                    if let userTimeString = UserDefaults.standard.string(forKey: .dailyDigestDate),
+                       let userTime = Date(rawValue: userTimeString) {
+                        timeComponents = Calendar.current.dateComponents([.hour, .minute], from: userTime)
+                    } else {
+                        timeComponents = DateComponents(hour: 7, minute: 30)
+                    }
+                    let notificationTimeComponents = DateComponents(year: dueDateComponents.year, month: dueDateComponents.month, day: dueDateComponents.day, hour: timeComponents.hour, minute: timeComponents.minute)
+
                     let tasks = taskData.value
-                    
                     let taskPlantNames = tasks.compactMap { $0.plant?.nickname ?? $0.plant?.commonName }
                     let taskCount = tasks.reduce(0) { currentCount, task in
                         task.historyLog == nil ? currentCount + 1 : currentCount
@@ -38,10 +53,7 @@ final class TaskNotificationManager {
                     
                     let notificationTitle = "Plant Care Due Today"
                     var notificationBody: String?
-                    var notificationComponents = Calendar.current.dateComponents([.year, .month, .day], from: dueDate)
-                    notificationComponents.hour = 7
-                    notificationComponents.minute = 30
-                    
+
                     switch taskCount {
                     case 1:
                         if let reminderList = ListFormatter().string(from: taskPlantNames) {
@@ -61,11 +73,15 @@ final class TaskNotificationManager {
                         break
                     }
                     
-                    let notification = LocalNotification(id: UUID().uuidString, title: notificationTitle, body: notificationBody, badgeValue: taskCount, datetime: notificationComponents)
+                    let notification = LocalNotification(id: UUID().uuidString, title: notificationTitle, body: notificationBody, badgeValue: taskCount, datetime: notificationTimeComponents)
                     notifications.append(notification)
                 }) ?? []
             }
             .sink { [weak self] data in
+                if let scheduledDateComponents = data.first?.datetime {
+                    self?.scheduledTimeComponents = DateComponents(hour: scheduledDateComponents.hour, minute: scheduledDateComponents.minute)
+                }
+
                 self?.notificationsManager.removeAllScheduledNotifications()
                 self?.notificationsManager.scheduleNotifications(data)
             }

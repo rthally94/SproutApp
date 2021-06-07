@@ -11,8 +11,8 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
     static var hasLaunched: Bool {
-        get { UserDefaults.standard.bool(forKey: "hasLaunched") }
-        set { UserDefaults.standard.setValue(newValue, forKey: "hasLaunched") }
+        get { UserDefaults.standard.bool(forKey: UserDefaults.Keys.hasLaunched) }
+        set { UserDefaults.standard.setValue(newValue, forKey: UserDefaults.Keys.hasLaunched) }
     }
 
     static var storageProvider: StorageProvider {
@@ -32,7 +32,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        taskNotificationManager.registerForNotifications()
+        NotificationCenter.default.addObserver(self, selector: #selector(updateNotificationsState), name: UserDefaults.didChangeNotification, object: nil)
+
+        updateNotificationsState()
         return true
     }
 
@@ -50,6 +52,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
 
+    @objc private func updateNotificationsState() {
+        let notificationsAreEnabled = UserDefaults.standard.bool(forKey: .dailyDigestIsEnabled)
 
+        let notificationTimeComponents: DateComponents = {
+            guard let dateTimeString = UserDefaults.standard.string(forKey: .dailyDigestDate), let dateTime = Date(rawValue: dateTimeString) else { return DateComponents() }
+            return Calendar.current.dateComponents([.hour, .minute], from: dateTime)
+        }()
+
+        if notificationsAreEnabled != taskNotificationManager.areNotificationsEnabled ||  notificationTimeComponents != taskNotificationManager.scheduledTimeComponents {
+            taskNotificationManager.registerForNotifications()
+        } else {
+            print("User has disabled notifications in settings")
+            taskNotificationManager.stopNotifications()
+        }
+    }
 }
 
