@@ -55,15 +55,10 @@ class UpNextViewController: UIViewController {
 
         viewModel.snapshot
             .sink {[weak self] snapshot in
-                self?.dataSource.apply(snapshot)
+                if let snapshot = snapshot {
+                    self?.dataSource.apply(snapshot)
+                }
             }
-            .store(in: &cancellables)
-
-        viewModel.tasksNeedingCare
-            .map { itemCount in
-                itemCount > 0 ? "\(itemCount)" : nil
-            }
-            .assign(to: \.tabBarItem.badgeValue, on: self.parent!)
             .store(in: &cancellables)
 
         viewModel.$doesShowAllCompletedTasks
@@ -108,15 +103,28 @@ private extension UpNextViewController {
     }
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<TaskCalendarListCell, Item> {
-        UICollectionView.CellRegistration<TaskCalendarListCell, Item> { cell, indexPath, item in
-            cell.updateWithText(item.title, secondaryText: item.subtitle, image: item.icon, daysLate: item.daysLate)
+        UICollectionView.CellRegistration<TaskCalendarListCell, Item> {[unowned self] cell, indexPath, item in
+            guard let task = self.viewModel.task(witID: item), let plant = task.plant else { return }
 
-            if item.isChecked {
+            let daysLate: Int
+            if let dueDate = task.dueDate, let daysTilToday = Calendar.current.dateComponents([.day], from: Date(), to: dueDate).day, daysTilToday >= 0 {
+                daysLate = daysTilToday
+            } else {
+                daysLate = 0
+            }
+
+            let scheduleText = Utility.careScheduleFormatter.string(for: task.schedule)
+
+            cell.updateWithText(plant.primaryDisplayName, secondaryText: scheduleText, image: plant.icon, daysLate: daysLate)
+
+            let isChecked = task.historyLog != nil
+
+            if isChecked {
                 cell.accessories = [ .checkmark() ]
             } else {
                 cell.accessories = [
                     .todoAccessory(actionHandler: {_ in
-                        self.viewModel.markItemAsComplete(item)
+                        self.viewModel.markTaskAsComplete(id: item)
                     })
                 ]
             }
@@ -129,7 +137,9 @@ private extension UpNextViewController {
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             var configuration = UIListContentConfiguration.largeGroupedHeader()
-            configuration.text = section.headerTitle
+
+            guard let date = Utility.ISODateFormatter.date(from: section) else { return }
+            configuration.text = Utility.relativeDateFormatter.string(from: date)
             //            configuration.secondaryText = itemCount == 1 ? "\(itemCount) task" : "\(itemCount) tasks"
             cell.contentConfiguration = configuration
         }

@@ -7,6 +7,6 @@
 
 import Foundation
 
-struct PlantGroupSection: Hashable {
-    let name: String
+enum PlantGroupSection: String, Hashable {
+    case all
 }

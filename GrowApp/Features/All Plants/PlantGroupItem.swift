@@ -5,16 +5,8 @@
 //  Created by Ryan Thally on 5/5/21.
 //
 
-import UIKit
+import CoreData
 
-struct PlantGroupItem: Hashable {
-    let plant: SproutPlantMO
-
-    var image: UIImage? {
-        return plant.icon
-    }
-
-    var title: String? {
-        return plant.nickname ?? plant.commonName
-    }
+enum PlantGroupItem: Hashable {
+    case plant(id: NSManagedObjectID)
 }

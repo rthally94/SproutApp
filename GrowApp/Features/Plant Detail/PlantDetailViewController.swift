@@ -17,6 +17,10 @@ class PlantDetailViewController: UIViewController {
     let careDateFormatter = Utility.relativeDateFormatter
 
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+    var viewContext: NSManagedObjectContext {
+        persistentContainer.viewContext
+    }
+
     var plant: SproutPlantMO?
 
     private var collectionView: UICollectionView!
@@ -25,8 +29,6 @@ class PlantDetailViewController: UIViewController {
     // MARK: - View Life Cycle
     override func loadView() {
         configureCollectionView()
-        view = collectionView
-
     }
 
     override func viewDidLoad() {
@@ -67,7 +69,8 @@ private extension PlantDetailViewController {
         }
 
         enum Item: Hashable {
-            case careTask(image: UIImage? = nil, taskName: String, taskSchedule: String?)
+            case careTask(id: NSManagedObjectID)
+//            case careTask(image: UIImage? = nil, taskName: String, taskSchedule: String?)
         }
     }
 }
@@ -78,6 +81,7 @@ private extension PlantDetailViewController {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .systemGroupedBackground
+        view = collectionView
     }
 
     func makeLayout() -> UICollectionViewLayout {
@@ -153,11 +157,10 @@ private extension PlantDetailViewController {
         snapshot.appendSections(Section.allCases)
 
         // All Tasks
-        let currentScheduleFormatter = Utility.careScheduleFormatter
         let items: [Item] = plant.allTasks.filter({ task in
             task.historyLog == nil
         }).map { task in
-            return Item.careTask(image: task.taskTypeProperties?.icon, taskName: task.taskTypeProperties?.displayName ?? "Unknown Task Name", taskSchedule: currentScheduleFormatter.string(for: task.schedule))
+            return Item.careTask(id: task.objectID)
         }
 
         snapshot.appendItems(items, toSection: .tasks)
@@ -168,13 +171,15 @@ private extension PlantDetailViewController {
 // MARK: Cell Registrations
 private extension PlantDetailViewController {
     private func makeUICollectionListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [weak self] cell, indexPath, item in
             switch item {
-            case let .careTask(image, taskName, taskSchedule):
+            case let .careTask(id):
+                guard let task = self?.viewContext.object(with: id) as? SproutCareTaskMO else { break }
+                let viewModel = SproutCareTaskCellViewModel(careTask: task)
                 var config = UIListContentConfiguration.valueCell()
-                config.image = image
-                config.text = taskName
-                config.secondaryText = taskSchedule
+                config.image = viewModel.image
+                config.text = viewModel.title
+                config.secondaryText = viewModel.subtitle
                 config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
                 config.prefersSideBySideTextAndSecondaryText = false
                 cell.contentConfiguration = config

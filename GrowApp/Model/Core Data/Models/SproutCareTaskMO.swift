@@ -35,7 +35,7 @@ class SproutCareTaskMO: NSManagedObject {
     static func createNewTask(type: SproutCareTaskType, in context: NSManagedObjectContext, completion: @escaping (SproutCareTaskMO) -> Void) {
         context.perform {
             let newTask = SproutCareTaskMO(context: context)
-            newTask.id = UUID().uuidString
+            newTask.identifier = UUID().uuidString
             newTask.creationDate = Date()
             newTask.taskType = type.rawValue
             newTask.hasSchedule = false
@@ -51,7 +51,7 @@ class SproutCareTaskMO: NSManagedObject {
 
         context.performAndWait {
             let newTask = SproutCareTaskMO(context: context)
-            newTask.id = UUID().uuidString
+            newTask.identifier = UUID().uuidString
             newTask.creationDate = Date()
 
             newTask.taskType = existingTask.taskType
@@ -81,6 +81,7 @@ class SproutCareTaskMO: NSManagedObject {
             hasSchedule = newValue != nil
             startDate = newValue?.startDate
             dueDate = newValue?.dueDate
+            displayDate = dueDate != nil ? Calendar.current.startOfDay(for: dueDate!) : nil
 
             recurrenceRule = newValue?.recurrenceRule
         }
@@ -124,6 +125,7 @@ extension SproutCareTaskMO {
             // Create a new log and assign self as the parent
             do {
                 try SproutCareHistoryMO.createNewLog(for: self, status: .complete, completion: { newLog -> Void in
+                    self.dueDate = newLog.statusDate != nil ? Calendar.current.startOfDay(for: newLog.statusDate!) : nil
                     // Create a new task, using self as the template
                     do {
                         try SproutCareTaskMO.createNewTask(from: self, completion: { newTask in

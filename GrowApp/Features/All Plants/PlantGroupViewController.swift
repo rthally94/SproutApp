@@ -41,7 +41,9 @@ class PlantGroupViewController: UIViewController {
 
         viewModel.snapshot
             .sink(receiveValue: { [weak self] snapshot in
-                self?.dataSource.apply(snapshot)
+                if let snapshot = snapshot {
+                    self?.dataSource.apply(snapshot)
+                }
             })
             .store(in: &cancellables)
 
@@ -93,7 +95,7 @@ extension PlantGroupViewController {
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.65))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.6))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)
@@ -104,9 +106,12 @@ extension PlantGroupViewController {
     }
 
     func makeCellRegistration() -> UICollectionView.CellRegistration<CardCell, Item> {
+        let viewModel = viewModel
+
         return UICollectionView.CellRegistration<CardCell, Item>() { cell, indexPath, item in
-            cell.image = item.image
-            cell.text = item.title
+            guard let plant = viewModel.plant(withID: item) else { return }
+            cell.image = plant.icon
+            cell.text = plant.primaryDisplayName
         }
     }
 

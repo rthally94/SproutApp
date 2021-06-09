@@ -9,6 +9,16 @@ import CoreData
 import UIKit
 
 class SproutCareHistoryMO: NSManagedObject {
+    var id: String {
+        get {
+            assert(identifier != nil, "Got \"nil\" identifier to task")
+            return identifier ?? ""
+        }
+        set {
+            identifier = newValue
+        }
+    }
+
     enum SproutTaskStatus: String {
         case complete
     }

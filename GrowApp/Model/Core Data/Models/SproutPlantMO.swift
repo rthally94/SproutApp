@@ -13,6 +13,16 @@ enum IconImageError: Error {
 }
 
 class SproutPlantMO: NSManagedObject {
+    var id: String {
+        get {
+            assert(identifier != nil, "Got \"nil\" identifier to task")
+            return identifier ?? ""
+        }
+        set {
+            identifier = newValue
+        }
+    }
+    
     static func createNewPlant(in context: NSManagedObjectContext, completion: @escaping (SproutPlantMO) -> Void) {
         context.performAndWait {
             let newPlant = SproutPlantMO(context: context)

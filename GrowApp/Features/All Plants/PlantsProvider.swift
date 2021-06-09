@@ -16,7 +16,7 @@ class PlantsProvider: NSObject {
     fileprivate let fetchedResultsController: NSFetchedResultsController<SproutPlantMO>
     
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
-    
+
     init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext
         
@@ -47,6 +47,22 @@ class PlantsProvider: NSObject {
 
 extension PlantsProvider: NSFetchedResultsControllerDelegate {
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        self.snapshot = snapshot as NSDiffableDataSourceSnapshot<Section, Item>
+        var newSnapshot = snapshot as NSDiffableDataSourceSnapshot<Section, Item>
+
+        let idsToReload = newSnapshot.itemIdentifiers.filter { identifier in
+            guard let oldIndex = self.snapshot?.indexOfItem(identifier),
+                  let newIndex = newSnapshot.indexOfItem(identifier),
+                  oldIndex != newIndex
+            else { return false }
+
+            guard (try? controller.managedObjectContext.existingObject(with: identifier))?.isUpdated == true else {
+                return false
+            }
+
+            return true
+        }
+
+        newSnapshot.reloadItems(idsToReload)
+        self.snapshot = newSnapshot
     }
 }

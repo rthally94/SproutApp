@@ -18,7 +18,7 @@ extension Utility {
     }()
 
     static let dateComponentsFormatter: DateComponentsFormatter = {
-       let formatter = DateComponentsFormatter()
+        let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.month, .weekOfMonth, .day]
         formatter.maximumUnitCount = 1
         formatter.formattingContext = .beginningOfSentence
@@ -43,6 +43,12 @@ extension Utility {
         formatter.frequencyStyle = .short
         formatter.valuesStyle = .short
         formatter.formattingContext = .standalone
+        return formatter
+    }()
+
+    static let ISODateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:SS ZZZ"
         return formatter
     }()
 }
