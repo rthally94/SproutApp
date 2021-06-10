@@ -49,9 +49,7 @@ struct LocalNotification: Hashable {
 
         let trigger = UNCalendarNotificationTrigger(dateMatching: datetime, repeats: false)
         let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-        
-        print("Local:", datetime, " | Trigger:", trigger.dateComponents)
-        print("nextTriggerDate: \(trigger.nextTriggerDate())")
+
         return request
     }
 }
@@ -89,8 +87,6 @@ class LocalNotificationManager: NSObject, ObservableObject {
             UNUserNotificationCenter.current().add(request) { error in
                 if let error = error {
                     print(error)
-                } else {
-                    print("Scheduled")
                 }
             }
 

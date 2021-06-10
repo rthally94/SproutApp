@@ -24,7 +24,6 @@ final class TaskNotificationManager {
 
     func registerForNotifications() {
         notificationsManager.requestAuthorization { [weak self] granted in
-            print("Granted: \(granted)")
             if granted {
                 self?.startNotifications()
             }

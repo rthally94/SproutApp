@@ -51,7 +51,8 @@ class StorageProvider {
         let templatePlantRequest: NSFetchRequest<SproutPlantMO> = SproutPlantMO.allTemplatesFetchRequest()
         let typeCount = (try? persistentContainer.viewContext.count(for: templatePlantRequest)) ?? 0
         print("Template Plant Count: \(typeCount)")
-        if typeCount == 0 {
+        if typeCount == PlantType.allTypes.count {
+            print("Loading new plant types: \(PlantType.allTypes.count - typeCount)")
             loadPlantTypes()
         }
 
@@ -59,7 +60,8 @@ class StorageProvider {
         templateTaskRequest.predicate = NSPredicate(format: "%K == true", #keyPath(SproutCareTaskMO.isTemplate))
         let taskCount = (try? persistentContainer.viewContext.count(for: templateTaskRequest)) ?? 0
         print("Template Task Count: \(taskCount)")
-        if taskCount == 0 {
+        if taskCount != SproutCareTaskMO.SproutCareTaskType.allCases.count {
+            print("Loading new task types: \(SproutCareTaskMO.SproutCareTaskType.allCases.count - typeCount)")
             loadTemplateTasks()
         }
     }

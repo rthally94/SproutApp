@@ -14,9 +14,6 @@ class UpNextProvider: NSObject {
 
     @Published var snapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>?
 
-    @Published var scheduledReminders: [Date: [SproutCareTaskMO]]?
-    @Published var unscheduledReminders: [SproutCareTaskMO]?
-
     var doesShowCompletedTasks: Bool = false {
         didSet {
             fetchedResultsController.fetchRequest.predicate = makePredicate()
@@ -29,15 +26,10 @@ class UpNextProvider: NSObject {
         super.init()
 
         let request = makeFetchRequest()
-
-        let count = try? moc.count(for: request)
-        print("Objects: \(count ?? -1)")
-
         fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.displayDate), cacheName: nil)
 
         fetchedResultsController.delegate = self
         try! fetchedResultsController.performFetch()
-        updateProperties()
     }
 
 
@@ -51,26 +43,6 @@ class UpNextProvider: NSObject {
 
     func plant(withID id: NSManagedObjectID) -> SproutPlantMO? {
         return moc.object(with: id) as? SproutPlantMO
-    }
-
-    private func updateProperties() {
-        print("FRC: Updating...")
-        scheduledReminders = fetchedResultsController.fetchedObjects?.reduce(into: [Date: [SproutCareTaskMO]](), { scheduledReminders, reminder in
-            if let log = reminder.historyLog, let date = log.statusDate {
-                let midnightOfDate = Calendar.current.startOfDay(for: date)
-                scheduledReminders[midnightOfDate, default: [] ].append(reminder)
-            } else if let date = reminder.dueDate, reminder.hasSchedule {
-                let midnightOfDate = Calendar.current.startOfDay(for: date)
-                scheduledReminders[midnightOfDate, default: [] ].append(reminder)
-            }
-        })
-        print("FRC: scheduledReminder Updated: \(scheduledReminders)")
-
-        unscheduledReminders = fetchedResultsController.fetchedObjects?.filter({ reminder in
-            !reminder.hasSchedule
-        })
-        print("FRC: unscheduledReminder Updated: \(unscheduledReminders)")
-        print("FRC: DONE")
     }
 
     private func makeFetchRequest() -> NSFetchRequest<SproutCareTaskMO> {
@@ -106,10 +78,6 @@ class UpNextProvider: NSObject {
 }
 
 extension UpNextProvider: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        updateProperties()
-    }
-
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var newSnapshot = snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>
 

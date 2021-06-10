@@ -25,6 +25,7 @@
 		FB43D647266E70BD00FA9FA1 /* Date+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */; };
 		FB4FAB09265EDE7C001A9201 /* HashableClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4FAB08265EDE7C001A9201 /* HashableClosure.swift */; };
 		FB5CB8462671068400A7F60E /* SproutCareTaskCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB8452671068400A7F60E /* SproutCareTaskCellViewModel.swift */; };
+		FB5CB848267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB847267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel */; };
 		FB5F348925B63E6900CCE6BC /* GreenhouseListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */; };
 		FB5F348D25B6411F00CCE6BC /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348C25B6411F00CCE6BC /* DividerView.swift */; };
 		FB5F349125B7266A00CCE6BC /* RoundedRectContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */; };
@@ -141,6 +142,7 @@
 		FB4FAB08265EDE7C001A9201 /* HashableClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableClosure.swift; sourceTree = "<group>"; };
 		FB5CB8442670F92400A7F60E /* SproutDataModel-v1.0.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SproutDataModel-v1.0.1.xcdatamodel"; sourceTree = "<group>"; };
 		FB5CB8452671068400A7F60E /* SproutCareTaskCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTaskCellViewModel.swift; sourceTree = "<group>"; };
+		FB5CB847267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "SproutDataModel-1.0.0-1.0.1.xcmappingmodel"; sourceTree = "<group>"; };
 		FB5F348825B63E6900CCE6BC /* GreenhouseListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreenhouseListCell.swift; sourceTree = "<group>"; };
 		FB5F348C25B6411F00CCE6BC /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		FB5F349025B7266A00CCE6BC /* RoundedRectContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectContainer.swift; sourceTree = "<group>"; };
@@ -388,6 +390,14 @@
 			path = Icon;
 			sourceTree = "<group>";
 		};
+		FB5CB8492671A2D500A7F60E /* Mapping Models */ = {
+			isa = PBXGroup;
+			children = (
+				FB5CB847267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel */,
+			);
+			path = "Mapping Models";
+			sourceTree = "<group>";
+		};
 		FB5F348225B4C28300CCE6BC /* Features */ = {
 			isa = PBXGroup;
 			children = (
@@ -432,6 +442,7 @@
 			children = (
 				FB7ED5182615260F008FD1BE /* StorageProvider.swift */,
 				FB98B94626681F3600629C1B /* SproutDataModel.xcdatamodeld */,
+				FB5CB8492671A2D500A7F60E /* Mapping Models */,
 				FB98B949266858D700629C1B /* Models */,
 				FB98B94026629CDB00629C1B /* Value Transformers */,
 			);
@@ -903,6 +914,7 @@
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
 				FB82CDE92642F6BE00E32F16 /* PlantGroupItem.swift in Sources */,
 				FB43D643266E603E00FA9FA1 /* SettingsView.swift in Sources */,
+				FB5CB848267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel in Sources */,
 				FB6C464B25F591FD009ED947 /* ScheduleViewController.swift in Sources */,
 				FB6661BB261FD09800DC8B04 /* TaskEditorController.swift in Sources */,
 				FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */,

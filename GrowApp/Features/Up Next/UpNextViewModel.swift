@@ -31,49 +31,6 @@ class UpNextViewModel {
 
     var snapshot: AnyPublisher<Snapshot?, Never> {
         tasksProvider.$snapshot.eraseToAnyPublisher()
-//        tasksProvider.$scheduledReminders
-//            .combineLatest(tasksProvider.$unscheduledReminders, $doesShowAllCompletedTasks, $taskMarkerDate)
-//            .map { scheduledReminders, unscheduledReminders, doesShowAllCompletedTasks, taskMarkerDate in
-//                var upNextSnapshot = Snapshot()
-//
-//                if let scheduledReminders = scheduledReminders, !scheduledReminders.isEmpty {
-//                    let sortedDates = scheduledReminders.keys.sorted()
-//                    sortedDates.forEach { date in
-//                        let items = scheduledReminders[date]!
-//                            .filter({ task in
-//                                if let log = task.historyLog {
-//                                    // Is a completed task. Set inclusion based on view parameters
-//                                    return doesShowAllCompletedTasks ? true : log.statusDate > taskMarkerDate
-//                                } else {
-//                                    return true
-//                                }
-//                            })
-//                            .sorted(by: <)
-//                            .compactMap({ task -> Item? in
-//                            guard let plant = task.plant else { return nil }
-//                            return Item(task: task, plant: plant)
-//                        })
-//
-//                        if !items.isEmpty {
-//                            let section = Section.scheduled(date)
-//                            upNextSnapshot.appendSections([section])
-//                            upNextSnapshot.appendItems(items, toSection: section)
-//                        }
-//                    }
-//                }
-//
-//                if let unscheduledReminders = unscheduledReminders, !unscheduledReminders.isEmpty {
-//                    upNextSnapshot.appendSections([.unscheduled])
-//                    let items = unscheduledReminders.compactMap { task -> Item? in
-//                        guard let plant = task.plant else { return nil }
-//                        return Item(task: task, plant: plant)
-//                    }
-//                    upNextSnapshot.appendItems(items, toSection: .unscheduled)
-//                }
-//
-//                return upNextSnapshot
-//            }
-//            .eraseToAnyPublisher()
     }
 
     var taskNeedingCare: Int {
