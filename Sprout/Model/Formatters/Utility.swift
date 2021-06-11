@@ -1,6 +1,6 @@
 //
 //  Utility.swift
-//  GrowApp
+//  Sprout
 //
 //  Created by Ryan Thally on 4/9/21.
 //

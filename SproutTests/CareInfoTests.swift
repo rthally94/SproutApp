@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import GrowApp
+@testable import Sprout
 
 class CareInfoTests: XCTestCase {
     var storageProvider: StorageProvider!

@@ -72,8 +72,8 @@
 		FB9C66B5263AE76900CDC15A /* UpNextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* UpNextProvider.swift */; };
 		FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* SproutButtonCell.swift */; };
 		FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */; };
-		FBAF464E2641FE5000854D2C /* GHIntervalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF464D2641FE5000854D2C /* GHIntervalTests.swift */; };
-		FBAF46542642087600854D2C /* GHTaskTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF46532642087600854D2C /* GHTaskTests.swift */; };
+		FBAF464E2641FE5000854D2C /* CareRecurrenceRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF464D2641FE5000854D2C /* CareRecurrenceRuleTests.swift */; };
+		FBAF46542642087600854D2C /* CareInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF46532642087600854D2C /* CareInfoTests.swift */; };
 		FBB03C122637781C00F7F364 /* SproutHeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C112637781C00F7F364 /* SproutHeroView.swift */; };
 		FBB75BBF264AFBB3000CC823 /* PlantType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB75BBE264AFBB3000CC823 /* PlantType.swift */; };
 		FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */; };
@@ -175,8 +175,8 @@
 		FB9C66B4263AE76900CDC15A /* UpNextProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextProvider.swift; sourceTree = "<group>"; };
 		FB9E8C58262D08B400514AAB /* SproutButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutButtonCell.swift; sourceTree = "<group>"; };
 		FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectBackgroundView.swift; sourceTree = "<group>"; };
-		FBAF464D2641FE5000854D2C /* GHIntervalTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHIntervalTests.swift; sourceTree = "<group>"; };
-		FBAF46532642087600854D2C /* GHTaskTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHTaskTests.swift; sourceTree = "<group>"; };
+		FBAF464D2641FE5000854D2C /* CareRecurrenceRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareRecurrenceRuleTests.swift; sourceTree = "<group>"; };
+		FBAF46532642087600854D2C /* CareInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoTests.swift; sourceTree = "<group>"; };
 		FBB03C112637781C00F7F364 /* SproutHeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutHeroView.swift; sourceTree = "<group>"; };
 		FBB75BBE264AFBB3000CC823 /* PlantType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantType.swift; sourceTree = "<group>"; };
 		FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -218,8 +218,8 @@
 		FB21B6EB25B1E5CC00D02384 = {
 			isa = PBXGroup;
 			children = (
-				FB21B6F625B1E5CC00D02384 /* GrowApp */,
-				FB7490E925B1E71200925C29 /* GrowAppTests */,
+				FB21B6F625B1E5CC00D02384 /* Sprout */,
+				FB7490E925B1E71200925C29 /* SproutTests */,
 				FB21B6F525B1E5CC00D02384 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -233,7 +233,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		FB21B6F625B1E5CC00D02384 /* GrowApp */ = {
+		FB21B6F625B1E5CC00D02384 /* Sprout */ = {
 			isa = PBXGroup;
 			children = (
 				FB21B70C25B1E5D900D02384 /* Model */,
@@ -241,7 +241,7 @@
 				FB5F348225B4C28300CCE6BC /* View Controllers */,
 				FBE8FFE8267406FB00C9CCFF /* Resources */,
 			);
-			path = GrowApp;
+			path = Sprout;
 			sourceTree = "<group>";
 		};
 		FB21B70C25B1E5D900D02384 /* Model */ = {
@@ -260,6 +260,7 @@
 		FB28A8EB264AB7C100B1206E /* Formatters */ = {
 			isa = PBXGroup;
 			children = (
+				FB6661CA2620938F00DC8B04 /* Utility.swift */,
 				FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */,
 				FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */,
 			);
@@ -296,7 +297,6 @@
 			isa = PBXGroup;
 			children = (
 				FB98B95026691E7500629C1B /* SproutCareTaskSchedule.swift */,
-				FB6661CA2620938F00DC8B04 /* Utility.swift */,
 				FB4FAB08265EDE7C001A9201 /* HashableClosure.swift */,
 				FB5CB84D2672624E00A7F60E /* ModelStore.swift */,
 			);
@@ -419,14 +419,14 @@
 			path = SproutIconView;
 			sourceTree = "<group>";
 		};
-		FB7490E925B1E71200925C29 /* GrowAppTests */ = {
+		FB7490E925B1E71200925C29 /* SproutTests */ = {
 			isa = PBXGroup;
 			children = (
 				FB7490EC25B1E71200925C29 /* Info.plist */,
-				FBAF464D2641FE5000854D2C /* GHIntervalTests.swift */,
-				FBAF46532642087600854D2C /* GHTaskTests.swift */,
+				FBAF464D2641FE5000854D2C /* CareRecurrenceRuleTests.swift */,
+				FBAF46532642087600854D2C /* CareInfoTests.swift */,
 			);
-			path = GrowAppTests;
+			path = SproutTests;
 			sourceTree = "<group>";
 		};
 		FB7B815225BE188E0053E543 /* Add-Edit Plant */ = {
@@ -794,8 +794,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FBAF464E2641FE5000854D2C /* GHIntervalTests.swift in Sources */,
-				FBAF46542642087600854D2C /* GHTaskTests.swift in Sources */,
+				FBAF464E2641FE5000854D2C /* CareRecurrenceRuleTests.swift in Sources */,
+				FBAF46542642087600854D2C /* CareInfoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -944,13 +944,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
-				INFOPLIST_FILE = GrowApp/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Sprout/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.seedling;
+				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -964,13 +964,13 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
-				INFOPLIST_FILE = GrowApp/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Sprout/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.seedling;
+				PRODUCT_BUNDLE_IDENTIFIER = net.thally.ryan.sprout;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -984,7 +984,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
-				INFOPLIST_FILE = GrowAppTests/Info.plist;
+				INFOPLIST_FILE = Sprout/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1006,7 +1006,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
-				INFOPLIST_FILE = GrowAppTests/Info.plist;
+				INFOPLIST_FILE = Sprout/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

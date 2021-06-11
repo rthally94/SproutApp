@@ -7,7 +7,8 @@
 
 import CoreData
 import XCTest
-@testable import GrowApp
+
+@testable import Sprout
 
 class CareRecurrenceRuleTests: XCTestCase {
     var storageProvider: StorageProvider!
