@@ -10,7 +10,7 @@ import CoreData
 
 final class TaskNotificationManager {
     lazy var persistentContainer = AppDelegate.persistentContainer
-    private lazy var remindersProvider = ReminderNotificationProvider(managedObjectContext: persistentContainer.viewContext)
+    private lazy var remindersProvider = ReminderNotificationProvider(managedObjectContext: persistentContainer.newBackgroundContext())
     private lazy var notificationsManager = LocalNotificationManager()
     
     private var cancellables = Set<AnyCancellable>()
@@ -24,8 +24,9 @@ final class TaskNotificationManager {
 
     func registerForNotifications() {
         notificationsManager.requestAuthorization { [weak self] granted in
+            guard let self = self else { return }
             if granted {
-                self?.startNotifications()
+                self.startNotifications()
             }
         }
     }
@@ -77,12 +78,15 @@ final class TaskNotificationManager {
                 }) ?? []
             }
             .sink { [weak self] data in
+                guard let self = self else { return }
                 if let scheduledDateComponents = data.first?.datetime {
-                    self?.scheduledTimeComponents = DateComponents(hour: scheduledDateComponents.hour, minute: scheduledDateComponents.minute)
+                    self.scheduledTimeComponents = DateComponents(hour: scheduledDateComponents.hour, minute: scheduledDateComponents.minute)
                 }
 
-                self?.notificationsManager.removeAllScheduledNotifications()
-                self?.notificationsManager.scheduleNotifications(data)
+                DispatchQueue.main.async {
+                    self.notificationsManager.removeAllScheduledNotifications()
+                    self.notificationsManager.scheduleNotifications(data)
+                }
             }
             .store(in: &cancellables)
     }

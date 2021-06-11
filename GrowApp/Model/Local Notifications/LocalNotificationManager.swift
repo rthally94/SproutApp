@@ -65,7 +65,8 @@ class LocalNotificationManager: NSObject, ObservableObject {
     
     func requestAuthorization(completion: @escaping (Bool) -> Void) {
         UNUserNotificationCenter.current()
-            .requestAuthorization(options: [.alert, .badge, .sound]) { granted, _ in
+            .requestAuthorization(options: [.alert, .badge, .sound]) {[weak self] granted, _ in
+                guard let self = self else { return }
                 self.fetchNotificationSettings()
                 DispatchQueue.main.async {
                     completion(granted)
@@ -74,8 +75,9 @@ class LocalNotificationManager: NSObject, ObservableObject {
     }
     
     func fetchNotificationSettings() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
+        UNUserNotificationCenter.current().getNotificationSettings {[weak self] settings in
             DispatchQueue.main.async {
+                guard let self = self else { return }
                 self.settings = settings
             }
         }

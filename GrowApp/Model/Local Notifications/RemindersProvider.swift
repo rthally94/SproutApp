@@ -12,13 +12,8 @@ import Foundation
 class ReminderNotificationProvider: NSObject {
     let moc: NSManagedObjectContext
     
-    fileprivate let fetchedResultsController: NSFetchedResultsController<SproutCareTaskMO>
-    
     @Published var data: [Date: [SproutCareTaskMO]]?
-    
-    init(managedObjectContext: NSManagedObjectContext) {
-        self.moc = managedObjectContext
-        
+    private let request: NSFetchRequest<SproutCareTaskMO> = {
         let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
 
         let sortByDueDate = NSSortDescriptor(keyPath: \SproutCareTaskMO.dueDate, ascending: true)
@@ -36,31 +31,35 @@ class ReminderNotificationProvider: NSObject {
         let isScheduledPredicate = NSPredicate(format: "%K == true && %K != nil", #keyPath(SproutCareTaskMO.hasSchedule), #keyPath(SproutCareTaskMO.dueDate))
         let predicates = [isNotTemplatePredicate, isNotCompletedPredicate, isScheduledPredicate].compactMap { $0 }
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
+        return request
+    }()
 
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        
+    init(managedObjectContext: NSManagedObjectContext) {
+        self.moc = managedObjectContext
         super.init()
-        
-        fetchedResultsController.delegate = self
-        try! fetchedResultsController.performFetch()
+
+        updateData()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(contextDidSave), name: .NSManagedObjectContextDidSave, object: moc)
+    }
+
+    @objc private func contextDidSave() {
         updateData()
     }
     
     func updateData() {
-        let reminders = fetchedResultsController.fetchedObjects
-        let midnightToday = Calendar.current.startOfDay(for: Date())
-        data = reminders?.reduce(into: [Date: [SproutCareTaskMO]](), { result, task in
-            if let scheduledDate = task.dueDate {
-                // Any tasks that scheduled care before today, will be grouped in today
-                let date = Calendar.current.startOfDay(for: scheduledDate < midnightToday ? midnightToday : scheduledDate)
-                result[date, default: []].append(task)
-            }
-        })
-    }
-}
+        moc.perform { [weak self] in
+            guard let self = self else { return }
+            guard let reminders = try? self.moc.fetch(self.request) else { return }
 
-extension ReminderNotificationProvider: NSFetchedResultsControllerDelegate {
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        updateData()
+            let midnightToday = Calendar.current.startOfDay(for: Date())
+            self.data = reminders.reduce(into: [Date: [SproutCareTaskMO]](), { result, task in
+                if let scheduledDate = task.dueDate {
+                    // Any tasks that scheduled care before today, will be grouped in today
+                    let date = Calendar.current.startOfDay(for: scheduledDate < midnightToday ? midnightToday : scheduledDate)
+                    result[date, default: []].append(task)
+                }
+            })
+        }
     }
 }
