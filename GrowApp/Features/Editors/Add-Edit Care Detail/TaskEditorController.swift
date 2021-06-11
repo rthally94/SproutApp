@@ -10,57 +10,47 @@ import UIKit
 
 class TaskEditorController: UIViewController {
     // MARK: - Properties
-    fileprivate typealias Section = ViewModel.Section
-    fileprivate typealias Item = ViewModel.Item
+    fileprivate typealias Section = TaskEditorSection.ID
+    fileprivate typealias Item = TaskEditorItem.ID
+
+    fileprivate let sectionStore = AnyModelStore<TaskEditorSection>([
+        TaskEditorSection(id: .detailHeader, items: [
+            .detailHeader
+        ]),
+        TaskEditorSection(id: .scheduleGeneral, items: [
+            .remindersToggle
+        ]),
+        TaskEditorSection(id: .recurrenceFrequency, items: [
+            .repeatsIntervalRow(.daily),
+            .repeatsIntervalRow(.weekly),
+            .repeatsIntervalRow(.monthly)
+        ], headerText: "Repeats"),
+        TaskEditorSection(id: .recurrenceValue, items: [
+            .dayOfWeekPicker,
+            .dayOfMonthPicker
+        ])
+    ])
 
     let dateFormatter = Utility.dateFormatter
 
     var storageProvider: StorageProvider
     var editingContext: NSManagedObjectContext { storageProvider.editingContext }
 
-    var task: SproutCareTaskMO
-    var delegate: TaskEditorDelegate?
+    var taskID: NSManagedObjectID
+    private var task: SproutCareTaskMO {
+        editingContext.object(with: taskID) as! SproutCareTaskMO
+    }
 
-    private let repeatFrequencyChoices = [
-        "Daily",
-        "Weekly",
-        "Monthly"
-    ]
+    var delegate: TaskEditorDelegate?
 
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
 
     private lazy var imageView = UIImageView(image: UIImage(systemName: "circle"))
 
-    private func makeWeekdayPicker() -> [Item] {
-        let values = task.recurrenceDaysOfWeek ?? []
-        let items: [Item] = Array(1...7).map { value in
-            let title = Calendar.current.veryShortStandaloneWeekdaySymbols[value-1]
-            let item = Item.circlePickerButton(text: title, isSelected: values.contains(value), tapAction: HashableClosure<Void>(handler: { [weak self] in
-                self?.repeatValueButtonTapped(value)
-            }))
-            return item
-        }
-
-        return items
-    }
-
-    private func makeDayPicker() -> [Item] {
-        let values = task.recurrenceDaysOfMonth ?? []
-        let items: [Item] = Array(1...31).map { value in
-            let title = String(value)
-            let item = Item.circlePickerButton(text: title, isSelected: values.contains(value), tapAction: HashableClosure<Void>(handler: {
-                self.repeatValueButtonTapped(value)
-            }))
-            return item
-        }
-
-        return items
-    }
-
     //MARK: - Initializers
     init(task: SproutCareTaskMO, storageProvider: StorageProvider = AppDelegate.storageProvider) {
-        self.task = task
+        self.taskID = task.objectID
         self.storageProvider = storageProvider
 
         super.init(nibName: nil, bundle: nil)
@@ -72,19 +62,10 @@ class TaskEditorController: UIViewController {
 
     // MARK: - View Life Cycle
     override func loadView() {
-        super.loadView()
-
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
         collectionView.backgroundColor = .systemGroupedBackground
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(collectionView)
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
-        ])
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view = collectionView
     }
 
     override func viewDidLoad() {
@@ -93,7 +74,7 @@ class TaskEditorController: UIViewController {
         collectionView.delegate = self
         dataSource = makeDataSource()
 
-        updateUI()
+        applyInitialSnapshot()
 
         title = "Edit Task"
         //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
@@ -117,38 +98,18 @@ class TaskEditorController: UIViewController {
         editingContext.delete(task)
         doneButtonPressed(self)
     }
-
-    @objc private func repeatValueButtonTapped(_ value: Int) {
-        // TODO: Add support for updating values
-
-        var oldValues: Set<Int>
-        let rule = task.recurrenceRule
-        switch rule {
-        case let .weekly(interval, weekdays) where interval == 1 && weekdays?.isEmpty == false:
-            oldValues = weekdays!
-        case let .monthly(interval, days) where interval == 1 && days?.isEmpty == false:
-            oldValues = days!
-        default:
-            oldValues = []
-        }
-
-        if oldValues.contains(value) == true && oldValues.count > 1 {
-            oldValues.remove(value)
-        } else {
-            oldValues.insert(value)
-        }
-        setIntervalValue(to: oldValues)
-    }
 }
 
 // MARK: - Collection View Setup
 extension TaskEditorController {
     // MARK: Layout
     func makeLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
-            let sectionKind = self.dataSource.snapshot().sectionIdentifiers[sectionIndex]
+        let layout = UICollectionViewCompositionalLayout {[unowned self] sectionIndex, layoutEnvironment in
+            let sectionID = self.dataSource.snapshot().sectionIdentifiers[sectionIndex]
+            let sectionKind = self.sectionStore.fetchByID(sectionID)
+
             let section: NSCollectionLayoutSection
-            switch sectionKind {
+            switch sectionID {
             case .detailHeader:
                 let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(100))
                 let item = NSCollectionLayoutItem(layoutSize: itemSize)
@@ -158,23 +119,10 @@ extension TaskEditorController {
 
                 section = NSCollectionLayoutSection(group: group)
                 section.contentInsets = .init(top: 16, leading: 16, bottom: 0, trailing: 16)
-            case .recurrenceWeekly, .recurrenceMonthly:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1/7), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-                item.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 3, bottom: 3, trailing: 3)
-
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(1/7))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 24, bottom: 6, trailing: 24)
-                section.decorationItems = [
-                    NSCollectionLayoutDecorationItem.background(elementKind: RoundedRectBackgroundView.ElementKind)
-                ]
-
             default:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
-                config.headerMode = sectionKind.headerText != nil ? .supplementary : .none
+                config.headerMode = sectionKind.showsHeader ? .supplementary : .none
+                config.footerMode = sectionKind.showsFooter ? .supplementary : .none
                 section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
             }
 
@@ -190,16 +138,19 @@ extension TaskEditorController {
     private func makeDataSource() -> UICollectionViewDiffableDataSource<Section, Item> {
         let detailHeaderRegistration = makeDetailHeaderRegistration()
         let uiCollectionListCellRegistration = makeUICollectionViewListCellRegistration()
-        let circleButtonCellRegistration = makeCircleButtonCellRegistration()
+        let dayOfWeekPickerRegistration = makeDayOfWeekPickerRegistration()
+        let dayOfMonthPickerRegistration = makeDayOfMonthPickerRegistration()
 
         let dataSource = UICollectionViewDiffableDataSource<Section, Item>(collectionView: collectionView) {collectionView, indexPath, item in
             switch item {
             case .detailHeader:
                 return collectionView.dequeueConfiguredReusableCell(using: detailHeaderRegistration, for: indexPath, item: item)
-            case .pickerRow, .switchRow:
+            case .remindersToggle, .repeatsIntervalRow:
                 return collectionView.dequeueConfiguredReusableCell(using: uiCollectionListCellRegistration, for: indexPath, item: item)
-            case .circlePickerButton:
-                return collectionView.dequeueConfiguredReusableCell(using: circleButtonCellRegistration, for: indexPath, item: item)
+            case .dayOfWeekPicker:
+                return collectionView.dequeueConfiguredReusableCell(using: dayOfWeekPickerRegistration, for: indexPath, item: item)
+            case .dayOfMonthPicker:
+                return collectionView.dequeueConfiguredReusableCell(using: dayOfMonthPickerRegistration, for: indexPath, item: item)
             }
         }
 
@@ -216,24 +167,23 @@ extension TaskEditorController {
         return dataSource
     }
 
-    private func applySnapshot() {
+    private func applyInitialSnapshot() {
         var dataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        let visibleSections = ViewModel.Section.allCases.filter { sectionType in
-            // Show the value picker only if the frequency is .weekly or .monthly
-            switch sectionType {
+
+        let visibleSections = Section.allCases.filter { sectionID in
+            switch sectionID {
             case .recurrenceFrequency:
-                return task.hasSchedule == true
-            case .recurrenceWeekly:
-                guard case .weekly = task.recurrenceRule else { return false }
-                return true
-            case .recurrenceMonthly:
-                guard case .monthly = task.recurrenceRule else { return false }
-                return true
+                return self.task.hasSchedule
+            case .recurrenceValue:
+                return self.task.hasSchedule
             default:
                 return true
             }
         }
         dataSourceSnapshot.appendSections(visibleSections)
+
+        let valueSectionNeedsReload = dataSource.snapshot().sectionIdentifiers.contains(.recurrenceValue)^visibleSections.contains(.recurrenceValue)
+
         dataSource.apply(dataSourceSnapshot)
 
         // Header Row
@@ -242,164 +192,105 @@ extension TaskEditorController {
         }
 
         if visibleSections.contains(.scheduleGeneral) {
-            applyScheduleGeneralSnapshot(after: .detailHeader)
+            applyScheduleGeneralSnapshot()
         }
 
         if visibleSections.contains(.recurrenceFrequency) {
-            applyFrequencyPickerSnapshot(after: .scheduleGeneral)
+            applyFrequencyPickerSnapshot()
         }
 
-        if visibleSections.contains(.recurrenceWeekly) {
-            applyWeekdayPickerSnapshot(after: .recurrenceFrequency)
-        } else if visibleSections.contains(.recurrenceMonthly) {
-            applyDayOfMonthPickerSnapshot(after: .recurrenceFrequency)
+        if valueSectionNeedsReload {
+            applyValuePickerSnapshot()
         }
     }
 
-    private func applyDetailHeaderSnapshot(after section: Section? = nil) {
-        // Get the current snapshots
-        var currentSnapshot = dataSource.snapshot()
-        var detailHeaderSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+    private func applyFrequencyChangedSnapshot() {
+        let currentSnapshot = dataSource.snapshot()
 
-        if let section = section {
-            let dataSourceContainsSection = currentSnapshot.sectionIdentifiers.contains(section)
-            assert(dataSourceContainsSection, "Current dataSource snapshot does not contain the desired section. Add it before calling this method.")
-            guard dataSourceContainsSection else { return }
+        // Header Row
+        if currentSnapshot.sectionIdentifiers.contains(.detailHeader) {
+            applyDetailHeaderSnapshot()
         }
+
+        if currentSnapshot.sectionIdentifiers.contains(.recurrenceFrequency) {
+            applyFrequencyPickerSnapshot()
+        }
+
+        if currentSnapshot.sectionIdentifiers.contains(.recurrenceValue) {
+            applyValuePickerSnapshot()
+        }
+    }
+
+    private func applyRecurrenceValueChangedSnapshot() {
+        if dataSource.snapshot().sectionIdentifiers.contains(.detailHeader) {
+            applyDetailHeaderSnapshot()
+        }
+    }
+
+    private func applyDetailHeaderSnapshot() {
+        // Get the current snapshots
+        var detailHeaderSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
 
         // Apply the new items to the frequency snapshot
         let currentScheduleFormatter = Utility.careScheduleFormatter
         let scheduleValue = currentScheduleFormatter.string(for: task.schedule) ?? "No schedule"
         let valueIcon = task.schedule == nil ? "bell.slash" : "bell.fill"
-        let item = Item.detailHeader(titleImage: task.taskTypeProperties?.icon, titleText: task.taskTypeProperties?.displayName, valueIcon: valueIcon, valueText: scheduleValue, tintColor: .systemBlue)
+        let item = Item.detailHeader
 
         detailHeaderSnapshot.append([item])
-
-        if !currentSnapshot.sectionIdentifiers.contains(.recurrenceFrequency) {
-            if let section = section {
-                currentSnapshot.insertSections([.recurrenceFrequency], afterSection: section)
-            } else {
-                currentSnapshot.appendSections([.recurrenceFrequency])
-            }
-            dataSource.apply(currentSnapshot, animatingDifferences: false)
+        UIView.performWithoutAnimation {
+            self.dataSource.apply(detailHeaderSnapshot, to: .detailHeader)
         }
-
-        dataSource.apply(detailHeaderSnapshot, to: .detailHeader, animatingDifferences: false)
     }
 
     private func applyScheduleGeneralSnapshot(after section: Section? = nil) {
         // Get the current snapshots
-        var currentSnapshot = dataSource.snapshot()
         var scheduleGeneralSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
 
-        if let section = section {
-            let dataSourceContainsSection = currentSnapshot.sectionIdentifiers.contains(section)
-            assert(dataSourceContainsSection, "Current dataSource snapshot does not contain the desired section. Add it before calling this method.")
-            guard dataSourceContainsSection else { return }
-        }
-
         scheduleGeneralSnapshot.append([
-            .switchRow(icon: nil, title: "Reminders", isEnabled: task.hasSchedule, tapAction: HashableClosure<Bool>(handler: {[weak self] newValue in
-                self?.setCareScheduleEnabled(to: newValue)
-            }))
+            .remindersToggle
         ])
 
-        if !currentSnapshot.sectionIdentifiers.contains(.scheduleGeneral) {
-            if let section = section {
-                currentSnapshot.insertSections([.scheduleGeneral], afterSection: section)
-            } else {
-                currentSnapshot.appendSections([.scheduleGeneral])
-            }
-            dataSource.apply(currentSnapshot, animatingDifferences: false)
+        UIView.performWithoutAnimation {
+            self.dataSource.apply(scheduleGeneralSnapshot, to: .scheduleGeneral)
         }
-
-        dataSource.apply(scheduleGeneralSnapshot, to: .scheduleGeneral, animatingDifferences: false)
     }
 
     private func applyFrequencyPickerSnapshot(after section: Section? = nil) {
         // Get the current snapshots
-        var currentSnapshot = dataSource.snapshot()
         var frequencyPickerSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-
-        if let section = section {
-            let dataSourceContainsSection = currentSnapshot.sectionIdentifiers.contains(section)
-            assert(dataSourceContainsSection, "Current dataSource snapshot does not contain the desired section. Add it before calling this method.")
-            guard dataSourceContainsSection else { return }
-        }
 
         // Apply the new items to the frequency snapshot
         let intervalType = task.recurrenceFrequency ?? ""
-        let items: [Item] = repeatFrequencyChoices.map { type in
-            .pickerRow(image: nil, title: type, isSelected: type.caseInsensitiveCompare(intervalType) == .orderedSame, tapAction: HashableClosure<Void>(handler: { [weak self] in
-                self?.selectFrequency(type)
-            }))
+        let items: [Item] = RepeatFrequencyChoices.allCases.map { type in
+            .repeatsIntervalRow(type)
         }
         frequencyPickerSnapshot.append(items)
 
-        if !currentSnapshot.sectionIdentifiers.contains(.recurrenceFrequency) {
-            if let section = section {
-                currentSnapshot.insertSections([.recurrenceFrequency], afterSection: section)
-            } else {
-                currentSnapshot.appendSections([.recurrenceFrequency])
-            }
-            dataSource.apply(currentSnapshot, animatingDifferences: false)
+        UIView.performWithoutAnimation {
+            self.dataSource.apply(frequencyPickerSnapshot, to: .recurrenceFrequency)
         }
-
-        dataSource.apply(frequencyPickerSnapshot, to: .recurrenceFrequency, animatingDifferences: false)
     }
 
-    private func applyWeekdayPickerSnapshot(after section: Section? = nil) {
+    private func applyValuePickerSnapshot() {
         // Get the current snapshots
-        var currentSnapshot = dataSource.snapshot()
-        var weekdayPickerSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-
-        if let section = section {
-            let dataSourceContainsSection = currentSnapshot.sectionIdentifiers.contains(section)
-            assert(dataSourceContainsSection, "Current dataSource snapshot does not contain the desired section. Add it before calling this method.")
-            guard dataSourceContainsSection else { return }
-        }
+        var valuePickersSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
 
         // Apply the new items to the weekday picker snapshot
-        let weekdayItems = makeWeekdayPicker()
-        weekdayPickerSnapshot.append(weekdayItems)
-
-        if !currentSnapshot.sectionIdentifiers.contains(.recurrenceWeekly) {
-            if let section = section {
-                currentSnapshot.insertSections([.recurrenceWeekly], afterSection: section)
-            } else {
-                currentSnapshot.appendSections([.recurrenceWeekly])
-            }
-            dataSource.apply(currentSnapshot, animatingDifferences: false)
+        switch task.recurrenceRule {
+        case .weekly:
+            let weekdayItems = Item.dayOfWeekPicker
+            valuePickersSnapshot.append([weekdayItems])
+        case .monthly:
+            let daysInMonthItem = Item.dayOfMonthPicker
+            valuePickersSnapshot.append([daysInMonthItem])
+        default:
+            break
         }
 
-        dataSource.apply(weekdayPickerSnapshot, to: .recurrenceWeekly, animatingDifferences: false)
-    }
-
-    private func applyDayOfMonthPickerSnapshot(after section: Section? = nil) {
-        // Get the current snapshots
-        var currentSnapshot = dataSource.snapshot()
-        var dayOfMonthPickerSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
-
-        if let section = section {
-            let dataSourceContainsSection = currentSnapshot.sectionIdentifiers.contains(section)
-            assert(dataSourceContainsSection, "Current dataSource snapshot does not contain the desired section. Add it before calling this method.")
-            guard dataSourceContainsSection else { return }
+        UIView.performWithoutAnimation {
+            self.dataSource.apply(valuePickersSnapshot, to: .recurrenceValue)
         }
-
-        // Apply the new items to the weekday picker snapshot
-        let dayPickerItems = makeDayPicker()
-        dayOfMonthPickerSnapshot.append(dayPickerItems)
-
-        if !currentSnapshot.sectionIdentifiers.contains(.recurrenceMonthly) {
-            if let section = section {
-                currentSnapshot.insertSections([.recurrenceMonthly], afterSection: section)
-            } else {
-                currentSnapshot.appendSections([.recurrenceMonthly])
-            }
-            dataSource.apply(currentSnapshot, animatingDifferences: false)
-        }
-
-        dataSource.apply(dayOfMonthPickerSnapshot, to: .recurrenceMonthly, animatingDifferences: false)
     }
 
     private func setCareScheduleEnabled(to isEnabled: Bool) {
@@ -412,19 +303,19 @@ extension TaskEditorController {
             }
         }
 
-        updateUI()
+        applyFrequencyChangedSnapshot()
     }
 
-    private func selectFrequency(_ newValue: String) {
-        guard newValue.caseInsensitiveCompare(task.recurrenceFrequency ?? "") != .orderedSame else { return }
+    private func selectFrequency(_ newValue: RepeatFrequencyChoices) {
+        guard newValue.rawValue.caseInsensitiveCompare(task.recurrenceFrequency ?? "") != .orderedSame else { return }
 
-        // Update the task interval parameters
+        // Update the task interval parameter
         switch newValue {
-        case "Daily":
+        case .daily:
             task.schedule = .init(startDate: Date(), recurrenceRule: .daily(1))
-        case "Weekly":
+        case .weekly:
             task.schedule = .init(startDate: Date(), recurrenceRule: .weekly(1, [1]))
-        case "Monthly":
+        case .monthly:
             task.schedule = .init(startDate: Date(), recurrenceRule: .monthly(1, [1]))
         default:
             print("Unknown frequency value: \(newValue)")
@@ -432,7 +323,8 @@ extension TaskEditorController {
         }
 
         delegate?.taskEditor(self, didUpdateTask: task)
-        updateUI()
+
+        applyFrequencyChangedSnapshot()
     }
 
     func setIntervalValue(to newValue: Set<Int>) {
@@ -446,7 +338,8 @@ extension TaskEditorController {
         }
 
         delegate?.taskEditor(self, didUpdateTask: task)
-        updateUI()
+
+        applyRecurrenceValueChangedSnapshot()
     }
 }
 
@@ -455,7 +348,7 @@ extension TaskEditorController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let item = dataSource.itemIdentifier(for: indexPath)
         switch item {
-        case .pickerRow, .circlePickerButton:
+        case .repeatsIntervalRow:
             return true
         default:
             return false
@@ -465,10 +358,8 @@ extension TaskEditorController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = dataSource.itemIdentifier(for: indexPath)
         switch item {
-        case .pickerRow(_, _, _, let tapAction):
-            tapAction.handler(Void())
-        case .circlePickerButton(_, _, let tapAction):
-            tapAction.handler(Void())
+        case let .repeatsIntervalRow(value):
+            selectFrequency(value)
         default:
             break
         }
@@ -479,71 +370,72 @@ extension TaskEditorController: UICollectionViewDelegate {
 
 // MARK: - Cell Registration
 private extension TaskEditorController {
-    func updateUI() {
-        applySnapshot()
-    }
-
     func makeDetailHeaderRegistration() -> UICollectionView.CellRegistration<LargeHeaderCell, Item> {
-        UICollectionView.CellRegistration<LargeHeaderCell, Item> { cell, indexPath, item in
-            guard case let .detailHeader(titleImage, titleText, valueIcon, valueText, tintColor) = item else { return }
-            cell.titleImage = titleImage
-            cell.titleText = titleText
-            cell.valueIcon = valueIcon
-            cell.valueText = valueText
-            cell.tintColor = tintColor
+        UICollectionView.CellRegistration<LargeHeaderCell, Item> {[unowned self] cell, indexPath, item in
+            let task = self.task
+            cell.titleImage = task.taskTypeProperties?.icon
+            cell.titleText = task.taskTypeProperties?.displayName
+            cell.valueIcon = task.hasSchedule ? "bell.fill" : "bell.slash"
+            cell.valueText = Utility.careScheduleFormatter.string(for: task.schedule) ?? "No schedule"
+
+            // TODO: Add tintColor property to task
+            cell.tintColor = .systemBlue
 
             cell.layer.cornerRadius = 10
             cell.clipsToBounds = true
         }
     }
 
-    func makeUICollectionViewListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
-            switch item {
-            case let .pickerRow(image, title, isSelected, _):
-                var config = UIListContentConfiguration.valueCell()
-                config.image = image
-                config.text = title
-
-                cell.contentConfiguration = config
-                cell.accessories = isSelected ? [.checkmark()] : []
-            case let.switchRow(icon, title, isEnabled, tapAction):
-                var config = UIListContentConfiguration.valueCell()
-                if let icon = icon {
-                    config.image = UIImage(named: icon) ?? UIImage(systemName: icon)
-                }
-                config.text = title
-
-                cell.contentConfiguration = config
-
-                let action = UIAction { action in
-                    let newState = (action.sender as? UISwitch)?.isOn ?? false
-                    tapAction.handler(newState)
-                }
-
-                cell.accessories = [
-                    .toggleAccessory(isOn: isEnabled, action: action)
-                ]
-
-
-            default:
-                break
+    func makeDayOfWeekPickerRegistration() -> UICollectionView.CellRegistration<SproutDayOfWeekPickerCollectionViewCell, Item> {
+        UICollectionView.CellRegistration<SproutDayOfWeekPickerCollectionViewCell, Item> { [unowned self] cell, indexPath, item in
+            cell.setSelection(self.task.recurrenceDaysOfWeek ?? [1])
+            cell.valueChangedAction = UIAction {[weak self] action in
+                guard let picker = action.sender as? DayOfWeekPicker else { return }
+                self?.setIntervalValue(to: picker.selection)
             }
         }
     }
 
-    func makeCircleButtonCellRegistration() -> UICollectionView.CellRegistration<SproutButtonCell, Item> {
-        let tintColor = view.tintColor
+    func makeDayOfMonthPickerRegistration() -> UICollectionView.CellRegistration<SproutDayOfMonthPickerCollectionViewCell, Item> {
+        UICollectionView.CellRegistration<SproutDayOfMonthPickerCollectionViewCell, Item> { [unowned self] cell, indexPath, item in
+            cell.setSelection(self.task.recurrenceDaysOfMonth ?? [1])
+            cell.valueChangedAction = UIAction {[weak self] action in
+                guard let picker = action.sender as? DayOfMonthPicker else { return }
+                self?.setIntervalValue(to: picker.selection)
+            }
+        }
+    }
 
-        return UICollectionView.CellRegistration<SproutButtonCell, Item> { cell, indexPath, item in
+
+    func makeUICollectionViewListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> {[unowned self] cell, indexPath, item in
             switch item {
-            case let .circlePickerButton(text, isSelected, _):
-                cell.title = text
-                cell.isSelected = isSelected
-                cell.displayMode = .plain
-                cell.tintColor = isSelected ? tintColor : .systemGray
-                cell.layer.cornerRadius = cell.bounds.height/2
-                cell.clipsToBounds = true
+            case let .repeatsIntervalRow(value):
+                var config = UIListContentConfiguration.valueCell()
+                config.text = value.rawValue.capitalized
+                cell.contentConfiguration = config
+                let isSelected = self.task.recurrenceFrequency?.compare(value.rawValue) == .orderedSame
+                cell.accessories = isSelected ? [.checkmark()] : []
+
+            case .remindersToggle:
+                var config = UIListContentConfiguration.valueCell()
+                // TODO: Source constant from view model
+                config.text = "Reminders"
+
+                cell.contentConfiguration = config
+
+                let action = UIAction {[unowned self] action in
+                    let newState = (action.sender as? UISwitch)?.isOn ?? false
+                    self.setCareScheduleEnabled(to: newState)
+                }
+
+                let isOn = self.task.hasSchedule
+
+                // TODO: Replace constant with value from view model
+                cell.accessories = [
+                    .toggleAccessory(isOn: isOn, action: action)
+                ]
+
             default:
                 break
             }
@@ -551,65 +443,14 @@ private extension TaskEditorController {
     }
 
     func createSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
-        return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { supplementaryView, elementKind, indexPath in
-            let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
+        return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) {[unowned self] supplementaryView, elementKind, indexPath in
+            let sectionID = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
+            let section = self.sectionStore.fetchByID(sectionID)
+
             var config = UIListContentConfiguration.largeGroupedHeader()
             config.text = section.headerText
             supplementaryView.contentConfiguration = config
             supplementaryView.contentView.backgroundColor = .systemGroupedBackground
-        }
-    }
-}
-
-// MARK: - Data Source View Model
-private extension TaskEditorController {
-    enum ViewModel {
-        enum Section: CaseIterable {
-            case detailHeader
-            //            case lastCareDate
-            case scheduleGeneral
-            case recurrenceFrequency
-            case recurrenceDaily
-            case recurrenceWeekly
-            case recurrenceMonthly
-
-            var headerText: String? {
-                switch self {
-                //                case .lastCareDate:
-                //                    return "Last Care Date"
-                case .recurrenceFrequency:
-                    return "Repeats"
-                case .recurrenceWeekly, .recurrenceMonthly:
-                    return "On these days"
-                default:
-                    return nil
-                }
-            }
-
-            var footerText: String? {
-                switch self {
-                default:
-                    return nil
-                }
-            }
-        }
-
-        enum Item: Hashable {
-            case detailHeader(titleImage: UIImage?, titleText: String?, valueIcon: String?, valueText: String?, tintColor: UIColor?)
-            case pickerRow(image: UIImage?, title: String?, isSelected: Bool, tapAction: HashableClosure<Void>)
-            case switchRow(icon: String?, title: String?, isEnabled: Bool, tapAction: HashableClosure<Bool>)
-            case circlePickerButton(text: String, isSelected: Bool, tapAction: HashableClosure<Void>)
-
-            enum CellAccessory {
-                case checkmark
-
-                var uiCellAccessory: UICellAccessory {
-                    switch self {
-                    case .checkmark:
-                        return UICellAccessory.checkmark()
-                    }
-                }
-            }
         }
     }
 }

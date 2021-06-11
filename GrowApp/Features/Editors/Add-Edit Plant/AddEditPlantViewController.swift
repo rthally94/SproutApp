@@ -26,7 +26,7 @@ class AddEditPlantViewController: UICollectionViewController {
         let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
         request.predicate = NSPredicate(format: "%K == true", #keyPath(SproutCareTaskMO.isTemplate))
 
-        print(String((try? editingContext.count(for: request)) ?? -1))
+//        print(String((try? editingContext.count(for: request)) ?? -1))
 
         let allTemplates: [SproutCareTaskMO]
         do {
@@ -140,7 +140,6 @@ class AddEditPlantViewController: UICollectionViewController {
     }
 
     private func discardChangesIfAble(completion: @escaping (Bool) -> Void) {
-        print(hasChanges, canSave)
         func discardChanges() {
             self.storageProvider.editingContext.rollback()
             self.storageProvider.saveContext()
@@ -236,10 +235,10 @@ extension AddEditPlantViewController {
         let areObjectsUpdated = !editingContext.updatedObjects.isEmpty
         let isNameUpdated = originalNickname != plant?.nickname
 
-        print("isNameUpdated: \(isNameUpdated), areObjectsUpdated: \(areObjectsUpdated)")
-        if isNameUpdated {
-            print("originalNameValue: \(originalNickname), plantNameValue: \(plant?.nickname)")
-        }
+//        print("isNameUpdated: \(isNameUpdated), areObjectsUpdated: \(areObjectsUpdated)")
+//        if isNameUpdated {
+//            print("originalNameValue: \(originalNickname), plantNameValue: \(plant?.nickname)")
+//        }
 
         return areObjectsUpdated || isNameUpdated
     }

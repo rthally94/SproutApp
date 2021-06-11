@@ -69,6 +69,15 @@ class ButtonCell: UICollectionViewCell {
         state.isSelected = isSelected
         return state
     }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        image = nil
+        title = nil
+        displayMode = .normal
+        isSelected = false
+    }
 }
 
 class SproutButtonCell: ButtonCell {
