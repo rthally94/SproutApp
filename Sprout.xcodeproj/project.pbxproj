@@ -17,16 +17,11 @@
 		FB28A8ED264AB7D700B1206E /* CareScheduleFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */; };
 		FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D639266D680600FA9FA1 /* SproutBlurredHeaderView.swift */; };
 		FB43D640266DB4BE00FA9FA1 /* DetailHeroReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D63F266DB4BE00FA9FA1 /* DetailHeroReusableView.swift */; };
-		FB43D643266E603E00FA9FA1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D642266E603E00FA9FA1 /* SettingsView.swift */; };
 		FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D644266E665E00FA9FA1 /* UserDefaults+Extensions.swift */; };
 		FB43D647266E70BD00FA9FA1 /* Date+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */; };
 		FB4FAB09265EDE7C001A9201 /* HashableClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4FAB08265EDE7C001A9201 /* HashableClosure.swift */; };
-		FB5CB8462671068400A7F60E /* SproutCareTaskCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB8452671068400A7F60E /* SproutCareTaskCellViewModel.swift */; };
 		FB5CB848267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB847267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel */; };
 		FB5CB84E2672624E00A7F60E /* ModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB84D2672624E00A7F60E /* ModelStore.swift */; };
-		FB5CB8502672639B00A7F60E /* TaskEditorSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB84F2672639B00A7F60E /* TaskEditorSection.swift */; };
-		FB5CB8522672643700A7F60E /* TaskEditorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB8512672643700A7F60E /* TaskEditorItem.swift */; };
-		FB5CB8542672666300A7F60E /* RepeatFrequencyChoices.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB8532672666300A7F60E /* RepeatFrequencyChoices.swift */; };
 		FB5CB85726726B0600A7F60E /* DayOfWeekPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85626726B0600A7F60E /* DayOfWeekPicker.swift */; };
 		FB5CB85926728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85826728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift */; };
 		FB5CB85C2672A72300A7F60E /* SproutCapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85B2672A72300A7F60E /* SproutCapsuleButton.swift */; };
@@ -37,9 +32,7 @@
 		FB5F348925B63E6900CCE6BC /* SproutScheduledTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* SproutScheduledTaskCell.swift */; };
 		FB6661B2261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661B1261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift */; };
 		FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661B5261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift */; };
-		FB6661BB261FD09800DC8B04 /* TaskEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661BA261FD09800DC8B04 /* TaskEditorController.swift */; };
 		FB6661CB2620938F00DC8B04 /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661CA2620938F00DC8B04 /* Utility.swift */; };
-		FB6661D126209F1800DC8B04 /* TaskEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6661D026209F1800DC8B04 /* TaskEditorDelegate.swift */; };
 		FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */; };
 		FB6C461725F1975F009ED947 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461625F1975F009ED947 /* UIColor+Extension.swift */; };
 		FB6CD6582657E17500D7DE82 /* RemindersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6CD6572657E17500D7DE82 /* RemindersProvider.swift */; };
@@ -48,15 +41,6 @@
 		FB76D341262A592500D00036 /* SproutCareDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D340262A592500D00036 /* SproutCareDetailView.swift */; };
 		FB7ED5092614D111008FD1BE /* UIImageTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */; };
 		FB7ED5192615260F008FD1BE /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5182615260F008FD1BE /* StorageProvider.swift */; };
-		FB7ED52B26164290008FD1BE /* PlantsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED52A26164290008FD1BE /* PlantsProvider.swift */; };
-		FB7ED54826177FE4008FD1BE /* PlantTypesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED54726177FE4008FD1BE /* PlantTypesProvider.swift */; };
-		FB7ED54E2617B8F4008FD1BE /* PlantTypePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED54D2617B8F4008FD1BE /* PlantTypePickerDelegate.swift */; };
-		FB82CDE12642F35F00E32F16 /* PlantGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDE02642F35F00E32F16 /* PlantGroupViewModel.swift */; };
-		FB82CDE52642F62B00E32F16 /* PlantGroupSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDE42642F62B00E32F16 /* PlantGroupSection.swift */; };
-		FB82CDE92642F6BE00E32F16 /* PlantGroupItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDE82642F6BE00E32F16 /* PlantGroupItem.swift */; };
-		FB82CDF526444EBE00E32F16 /* UpNextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDF426444EBD00E32F16 /* UpNextViewModel.swift */; };
-		FB82CDF926444F7400E32F16 /* UpNextSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDF826444F7400E32F16 /* UpNextSection.swift */; };
-		FB82CDFD26444F7D00E32F16 /* UpNextItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB82CDFC26444F7D00E32F16 /* UpNextItem.swift */; };
 		FB92AF66262E093D0062DE47 /* SproutCareDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF65262E093D0062DE47 /* SproutCareDetailCell.swift */; };
 		FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */; };
 		FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B94226645BD800629C1B /* SproutLabel.swift */; };
@@ -68,39 +52,55 @@
 		FB98B95126691E7500629C1B /* SproutCareTaskSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B95026691E7500629C1B /* SproutCareTaskSchedule.swift */; };
 		FB98B95326695C3200629C1B /* Optional+Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B95226695C3200629C1B /* Optional+Comparable.swift */; };
 		FB9C66AA263A539D00CDC15A /* SproutCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* SproutCardView.swift */; };
-		FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */; };
-		FB9C66B5263AE76900CDC15A /* UpNextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66B4263AE76900CDC15A /* UpNextProvider.swift */; };
 		FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* SproutButtonCell.swift */; };
 		FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */; };
 		FBAF464E2641FE5000854D2C /* CareRecurrenceRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF464D2641FE5000854D2C /* CareRecurrenceRuleTests.swift */; };
 		FBAF46542642087600854D2C /* CareInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF46532642087600854D2C /* CareInfoTests.swift */; };
 		FBB03C122637781C00F7F364 /* SproutHeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C112637781C00F7F364 /* SproutHeroView.swift */; };
 		FBB75BBF264AFBB3000CC823 /* PlantType.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB75BBE264AFBB3000CC823 /* PlantType.swift */; };
-		FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */; };
-		FBC5D63825EEA269005BF6B1 /* PlantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */; };
 		FBC7330325DDB4F00048999C /* SproutIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330225DDB4F00048999C /* SproutIconCell.swift */; };
-		FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */; };
-		FBC7332925E307DF0048999C /* PlantTypePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7332825E307DF0048999C /* PlantTypePickerViewController.swift */; };
-		FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */; };
-		FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */; };
+		FBCA565326740BFC008DBFFC /* PlantGroupSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562926740BFC008DBFFC /* PlantGroupSection.swift */; };
+		FBCA565426740BFC008DBFFC /* PlantsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562A26740BFC008DBFFC /* PlantsProvider.swift */; };
+		FBCA565526740BFC008DBFFC /* PlantGroupItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562B26740BFC008DBFFC /* PlantGroupItem.swift */; };
+		FBCA565626740BFC008DBFFC /* PlantGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562C26740BFC008DBFFC /* PlantGroupViewModel.swift */; };
+		FBCA565726740BFC008DBFFC /* PlantGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562D26740BFC008DBFFC /* PlantGroupViewController.swift */; };
+		FBCA565826740BFC008DBFFC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563126740BFC008DBFFC /* SettingsView.swift */; };
+		FBCA565926740BFC008DBFFC /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563326740BFC008DBFFC /* MainViewController.swift */; };
+		FBCA565A26740BFC008DBFFC /* SproutCareTaskCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563526740BFC008DBFFC /* SproutCareTaskCellViewModel.swift */; };
+		FBCA565B26740BFC008DBFFC /* PlantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563626740BFC008DBFFC /* PlantDetailViewController.swift */; };
+		FBCA565D26740BFC008DBFFC /* AddEditPlantViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563B26740BFC008DBFFC /* AddEditPlantViewController.swift */; };
+		FBCA565E26740BFC008DBFFC /* AddEditPlantViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563C26740BFC008DBFFC /* AddEditPlantViewControllerDelegate.swift */; };
+		FBCA565F26740BFC008DBFFC /* ButtonHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563E26740BFC008DBFFC /* ButtonHeaderFooterView.swift */; };
+		FBCA566026740BFC008DBFFC /* CollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563F26740BFC008DBFFC /* CollectionViewHeader.swift */; };
+		FBCA566126740BFC008DBFFC /* PlantIconSupplementaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564026740BFC008DBFFC /* PlantIconSupplementaryView.swift */; };
+		FBCA566326740BFC008DBFFC /* PlantTypePickerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564326740BFC008DBFFC /* PlantTypePickerDelegate.swift */; };
+		FBCA566426740BFC008DBFFC /* PlantTypePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564426740BFC008DBFFC /* PlantTypePickerViewController.swift */; };
+		FBCA566526740BFC008DBFFC /* PlantTypesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564526740BFC008DBFFC /* PlantTypesProvider.swift */; };
+		FBCA566626740BFC008DBFFC /* TaskEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564726740BFC008DBFFC /* TaskEditorDelegate.swift */; };
+		FBCA566726740BFC008DBFFC /* TaskEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564826740BFC008DBFFC /* TaskEditorController.swift */; };
+		FBCA566826740BFC008DBFFC /* TaskEditorSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564A26740BFC008DBFFC /* TaskEditorSection.swift */; };
+		FBCA566926740BFC008DBFFC /* TaskEditorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564B26740BFC008DBFFC /* TaskEditorItem.swift */; };
+		FBCA566A26740BFC008DBFFC /* RepeatFrequencyChoices.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564C26740BFC008DBFFC /* RepeatFrequencyChoices.swift */; };
+		FBCA566B26740BFC008DBFFC /* UpNextViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564E26740BFC008DBFFC /* UpNextViewModel.swift */; };
+		FBCA566C26740BFC008DBFFC /* UpNextSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564F26740BFC008DBFFC /* UpNextSection.swift */; };
+		FBCA566D26740BFD008DBFFC /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA565026740BFC008DBFFC /* UpNextViewController.swift */; };
+		FBCA566E26740BFD008DBFFC /* UpNextItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA565126740BFC008DBFFC /* UpNextItem.swift */; };
+		FBCA566F26740BFD008DBFFC /* UpNextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA565226740BFC008DBFFC /* UpNextProvider.swift */; };
 		FBD20AE4260FC6B7008915E1 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */; };
 		FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */; };
-		FBE73CAE265C3938007106AE /* AddEditPlantViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE73CAD265C3938007106AE /* AddEditPlantViewController.swift */; };
 		FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */; };
 		FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */; };
-		FBEB496C260CBED300F6060C /* PlantGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */; };
 		FBEB4972260CBEF800F6060C /* SproutCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4971260CBEF800F6060C /* SproutCardCell.swift */; };
 		FBF8AC5225DD80AC00E7E8EB /* SproutIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF8AC5125DD80AC00E7E8EB /* SproutIconView.swift */; };
-		FBFAECB92617D93300F0C67D /* AddEditPlantViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBFAECB82617D93300F0C67D /* AddEditPlantViewControllerDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		FB7490ED25B1E71200925C29 /* PBXContainerItemProxy */ = {
+		FBCA562426740B81008DBFFC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = FB21B6EC25B1E5CC00D02384 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = FB21B6F325B1E5CC00D02384;
-			remoteInfo = GrowApp;
+			remoteInfo = Sprout;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -117,17 +117,12 @@
 		FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareScheduleFormatter.swift; sourceTree = "<group>"; };
 		FB43D639266D680600FA9FA1 /* SproutBlurredHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutBlurredHeaderView.swift; sourceTree = "<group>"; };
 		FB43D63F266DB4BE00FA9FA1 /* DetailHeroReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeroReusableView.swift; sourceTree = "<group>"; };
-		FB43D642266E603E00FA9FA1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		FB43D644266E665E00FA9FA1 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+RawRepresentable.swift"; sourceTree = "<group>"; };
 		FB4FAB08265EDE7C001A9201 /* HashableClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableClosure.swift; sourceTree = "<group>"; };
 		FB5CB8442670F92400A7F60E /* SproutDataModel-v1.0.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SproutDataModel-v1.0.1.xcdatamodel"; sourceTree = "<group>"; };
-		FB5CB8452671068400A7F60E /* SproutCareTaskCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTaskCellViewModel.swift; sourceTree = "<group>"; };
 		FB5CB847267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "SproutDataModel-1.0.0-1.0.1.xcmappingmodel"; sourceTree = "<group>"; };
 		FB5CB84D2672624E00A7F60E /* ModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelStore.swift; sourceTree = "<group>"; };
-		FB5CB84F2672639B00A7F60E /* TaskEditorSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorSection.swift; sourceTree = "<group>"; };
-		FB5CB8512672643700A7F60E /* TaskEditorItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorItem.swift; sourceTree = "<group>"; };
-		FB5CB8532672666300A7F60E /* RepeatFrequencyChoices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatFrequencyChoices.swift; sourceTree = "<group>"; };
 		FB5CB85626726B0600A7F60E /* DayOfWeekPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekPicker.swift; sourceTree = "<group>"; };
 		FB5CB85826728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutDayOfWeekPickerCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB5CB85B2672A72300A7F60E /* SproutCapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCapsuleButton.swift; sourceTree = "<group>"; };
@@ -138,9 +133,7 @@
 		FB5F348825B63E6900CCE6BC /* SproutScheduledTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutScheduledTaskCell.swift; sourceTree = "<group>"; };
 		FB6661B1261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPersistentContainer+Extensions.swift"; sourceTree = "<group>"; };
 		FB6661B5261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSManagedObjectContext+Extensions.swift"; sourceTree = "<group>"; };
-		FB6661BA261FD09800DC8B04 /* TaskEditorController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorController.swift; sourceTree = "<group>"; };
 		FB6661CA2620938F00DC8B04 /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
-		FB6661D026209F1800DC8B04 /* TaskEditorDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditorDelegate.swift; sourceTree = "<group>"; };
 		FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		FB6C461625F1975F009ED947 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		FB6CD6572657E17500D7DE82 /* RemindersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersProvider.swift; sourceTree = "<group>"; };
@@ -151,15 +144,6 @@
 		FB76D340262A592500D00036 /* SproutCareDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareDetailView.swift; sourceTree = "<group>"; };
 		FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageTransformer.swift; sourceTree = "<group>"; };
 		FB7ED5182615260F008FD1BE /* StorageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProvider.swift; sourceTree = "<group>"; };
-		FB7ED52A26164290008FD1BE /* PlantsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantsProvider.swift; sourceTree = "<group>"; };
-		FB7ED54726177FE4008FD1BE /* PlantTypesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTypesProvider.swift; sourceTree = "<group>"; };
-		FB7ED54D2617B8F4008FD1BE /* PlantTypePickerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTypePickerDelegate.swift; sourceTree = "<group>"; };
-		FB82CDE02642F35F00E32F16 /* PlantGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantGroupViewModel.swift; sourceTree = "<group>"; };
-		FB82CDE42642F62B00E32F16 /* PlantGroupSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantGroupSection.swift; sourceTree = "<group>"; };
-		FB82CDE82642F6BE00E32F16 /* PlantGroupItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantGroupItem.swift; sourceTree = "<group>"; };
-		FB82CDF426444EBD00E32F16 /* UpNextViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewModel.swift; sourceTree = "<group>"; };
-		FB82CDF826444F7400E32F16 /* UpNextSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextSection.swift; sourceTree = "<group>"; };
-		FB82CDFC26444F7D00E32F16 /* UpNextItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextItem.swift; sourceTree = "<group>"; };
 		FB92AF65262E093D0062DE47 /* SproutCareDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareDetailCell.swift; sourceTree = "<group>"; };
 		FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+DismissKeyboardGesture.swift"; sourceTree = "<group>"; };
 		FB98B94226645BD800629C1B /* SproutLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutLabel.swift; sourceTree = "<group>"; };
@@ -171,30 +155,46 @@
 		FB98B95026691E7500629C1B /* SproutCareTaskSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTaskSchedule.swift; sourceTree = "<group>"; };
 		FB98B95226695C3200629C1B /* Optional+Comparable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Comparable.swift"; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* SproutCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCardView.swift; sourceTree = "<group>"; };
-		FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
-		FB9C66B4263AE76900CDC15A /* UpNextProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextProvider.swift; sourceTree = "<group>"; };
 		FB9E8C58262D08B400514AAB /* SproutButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutButtonCell.swift; sourceTree = "<group>"; };
 		FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectBackgroundView.swift; sourceTree = "<group>"; };
 		FBAF464D2641FE5000854D2C /* CareRecurrenceRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareRecurrenceRuleTests.swift; sourceTree = "<group>"; };
 		FBAF46532642087600854D2C /* CareInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoTests.swift; sourceTree = "<group>"; };
 		FBB03C112637781C00F7F364 /* SproutHeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutHeroView.swift; sourceTree = "<group>"; };
 		FBB75BBE264AFBB3000CC823 /* PlantType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantType.swift; sourceTree = "<group>"; };
-		FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailViewController.swift; sourceTree = "<group>"; };
 		FBC7330225DDB4F00048999C /* SproutIconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIconCell.swift; sourceTree = "<group>"; };
-		FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewHeader.swift; sourceTree = "<group>"; };
-		FBC7332825E307DF0048999C /* PlantTypePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTypePickerViewController.swift; sourceTree = "<group>"; };
-		FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconSupplementaryView.swift; sourceTree = "<group>"; };
-		FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHeaderFooterView.swift; sourceTree = "<group>"; };
+		FBCA562926740BFC008DBFFC /* PlantGroupSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantGroupSection.swift; sourceTree = "<group>"; };
+		FBCA562A26740BFC008DBFFC /* PlantsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantsProvider.swift; sourceTree = "<group>"; };
+		FBCA562B26740BFC008DBFFC /* PlantGroupItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantGroupItem.swift; sourceTree = "<group>"; };
+		FBCA562C26740BFC008DBFFC /* PlantGroupViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantGroupViewModel.swift; sourceTree = "<group>"; };
+		FBCA562D26740BFC008DBFFC /* PlantGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantGroupViewController.swift; sourceTree = "<group>"; };
+		FBCA563126740BFC008DBFFC /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		FBCA563326740BFC008DBFFC /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		FBCA563526740BFC008DBFFC /* SproutCareTaskCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SproutCareTaskCellViewModel.swift; sourceTree = "<group>"; };
+		FBCA563626740BFC008DBFFC /* PlantDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantDetailViewController.swift; sourceTree = "<group>"; };
+		FBCA563B26740BFC008DBFFC /* AddEditPlantViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddEditPlantViewController.swift; sourceTree = "<group>"; };
+		FBCA563C26740BFC008DBFFC /* AddEditPlantViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddEditPlantViewControllerDelegate.swift; sourceTree = "<group>"; };
+		FBCA563E26740BFC008DBFFC /* ButtonHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonHeaderFooterView.swift; sourceTree = "<group>"; };
+		FBCA563F26740BFC008DBFFC /* CollectionViewHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewHeader.swift; sourceTree = "<group>"; };
+		FBCA564026740BFC008DBFFC /* PlantIconSupplementaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantIconSupplementaryView.swift; sourceTree = "<group>"; };
+		FBCA564326740BFC008DBFFC /* PlantTypePickerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantTypePickerDelegate.swift; sourceTree = "<group>"; };
+		FBCA564426740BFC008DBFFC /* PlantTypePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantTypePickerViewController.swift; sourceTree = "<group>"; };
+		FBCA564526740BFC008DBFFC /* PlantTypesProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantTypesProvider.swift; sourceTree = "<group>"; };
+		FBCA564726740BFC008DBFFC /* TaskEditorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEditorDelegate.swift; sourceTree = "<group>"; };
+		FBCA564826740BFC008DBFFC /* TaskEditorController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEditorController.swift; sourceTree = "<group>"; };
+		FBCA564A26740BFC008DBFFC /* TaskEditorSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEditorSection.swift; sourceTree = "<group>"; };
+		FBCA564B26740BFC008DBFFC /* TaskEditorItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEditorItem.swift; sourceTree = "<group>"; };
+		FBCA564C26740BFC008DBFFC /* RepeatFrequencyChoices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatFrequencyChoices.swift; sourceTree = "<group>"; };
+		FBCA564E26740BFC008DBFFC /* UpNextViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextViewModel.swift; sourceTree = "<group>"; };
+		FBCA564F26740BFC008DBFFC /* UpNextSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextSection.swift; sourceTree = "<group>"; };
+		FBCA565026740BFC008DBFFC /* UpNextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
+		FBCA565126740BFC008DBFFC /* UpNextItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextItem.swift; sourceTree = "<group>"; };
+		FBCA565226740BFC008DBFFC /* UpNextProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextProvider.swift; sourceTree = "<group>"; };
 		FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutSymbolSymbolIconView.swift; sourceTree = "<group>"; };
-		FBE73CAD265C3938007106AE /* AddEditPlantViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditPlantViewController.swift; sourceTree = "<group>"; };
 		FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
 		FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICellAccessory+Extensions.swift"; sourceTree = "<group>"; };
-		FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PlantGroupViewController.swift; path = "GrowApp/Features/All Plants/PlantGroupViewController.swift"; sourceTree = SOURCE_ROOT; };
 		FBEB4971260CBEF800F6060C /* SproutCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SproutCardCell.swift; sourceTree = "<group>"; };
 		FBF8AC5125DD80AC00E7E8EB /* SproutIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIconView.swift; sourceTree = "<group>"; };
-		FBFAECB82617D93300F0C67D /* AddEditPlantViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddEditPlantViewControllerDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,7 +238,7 @@
 			children = (
 				FB21B70C25B1E5D900D02384 /* Model */,
 				FB5CB85A2672A70400A7F60E /* Views */,
-				FB5F348225B4C28300CCE6BC /* View Controllers */,
+				FBCA562726740BFC008DBFFC /* View Controllers */,
 				FBE8FFE8267406FB00C9CCFF /* Resources */,
 			);
 			path = Sprout;
@@ -285,14 +285,6 @@
 			path = ReusableViews;
 			sourceTree = "<group>";
 		};
-		FB43D641266E601D00FA9FA1 /* Settings */ = {
-			isa = PBXGroup;
-			children = (
-				FB43D642266E603E00FA9FA1 /* SettingsView.swift */,
-			);
-			path = Settings;
-			sourceTree = "<group>";
-		};
 		FB4FAB07265EDE68001A9201 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -303,32 +295,12 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		FB4FAB0E26612556001A9201 /* Editors */ = {
-			isa = PBXGroup;
-			children = (
-				FB7B815225BE188E0053E543 /* Add-Edit Plant */,
-				FB7B815325BE189E0053E543 /* Edit Plant Type */,
-				FB6661B9261FD00500DC8B04 /* Add-Edit Care Detail */,
-			);
-			path = Editors;
-			sourceTree = "<group>";
-		};
 		FB5CB8492671A2D500A7F60E /* Mapping Models */ = {
 			isa = PBXGroup;
 			children = (
 				FB5CB847267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel */,
 			);
 			path = "Mapping Models";
-			sourceTree = "<group>";
-		};
-		FB5CB84A26725F5200A7F60E /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				FB5CB84F2672639B00A7F60E /* TaskEditorSection.swift */,
-				FB5CB8512672643700A7F60E /* TaskEditorItem.swift */,
-				FB5CB8532672666300A7F60E /* RepeatFrequencyChoices.swift */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		FB5CB85526726AEC00A7F60E /* Pickers */ = {
@@ -353,29 +325,6 @@
 				FBE8FFE52674060100C9CCFF /* Backgrounds */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		FB5F348225B4C28300CCE6BC /* View Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				FB43D641266E601D00FA9FA1 /* Settings */,
-				FB9C66AF263AE63800CDC15A /* Up Next */,
-				FBC5D60A25EC2BE0005BF6B1 /* MainViewController */,
-				FBC5D61B25EC555E005BF6B1 /* All Plants */,
-				FBC5D63625EEA255005BF6B1 /* Plant Detail */,
-				FB4FAB0E26612556001A9201 /* Editors */,
-			);
-			path = "View Controllers";
-			sourceTree = "<group>";
-		};
-		FB6661B9261FD00500DC8B04 /* Add-Edit Care Detail */ = {
-			isa = PBXGroup;
-			children = (
-				FB5CB84A26725F5200A7F60E /* Model */,
-				FB6661BA261FD09800DC8B04 /* TaskEditorController.swift */,
-				FB6661D026209F1800DC8B04 /* TaskEditorDelegate.swift */,
-			);
-			path = "Add-Edit Care Detail";
 			sourceTree = "<group>";
 		};
 		FB6661C72620938200DC8B04 /* Core Data */ = {
@@ -429,26 +378,6 @@
 			path = SproutTests;
 			sourceTree = "<group>";
 		};
-		FB7B815225BE188E0053E543 /* Add-Edit Plant */ = {
-			isa = PBXGroup;
-			children = (
-				FBE73CAD265C3938007106AE /* AddEditPlantViewController.swift */,
-				FBFAECB82617D93300F0C67D /* AddEditPlantViewControllerDelegate.swift */,
-				FBC7331A25E2E0D70048999C /* Collection View Cells */,
-			);
-			path = "Add-Edit Plant";
-			sourceTree = "<group>";
-		};
-		FB7B815325BE189E0053E543 /* Edit Plant Type */ = {
-			isa = PBXGroup;
-			children = (
-				FBC7332825E307DF0048999C /* PlantTypePickerViewController.swift */,
-				FB7ED54726177FE4008FD1BE /* PlantTypesProvider.swift */,
-				FB7ED54D2617B8F4008FD1BE /* PlantTypePickerDelegate.swift */,
-			);
-			path = "Edit Plant Type";
-			sourceTree = "<group>";
-		};
 		FB98B94026629CDB00629C1B /* Value Transformers */ = {
 			isa = PBXGroup;
 			children = (
@@ -485,18 +414,6 @@
 			path = "Local Notifications";
 			sourceTree = "<group>";
 		};
-		FB9C66AF263AE63800CDC15A /* Up Next */ = {
-			isa = PBXGroup;
-			children = (
-				FB9C66B4263AE76900CDC15A /* UpNextProvider.swift */,
-				FB82CDF426444EBD00E32F16 /* UpNextViewModel.swift */,
-				FB9C66B0263AE65200CDC15A /* UpNextViewController.swift */,
-				FB82CDF826444F7400E32F16 /* UpNextSection.swift */,
-				FB82CDFC26444F7D00E32F16 /* UpNextItem.swift */,
-			);
-			path = "Up Next";
-			sourceTree = "<group>";
-		};
 		FB9E8C54262CE05F00514AAB /* Form Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -519,43 +436,126 @@
 			path = "Sprout Cells";
 			sourceTree = "<group>";
 		};
-		FBC5D60A25EC2BE0005BF6B1 /* MainViewController */ = {
+		FBCA562726740BFC008DBFFC /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				FBC5D60B25EC2BF1005BF6B1 /* MainViewController.swift */,
+				FBCA563226740BFC008DBFFC /* MainViewController */,
+				FBCA564D26740BFC008DBFFC /* Up Next */,
+				FBCA562826740BFC008DBFFC /* All Plants */,
+				FBCA563026740BFC008DBFFC /* Settings */,
+				FBCA563426740BFC008DBFFC /* Plant Detail */,
+				FBCA563726740BFC008DBFFC /* Editors */,
 			);
-			path = MainViewController;
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
-		FBC5D61B25EC555E005BF6B1 /* All Plants */ = {
+		FBCA562826740BFC008DBFFC /* All Plants */ = {
 			isa = PBXGroup;
 			children = (
-				FB7ED52A26164290008FD1BE /* PlantsProvider.swift */,
-				FB82CDE02642F35F00E32F16 /* PlantGroupViewModel.swift */,
-				FBEB496B260CBED300F6060C /* PlantGroupViewController.swift */,
-				FB82CDE42642F62B00E32F16 /* PlantGroupSection.swift */,
-				FB82CDE82642F6BE00E32F16 /* PlantGroupItem.swift */,
+				FBCA562926740BFC008DBFFC /* PlantGroupSection.swift */,
+				FBCA562A26740BFC008DBFFC /* PlantsProvider.swift */,
+				FBCA562B26740BFC008DBFFC /* PlantGroupItem.swift */,
+				FBCA562C26740BFC008DBFFC /* PlantGroupViewModel.swift */,
+				FBCA562D26740BFC008DBFFC /* PlantGroupViewController.swift */,
 			);
 			path = "All Plants";
 			sourceTree = "<group>";
 		};
-		FBC5D63625EEA255005BF6B1 /* Plant Detail */ = {
+		FBCA563026740BFC008DBFFC /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				FBC5D63725EEA269005BF6B1 /* PlantDetailViewController.swift */,
-				FB5CB8452671068400A7F60E /* SproutCareTaskCellViewModel.swift */,
+				FBCA563126740BFC008DBFFC /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		FBCA563226740BFC008DBFFC /* MainViewController */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA563326740BFC008DBFFC /* MainViewController.swift */,
+			);
+			path = MainViewController;
+			sourceTree = "<group>";
+		};
+		FBCA563426740BFC008DBFFC /* Plant Detail */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA563526740BFC008DBFFC /* SproutCareTaskCellViewModel.swift */,
+				FBCA563626740BFC008DBFFC /* PlantDetailViewController.swift */,
 			);
 			path = "Plant Detail";
 			sourceTree = "<group>";
 		};
-		FBC7331A25E2E0D70048999C /* Collection View Cells */ = {
+		FBCA563726740BFC008DBFFC /* Editors */ = {
 			isa = PBXGroup;
 			children = (
-				FBC7333F25E578480048999C /* PlantIconSupplementaryView.swift */,
-				FBC7331425DF0DA70048999C /* CollectionViewHeader.swift */,
-				FBC7334725E690E50048999C /* ButtonHeaderFooterView.swift */,
+				FBCA563A26740BFC008DBFFC /* Add-Edit Plant */,
+				FBCA564226740BFC008DBFFC /* Edit Plant Type */,
+				FBCA564626740BFC008DBFFC /* Add-Edit Care Detail */,
+			);
+			path = Editors;
+			sourceTree = "<group>";
+		};
+		FBCA563A26740BFC008DBFFC /* Add-Edit Plant */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA563B26740BFC008DBFFC /* AddEditPlantViewController.swift */,
+				FBCA563C26740BFC008DBFFC /* AddEditPlantViewControllerDelegate.swift */,
+				FBCA563D26740BFC008DBFFC /* Collection View Cells */,
+			);
+			path = "Add-Edit Plant";
+			sourceTree = "<group>";
+		};
+		FBCA563D26740BFC008DBFFC /* Collection View Cells */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA563E26740BFC008DBFFC /* ButtonHeaderFooterView.swift */,
+				FBCA563F26740BFC008DBFFC /* CollectionViewHeader.swift */,
+				FBCA564026740BFC008DBFFC /* PlantIconSupplementaryView.swift */,
 			);
 			path = "Collection View Cells";
+			sourceTree = "<group>";
+		};
+		FBCA564226740BFC008DBFFC /* Edit Plant Type */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA564326740BFC008DBFFC /* PlantTypePickerDelegate.swift */,
+				FBCA564426740BFC008DBFFC /* PlantTypePickerViewController.swift */,
+				FBCA564526740BFC008DBFFC /* PlantTypesProvider.swift */,
+			);
+			path = "Edit Plant Type";
+			sourceTree = "<group>";
+		};
+		FBCA564626740BFC008DBFFC /* Add-Edit Care Detail */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA564726740BFC008DBFFC /* TaskEditorDelegate.swift */,
+				FBCA564826740BFC008DBFFC /* TaskEditorController.swift */,
+				FBCA564926740BFC008DBFFC /* Model */,
+			);
+			path = "Add-Edit Care Detail";
+			sourceTree = "<group>";
+		};
+		FBCA564926740BFC008DBFFC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA564A26740BFC008DBFFC /* TaskEditorSection.swift */,
+				FBCA564B26740BFC008DBFFC /* TaskEditorItem.swift */,
+				FBCA564C26740BFC008DBFFC /* RepeatFrequencyChoices.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		FBCA564D26740BFC008DBFFC /* Up Next */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA564E26740BFC008DBFFC /* UpNextViewModel.swift */,
+				FBCA564F26740BFC008DBFFC /* UpNextSection.swift */,
+				FBCA565026740BFC008DBFFC /* UpNextViewController.swift */,
+				FBCA565126740BFC008DBFFC /* UpNextItem.swift */,
+				FBCA565226740BFC008DBFFC /* UpNextProvider.swift */,
+			);
+			path = "Up Next";
 			sourceTree = "<group>";
 		};
 		FBE8FFE4267405F000C9CCFF /* Buttons */ = {
@@ -637,7 +637,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				FB7490EE25B1E71200925C29 /* PBXTargetDependency */,
+				FBCA562526740B81008DBFFC /* PBXTargetDependency */,
 			);
 			name = SproutTests;
 			productName = GrowAppTests;
@@ -708,84 +708,84 @@
 			files = (
 				FB5CB85726726B0600A7F60E /* DayOfWeekPicker.swift in Sources */,
 				FB5CB84E2672624E00A7F60E /* ModelStore.swift in Sources */,
-				FB82CDF526444EBE00E32F16 /* UpNextViewModel.swift in Sources */,
-				FB82CDE52642F62B00E32F16 /* PlantGroupSection.swift in Sources */,
+				FBCA565926740BFC008DBFFC /* MainViewController.swift in Sources */,
 				FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */,
 				FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */,
-				FBC7331525DF0DA70048999C /* CollectionViewHeader.swift in Sources */,
+				FBCA566326740BFC008DBFFC /* PlantTypePickerDelegate.swift in Sources */,
 				FB5F348925B63E6900CCE6BC /* SproutScheduledTaskCell.swift in Sources */,
+				FBCA566C26740BFC008DBFFC /* UpNextSection.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
+				FBCA565E26740BFC008DBFFC /* AddEditPlantViewControllerDelegate.swift in Sources */,
+				FBCA566E26740BFD008DBFFC /* UpNextItem.swift in Sources */,
 				FB5CB86226739F5D00A7F60E /* SproutDayOfMonthPickerCollectionViewCell.swift in Sources */,
-				FB5CB8462671068400A7F60E /* SproutCareTaskCellViewModel.swift in Sources */,
-				FB7ED54E2617B8F4008FD1BE /* PlantTypePickerDelegate.swift in Sources */,
 				FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */,
-				FBC5D63825EEA269005BF6B1 /* PlantDetailViewController.swift in Sources */,
+				FBCA565D26740BFC008DBFFC /* AddEditPlantViewController.swift in Sources */,
+				FBCA565526740BFC008DBFFC /* PlantGroupItem.swift in Sources */,
 				FB6661B2261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift in Sources */,
 				FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */,
+				FBCA565F26740BFC008DBFFC /* ButtonHeaderFooterView.swift in Sources */,
+				FBCA566B26740BFC008DBFFC /* UpNextViewModel.swift in Sources */,
 				FBB75BBF264AFBB3000CC823 /* PlantType.swift in Sources */,
-				FBE73CAE265C3938007106AE /* AddEditPlantViewController.swift in Sources */,
+				FBCA566526740BFC008DBFFC /* PlantTypesProvider.swift in Sources */,
+				FBCA566726740BFC008DBFFC /* TaskEditorController.swift in Sources */,
+				FBCA565326740BFC008DBFFC /* PlantGroupSection.swift in Sources */,
 				FB6CD6582657E17500D7DE82 /* RemindersProvider.swift in Sources */,
+				FBCA566826740BFC008DBFFC /* TaskEditorSection.swift in Sources */,
 				FB76D341262A592500D00036 /* SproutCareDetailView.swift in Sources */,
 				FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */,
-				FB7ED54826177FE4008FD1BE /* PlantTypesProvider.swift in Sources */,
 				FB6C461725F1975F009ED947 /* UIColor+Extension.swift in Sources */,
-				FB6661D126209F1800DC8B04 /* TaskEditorDelegate.swift in Sources */,
 				FB98B95126691E7500629C1B /* SproutCareTaskSchedule.swift in Sources */,
 				FB7ED5192615260F008FD1BE /* StorageProvider.swift in Sources */,
-				FB9C66B1263AE65200CDC15A /* UpNextViewController.swift in Sources */,
-				FBC7332925E307DF0048999C /* PlantTypePickerViewController.swift in Sources */,
 				FB43D647266E70BD00FA9FA1 /* Date+RawRepresentable.swift in Sources */,
 				FB98B94B266858F100629C1B /* SproutCareHistoryMO.swift in Sources */,
 				FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */,
 				FB98B94F2668591100629C1B /* SproutPlantMO.swift in Sources */,
+				FBCA566126740BFC008DBFFC /* PlantIconSupplementaryView.swift in Sources */,
+				FBCA566A26740BFC008DBFFC /* RepeatFrequencyChoices.swift in Sources */,
 				FB98B94826681F3600629C1B /* SproutDataModel.xcdatamodeld in Sources */,
 				FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				FBC7330325DDB4F00048999C /* SproutIconCell.swift in Sources */,
 				FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */,
 				FBF8AC5225DD80AC00E7E8EB /* SproutIconView.swift in Sources */,
-				FBC5D60C25EC2BF1005BF6B1 /* MainViewController.swift in Sources */,
+				FBCA566F26740BFD008DBFFC /* UpNextProvider.swift in Sources */,
+				FBCA565626740BFC008DBFFC /* PlantGroupViewModel.swift in Sources */,
 				FB6CD65A2657EADD00D7DE82 /* TaskNotificationManager.swift in Sources */,
 				FB5CB86026730BF200A7F60E /* DayOfMonthPicker.swift in Sources */,
 				FB28A8E82649A2DE00B1206E /* SproutChipView.swift in Sources */,
 				FB92AF66262E093D0062DE47 /* SproutCareDetailCell.swift in Sources */,
 				FB6661CB2620938F00DC8B04 /* Utility.swift in Sources */,
 				FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */,
-				FB7ED52B26164290008FD1BE /* PlantsProvider.swift in Sources */,
 				FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */,
+				FBCA566D26740BFD008DBFFC /* UpNextViewController.swift in Sources */,
 				FB5CB8642673A43400A7F60E /* CircleButtonCollectionViewCell.swift in Sources */,
 				FB5CB8662673B7C000A7F60E /* Bool+XOR.swift in Sources */,
+				FBCA566926740BFC008DBFFC /* TaskEditorItem.swift in Sources */,
 				FBD20AE4260FC6B7008915E1 /* String+Extensions.swift in Sources */,
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
-				FB82CDE92642F6BE00E32F16 /* PlantGroupItem.swift in Sources */,
-				FB43D643266E603E00FA9FA1 /* SettingsView.swift in Sources */,
+				FBCA565B26740BFC008DBFFC /* PlantDetailViewController.swift in Sources */,
+				FBCA565A26740BFC008DBFFC /* SproutCareTaskCellViewModel.swift in Sources */,
 				FB5CB848267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel in Sources */,
-				FB6661BB261FD09800DC8B04 /* TaskEditorController.swift in Sources */,
-				FBC7334825E690E50048999C /* ButtonHeaderFooterView.swift in Sources */,
 				FB43D640266DB4BE00FA9FA1 /* DetailHeroReusableView.swift in Sources */,
 				FB0A9F3625DC5D7E0084AED8 /* SproutTextFieldCell.swift in Sources */,
 				FB5CB85926728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift in Sources */,
 				FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */,
-				FB5CB8542672666300A7F60E /* RepeatFrequencyChoices.swift in Sources */,
+				FBCA565826740BFC008DBFFC /* SettingsView.swift in Sources */,
 				FBEB4972260CBEF800F6060C /* SproutCardCell.swift in Sources */,
+				FBCA565726740BFC008DBFFC /* PlantGroupViewController.swift in Sources */,
 				FB98B95326695C3200629C1B /* Optional+Comparable.swift in Sources */,
 				FB28A8ED264AB7D700B1206E /* CareScheduleFormatter.swift in Sources */,
 				FB98B94D2668590000629C1B /* SproutCareTaskMO.swift in Sources */,
-				FB5CB8502672639B00A7F60E /* TaskEditorSection.swift in Sources */,
+				FBCA566626740BFC008DBFFC /* TaskEditorDelegate.swift in Sources */,
 				FB5CB85C2672A72300A7F60E /* SproutCapsuleButton.swift in Sources */,
+				FBCA566426740BFC008DBFFC /* PlantTypePickerViewController.swift in Sources */,
 				FB98B9452667C1C500629C1B /* Notification+CustomNames.swift in Sources */,
-				FB5CB8522672643700A7F60E /* TaskEditorItem.swift in Sources */,
-				FB82CDF926444F7400E32F16 /* UpNextSection.swift in Sources */,
-				FB9C66B5263AE76900CDC15A /* UpNextProvider.swift in Sources */,
-				FBC7334025E578480048999C /* PlantIconSupplementaryView.swift in Sources */,
 				FBB03C122637781C00F7F364 /* SproutHeroView.swift in Sources */,
-				FBEB496C260CBED300F6060C /* PlantGroupViewController.swift in Sources */,
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
-				FBFAECB92617D93300F0C67D /* AddEditPlantViewControllerDelegate.swift in Sources */,
+				FBCA566026740BFC008DBFFC /* CollectionViewHeader.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
-				FB82CDFD26444F7D00E32F16 /* UpNextItem.swift in Sources */,
+				FBCA565426740BFC008DBFFC /* PlantsProvider.swift in Sources */,
 				FB9C66AA263A539D00CDC15A /* SproutCardView.swift in Sources */,
 				FB4FAB09265EDE7C001A9201 /* HashableClosure.swift in Sources */,
-				FB82CDE12642F35F00E32F16 /* PlantGroupViewModel.swift in Sources */,
 				FB7ED5092614D111008FD1BE /* UIImageTransformer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -802,10 +802,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		FB7490EE25B1E71200925C29 /* PBXTargetDependency */ = {
+		FBCA562526740B81008DBFFC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = FB21B6F325B1E5CC00D02384 /* Sprout */;
-			targetProxy = FB7490ED25B1E71200925C29 /* PBXContainerItemProxy */;
+			targetProxy = FBCA562426740B81008DBFFC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -984,7 +984,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
-				INFOPLIST_FILE = Sprout/Info.plist;
+				INFOPLIST_FILE = Sprout/SproutTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1006,7 +1006,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
-				INFOPLIST_FILE = Sprout/Info.plist;
+				INFOPLIST_FILE = Sprout/SproutTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

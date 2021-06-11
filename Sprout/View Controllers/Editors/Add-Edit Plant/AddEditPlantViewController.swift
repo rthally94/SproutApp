@@ -556,10 +556,6 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
             imagePicker.sourceType = .photoLibrary
         }
 
-        if imagePicker.sourceType == .camera {
-            imagePicker.cameraOverlayView = CameraOverlayView(frame: .zero)
-        }
-
         present(imagePicker, animated: true)
     }
 
