@@ -86,6 +86,9 @@
 		FBCA566D26740BFD008DBFFC /* UpNextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA565026740BFC008DBFFC /* UpNextViewController.swift */; };
 		FBCA566E26740BFD008DBFFC /* UpNextItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA565126740BFC008DBFFC /* UpNextItem.swift */; };
 		FBCA566F26740BFD008DBFFC /* UpNextProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA565226740BFC008DBFFC /* UpNextProvider.swift */; };
+		FBCA567226744062008DBFFC /* PlantIconItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA567126744062008DBFFC /* PlantIconItemConfiguration.swift */; };
+		FBCA567426744111008DBFFC /* TextFieldItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA567326744111008DBFFC /* TextFieldItemConfiguration.swift */; };
+		FBCA5676267441EE008DBFFC /* CareDetailItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA5675267441EE008DBFFC /* CareDetailItemConfiguration.swift */; };
 		FBD20AE4260FC6B7008915E1 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */; };
 		FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */; };
 		FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */; };
@@ -189,6 +192,9 @@
 		FBCA565026740BFC008DBFFC /* UpNextViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextViewController.swift; sourceTree = "<group>"; };
 		FBCA565126740BFC008DBFFC /* UpNextItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextItem.swift; sourceTree = "<group>"; };
 		FBCA565226740BFC008DBFFC /* UpNextProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpNextProvider.swift; sourceTree = "<group>"; };
+		FBCA567126744062008DBFFC /* PlantIconItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconItemConfiguration.swift; sourceTree = "<group>"; };
+		FBCA567326744111008DBFFC /* TextFieldItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldItemConfiguration.swift; sourceTree = "<group>"; };
+		FBCA5675267441EE008DBFFC /* CareDetailItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareDetailItemConfiguration.swift; sourceTree = "<group>"; };
 		FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutSymbolSymbolIconView.swift; sourceTree = "<group>"; };
 		FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
@@ -480,8 +486,8 @@
 		FBCA563426740BFC008DBFFC /* Plant Detail */ = {
 			isa = PBXGroup;
 			children = (
-				FBCA563526740BFC008DBFFC /* SproutCareTaskCellViewModel.swift */,
 				FBCA563626740BFC008DBFFC /* PlantDetailViewController.swift */,
+				FBCA563526740BFC008DBFFC /* SproutCareTaskCellViewModel.swift */,
 			);
 			path = "Plant Detail";
 			sourceTree = "<group>";
@@ -499,6 +505,7 @@
 		FBCA563A26740BFC008DBFFC /* Add-Edit Plant */ = {
 			isa = PBXGroup;
 			children = (
+				FBCA567026744042008DBFFC /* Item Configuration */,
 				FBCA563B26740BFC008DBFFC /* AddEditPlantViewController.swift */,
 				FBCA563C26740BFC008DBFFC /* AddEditPlantViewControllerDelegate.swift */,
 				FBCA563D26740BFC008DBFFC /* Collection View Cells */,
@@ -556,6 +563,16 @@
 				FBCA565226740BFC008DBFFC /* UpNextProvider.swift */,
 			);
 			path = "Up Next";
+			sourceTree = "<group>";
+		};
+		FBCA567026744042008DBFFC /* Item Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA567126744062008DBFFC /* PlantIconItemConfiguration.swift */,
+				FBCA567326744111008DBFFC /* TextFieldItemConfiguration.swift */,
+				FBCA5675267441EE008DBFFC /* CareDetailItemConfiguration.swift */,
+			);
+			path = "Item Configuration";
 			sourceTree = "<group>";
 		};
 		FBE8FFE4267405F000C9CCFF /* Buttons */ = {
@@ -712,6 +729,7 @@
 				FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */,
 				FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */,
 				FBCA566326740BFC008DBFFC /* PlantTypePickerDelegate.swift in Sources */,
+				FBCA567226744062008DBFFC /* PlantIconItemConfiguration.swift in Sources */,
 				FB5F348925B63E6900CCE6BC /* SproutScheduledTaskCell.swift in Sources */,
 				FBCA566C26740BFC008DBFFC /* UpNextSection.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
@@ -768,6 +786,7 @@
 				FB43D640266DB4BE00FA9FA1 /* DetailHeroReusableView.swift in Sources */,
 				FB0A9F3625DC5D7E0084AED8 /* SproutTextFieldCell.swift in Sources */,
 				FB5CB85926728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift in Sources */,
+				FBCA5676267441EE008DBFFC /* CareDetailItemConfiguration.swift in Sources */,
 				FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */,
 				FBCA565826740BFC008DBFFC /* SettingsView.swift in Sources */,
 				FBEB4972260CBEF800F6060C /* SproutCardCell.swift in Sources */,
@@ -782,6 +801,7 @@
 				FBB03C122637781C00F7F364 /* SproutHeroView.swift in Sources */,
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
 				FBCA566026740BFC008DBFFC /* CollectionViewHeader.swift in Sources */,
+				FBCA567426744111008DBFFC /* TextFieldItemConfiguration.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FBCA565426740BFC008DBFFC /* PlantsProvider.swift in Sources */,
 				FB9C66AA263A539D00CDC15A /* SproutCardView.swift in Sources */,

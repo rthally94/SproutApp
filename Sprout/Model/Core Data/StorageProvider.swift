@@ -51,7 +51,7 @@ class StorageProvider {
         let templatePlantRequest: NSFetchRequest<SproutPlantMO> = SproutPlantMO.allTemplatesFetchRequest()
         let typeCount = (try? persistentContainer.viewContext.count(for: templatePlantRequest)) ?? 0
         print("Template Plant Count: \(typeCount)")
-        if typeCount == PlantType.allTypes.count {
+        if typeCount != PlantType.allTypes.count {
             print("Loading new plant types: \(PlantType.allTypes.count - typeCount)")
             loadPlantTypes()
         }

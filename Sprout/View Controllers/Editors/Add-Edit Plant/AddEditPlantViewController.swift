@@ -201,11 +201,8 @@ class AddEditPlantViewController: UICollectionViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = dataSource.itemIdentifier(for: indexPath)
         switch item {
-        case .plantIcon(_, let tapAction):
-            tapAction?.handler(Void())
-            collectionView.deselectItem(at: indexPath, animated: true)
-        case .careDetail(_, _, _, let tapAction):
-            tapAction.handler(Void())
+        case let .careDetail(config):
+            config.handler?()
         case .normalButton(_, _, _, let tapAction):
             tapAction.handler(Void())
             collectionView.deselectItem(at: indexPath, animated: true)
@@ -218,6 +215,16 @@ class AddEditPlantViewController: UICollectionViewController {
         default:
             break
         }
+    }
+}
+
+// MARK: - Action Handlers
+extension AddEditPlantViewController {
+    private func plantNameTextFieldDidChange(newValue: String?) {
+        guard let plant = plant else { return }
+        print("Plant name changed: Old(\(plant.nickname ?? "No Value")) | New(\(newValue ?? "No Value"))")
+        plant.nickname = newValue
+        updateNavButtons()
     }
 }
 
@@ -299,15 +306,18 @@ extension AddEditPlantViewController {
     }
 
     func applySnapshot(animatingDifferences: Bool = true) {
+        guard let plant = plant else { return }
+
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections(Section.allCases)
 
         // Plant Icon
+        snapshot.appendSections([.plantIcon])
         snapshot.appendItems([
-            .plantIcon(image: plant?.icon)
-        ], toSection: .plantIcon)
+            .plantIcon(.init(plant: plant))
+        ])
 
         // Icon Editor Buttons
+        snapshot.appendSections([.plantIconActions])
         snapshot.appendItems([
             .normalButton(systemIcon: "photo.fill.on.rectangle.fill", title: "Gallery", tintColor: view.tintColor, tapAction: .init(handler: { [weak self] in
                 print("Gallery Button Tapped.")
@@ -317,56 +327,61 @@ extension AddEditPlantViewController {
                 print("Camera Button Tapped.")
                 self?.showImagePicker(preferredType: .camera)
             }))
-        ], toSection: .plantIconActions)
+        ])
 
         // Plant Info
+        snapshot.appendSections([.plantInfo])
         snapshot.appendItems([
-            .nameTextField(placeholder: "Plant Name", initialText: plant?.nickname, onChange: .init(handler: { [weak self] newName in
-                print("Plant name changed: Old(\(self?.plant?.nickname ?? "No Value")) | New(\(newName ?? "No Value"))")
-                self?.plant?.nickname = newName
-                self?.updateNavButtons()
+            .nameTextField(.init(placeholder: "Plant Name", initialText: plant.nickname, handler: { [weak self] newValue in
+                guard let self = self else { return }
+                self.plantNameTextFieldDidChange(newValue: newValue)
             })),
-            .valueCell(image: nil, text: "Plant Type", secondaryText: plant?.commonName ?? "Configure", accessories: [.disclosureIndicator], tapAction: .init(handler: { [weak self] in
+            .valueCell(image: nil, text: "Plant Type", secondaryText: plant.commonName ?? "Configure", accessories: [.disclosureIndicator], tapAction: .init(handler: { [weak self] in
                 print("Plant Type Item Tapped.")
                 self?.showPlantTypePicker()
             }))
         ], toSection: .plantInfo)
 
         // Care Details
-        let careScheduleFormatter = Utility.careScheduleFormatter
-
-        let careDetailSet = plant?.allTasks.filter { task in
+        let careDetailSet = plant.allTasks.filter { task in
             task.historyLog == nil
-        } ?? []
+        }
 
         let careDetailItems: [Item] = careDetailSet.sorted().map { infoItem in
-            let scheduleText = infoItem.schedule != nil ? careScheduleFormatter.string(from: infoItem.schedule!) : nil
-
-            return Item.careDetail(image: infoItem.taskTypeProperties?.icon, text: infoItem.taskTypeProperties?.displayName, secondaryText: scheduleText, tapAction: .init(handler: { [weak self] in
-                print("\(infoItem.taskType ?? "") Item Tapped.")
-                // TODO: Call method to present care detail editor
+            let config = CareDetailItemConfiguration(careTask: infoItem) { [weak self] in
                 self?.showCareTaskEditor(for: infoItem)
-            }))
+            }
+
+            return Item.careDetail(config)
         }
-        snapshot.appendItems(careDetailItems, toSection: .plantCareDetails)
+
+        if !careDetailItems.isEmpty {
+            snapshot.appendSections([.plantCareDetails])
+            snapshot.appendItems(careDetailItems, toSection: .plantCareDetails)
+        }
 
         // Unconfigured Care Details
-        let unconfiguredCareItems = unconfiguredCareDetailTypes.map { templateTask in
-            Item.careDetail(image: templateTask.taskTypeProperties?.icon, text: templateTask.taskTypeProperties?.displayName, secondaryText: "Configure", tapAction: .init(handler: { [weak self] in
-                print("Unconfigured \(templateTask.taskType ?? "") Item Tapped.")
-                guard let strongSelf = self else { return }
+        let unconfiguredCareItems: [Item] = unconfiguredCareDetailTypes.map { templateTask in
+            let config = CareDetailItemConfiguration(careTask: templateTask) { [weak self] in
+                guard let self = self, let plant = self.plant else { return }
 
                 do {
                     try SproutCareTaskMO.createNewTask(from: templateTask) { newTask in
-                        strongSelf.plant?.addToCareTasks(newTask)
-                        strongSelf.showCareTaskEditor(for: newTask)
+                        plant.addToCareTasks(newTask)
+                        self.showCareTaskEditor(for: newTask)
                     }
                 } catch {
                     print("Unable to duplicate template task: \(error)")
                 }
-            }))
+            }
+
+            return Item.careDetail(config)
         }
-        snapshot.appendItems(unconfiguredCareItems, toSection: .unconfiguredCareDetails)
+
+        if !unconfiguredCareItems.isEmpty {
+            snapshot.appendSections([.unconfiguredCareDetails])
+            snapshot.appendItems(unconfiguredCareItems, toSection: .unconfiguredCareDetails)
+        }
 
         dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
     }
@@ -433,11 +448,11 @@ extension AddEditPlantViewController {
         }
 
         enum Item: Hashable {
-            case plantIcon(image: UIImage?, tapAction: HashableClosure<Void>? = nil)
+            case plantIcon(PlantIconItemConfiguration)
             case normalButton(systemIcon: String?, title: String?, tintColor: UIColor = .systemBlue, tapAction: HashableClosure<Void>)
             case destructiveButton(systemIcon: String?, title: String?, tapAction: HashableClosure<Void>)
-            case nameTextField(placeholder: String? = nil, initialText: String? = nil, onChange: HashableClosure<String?>)
-            case careDetail(image: UIImage? = nil, text: String? = nil, secondaryText: String? = nil, tapAction: HashableClosure<Void>)
+            case nameTextField(TextFieldItemConfiguration)
+            case careDetail(CareDetailItemConfiguration)
             case valueCell(image: UIImage? = nil, text: String? = nil, secondaryText: String? = nil, accessories: [CellAccessory] = [], tapAction: HashableClosure<Void>)
 
             enum CellAccessory {
@@ -458,11 +473,11 @@ extension AddEditPlantViewController {
 private extension AddEditPlantViewController {
     func makeIconCellRegistration() -> UICollectionView.CellRegistration<SproutIconCell, Item> {
         UICollectionView.CellRegistration<SproutIconCell, Item> { cell, indexPath, item in
-            guard case let .plantIcon(image, _) = item else { return }
+            guard case let .plantIcon(config) = item else { return }
 
-            var config = cell.defaultConfigurtion()
-            config.image = image
-            cell.contentConfiguration = config
+            var cellConfiguration = cell.defaultConfigurtion()
+            cellConfiguration.image = config.image
+            cell.contentConfiguration = cellConfiguration
             cell.backgroundColor = .systemGroupedBackground
         }
     }
@@ -491,10 +506,10 @@ private extension AddEditPlantViewController {
     func makeTextFieldCellRegistration() -> UICollectionView.CellRegistration<SproutTextFieldCell, Item> {
         UICollectionView.CellRegistration<SproutTextFieldCell, Item> { cell, indexPath, item in
             switch item {
-            case let .nameTextField(placeholder, initialText, onChange):
-                cell.placeholder = placeholder
-                cell.value = initialText
-                cell.onChange = onChange.handler
+            case let .nameTextField(config):
+                cell.placeholder = config.placeholder
+                cell.value = config.initialText
+                cell.onChange = config.handler
                 cell.autocapitalizationType = .words
             default:
                 break
@@ -505,14 +520,14 @@ private extension AddEditPlantViewController {
     func makeUICollectionViewListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
             switch item {
-            case let .careDetail(image, text, secondaryText, _):
-                var config = UIListContentConfiguration.valueCell()
-                config.image = image
-                config.text = text
-                config.secondaryText = secondaryText
-                config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
-                config.prefersSideBySideTextAndSecondaryText = false
-                cell.contentConfiguration = config
+            case let .careDetail(config):
+                var cellConfiguration = UIListContentConfiguration.valueCell()
+                cellConfiguration.image = config.image
+                cellConfiguration.text = config.title
+                cellConfiguration.secondaryText = config.subtitle
+                cellConfiguration.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
+                cellConfiguration.prefersSideBySideTextAndSecondaryText = false
+                cell.contentConfiguration = cellConfiguration
                 cell.accessories = [
                     .disclosureIndicator()
                 ]
