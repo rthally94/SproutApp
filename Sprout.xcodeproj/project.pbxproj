@@ -530,8 +530,8 @@
 		FBCA564226740BFC008DBFFC /* Edit Plant Type */ = {
 			isa = PBXGroup;
 			children = (
-				FBCA564326740BFC008DBFFC /* PlantTypePickerDelegate.swift */,
 				FBCA564426740BFC008DBFFC /* PlantTypePickerViewController.swift */,
+				FBCA564326740BFC008DBFFC /* PlantTypePickerDelegate.swift */,
 				FBCA564526740BFC008DBFFC /* PlantTypesProvider.swift */,
 			);
 			path = "Edit Plant Type";

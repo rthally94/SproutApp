@@ -36,7 +36,6 @@ class PlantTypePickerViewController: UIViewController {
 
     // MARK: - View Life Cycle
     override func loadView() {
-        super.loadView()
         configureHiearchy()
     }
     
@@ -60,16 +59,10 @@ class PlantTypePickerViewController: UIViewController {
 extension PlantTypePickerViewController {
     func configureHiearchy() {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(collectionView)
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view = collectionView
 
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
-        ])
-
+        collectionView.backgroundColor = .systemGroupedBackground
         collectionView.delegate = self
     }
 

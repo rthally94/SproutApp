@@ -93,7 +93,7 @@ extension ListCellConfiguration {
         }
 
         config.text = text
-        config.secondaryText = text
+        config.secondaryText = secondaryText
 
         config.image = image
         config.imageProperties.preferredSymbolConfiguration = preferredSymbolConfiguration
