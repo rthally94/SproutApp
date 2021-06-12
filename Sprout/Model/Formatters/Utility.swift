@@ -7,9 +7,7 @@
 
 import Foundation
 
-final class Utility { }
-
-extension Utility {
+enum Utility {
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeStyle = .none

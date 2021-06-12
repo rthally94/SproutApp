@@ -37,8 +37,6 @@ extension CareDetailItemConfiguration {
             subtitleText = scheduleFormatter.string(from: schedule)
         }
 
-
-
         self.init(image: careTask.taskTypeProperties?.icon, title: careTask.taskTypeProperties?.displayName, subtitle: subtitleText, handler: handler)
     }
 }

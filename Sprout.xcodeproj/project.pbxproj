@@ -89,6 +89,8 @@
 		FBCA567226744062008DBFFC /* PlantIconItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA567126744062008DBFFC /* PlantIconItemConfiguration.swift */; };
 		FBCA567426744111008DBFFC /* TextFieldItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA567326744111008DBFFC /* TextFieldItemConfiguration.swift */; };
 		FBCA5676267441EE008DBFFC /* CareDetailItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA5675267441EE008DBFFC /* CareDetailItemConfiguration.swift */; };
+		FBCA56782674EE48008DBFFC /* ButtonConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA56772674EE48008DBFFC /* ButtonConfiguration.swift */; };
+		FBCA567A2674FB3C008DBFFC /* ListCellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA56792674FB3C008DBFFC /* ListCellConfiguration.swift */; };
 		FBD20AE4260FC6B7008915E1 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */; };
 		FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */; };
 		FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */; };
@@ -195,6 +197,8 @@
 		FBCA567126744062008DBFFC /* PlantIconItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIconItemConfiguration.swift; sourceTree = "<group>"; };
 		FBCA567326744111008DBFFC /* TextFieldItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldItemConfiguration.swift; sourceTree = "<group>"; };
 		FBCA5675267441EE008DBFFC /* CareDetailItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareDetailItemConfiguration.swift; sourceTree = "<group>"; };
+		FBCA56772674EE48008DBFFC /* ButtonConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonConfiguration.swift; sourceTree = "<group>"; };
+		FBCA56792674FB3C008DBFFC /* ListCellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCellConfiguration.swift; sourceTree = "<group>"; };
 		FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutSymbolSymbolIconView.swift; sourceTree = "<group>"; };
 		FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
@@ -571,6 +575,8 @@
 				FBCA567126744062008DBFFC /* PlantIconItemConfiguration.swift */,
 				FBCA567326744111008DBFFC /* TextFieldItemConfiguration.swift */,
 				FBCA5675267441EE008DBFFC /* CareDetailItemConfiguration.swift */,
+				FBCA56772674EE48008DBFFC /* ButtonConfiguration.swift */,
+				FBCA56792674FB3C008DBFFC /* ListCellConfiguration.swift */,
 			);
 			path = "Item Configuration";
 			sourceTree = "<group>";
@@ -735,6 +741,7 @@
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
 				FBCA565E26740BFC008DBFFC /* AddEditPlantViewControllerDelegate.swift in Sources */,
 				FBCA566E26740BFD008DBFFC /* UpNextItem.swift in Sources */,
+				FBCA567A2674FB3C008DBFFC /* ListCellConfiguration.swift in Sources */,
 				FB5CB86226739F5D00A7F60E /* SproutDayOfMonthPickerCollectionViewCell.swift in Sources */,
 				FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */,
 				FBCA565D26740BFC008DBFFC /* AddEditPlantViewController.swift in Sources */,
@@ -761,6 +768,7 @@
 				FBCA566126740BFC008DBFFC /* PlantIconSupplementaryView.swift in Sources */,
 				FBCA566A26740BFC008DBFFC /* RepeatFrequencyChoices.swift in Sources */,
 				FB98B94826681F3600629C1B /* SproutDataModel.xcdatamodeld in Sources */,
+				FBCA56782674EE48008DBFFC /* ButtonConfiguration.swift in Sources */,
 				FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				FBC7330325DDB4F00048999C /* SproutIconCell.swift in Sources */,
 				FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */,

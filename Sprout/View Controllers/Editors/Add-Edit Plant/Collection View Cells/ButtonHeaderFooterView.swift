@@ -33,7 +33,8 @@ class ButtonHeaderFooterView: UICollectionReusableView {
         configureHiearchy()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -47,7 +48,7 @@ class ButtonHeaderFooterView: UICollectionReusableView {
             stack.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: 10),
             stack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
             stack.centerXAnchor.constraint(equalTo: centerXAnchor),
-            stack.widthAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.widthAnchor, multiplier: 1.0)
+            stack.widthAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.widthAnchor, multiplier: 1.0),
         ])
     }
 }

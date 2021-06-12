@@ -11,6 +11,7 @@ import UIKit
 
 class AddEditPlantViewController: UICollectionViewController {
     // MARK: - Properties
+
     typealias Section = ViewModel.Section
     typealias Item = ViewModel.Item
 
@@ -36,12 +37,12 @@ class AddEditPlantViewController: UICollectionViewController {
             allTemplates = []
         }
 
-        let filtered = allTemplates.filter({ template in
+        let filtered = allTemplates.filter { template in
             let plantTasks = plant?.allTasks ?? []
             return !plantTasks.contains { task in
                 template.taskType == task.taskType
             }
-        })
+        }
 
         return filtered
     }
@@ -50,10 +51,11 @@ class AddEditPlantViewController: UICollectionViewController {
     private var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
 
     // MARK: - Initializers
+
     init(plant: SproutPlantMO? = nil, storageProvider: StorageProvider = AppDelegate.storageProvider) {
         self.storageProvider = storageProvider
         let editingContext = storageProvider.editingContext
-        
+
         // Fetch input plant in editing context or create a new one.
         if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? SproutPlantMO {
             self.plant = editingPlant
@@ -62,7 +64,7 @@ class AddEditPlantViewController: UICollectionViewController {
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
 
         if plant == nil {
-            SproutPlantMO.createNewPlant(in: editingContext) {[weak self] newPlant in
+            SproutPlantMO.createNewPlant(in: editingContext) { [weak self] newPlant in
                 DispatchQueue.main.async {
                     self?.plant = newPlant
                 }
@@ -74,11 +76,13 @@ class AddEditPlantViewController: UICollectionViewController {
         collectionView.collectionViewLayout = makeLayout()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - View Life Cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -106,7 +110,8 @@ class AddEditPlantViewController: UICollectionViewController {
     }
 
     // MARK: - Actions
-    @objc private func cancelButtonPressed(sender: AnyObject) {
+
+    @objc private func cancelButtonPressed(sender _: AnyObject) {
         discardChangesIfAble { [weak self] success in
             if success {
                 self?.dismiss(animated: true)
@@ -114,7 +119,7 @@ class AddEditPlantViewController: UICollectionViewController {
         }
     }
 
-    @objc private func saveButtonPressed(sender: AnyObject) {
+    @objc private func saveButtonPressed(sender _: AnyObject) {
         saveChanges()
         dismiss(animated: true)
     }
@@ -136,13 +141,13 @@ class AddEditPlantViewController: UICollectionViewController {
 
     private func saveChanges() {
         //        delegate?.plantEditor(self, didUpdatePlant: plant)
-        self.storageProvider.saveContext()
+        storageProvider.saveContext()
     }
 
     private func discardChangesIfAble(completion: @escaping (Bool) -> Void) {
         func discardChanges() {
-            self.storageProvider.editingContext.rollback()
-            self.storageProvider.saveContext()
+            storageProvider.editingContext.rollback()
+            storageProvider.saveContext()
         }
 
         if hasChanges {
@@ -174,20 +179,9 @@ class AddEditPlantViewController: UICollectionViewController {
         applySnapshot(animatingDifferences: animated)
     }
 
-    //    private func createNewDetailItem(for detailTypeName: CareCategory.TaskTypeName) -> CareInfo? {
-    //        do {
-    //            let newCareDetailItem = try CareInfo.createDefaultInfoItem(in: editingContext, ofType: detailTypeName)
-    //            plant.addToCareInfoItems(newCareDetailItem)
-    //            let _ = newCareDetailItem.nextReminder
-    //            return newCareDetailItem
-    //        } catch {
-    //            print("Unable to create new detail item of type: \(detailTypeName.rawValue) - \(error)")
-    //            return nil
-    //        }
-    //    }
-
     // MARK: - Collection View Delegate
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+
+    override func collectionView(_: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         let item = dataSource.itemIdentifier(for: indexPath)
 
         switch item {
@@ -203,14 +197,11 @@ class AddEditPlantViewController: UICollectionViewController {
         switch item {
         case let .careDetail(config):
             config.handler?()
-        case .normalButton(_, _, _, let tapAction):
-            tapAction.handler(Void())
+        case let .button(config):
+            config.handler?()
             collectionView.deselectItem(at: indexPath, animated: true)
-        case .destructiveButton(_, _, let tapAction):
-            tapAction.handler(Void())
-            collectionView.deselectItem(at: indexPath, animated: true)
-        case .valueCell(_, _, _, _, let tapAction):
-            tapAction.handler(Void())
+        case let .listCell(config):
+            config.handler?()
             collectionView.deselectItem(at: indexPath, animated: true)
         default:
             break
@@ -219,6 +210,7 @@ class AddEditPlantViewController: UICollectionViewController {
 }
 
 // MARK: - Action Handlers
+
 extension AddEditPlantViewController {
     private func plantNameTextFieldDidChange(newValue: String?) {
         guard let plant = plant else { return }
@@ -229,6 +221,7 @@ extension AddEditPlantViewController {
 }
 
 // MARK: Computed Properties
+
 extension AddEditPlantViewController {
     private var isNew: Bool {
         plant?.isInserted ?? true
@@ -241,11 +234,6 @@ extension AddEditPlantViewController {
     private var hasChanges: Bool {
         let areObjectsUpdated = !editingContext.updatedObjects.isEmpty
         let isNameUpdated = originalNickname != plant?.nickname
-
-//        print("isNameUpdated: \(isNameUpdated), areObjectsUpdated: \(areObjectsUpdated)")
-//        if isNameUpdated {
-//            print("originalNameValue: \(originalNickname), plantNameValue: \(plant?.nickname)")
-//        }
 
         return areObjectsUpdated || isNameUpdated
     }
@@ -268,9 +256,11 @@ extension AddEditPlantViewController {
 }
 
 // MARK: - Collection View Setup
+
 extension AddEditPlantViewController {
     // MARK: Data Source
-    internal func makeDataSource() -> UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item> {
+
+    func makeDataSource() -> UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item> {
         let iconCellRegistration = makeIconCellRegistration()
         let buttonCellRegistration = makeButtonCellRegistration()
         let textFieldCellRegistration = makeTextFieldCellRegistration()
@@ -280,11 +270,11 @@ extension AddEditPlantViewController {
             switch item {
             case .plantIcon:
                 return collectionView.dequeueConfiguredReusableCell(using: iconCellRegistration, for: indexPath, item: item)
-            case .normalButton, .destructiveButton:
+            case .button:
                 return collectionView.dequeueConfiguredReusableCell(using: buttonCellRegistration, for: indexPath, item: item)
             case .nameTextField:
                 return collectionView.dequeueConfiguredReusableCell(using: textFieldCellRegistration, for: indexPath, item: item)
-            case .careDetail, .valueCell:
+            case .careDetail, .listCell:
                 return collectionView.dequeueConfiguredReusableCell(using: listCellRegistration, for: indexPath, item: item)
             default:
                 return nil
@@ -313,33 +303,60 @@ extension AddEditPlantViewController {
         // Plant Icon
         snapshot.appendSections([.plantIcon])
         snapshot.appendItems([
-            .plantIcon(.init(plant: plant))
+            .plantIcon(.init(plant: plant)),
         ])
 
         // Icon Editor Buttons
+        let photoGalleryConfiguration: ButtonConfiguration = {
+            var config = ButtonConfiguration.normal()
+            config.image = UIImage(systemName: "photo.fill.on.rectangle.fill")
+            config.title = "Library"
+            config.handler = { [weak self] in
+                self?.showImagePicker(preferredType: .photoLibrary)
+            }
+            return config
+        }()
+
+        let cameraConfiguration: ButtonConfiguration = {
+            var config = ButtonConfiguration.normal()
+            config.image = UIImage(systemName: "camera.fill")
+            config.title = "Camera"
+            config.handler = { [weak self] in
+                self?.showImagePicker(preferredType: .camera)
+            }
+            return config
+        }()
+
         snapshot.appendSections([.plantIconActions])
         snapshot.appendItems([
-            .normalButton(systemIcon: "photo.fill.on.rectangle.fill", title: "Gallery", tintColor: view.tintColor, tapAction: .init(handler: { [weak self] in
-                print("Gallery Button Tapped.")
-                self?.showImagePicker(preferredType: .photoLibrary)
-            })),
-            .normalButton(systemIcon: "camera.fill", title: "Camera", tintColor: view.tintColor, tapAction: .init(handler: { [weak self] in
-                print("Camera Button Tapped.")
-                self?.showImagePicker(preferredType: .camera)
-            }))
+            .button(photoGalleryConfiguration),
+            .button(cameraConfiguration),
         ])
 
         // Plant Info
+
+        let plantNicknameTextFieldConfiguration: TextFieldItemConfiguration = {
+            TextFieldItemConfiguration(placeholder: "Nickname", initialText: plant.nickname) { [weak self] newValue in
+                self?.plantNameTextFieldDidChange(newValue: newValue)
+            }
+        }()
+
+        let plantTypeConfiguration: ListCellConfiguration = {
+            var config = ListCellConfiguration.value()
+            config.title = "Plant Type"
+            config.value = plant.commonName ?? "Configure"
+            config.accessories = [.disclosureIndicator()]
+            config.handler = { [weak self] in
+                self?.showPlantTypePicker()
+            }
+
+            return config
+        }()
+
         snapshot.appendSections([.plantInfo])
         snapshot.appendItems([
-            .nameTextField(.init(placeholder: "Plant Name", initialText: plant.nickname, handler: { [weak self] newValue in
-                guard let self = self else { return }
-                self.plantNameTextFieldDidChange(newValue: newValue)
-            })),
-            .valueCell(image: nil, text: "Plant Type", secondaryText: plant.commonName ?? "Configure", accessories: [.disclosureIndicator], tapAction: .init(handler: { [weak self] in
-                print("Plant Type Item Tapped.")
-                self?.showPlantTypePicker()
-            }))
+            .nameTextField(plantNicknameTextFieldConfiguration),
+            .listCell(plantTypeConfiguration),
         ], toSection: .plantInfo)
 
         // Care Details
@@ -387,8 +404,9 @@ extension AddEditPlantViewController {
     }
 
     // MARK: Layout
-    internal func makeLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout() { sectionIndex, layoutEnvironment in
+
+    func makeLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
             let sectionKind = ViewModel.Section.allCases[sectionIndex]
 
             switch sectionKind {
@@ -402,7 +420,7 @@ extension AddEditPlantViewController {
 
                 let edgeInset = layoutEnvironment.container.effectiveContentSize.width / 3.5
                 let section = NSCollectionLayoutSection(group: group)
-                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: edgeInset, bottom: 16, trailing: edgeInset )
+                section.contentInsets = NSDirectionalEdgeInsets(top: 16, leading: edgeInset, bottom: 16, trailing: edgeInset)
                 return section
             case .plantIconActions:
                 let buttonItemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.2), heightDimension: .absolute(44))
@@ -428,6 +446,7 @@ extension AddEditPlantViewController {
 }
 
 // MARK: Data Source View Model
+
 extension AddEditPlantViewController {
     enum ViewModel {
         enum Section: CaseIterable {
@@ -449,30 +468,19 @@ extension AddEditPlantViewController {
 
         enum Item: Hashable {
             case plantIcon(PlantIconItemConfiguration)
-            case normalButton(systemIcon: String?, title: String?, tintColor: UIColor = .systemBlue, tapAction: HashableClosure<Void>)
-            case destructiveButton(systemIcon: String?, title: String?, tapAction: HashableClosure<Void>)
+            case button(ButtonConfiguration)
             case nameTextField(TextFieldItemConfiguration)
             case careDetail(CareDetailItemConfiguration)
-            case valueCell(image: UIImage? = nil, text: String? = nil, secondaryText: String? = nil, accessories: [CellAccessory] = [], tapAction: HashableClosure<Void>)
-
-            enum CellAccessory {
-                case disclosureIndicator
-
-                var uiCellAccessory: UICellAccessory {
-                    switch self {
-                    case .disclosureIndicator:
-                        return UICellAccessory.disclosureIndicator()
-                    }
-                }
-            }
+            case listCell(ListCellConfiguration)
         }
     }
 }
 
 // MARK: - Collection View Cell Registrations
+
 private extension AddEditPlantViewController {
     func makeIconCellRegistration() -> UICollectionView.CellRegistration<SproutIconCell, Item> {
-        UICollectionView.CellRegistration<SproutIconCell, Item> { cell, indexPath, item in
+        UICollectionView.CellRegistration<SproutIconCell, Item> { cell, _, item in
             guard case let .plantIcon(config) = item else { return }
 
             var cellConfiguration = cell.defaultConfigurtion()
@@ -482,20 +490,22 @@ private extension AddEditPlantViewController {
         }
     }
 
-    func makeButtonCellRegistration() -> UICollectionView.CellRegistration<SproutButtonCell, Item>  {
-        UICollectionView.CellRegistration<SproutButtonCell, Item> { cell, indexPath, item in
-            switch item {
-            case let .normalButton(systemIcon, title, tintColor, _):
-                cell.image = UIImage(systemName: systemIcon ?? "")
-                cell.title = title
-                cell.tintColor = tintColor
+    func makeButtonCellRegistration() -> UICollectionView.CellRegistration<SproutButtonCell, Item> {
+        UICollectionView.CellRegistration<SproutButtonCell, Item> { cell, _, item in
+            guard case let .button(config) = item else { return }
+            cell.image = config.image
+            cell.title = config.title
+            cell.tintColor = config.tintColor
+
+            switch config.role {
+            case .plain:
+                cell.displayMode = .plain
+            case .normal:
                 cell.displayMode = .normal
-            case let .destructiveButton(systemIcon, title, _):
-                cell.image = UIImage(systemName: systemIcon ?? "")
-                cell.title = title
+            case .filled:
+                cell.displayMode = .primary
+            case .destructive:
                 cell.displayMode = .destructive
-            default:
-                break
             }
 
             cell.layer.cornerRadius = 10
@@ -504,7 +514,7 @@ private extension AddEditPlantViewController {
     }
 
     func makeTextFieldCellRegistration() -> UICollectionView.CellRegistration<SproutTextFieldCell, Item> {
-        UICollectionView.CellRegistration<SproutTextFieldCell, Item> { cell, indexPath, item in
+        UICollectionView.CellRegistration<SproutTextFieldCell, Item> { cell, _, item in
             switch item {
             case let .nameTextField(config):
                 cell.placeholder = config.placeholder
@@ -518,7 +528,7 @@ private extension AddEditPlantViewController {
     }
 
     func makeUICollectionViewListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, _, item in
             switch item {
             case let .careDetail(config):
                 var cellConfiguration = UIListContentConfiguration.valueCell()
@@ -529,17 +539,12 @@ private extension AddEditPlantViewController {
                 cellConfiguration.prefersSideBySideTextAndSecondaryText = false
                 cell.contentConfiguration = cellConfiguration
                 cell.accessories = [
-                    .disclosureIndicator()
+                    .disclosureIndicator(),
                 ]
 
-            case let .valueCell(image, text, secondaryText, accessories, _):
-                var config = UIListContentConfiguration.valueCell()
-                config.image = image
-                config.text = text
-                config.secondaryText = secondaryText
-                cell.contentConfiguration = config
-                cell.accessories = accessories.map { $0.uiCellAccessory }
-
+            case let .listCell(config):
+                cell.contentConfiguration = config.contentConfiguration()
+                cell.accessories = config.accessories ?? []
             default:
                 break
             }
@@ -547,7 +552,7 @@ private extension AddEditPlantViewController {
     }
 
     func makeSupplementaryHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
-        return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) {[unowned self] cell, elementKind, indexPath in
+        return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) { [unowned self] cell, elementKind, indexPath in
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
             var configuration = UIListContentConfiguration.largeGroupedHeader()
@@ -559,10 +564,11 @@ private extension AddEditPlantViewController {
 }
 
 // MARK: - Plant Icon Picker Delegate
+
 extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func showImagePicker(preferredType: UIImagePickerController.SourceType = .photoLibrary) {
         let imagePicker = UIImagePickerController()
-        
+
         imagePicker.delegate = self
 
         if UIImagePickerController.isSourceTypeAvailable(preferredType) {
@@ -574,7 +580,7 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
         present(imagePicker, animated: true)
     }
 
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+    func imagePickerController(_: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let image = info[.originalImage] as? UIImage else { return }
 
         // Apply the new selected image
@@ -590,8 +596,9 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
 }
 
 // MARK: - Plant Type Picker Delegate
+
 extension AddEditPlantViewController: PlantTypePickerDelegate {
-    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantMO) {
+    func plantTypePicker(_: PlantTypePickerViewController, didSelectType plantType: SproutPlantMO) {
         editingContext.performAndWait { [unowned self] in
             plant?.scientificName = plantType.scientificName
             plant?.commonName = plantType.commonName
@@ -601,17 +608,18 @@ extension AddEditPlantViewController: PlantTypePickerDelegate {
 }
 
 // MARK: - Plant Task Editor Delegate
+
 extension AddEditPlantViewController: TaskEditorDelegate {
-    internal func taskEditor(_ editor: TaskEditorController, didUpdateTask newInfo: SproutCareTaskMO) {
+    internal func taskEditor(_: TaskEditorController, didUpdateTask _: SproutCareTaskMO) {
         updateUI()
     }
 }
 
 // MARK: - UIAdaptivePresentationControllerDelegate
+
 extension AddEditPlantViewController: UIAdaptivePresentationControllerDelegate {
     // Decides if a pull down gesture should dismiss the editor
-    func presentationControllerShouldDismiss(_ presentationController: UIPresentationController) -> Bool {
-
+    func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {
         if hasChanges {
             discardChangesIfAble { [weak self] success in
                 if success {

@@ -21,7 +21,7 @@ class PlantIconSupplementaryView: UICollectionReusableView {
             }
         }
     }
-    
+
     var tapAction: (() -> Void)? {
         didSet {
             if tapAction == nil {
@@ -31,7 +31,7 @@ class PlantIconSupplementaryView: UICollectionReusableView {
             }
         }
     }
-    
+
     private lazy var buttonView: UIButton = {
         let button = UIButton(type: .system)
         button.setPreferredSymbolConfiguration(.init(textStyle: .title3), forImageIn: .normal)
@@ -39,7 +39,7 @@ class PlantIconSupplementaryView: UICollectionReusableView {
         button.tintColor = .white
         return button
     }()
-    
+
     @objc private func onTap() {
         tapAction?()
     }
@@ -52,24 +52,24 @@ class PlantIconSupplementaryView: UICollectionReusableView {
         super.init(frame: frame)
 
         configureHiearchy()
-        
+
         let length = min(frame.width, frame.height)
         let inset = length / 4
-        
+
         buttonView.contentEdgeInsets = .init(top: inset, left: inset, bottom: inset, right: inset)
         clipsToBounds = true
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
-        
+
         layer.cornerRadius = min(bounds.height, bounds.width) / 2
     }
-
 
     private func configureHiearchy() {
         addSubview(buttonView)

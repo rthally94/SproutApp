@@ -13,10 +13,10 @@ class CollectionViewHeader: UICollectionReusableView {
         imageView.contentMode = .center
         imageView.preferredSymbolConfiguration = UIImage.SymbolConfiguration(pointSize: 24, weight: .bold)
         imageView.isHidden = true
-        
+
         let huggingPriority = imageView.contentHuggingPriority(for: .horizontal) + 1
         imageView.setContentHuggingPriority(huggingPriority, for: .horizontal)
-        
+
         return imageView
     }()
 
@@ -49,22 +49,23 @@ class CollectionViewHeader: UICollectionReusableView {
         configureHiearchy()
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     func setImage(_ newImage: UIImage?) {
         if newImage != imageView.image {
             imageView.image = newImage
-            
+
             imageView.isHidden = newImage == nil
         }
     }
-    
+
     func setTitle(_ newTitle: String?) {
         if newTitle != textLabel.text {
             textLabel.text = newTitle
-            
+
             textLabel.isHidden = newTitle == nil
         }
     }
@@ -77,7 +78,7 @@ extension CollectionViewHeader {
         stack.alignment = .center
         stack.distribution = .fill
         stack.spacing = 8
-        
+
         stack.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stack)
@@ -88,7 +89,7 @@ extension CollectionViewHeader {
             stack.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
             stack.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
             stack.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-            stack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
+            stack.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
         ])
     }
 }

@@ -17,7 +17,7 @@ struct TextFieldItemConfiguration: Hashable {
         hasher.combine(initialText)
     }
 
-    static func ==(lhs: TextFieldItemConfiguration, rhs: TextFieldItemConfiguration) -> Bool {
+    static func == (lhs: TextFieldItemConfiguration, rhs: TextFieldItemConfiguration) -> Bool {
         return lhs.placeholder == rhs.placeholder
             && lhs.initialText == rhs.initialText
     }

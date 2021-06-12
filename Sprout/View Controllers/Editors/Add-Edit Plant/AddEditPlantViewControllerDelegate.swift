@@ -13,6 +13,6 @@ protocol AddEditPlantViewControllerDelegate: AnyObject {
 }
 
 extension AddEditPlantViewControllerDelegate {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) { }
-    func plantEditorDidCancel(_ editor: AddEditPlantViewController) { }
+    func plantEditor(_: AddEditPlantViewController, didUpdatePlant _: SproutPlantMO) {}
+    func plantEditorDidCancel(_: AddEditPlantViewController) {}
 }
