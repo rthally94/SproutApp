@@ -8,11 +8,11 @@
 import Foundation
 
 protocol TaskEditorDelegate: AnyObject {
-    func taskEditor(_ editor: TaskEditorController, didUpdateTask task: SproutCareTaskMO)
-    func taskEditorDidCancel(_ editor: TaskEditorController)
+    func taskEditor(_ editor: TaskEditorViewController, didUpdateTask task: SproutCareTaskMO)
+    func taskEditorDidCancel(_ editor: TaskEditorViewController)
 }
 
 extension TaskEditorDelegate {
-    func taskEditor(_ editor: TaskEditorController, didUpdateTask task: SproutCareTaskMO) { }
-    func taskEditorDidCancel(_ editor: TaskEditorController) { }
+    func taskEditor(_: TaskEditorViewController, didUpdateTask _: SproutCareTaskMO) {}
+    func taskEditorDidCancel(_: TaskEditorViewController) {}
 }

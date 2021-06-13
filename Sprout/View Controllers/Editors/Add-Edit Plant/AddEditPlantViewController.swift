@@ -133,7 +133,7 @@ class AddEditPlantViewController: UICollectionViewController {
     }
 
     private func showCareTaskEditor(for task: SproutCareTaskMO) {
-        let vc = TaskEditorController(task: task, storageProvider: storageProvider)
+        let vc = TaskEditorViewController(task: task, storageProvider: storageProvider)
         vc.storageProvider = storageProvider
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
@@ -610,7 +610,7 @@ extension AddEditPlantViewController: PlantTypePickerDelegate {
 // MARK: - Plant Task Editor Delegate
 
 extension AddEditPlantViewController: TaskEditorDelegate {
-    internal func taskEditor(_: TaskEditorController, didUpdateTask _: SproutCareTaskMO) {
+    internal func taskEditor(_: TaskEditorViewController, didUpdateTask _: SproutCareTaskMO) {
         updateUI()
     }
 }

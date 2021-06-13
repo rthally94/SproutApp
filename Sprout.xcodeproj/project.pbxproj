@@ -77,7 +77,7 @@
 		FBCA566426740BFC008DBFFC /* PlantTypePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564426740BFC008DBFFC /* PlantTypePickerViewController.swift */; };
 		FBCA566526740BFC008DBFFC /* PlantTypesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564526740BFC008DBFFC /* PlantTypesProvider.swift */; };
 		FBCA566626740BFC008DBFFC /* TaskEditorDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564726740BFC008DBFFC /* TaskEditorDelegate.swift */; };
-		FBCA566726740BFC008DBFFC /* TaskEditorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564826740BFC008DBFFC /* TaskEditorController.swift */; };
+		FBCA566726740BFC008DBFFC /* TaskEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564826740BFC008DBFFC /* TaskEditorViewController.swift */; };
 		FBCA566826740BFC008DBFFC /* TaskEditorSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564A26740BFC008DBFFC /* TaskEditorSection.swift */; };
 		FBCA566926740BFC008DBFFC /* TaskEditorItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564B26740BFC008DBFFC /* TaskEditorItem.swift */; };
 		FBCA566A26740BFC008DBFFC /* RepeatFrequencyChoices.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA564C26740BFC008DBFFC /* RepeatFrequencyChoices.swift */; };
@@ -91,6 +91,11 @@
 		FBCA5676267441EE008DBFFC /* CareDetailItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA5675267441EE008DBFFC /* CareDetailItemConfiguration.swift */; };
 		FBCA56782674EE48008DBFFC /* ButtonConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA56772674EE48008DBFFC /* ButtonConfiguration.swift */; };
 		FBCA567A2674FB3C008DBFFC /* ListCellConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA56792674FB3C008DBFFC /* ListCellConfiguration.swift */; };
+		FBCA567D26751F41008DBFFC /* SectionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA567C26751F41008DBFFC /* SectionConfiguration.swift */; };
+		FBCA567F2675254D008DBFFC /* TaskDetailItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA567E2675254D008DBFFC /* TaskDetailItemConfiguration.swift */; };
+		FBCA5681267526BD008DBFFC /* ToggleItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA5680267526BD008DBFFC /* ToggleItemConfiguration.swift */; };
+		FBCA568326757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA568226757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift */; };
+		FBCA568526757F31008DBFFC /* DayOfMonthPickerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA568426757F31008DBFFC /* DayOfMonthPickerConfiguration.swift */; };
 		FBD20AE4260FC6B7008915E1 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */; };
 		FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */; };
 		FBEB4955260BDC4600F6060C /* RelativeDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */; };
@@ -185,7 +190,7 @@
 		FBCA564426740BFC008DBFFC /* PlantTypePickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantTypePickerViewController.swift; sourceTree = "<group>"; };
 		FBCA564526740BFC008DBFFC /* PlantTypesProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantTypesProvider.swift; sourceTree = "<group>"; };
 		FBCA564726740BFC008DBFFC /* TaskEditorDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEditorDelegate.swift; sourceTree = "<group>"; };
-		FBCA564826740BFC008DBFFC /* TaskEditorController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEditorController.swift; sourceTree = "<group>"; };
+		FBCA564826740BFC008DBFFC /* TaskEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEditorViewController.swift; sourceTree = "<group>"; };
 		FBCA564A26740BFC008DBFFC /* TaskEditorSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEditorSection.swift; sourceTree = "<group>"; };
 		FBCA564B26740BFC008DBFFC /* TaskEditorItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskEditorItem.swift; sourceTree = "<group>"; };
 		FBCA564C26740BFC008DBFFC /* RepeatFrequencyChoices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepeatFrequencyChoices.swift; sourceTree = "<group>"; };
@@ -199,6 +204,11 @@
 		FBCA5675267441EE008DBFFC /* CareDetailItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareDetailItemConfiguration.swift; sourceTree = "<group>"; };
 		FBCA56772674EE48008DBFFC /* ButtonConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonConfiguration.swift; sourceTree = "<group>"; };
 		FBCA56792674FB3C008DBFFC /* ListCellConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCellConfiguration.swift; sourceTree = "<group>"; };
+		FBCA567C26751F41008DBFFC /* SectionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionConfiguration.swift; sourceTree = "<group>"; };
+		FBCA567E2675254D008DBFFC /* TaskDetailItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailItemConfiguration.swift; sourceTree = "<group>"; };
+		FBCA5680267526BD008DBFFC /* ToggleItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleItemConfiguration.swift; sourceTree = "<group>"; };
+		FBCA568226757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekPickerConfiguration.swift; sourceTree = "<group>"; };
+		FBCA568426757F31008DBFFC /* DayOfMonthPickerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfMonthPickerConfiguration.swift; sourceTree = "<group>"; };
 		FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutSymbolSymbolIconView.swift; sourceTree = "<group>"; };
 		FBEB4954260BDC4600F6060C /* RelativeDateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeDateFormatter.swift; sourceTree = "<group>"; };
@@ -540,8 +550,9 @@
 		FBCA564626740BFC008DBFFC /* Add-Edit Care Detail */ = {
 			isa = PBXGroup;
 			children = (
+				FBCA567B26751EB0008DBFFC /* Item Configuration */,
+				FBCA564826740BFC008DBFFC /* TaskEditorViewController.swift */,
 				FBCA564726740BFC008DBFFC /* TaskEditorDelegate.swift */,
-				FBCA564826740BFC008DBFFC /* TaskEditorController.swift */,
 				FBCA564926740BFC008DBFFC /* Model */,
 			);
 			path = "Add-Edit Care Detail";
@@ -577,6 +588,18 @@
 				FBCA5675267441EE008DBFFC /* CareDetailItemConfiguration.swift */,
 				FBCA56772674EE48008DBFFC /* ButtonConfiguration.swift */,
 				FBCA56792674FB3C008DBFFC /* ListCellConfiguration.swift */,
+			);
+			path = "Item Configuration";
+			sourceTree = "<group>";
+		};
+		FBCA567B26751EB0008DBFFC /* Item Configuration */ = {
+			isa = PBXGroup;
+			children = (
+				FBCA567C26751F41008DBFFC /* SectionConfiguration.swift */,
+				FBCA567E2675254D008DBFFC /* TaskDetailItemConfiguration.swift */,
+				FBCA5680267526BD008DBFFC /* ToggleItemConfiguration.swift */,
+				FBCA568226757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift */,
+				FBCA568426757F31008DBFFC /* DayOfMonthPickerConfiguration.swift */,
 			);
 			path = "Item Configuration";
 			sourceTree = "<group>";
@@ -732,12 +755,14 @@
 				FB5CB85726726B0600A7F60E /* DayOfWeekPicker.swift in Sources */,
 				FB5CB84E2672624E00A7F60E /* ModelStore.swift in Sources */,
 				FBCA565926740BFC008DBFFC /* MainViewController.swift in Sources */,
+				FBCA5681267526BD008DBFFC /* ToggleItemConfiguration.swift in Sources */,
 				FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */,
 				FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */,
 				FBCA566326740BFC008DBFFC /* PlantTypePickerDelegate.swift in Sources */,
 				FBCA567226744062008DBFFC /* PlantIconItemConfiguration.swift in Sources */,
 				FB5F348925B63E6900CCE6BC /* SproutScheduledTaskCell.swift in Sources */,
 				FBCA566C26740BFC008DBFFC /* UpNextSection.swift in Sources */,
+				FBCA568526757F31008DBFFC /* DayOfMonthPickerConfiguration.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
 				FBCA565E26740BFC008DBFFC /* AddEditPlantViewControllerDelegate.swift in Sources */,
 				FBCA566E26740BFD008DBFFC /* UpNextItem.swift in Sources */,
@@ -752,7 +777,8 @@
 				FBCA566B26740BFC008DBFFC /* UpNextViewModel.swift in Sources */,
 				FBB75BBF264AFBB3000CC823 /* PlantType.swift in Sources */,
 				FBCA566526740BFC008DBFFC /* PlantTypesProvider.swift in Sources */,
-				FBCA566726740BFC008DBFFC /* TaskEditorController.swift in Sources */,
+				FBCA568326757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift in Sources */,
+				FBCA566726740BFC008DBFFC /* TaskEditorViewController.swift in Sources */,
 				FBCA565326740BFC008DBFFC /* PlantGroupSection.swift in Sources */,
 				FB6CD6582657E17500D7DE82 /* RemindersProvider.swift in Sources */,
 				FBCA566826740BFC008DBFFC /* TaskEditorSection.swift in Sources */,
@@ -765,9 +791,11 @@
 				FB98B94B266858F100629C1B /* SproutCareHistoryMO.swift in Sources */,
 				FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */,
 				FB98B94F2668591100629C1B /* SproutPlantMO.swift in Sources */,
+				FBCA567D26751F41008DBFFC /* SectionConfiguration.swift in Sources */,
 				FBCA566126740BFC008DBFFC /* PlantIconSupplementaryView.swift in Sources */,
 				FBCA566A26740BFC008DBFFC /* RepeatFrequencyChoices.swift in Sources */,
 				FB98B94826681F3600629C1B /* SproutDataModel.xcdatamodeld in Sources */,
+				FBCA567F2675254D008DBFFC /* TaskDetailItemConfiguration.swift in Sources */,
 				FBCA56782674EE48008DBFFC /* ButtonConfiguration.swift in Sources */,
 				FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				FBC7330325DDB4F00048999C /* SproutIconCell.swift in Sources */,

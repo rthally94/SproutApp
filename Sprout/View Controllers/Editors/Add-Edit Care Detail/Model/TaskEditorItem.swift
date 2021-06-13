@@ -7,19 +7,10 @@
 
 import Foundation
 
-struct TaskEditorItem: Identifiable, Hashable {
-    enum Identifier: Hashable {
-        case detailHeader
-        case repeatsIntervalRow(RepeatFrequencyChoices)
-        case remindersToggle
-        case dayOfWeekPicker
-        case dayOfMonthPicker
-
-        var rawValue: String {
-            return String(describing: self)
-        }
-    }
-
-    var id: Identifier
-    var isVisible: Bool
+enum TaskEditorItem: Hashable {
+    case detailHeader(TaskDetailItemConfiguration)
+    case repeatsIntervalRow(ToggleItemConfiguration)
+    case remindersToggle(ToggleItemConfiguration)
+    case dayOfWeekPicker(DayOfWeekPickerConfiguration)
+    case dayOfMonthPicker(DayOfMonthPickerConfiguration)
 }

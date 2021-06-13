@@ -13,6 +13,6 @@ protocol PlantTypePickerDelegate: AnyObject {
 }
 
 extension PlantTypePickerDelegate {
-    func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantMO) { }
-    func plantTypePickerDidCancel(_ picker: PlantTypePickerViewController) { }
+    func plantTypePicker(_: PlantTypePickerViewController, didSelectType _: SproutPlantMO) {}
+    func plantTypePickerDidCancel(_: PlantTypePickerViewController) {}
 }

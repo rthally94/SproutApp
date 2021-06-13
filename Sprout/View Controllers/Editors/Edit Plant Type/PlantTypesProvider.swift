@@ -8,32 +8,32 @@
 import CoreData
 import UIKit
 
-class PlantTypesProvider: NSObject {    
+class PlantTypesProvider: NSObject {
     let moc: NSManagedObjectContext
-    
+
     private var allTypes: [NSManagedObjectID: SproutPlantMO] = [:]
     private var selectedItem: Item?
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
-    
+
     enum Section: Int, Hashable, CaseIterable, CustomStringConvertible {
         case recent
         case allPlants
 
         var description: String {
             switch self {
-                case .recent: return "Recent Plants"
-                case .allPlants: return "All Plants"
+            case .recent: return "Recent Plants"
+            case .allPlants: return "All Plants"
             }
         }
     }
 
     typealias Item = NSManagedObjectID
-    
+
     init(managedObjectContext: NSManagedObjectContext) {
-        self.moc = managedObjectContext
-        
+        moc = managedObjectContext
+
         super.init()
-        
+
         // Fetch plant types
         let allTypesRequest: NSFetchRequest<SproutPlantMO> = SproutPlantMO.allTemplatesFetchRequest()
         allTypesRequest.propertiesToFetch = ["scientificName", "commonName"]
@@ -43,11 +43,11 @@ class PlantTypesProvider: NSObject {
         allTypes = types.reduce(into: [NSManagedObjectID: SproutPlantMO]()) { dict, type in
             dict[type.objectID] = type
         }
-        
+
         // Make Snapshot
         var newSnapshot = NSDiffableDataSourceSnapshot<Section, Item>()
         newSnapshot.appendSections([.allPlants])
-        
+
         let items = allTypes.sorted(by: { lhs, rhs in
             if let lName = lhs.value.commonName, let rName = rhs.value.commonName {
                 return lName < rName
@@ -57,7 +57,7 @@ class PlantTypesProvider: NSObject {
                 return false
             }
         }).map { $0.key }
-        
+
         newSnapshot.appendItems(items)
         snapshot = newSnapshot
     }
@@ -72,7 +72,7 @@ class PlantTypesProvider: NSObject {
     func object(withID id: NSManagedObjectID) -> SproutPlantMO {
         moc.object(with: id) as! SproutPlantMO
     }
-    
+
     func reloadItems(_ items: [Item]) {
         var newSnapshot = snapshot
         newSnapshot?.reloadItems(items)

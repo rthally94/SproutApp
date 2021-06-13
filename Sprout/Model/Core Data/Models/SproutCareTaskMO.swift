@@ -30,6 +30,13 @@ class SproutCareTaskMO: NSManagedObject {
                 return UIImage(systemName: "drop.fill")
             }
         }
+
+        var tintColor: UIColor? {
+            switch self {
+            case .watering:
+                return .systemBlue
+            }
+        }
     }
 
     static func createNewTask(type: SproutCareTaskType, in context: NSManagedObjectContext, completion: @escaping (SproutCareTaskMO) -> Void) {
