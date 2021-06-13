@@ -39,6 +39,7 @@ class PlantDetailViewController: UIViewController {
         collectionView.delegate = self
         
         title = "Plant Details"
+        navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPlant))
 
         dataSource.apply(makeSnapshot())
@@ -97,14 +98,14 @@ private extension PlantDetailViewController {
             }
 
             if sectionKind.headerText != nil {
-                let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(44))
+                let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(44))
                 let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
                 section.boundarySupplementaryItems = [headerItem]
             }
             return section
         }
 
-        let detailHeroSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(0.35))
+        let detailHeroSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalWidth(0.8))
         let detailHeroSupplementary = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: detailHeroSize, elementKind: UICollectionView.elementKindLayoutHeader, alignment: .top)
 
         let configuration = layout.configuration

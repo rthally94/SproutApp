@@ -16,7 +16,7 @@ class SproutHeroView: UIView {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.contentScaleFactor = 2.0
-        imageView.blurBackground(style: .systemChromeMaterial)
+        imageView.blurBackground(style: .systemMaterial)
         return imageView
     }()
 
@@ -44,14 +44,14 @@ class SproutHeroView: UIView {
         backgroundImageView.pinToBoundsOf(self)
 
         NSLayoutConstraint.activate([
-            iconView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor),
+            iconView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: 16),
             iconView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
             iconView.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 0.5),
 
-            headerTextView.topAnchor.constraint(equalToSystemSpacingBelow: iconView.bottomAnchor, multiplier: 1.0),
+            headerTextView.topAnchor.constraint(equalToSystemSpacingBelow: iconView.bottomAnchor, multiplier: 2.0),
             headerTextView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
             headerTextView.widthAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.widthAnchor),
-            headerTextView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor)
+            headerTextView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, constant: -16)
         ])
     }
 }
