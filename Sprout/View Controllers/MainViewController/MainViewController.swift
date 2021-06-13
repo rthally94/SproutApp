@@ -21,6 +21,8 @@ class MainViewController: UIViewController {
         vc.viewModel = viewModel
 
         let nav = vc.wrappedInNavigationController()
+        nav.navigationBar.prefersLargeTitles = true
+
         nav.tabBarItem = UITabBarItem(title: "Up Next", image: UIImage(systemName: "text.badge.checkmark"), tag: 0)
         if plantsNeedingCare > 0 {
             //            nav.tabBarItem.badgeValue = "\(plantsNeedingCare)"
@@ -37,6 +39,8 @@ class MainViewController: UIViewController {
         vc.viewModel = viewModel
 
         let nav = vc.wrappedInNavigationController()
+        nav.navigationBar.prefersLargeTitles = true
+        
         nav.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "house"), selectedImage: UIImage(systemName: "house.fill"))
         nav.tabBarItem.tag = 2
         return nav

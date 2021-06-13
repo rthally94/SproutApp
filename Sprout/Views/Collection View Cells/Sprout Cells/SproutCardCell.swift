@@ -19,11 +19,6 @@ class SproutCardCell: UICollectionViewCell {
         get { cardView.textLabel.text }
         set { cardView.textLabel.text = newValue }
     }
-
-    var secondaryText: String? {
-        get { cardView.secondaryTextLabel.text }
-        set { cardView.secondaryTextLabel.text = newValue }
-    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,6 +49,5 @@ class SproutCardCell: UICollectionViewCell {
 
         image = nil
         text = nil
-        secondaryText = nil
     }
 }

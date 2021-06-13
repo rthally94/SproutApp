@@ -18,29 +18,15 @@ class SproutCardView: UIView {
     let textLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .headline)
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
+        label.numberOfLines = 1
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
 
-    let secondaryTextLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        return label
-    }()
-
-    private lazy var textStack: UIStackView = { [unowned self] in
-        let stack = UIStackView(arrangedSubviews: [textLabel, secondaryTextLabel])
-        stack.axis = .vertical
-        stack.distribution = .fill
-        stack.alignment = .leading
-
-        stack.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10)
-        stack.isLayoutMarginsRelativeArrangement = true
-
-        stack.blurBackground(style: .prominent)
-
-        return stack
+    let blurView: UIView = {
+        let view = UIView()
+        view.blurBackground(style: .systemThinMaterial)
+        return view
     }()
 
     override init(frame: CGRect) {
@@ -53,30 +39,30 @@ class SproutCardView: UIView {
         setupViews()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
 
+        blurView.clipsToBounds = true
+        blurView.layer.cornerRadius = 6
+    }
 
     private func setupViews() {
         addSubview(imageView)
-        addSubview(textStack)
+        addSubview(blurView)
+        blurView.addSubview(textLabel)
 
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        textStack.translatesAutoresizingMaskIntoConstraints = false
-
-        let textStackTrailing = textStack.trailingAnchor.constraint(equalTo: trailingAnchor)
-        textStackTrailing.priority-=1
-        let textStackMinHeight = textStack.heightAnchor.constraint(greaterThanOrEqualToConstant: 44)
-        textStackMinHeight.priority-=1
-        let textStackTop = textStack.topAnchor.constraint(greaterThanOrEqualTo: topAnchor)
-        textStackTop.priority-=1
+        blurView.translatesAutoresizingMaskIntoConstraints = false
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
 
 
         imageView.pinToBoundsOf(self)
+        textLabel.pinToLayoutMarginsOf(blurView)
         NSLayoutConstraint.activate([
-            textStack.leadingAnchor.constraint(equalTo: leadingAnchor),
-            textStack.bottomAnchor.constraint(equalTo: bottomAnchor),
-            textStackTrailing,
-            textStackMinHeight,
-            textStackTop
+            blurView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
+            blurView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
+            blurView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
+            blurView.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
 }

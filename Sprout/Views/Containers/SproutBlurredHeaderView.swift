@@ -10,14 +10,14 @@ import UIKit
 class SproutBlurredHeaderView: UIView {
     var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.preferredFont(forTextStyle: .headline)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         label.setContentHuggingPriority(.defaultHigh+1, for: .vertical)
         return label
     }()
 
     var subtitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
+        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         label.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return label
     }()
