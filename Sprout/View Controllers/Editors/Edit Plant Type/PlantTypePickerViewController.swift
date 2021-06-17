@@ -15,13 +15,7 @@ class PlantTypePickerViewController: UIViewController {
     typealias Section = PlantTypesProvider.Section
     typealias Item = PlantTypesProvider.Item
 
-    var selectedType: SproutPlantMO? {
-        didSet {
-            if let newType = selectedType, newType.isTemplate == false {
-                selectedType = plantTypesProvider.template(for: newType)
-            }
-        }
-    }
+    var selectedType: SproutPlantTemplate?
 
     lazy var plantTypesProvider = PlantTypesProvider(managedObjectContext: persistentContainer.viewContext)
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer {
@@ -80,13 +74,12 @@ extension PlantTypePickerViewController {
 extension PlantTypePickerViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
         return UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [weak self] cell, _, item in
-            guard let type = self?.plantTypesProvider.object(withID: item) else { return }
             var configuration = cell.defaultContentConfiguration()
 
-            configuration.text = type.commonName
-            configuration.secondaryText = type.scientificName
+            configuration.text = item.commonName
+            configuration.secondaryText = item.scientificName
 
-            if self?.selectedType == type {
+            if self?.selectedType == item {
                 cell.accessories = [
                     .checkmark(),
                 ]
@@ -132,15 +125,16 @@ extension PlantTypePickerViewController {
 extension PlantTypePickerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let newItem = dataSource.itemIdentifier(for: indexPath) {
-            let oldItem = selectedType?.objectID
-            let newType = plantTypesProvider.object(withID: newItem)
-            selectedType = newType
+            let oldItem = selectedType
+            selectedType = newItem
 
             let idsToReload = [oldItem, newItem].compactMap { $0 }
+
+            // FIXME: May not refresh cells
             plantTypesProvider.reloadItems(idsToReload)
             collectionView.deselectItem(at: indexPath, animated: false)
 
-            delegate?.plantTypePicker(self, didSelectType: newType)
+            delegate?.plantTypePicker(self, didSelectType: newItem)
         }
     }
 }

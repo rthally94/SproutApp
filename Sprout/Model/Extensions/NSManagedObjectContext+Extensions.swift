@@ -9,6 +9,12 @@ import CoreData
 import Foundation
 
 extension NSManagedObjectContext {
+    func saveIfNeeded() throws {
+        if self.hasChanges {
+            try self.save()
+        }
+    }
+
     func persist(block: @escaping () -> Void, completion: (() -> Void)? = nil) {
         perform {
             block()

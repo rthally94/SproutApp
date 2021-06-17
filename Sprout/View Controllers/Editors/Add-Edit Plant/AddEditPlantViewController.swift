@@ -23,28 +23,17 @@ class AddEditPlantViewController: UICollectionViewController {
     private(set) var plant: SproutPlantMO?
     private var originalNickname: String?
 
-    private var unconfiguredCareDetailTypes: [SproutCareTaskMO] {
-        let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
-        request.predicate = NSPredicate(format: "%K == true", #keyPath(SproutCareTaskMO.isTemplate))
-
-//        print(String((try? editingContext.count(for: request)) ?? -1))
-
-        let allTemplates: [SproutCareTaskMO]
-        do {
-            allTemplates = try editingContext.fetch(request)
-        } catch {
-            print("Unable to fetch all task templates: \(error)")
-            allTemplates = []
-        }
-
-        let filtered = allTemplates.filter { template in
-            let plantTasks = plant?.allTasks ?? []
-            return !plantTasks.contains { task in
-                template.taskType == task.taskType
+    private var unconfiguredCareDetailTypes: [SproutCareType] {
+        let confguredCareInformation: Set<SproutCareType> = plant?.allCareInformation.reduce(into: Set<SproutCareType>(), { set, info in
+            if let typeString = info.type, let type = SproutCareType(rawValue: typeString) {
+                set.insert(type)
             }
-        }
+        }) ?? []
 
-        return filtered
+        let allTypes = Set<SproutCareType>(SproutCareType.allCases)
+        return allTypes.symmetricDifference(confguredCareInformation).sorted(by: {
+            $0.rawValue < $1.rawValue
+        })
     }
 
     weak var delegate: AddEditPlantViewControllerDelegate?
@@ -64,11 +53,7 @@ class AddEditPlantViewController: UICollectionViewController {
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
 
         if plant == nil {
-            SproutPlantMO.createNewPlant(in: editingContext) { [weak self] newPlant in
-                DispatchQueue.main.async {
-                    self?.plant = newPlant
-                }
-            }
+            self.plant = SproutPlantMO.insertNewPlant(into: editingContext)
         }
 
         originalNickname = plant?.nickname
@@ -127,7 +112,7 @@ class AddEditPlantViewController: UICollectionViewController {
     private func showPlantTypePicker() {
         let vc = PlantTypePickerViewController()
         vc.persistentContainer = storageProvider.persistentContainer
-        vc.selectedType = plant
+        vc.selectedType =
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -360,16 +345,15 @@ extension AddEditPlantViewController {
         ], toSection: .plantInfo)
 
         // Care Details
-        let careDetailSet = plant.allTasks.filter { task in
-            task.historyLog == nil
-        }
-
-        let careDetailItems: [Item] = careDetailSet.sorted().map { infoItem in
-            let config = CareDetailItemConfiguration(careTask: infoItem) { [weak self] in
-                self?.showCareTaskEditor(for: infoItem)
+        let careDetailItems: [Item] = plant.allCareInformation.compactMap { infoItem in
+            if let latestTask = infoItem.latestTask {
+                let config = CareDetailItemConfiguration(careTask: latestTask) { [weak self] in
+                    self?.showCareTaskEditor(for: latestTask)
+                }
+                return Item.careDetail(config)
+            } else {
+                
             }
-
-            return Item.careDetail(config)
         }
 
         if !careDetailItems.isEmpty {
@@ -379,17 +363,13 @@ extension AddEditPlantViewController {
 
         // Unconfigured Care Details
         let unconfiguredCareItems: [Item] = unconfiguredCareDetailTypes.map { templateTask in
-            let config = CareDetailItemConfiguration(careTask: templateTask) { [weak self] in
+            let info = SproutCareInformationMO.fetchOrInsertCareInformation(of: templateTask, for: plant, in: editingContext)
+            let config = CareDetailItemConfiguration(careInformation: info) { [weak self] in
                 guard let self = self, let plant = self.plant else { return }
 
-                do {
-                    try SproutCareTaskMO.createNewTask(from: templateTask) { newTask in
-                        plant.addToCareTasks(newTask)
-                        self.showCareTaskEditor(for: newTask)
-                    }
-                } catch {
-                    print("Unable to duplicate template task: \(error)")
-                }
+                let newTask = SproutCareTaskMO.insertNewTask(of: templateTask, into: self.editingContext)
+                plant.addToCareTasks(newTask)
+                self.showCareTaskEditor(for: newTask)
             }
 
             return Item.careDetail(config)

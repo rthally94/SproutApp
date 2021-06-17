@@ -111,7 +111,7 @@ class SproutScheduledTaskCell: SproutListCell {
         let constraints = (
             plantIconTop: plantIconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
             plantIconLeading: plantIconView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
-            plantIconWidth: plantIconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.15),
+            plantIconWidth: plantIconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.2),
             plantIconHeight: plantIconView.heightAnchor.constraint(equalTo: plantIconView.widthAnchor)
         )
 
@@ -127,7 +127,8 @@ class SproutScheduledTaskCell: SproutListCell {
             constraints.plantIconWidth,
             plantIconView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
 
-            listContentView.centerYAnchor.constraint(equalTo: plantIconView.centerYAnchor),
+            listContentView.topAnchor.constraint(equalTo: plantIconView.topAnchor),
+            listContentView.bottomAnchor.constraint(equalTo: plantIconView.bottomAnchor),
             listContentView.leadingAnchor.constraint(equalToSystemSpacingAfter: plantIconView.trailingAnchor, multiplier: 2.0),
             listContentView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ])

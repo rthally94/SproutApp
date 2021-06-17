@@ -115,7 +115,7 @@ private extension UpNextViewController {
 
             cell.updateWithText(plant.primaryDisplayName, secondaryText: scheduleText, image: plant.icon, daysLate: daysLate)
 
-            let isChecked = task.historyLog != nil
+            let isChecked = task.markStatus == .done
 
             if isChecked {
                 cell.accessories = [ .checkmark() ]

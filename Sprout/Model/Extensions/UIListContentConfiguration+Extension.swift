@@ -10,7 +10,7 @@ import UIKit
 extension UIListContentConfiguration {
     static func largeGroupedHeader() -> UIListContentConfiguration {
         var config = UIListContentConfiguration.groupedHeader()
-        let font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        let font = UIFont.systemFont(ofSize: 20, weight: .bold)
         config.textProperties.font = font
         config.textProperties.color = .label
         config.textProperties.transform = .capitalized

@@ -38,9 +38,8 @@ class UpNextViewModel {
         let midnightToday = Calendar.current.startOfDay(for: Date())
         let midnightTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: midnightToday)!
 
-        let isNotTemplatePredicate = NSPredicate(format: "%K == false", #keyPath(SproutCareTaskMO.isTemplate))
         let needsCareTodayPredicate = NSPredicate(format: "%K < %@", #keyPath(SproutCareTaskMO.dueDate), midnightTomorrow as NSDate)
-        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [isNotTemplatePredicate, needsCareTodayPredicate])
+        request.predicate = needsCareTodayPredicate
 
         return (try? persistentContainer.viewContext.count(for: request)) ?? 0
     }
@@ -56,14 +55,8 @@ class UpNextViewModel {
 
 
     func markTaskAsComplete(id: NSManagedObjectID) {
-        guard let task = task(witID: id) else { return }
-        do {
-            try task.markAs(.complete) { [unowned self] in
-                self.persistentContainer.saveContextIfNeeded()
-            }
-        } catch {
-            print("Unable to mark task as complete: \(error)")
-        }
+        guard let task = tasksProvider.task(withID: id) else { return }
+        task.markAs(.done)
     }
 
     func showAllCompletedTasks() {

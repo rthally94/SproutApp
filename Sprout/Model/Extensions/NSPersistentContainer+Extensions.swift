@@ -10,14 +10,10 @@ import Foundation
 
 extension NSPersistentContainer {
     func saveContextIfNeeded() {
-        if viewContext.hasChanges {
-            print("Persisting Changes")
-            do {
-                try viewContext.save()
-            } catch {
-                let error = error as NSError
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
+        do {
+            try viewContext.saveIfNeeded()
+        } catch {
+            print("Unable to save persistent container: \(error)")
         }
     }
 }

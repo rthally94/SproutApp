@@ -41,25 +41,12 @@ struct UpNextItem: Hashable {
     }
 
     var isChecked: Bool {
-        task.historyLog != nil
+        task.markStatus == .done
     }
 
     // MARK: - Task Actions
     func markAsComplete() {
-        do {
-            try task.markAs(.complete) {
-                do {
-                    if task.managedObjectContext?.hasChanges == true {
-                        try task.managedObjectContext?.save()
-                    }
-                } catch {
-                    print("Error saving context: \(error)")
-                    task.managedObjectContext?.rollback()
-                }
-            }
-        } catch {
-            print("Error marking task as complete: \(error)")
-        }
+        task.markAs(.done)
     }
 }
 

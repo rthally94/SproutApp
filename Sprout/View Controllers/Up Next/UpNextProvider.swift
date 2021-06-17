@@ -26,7 +26,7 @@ class UpNextProvider: NSObject {
         super.init()
 
         let request = makeFetchRequest()
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.displayDate), cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.statusDate), cacheName: nil)
 
         fetchedResultsController.delegate = self
         try! fetchedResultsController.performFetch()
@@ -46,34 +46,7 @@ class UpNextProvider: NSObject {
     }
 
     private func makeFetchRequest() -> NSFetchRequest<SproutCareTaskMO> {
-        let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
-        let sortByDisplayDate = NSSortDescriptor(keyPath: \SproutCareTaskMO.displayDate, ascending: true)
-        let sortByPlantName = NSSortDescriptor(keyPath: \SproutCareTaskMO.plant?.nickname, ascending: true)
-        let sortByTaskType = NSSortDescriptor(keyPath: \SproutCareTaskMO.taskType, ascending: true)
-        request.sortDescriptors = [sortByDisplayDate, sortByPlantName, sortByTaskType]
-        request.predicate = makePredicate()
-        return request
-    }
-
-    private func makePredicate() -> NSPredicate {
-        // Hides all template tasks
-        let isNotTemplatePredicate = NSPredicate(format: "%K == false", #keyPath(SproutCareTaskMO.isTemplate))
-
-        // Shows all tasks that are incomplete
-        let isIncompletePredicate = NSPredicate(format: "%K == nil", #keyPath(SproutCareTaskMO.historyLog))
-
-        // Shows all tasks that are completed today, including completed tasks
-        let isCompletedToday: NSPredicate
-        if doesShowCompletedTasks {
-            let midnightToday = Calendar.current.startOfDay(for: Date())
-            let midnightTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: midnightToday)!
-             isCompletedToday = NSPredicate(format: "%K >= %@ && %K < %@", #keyPath(SproutCareTaskMO.displayDate), midnightToday as NSDate, #keyPath(SproutCareTaskMO.displayDate), midnightTomorrow as NSDate)
-        } else {
-            isCompletedToday = NSPredicate.init(value: false)
-        }
-
-        let taskTypePredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [isIncompletePredicate, isCompletedToday])
-        return NSCompoundPredicate(andPredicateWithSubpredicates: [isNotTemplatePredicate, taskTypePredicate])
+        SproutCareTaskMO.upNextFetchRequest()
     }
 }
 
@@ -99,4 +72,8 @@ extension UpNextProvider: NSFetchedResultsControllerDelegate {
     }
 }
 
+
+private extension SproutCareTaskMO {
+
+}
 

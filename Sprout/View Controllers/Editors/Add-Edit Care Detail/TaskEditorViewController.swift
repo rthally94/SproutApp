@@ -63,7 +63,6 @@ class TaskEditorViewController: UIViewController {
         applyMainSnapshot(animatingDifferences: false)
 
         title = "Edit Task"
-        //        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonPressed))
     }
 
     // MARK: - Actions

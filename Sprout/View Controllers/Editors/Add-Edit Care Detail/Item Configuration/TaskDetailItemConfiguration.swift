@@ -19,9 +19,13 @@ struct TaskDetailItemConfiguration: Hashable {
 
 extension TaskDetailItemConfiguration {
     init(careTask: SproutCareTaskMO) {
+        let taskName = careTask.careInformation?.type?.capitalized ?? "Unknown Task"
+        let iconName = careTask.careInformation?.icon ?? ""
+        let taskIcon = UIImage(named: iconName) ?? UIImage(systemName: iconName)
         let taskSchedule = Utility.careScheduleFormatter.string(for: careTask.schedule) ?? "No schedule"
-        let taskIcon = careTask.hasSchedule ? "bell.fill" : "bell.slash"
+        let taskScheduleIcon = careTask.hasSchedule ? "bell.fill" : "bell.slash"
+        let tintColor = careTask.careInformation?.tintColor
 
-        self.init(taskName: careTask.taskTypeProperties?.displayName, taskIcon: careTask.taskTypeProperties?.icon, taskValueText: taskSchedule, taskValueIcon: taskIcon, tintColor: careTask.taskTypeProperties?.tintColor)
+        self.init(taskName: taskName, taskIcon: taskIcon, taskValueText: taskSchedule, taskValueIcon: taskScheduleIcon, tintColor: tintColor)
     }
 }

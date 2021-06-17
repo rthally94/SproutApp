@@ -47,98 +47,50 @@ class StorageProvider {
         
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
         persistentContainer.viewContext.shouldDeleteInaccessibleFaults = true
-
-        let templatePlantRequest: NSFetchRequest<SproutPlantMO> = SproutPlantMO.allTemplatesFetchRequest()
-        let typeCount = (try? persistentContainer.viewContext.count(for: templatePlantRequest)) ?? 0
-        print("Template Plant Count: \(typeCount)")
-        if typeCount != PlantType.allTypes.count {
-            print("Loading new plant types: \(PlantType.allTypes.count - typeCount)")
-            loadPlantTypes()
-        }
-
-        let templateTaskRequest: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
-        templateTaskRequest.predicate = NSPredicate(format: "%K == true", #keyPath(SproutCareTaskMO.isTemplate))
-        let taskCount = (try? persistentContainer.viewContext.count(for: templateTaskRequest)) ?? 0
-        print("Template Task Count: \(taskCount)")
-        if taskCount != SproutCareTaskMO.SproutCareTaskType.allCases.count {
-            print("Loading new task types: \(SproutCareTaskMO.SproutCareTaskType.allCases.count - typeCount)")
-            loadTemplateTasks()
-        }
     }
 
     enum StoreType  {
         case inMemory, persisted
-    }
-    
-    func loadPlantTypes() {
-        persistentContainer.performBackgroundTask { context in
-            PlantType.allTypes.forEach { type in
-                SproutPlantMO.createNewPlant(in: context) { newTemplate in
-                    newTemplate.scientificName = type.scientificName
-                    newTemplate.commonName = type.commonName
-                    newTemplate.isTemplate = true
-
-                    do {
-                        try newTemplate.setImage(UIImage(named: "SamplePlantImage"))
-                    } catch {
-                        print("Unable to set plant image: \(error)")
-                    }
-                }
-            }
-
-            if context.hasChanges {
-                do {
-                    try context.save()
-                } catch {
-                    print("Unable to save template plants: \(error)")
-                }
-            }
-        }
-    }
-
-    func loadTemplateTasks() {
-        persistentContainer.performBackgroundTask { context in
-            SproutCareTaskMO.SproutCareTaskType.allCases.forEach { type in
-                SproutCareTaskMO.createNewTask(type: type, in: context) { newTask in
-                    newTask.isTemplate = true
-                    do {
-                        try context.save()
-                    } catch {
-                        print("Unable to save new template task, \(type.displayName), to context: \(error)")
-                    }
-                }
-            }
-        }
     }
 
     func loadSampleData() {
         persistentContainer.performBackgroundTask { context in
             do {
                 // General Plant Config
-                let allTemplatesFetchRequest = SproutPlantMO.allTemplatesFetchRequest()
-                if let templates = try? context.fetch(allTemplatesFetchRequest), let template = templates.first {
-                    try SproutPlantMO.createNewPlant(from: template) { newPlant in
-                        newPlant.nickname = "My Sample Plant"
-                        SproutCareTaskMO.createNewTask(type: .watering, in: context, completion: { newTask in
-                            let schedule = SproutCareTaskSchedule(startDate: Date(), recurrenceRule: .weekly(1, [2,4,6]))
-                            newTask.schedule = schedule
+                SproutPlantTemplate.sampleData.enumerated().forEach { index, template in
+                    let samplePlant = SproutPlantMO.insertNewPlant(using: template, into: context)
+                    samplePlant.nickname = "My Sample Plant \(index+1)"
 
-                            newPlant.addToCareTasks(newTask)
+                    // Add a task
+                    let schedule: SproutCareTaskSchedule = {
+                        let recurrenceRule: SproutCareTaskRecurrenceRule
+                        switch index {
+                        case 0:
+                            recurrenceRule = SproutCareTaskRecurrenceRule.daily(1)
+                        case 1:
+                            recurrenceRule = SproutCareTaskRecurrenceRule.weekly(1, [2,4,6])
+                        case 2:
+                            recurrenceRule = SproutCareTaskRecurrenceRule.monthly(1, [1, 15])
+                        default:
+                            recurrenceRule = SproutCareTaskRecurrenceRule.daily(7)
+                        }
 
-                            do {
-                                if context.hasChanges {
-                                    try context.save()
-                                }
-                            } catch {
-                                print("Unable to save context: \(error)")
-                                context.rollback()
-                            }
-                        })
-                    }
+                        return SproutCareTaskSchedule(startDate: Date(), recurrenceRule: recurrenceRule)!
+                    }()
+
+                    let sampleTask = SproutCareTaskMO.insertNewTask(of: .watering, into: context)
+                    sampleTask.schedule = schedule
+                    sampleTask.markAs(.due)
+
+                    sampleTask.careInformation?.plant = samplePlant
+                    samplePlant.addToCareTasks(sampleTask)
                 }
+            }
+
+            do {
+                try context.saveIfNeeded()
             } catch {
-                print("Unable to load sample data. ")
-                context.rollback()
+                print("Unable to save changes to background context: \(error)")
             }
         }
     }
@@ -146,14 +98,7 @@ class StorageProvider {
 
 extension StorageProvider {
     func saveContext() {
-        if editingContext.hasChanges {
-            do {
-                try editingContext.save()
-            } catch {
-                editingContext.rollback()
-            }
-        }
-
+        try? editingContext.saveIfNeeded()
         persistentContainer.saveContextIfNeeded()
     }
 }

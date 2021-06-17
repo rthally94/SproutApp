@@ -71,7 +71,7 @@ private extension PlantDetailViewController {
 
         enum Item: Hashable {
             case careTask(id: NSManagedObjectID)
-//            case careTask(image: UIImage? = nil, taskName: String, taskSchedule: String?)
+            //            case careTask(image: UIImage? = nil, taskName: String, taskSchedule: String?)
         }
     }
 }
@@ -158,11 +158,13 @@ private extension PlantDetailViewController {
         snapshot.appendSections(Section.allCases)
 
         // All Tasks
-        let items: [Item] = plant.allTasks.filter({ task in
-            task.historyLog == nil
-        }).map { task in
-            return Item.careTask(id: task.objectID)
-        }
+        let items: [Item] = plant.allCareInformation.compactMap({ info in
+            if let task = info.latestTask {
+                return Item.careTask(id: task.objectID)
+            } else {
+                return nil
+            }
+        })
 
         snapshot.appendItems(items, toSection: .tasks)
         return snapshot

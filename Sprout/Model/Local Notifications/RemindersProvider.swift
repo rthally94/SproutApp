@@ -13,26 +13,7 @@ class ReminderNotificationProvider: NSObject {
     let moc: NSManagedObjectContext
     
     @Published var data: [Date: [SproutCareTaskMO]]?
-    private let request: NSFetchRequest<SproutCareTaskMO> = {
-        let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
-
-        let sortByDueDate = NSSortDescriptor(keyPath: \SproutCareTaskMO.dueDate, ascending: true)
-        let sortByPlantNickname = NSSortDescriptor(keyPath: \SproutCareTaskMO.plant?.nickname, ascending: true)
-        let sortByPlantCommonName = NSSortDescriptor(keyPath: \SproutCareTaskMO.plant?.commonName, ascending: true)
-
-        request.sortDescriptors = [
-            sortByDueDate,
-            sortByPlantNickname,
-            sortByPlantCommonName
-        ]
-
-        let isNotTemplatePredicate = NSPredicate(format: "%K == false", #keyPath(SproutCareTaskMO.isTemplate))
-        let isNotCompletedPredicate = NSPredicate(format: "%K == nil", #keyPath(SproutCareTaskMO.historyLog))
-        let isScheduledPredicate = NSPredicate(format: "%K == true && %K != nil", #keyPath(SproutCareTaskMO.hasSchedule), #keyPath(SproutCareTaskMO.dueDate))
-        let predicates = [isNotTemplatePredicate, isNotCompletedPredicate, isScheduledPredicate].compactMap { $0 }
-        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
-        return request
-    }()
+    private let request = SproutCareTaskMO.remindersFetchRequest()
 
     init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext

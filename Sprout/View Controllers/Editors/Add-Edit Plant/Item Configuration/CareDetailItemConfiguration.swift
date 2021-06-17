@@ -27,16 +27,23 @@ struct CareDetailItemConfiguration: Hashable {
 }
 
 extension CareDetailItemConfiguration {
-    init(careTask: SproutCareTaskMO, handler: (() -> Void)?) {
-        let scheduleFormatter = Utility.careScheduleFormatter
+    init(careTask task: SproutCareTaskMO, handler: (() -> Void)?) {
+        let iconName = task.careInformation?.icon ?? ""
+        let taskIcon = UIImage(named: iconName) ?? UIImage(systemName: iconName) ?? UIImage(systemName: "list.bullet.rectangle")
 
+        let scheduleFormatter = Utility.careScheduleFormatter
         var subtitleText: String?
-        if careTask.isTemplate {
-            subtitleText = "Configure"
-        } else if let schedule = careTask.schedule {
+        if let schedule = task.schedule {
             subtitleText = scheduleFormatter.string(from: schedule)
         }
 
-        self.init(image: careTask.taskTypeProperties?.icon, title: careTask.taskTypeProperties?.displayName, subtitle: subtitleText, handler: handler)
+        self.init(image: taskIcon, title: task.careInformation?.type?.capitalized, subtitle: subtitleText, handler: handler)
+    }
+
+    init(careInformation careInfo: SproutCareInformationMO, handler: (() -> Void)? ) {
+        let iconName = careInfo.icon ?? ""
+        let taskIcon = UIImage(named: iconName) ?? UIImage(systemName: iconName) ?? UIImage(systemName: "list.bullet.rectangle")
+
+        self.init(image: taskIcon, title: careInfo.type?.capitalized, subtitle: "Configure", handler: handler)
     }
 }
