@@ -9,11 +9,11 @@ import UIKit
 import CoreGraphics
 
 struct SproutIconConfiguration: Hashable {
-    private static let placeholderImage = UIImage(systemName: "photo.on.rectangle.angled")!
+    private static let placeholderImage = UIImage.PlaceholderPlantImage
     private static let placeholderColor = UIColor.systemGray
     private static let placeholderSymbolConfiguration = UIImage.SymbolConfiguration(textStyle: .largeTitle)
 
-    var image: UIImage? {
+    var image: UIImage? = SproutIconConfiguration.placeholderImage {
         didSet {
             if image == nil {
                 image = SproutIconConfiguration.placeholderImage
@@ -21,7 +21,7 @@ struct SproutIconConfiguration: Hashable {
         }
     }
 
-    var symbolConfiguration: UIImage.SymbolConfiguration? {
+    var symbolConfiguration: UIImage.SymbolConfiguration? = SproutIconConfiguration.placeholderSymbolConfiguration {
         didSet {
             if symbolConfiguration == nil {
                 symbolConfiguration = SproutIconConfiguration.placeholderSymbolConfiguration
@@ -29,7 +29,7 @@ struct SproutIconConfiguration: Hashable {
         }
     }
 
-    var tintColor: UIColor? {
+    var tintColor: UIColor? = SproutIconConfiguration.placeholderColor {
         didSet {
             if tintColor == nil {
                 tintColor = SproutIconConfiguration.placeholderColor
@@ -37,14 +37,14 @@ struct SproutIconConfiguration: Hashable {
         }
     }
     
-    var cornerStyle: SproutIconView.CornerStyle = .roundedRect
+    var cornerStyle: SproutIconView.CornerStyle = .circle
     
     func cornerRadius(rect: CGRect) -> CGFloat {
         switch cornerStyle {
         case .circle:
             return min(rect.width, rect.height) / 2
         case .roundedRect:
-            return min(rect.width, rect.height) / 4
+            return min(rect.width, rect.height) / 10
         default:
             return 0
         }

@@ -22,7 +22,7 @@ class UpNextViewController: UIViewController {
 
     lazy var collectionView: UICollectionView = { [unowned self] in
         let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        cv.backgroundColor = .clear
+        cv.backgroundColor = .systemBackground
         cv.delegate = self
         return cv
     }()
@@ -95,27 +95,19 @@ class UpNextViewController: UIViewController {
 
 private extension UpNextViewController {
     func makeLayout() -> UICollectionViewLayout {
-        var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
+        var config = UICollectionLayoutListConfiguration(appearance: .sidebar)
+        config.backgroundColor = .systemBackground
         config.headerMode = .supplementary
         return UICollectionViewCompositionalLayout.list(using: config)
     }
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {
         UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {[unowned self] cell, indexPath, item in
-            guard let task = self.viewModel.task(witID: item), let plant = task.plant else { return }
+            guard let task = self.viewModel.task(witID: item), let plantID = task.plant?.objectID, let plant = self.viewModel.plant(withID: plantID) else { return }
+            let viewModel = UpNextItem(task: task, plant: plant)
 
-            let daysLate: Int
-            if let dueDate = task.dueDate, let daysTilToday = Calendar.current.dateComponents([.day], from: Date(), to: dueDate).day, daysTilToday >= 0 {
-                daysLate = daysTilToday
-            } else {
-                daysLate = 0
-            }
-
-            let scheduleText = Utility.careScheduleFormatter.string(for: task.schedule)
-
-            cell.updateWithText(plant.primaryDisplayName, secondaryText: scheduleText, image: plant.icon, daysLate: daysLate)
-
-            let isChecked = task.markStatus == .done
+            cell.updateWithText(viewModel.title, subtitle: viewModel.subtitle, image: viewModel.plantIcon, valueImage: viewModel.scheduleIcon, valueText: viewModel.schedule)
+            let isChecked = viewModel.isChecked
 
             if isChecked {
                 cell.accessories = [ .checkmark() ]
@@ -138,7 +130,6 @@ private extension UpNextViewController {
 
             guard let date = Utility.ISODateFormatter.date(from: section) else { return }
             configuration.text = Utility.relativeDateFormatter.string(from: date)
-            //            configuration.secondaryText = itemCount == 1 ? "\(itemCount) task" : "\(itemCount) tasks"
             cell.contentConfiguration = configuration
         }
     }

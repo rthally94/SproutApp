@@ -121,18 +121,21 @@ class TaskEditorViewController: UIViewController {
     }
 
     func setRecurrenceValue(to newValue: Set<Int>) {
+        let newRule: SproutCareTaskRecurrenceRule
         switch task.recurrenceRule {
         case let .weekly(interval, _):
-            task.recurrenceRule = .weekly(interval, newValue)
+            newRule = .weekly(interval, newValue)
         case let .monthly(interval, _):
-            task.recurrenceRule = .monthly(interval, newValue)
+            newRule = .monthly(interval, newValue)
         default:
             return
         }
 
-        delegate?.taskEditor(self, didUpdateTask: task)
-
-        applyMainSnapshot()
+        if let startDate = task.schedule?.startDate {
+            task.schedule = SproutCareTaskSchedule(startDate: startDate, recurrenceRule: newRule)
+            delegate?.taskEditor(self, didUpdateTask: task)
+            applyMainSnapshot()
+        }
     }
 }
 

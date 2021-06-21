@@ -19,8 +19,9 @@ struct SproutCareTaskSchedule {
     }
 
     init?(startDate: Date, recurrenceRule: SproutCareTaskRecurrenceRule) {
-        guard let nextDate = recurrenceRule.nextDate(after: startDate) else { return nil }
-        self.init(startDate: startDate, dueDate: nextDate, recurrenceRule: recurrenceRule)
+        guard let nextPossibleDate = recurrenceRule.nextDate(after: Date()) else { return nil }
+
+        self.init(startDate: startDate, dueDate: nextPossibleDate, recurrenceRule: recurrenceRule)
     }
 
     init(startDate: Date, dueDate: Date, recurrenceRule: SproutCareTaskRecurrenceRule?) {

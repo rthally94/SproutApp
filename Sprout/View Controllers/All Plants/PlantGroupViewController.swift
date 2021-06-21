@@ -22,7 +22,7 @@ class PlantGroupViewController: UIViewController {
     
     lazy var collectionView: UICollectionView = { [unowned self] in
         let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        cv.backgroundColor = .clear
+        cv.backgroundColor = .systemGroupedBackground
         cv.delegate = self
         return cv
     }()
@@ -108,7 +108,7 @@ extension PlantGroupViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<SproutCardCell, Item> {
         return UICollectionView.CellRegistration<SproutCardCell, Item>() {[unowned self] cell, indexPath, item in
             guard let plant = self.viewModel.plant(withID: item) else { return }
-            cell.image = plant.icon
+            cell.image = plant.icon ?? UIImage.PlaceholderPlantImage
             cell.text = plant.primaryDisplayName
         }
     }
@@ -128,6 +128,20 @@ extension PlantGroupViewController {
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         viewModel.selectPlant(at: indexPath)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
+            let editAction = UIAction(title: "Edit Plant", image: UIImage(systemName: "pencil")) { action in
+                print("I should edit the plant")
+            }
+
+            let deleteAction = UIAction(title: "Delete Plant", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { action in
+                print("I should delete the plant")
+            }
+
+            return UIMenu(title: "", children: [editAction, deleteAction])
+        }
     }
 }
 

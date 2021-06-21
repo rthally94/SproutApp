@@ -11,7 +11,7 @@ final class SproutCareTaskMO: NSManagedObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
 
-        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutPlantMO.id))
+        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutPlantMO.identifier))
         setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.creationDate))
         setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.lastModifiedDate))
     }
@@ -40,12 +40,16 @@ extension SproutCareTaskMO {
         set {
             hasSchedule = newValue != nil
             startDate = newValue?.startDate
+
+
             dueDate = newValue?.dueDate
             recurrenceRule = newValue?.recurrenceRule
+
+            updateStatusProperties(for: markStatus)
         }
     }
 
-    var recurrenceRule: SproutCareTaskRecurrenceRule? {
+    private(set) var recurrenceRule: SproutCareTaskRecurrenceRule? {
         get {
             switch recurrenceFrequency {
             case "daily":
@@ -121,7 +125,7 @@ extension SproutCareTaskMO {
     @discardableResult private static func insertNewTask(into context: NSManagedObjectContext) -> SproutCareTaskMO {
         let newTask = SproutCareTaskMO(context: context)
         newTask.schedule = nil
-        newTask.markAs(.due)
+        newTask.updateStatusProperties(for: .due)
         return newTask
     }
 
@@ -136,10 +140,10 @@ extension SproutCareTaskMO {
 extension SproutCareTaskMO {
     static func upNextFetchRequest(includesCompleted: Bool = false) -> NSFetchRequest<SproutCareTaskMO> {
         let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
-        let sortByTaskType = NSSortDescriptor(keyPath: \SproutCareTaskMO.careInformation?.type, ascending: true)
         let sortByDisplayDate = NSSortDescriptor(keyPath: \SproutCareTaskMO.statusDate, ascending: true)
+        let sortByTaskType = NSSortDescriptor(keyPath: \SproutCareTaskMO.careInformation?.type, ascending: true)
         let sortByPlantName = NSSortDescriptor(keyPath: \SproutCareTaskMO.plant?.nickname, ascending: true)
-        request.sortDescriptors = [sortByTaskType, sortByDisplayDate, sortByPlantName]
+        request.sortDescriptors = [sortByDisplayDate, sortByTaskType, sortByPlantName]
 
         // Shows all tasks that are incomplete
         let isDuePredicate = NSPredicate(format: "%K == %@", #keyPath(SproutCareTaskMO.status), SproutMarkStatus.due.rawValue)

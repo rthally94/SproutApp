@@ -32,6 +32,15 @@ class SproutHeroView: UIView {
         setupViews()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        iconView.layer.shadowColor = UIColor.black.cgColor
+        iconView.layer.shadowOpacity = 0.25
+        iconView.layer.shadowRadius = 1
+        iconView.layer.shadowOffset = CGSize(width: 2, height: 2)
+    }
+
     private func setupViews() {
         addSubview(backgroundImageView)
         addSubview(iconView)

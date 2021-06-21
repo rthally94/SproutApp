@@ -36,7 +36,10 @@ extension SproutPlantTemplate {
     ]
 
     static let sampleData: [SproutPlantTemplate] = [
-        SproutPlantTemplate(scientificName: "Ficus Lyrata", commonName: "Fiddle Leaf Fig")
+        SproutPlantTemplate(scientificName: "Ficus Lyrata", commonName: "Fiddle Leaf Fig"),
+        SproutPlantTemplate(scientificName: "Bromeliaceae", commonName: "Bromeliad"),
+        SproutPlantTemplate(scientificName: "Schefflera", commonName: "Umbrella Plant"),
+        SproutPlantTemplate(scientificName: "Pilea Peperomiodies", commonName: "Chinese Money Plant"),
     ]
 }
 

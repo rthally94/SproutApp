@@ -75,12 +75,11 @@ class StorageProvider {
                             recurrenceRule = SproutCareTaskRecurrenceRule.daily(7)
                         }
 
-                        return SproutCareTaskSchedule(startDate: Date(), recurrenceRule: recurrenceRule)!
+                        return SproutCareTaskSchedule(startDate: Calendar.current.startOfDay(for: Date()), recurrenceRule: recurrenceRule)!
                     }()
 
                     let sampleTask = SproutCareTaskMO.insertNewTask(of: .watering, into: context)
                     sampleTask.schedule = schedule
-                    sampleTask.markAs(.due)
 
                     sampleTask.careInformation?.plant = samplePlant
                     samplePlant.addToCareTasks(sampleTask)

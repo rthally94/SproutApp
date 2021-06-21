@@ -69,23 +69,23 @@ class CareRecurrenceRuleFormatter: Formatter {
         switch rule {
         case .daily(let interval):
             frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
-            valueText = intervalSymbol(for: interval, frequency: rule, style: frequencyStyle, context: formattingContext)
+            valueText = intervalSymbol(for: interval, frequency: rule, style: valuesStyle, context: formattingContext)
 
         case .weekly(let interval, let weekdays) where interval == 1 && weekdays?.isEmpty == false:
             frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
-            valueText = daysOfTheWeekSymbol(for: weekdays!, style: frequencyStyle, context: formattingContext)
+            valueText = daysOfTheWeekSymbol(for: weekdays!, style: valuesStyle, context: formattingContext)
 
         case .weekly(let interval, _):
             frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
-            valueText = intervalSymbol(for: interval, frequency: rule, style: frequencyStyle, context: formattingContext)
+            valueText = intervalSymbol(for: interval, frequency: rule, style: valuesStyle, context: formattingContext)
 
         case .monthly(let interval, let days) where interval == 1 && days?.isEmpty == false:
             frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
-            valueText = daysOfTheMonthSymbol(for: days!, style: frequencyStyle, context: formattingContext)
+            valueText = daysOfTheMonthSymbol(for: days!, style: valuesStyle, context: formattingContext)
 
         case .monthly(let interval, _):
             frequencyText = frequencySymbol(for: rule, style: frequencyStyle, context: formattingContext)
-            valueText = intervalSymbol(for: interval, frequency: rule, style: frequencyStyle, context: formattingContext)
+            valueText = intervalSymbol(for: interval, frequency: rule, style: valuesStyle, context: formattingContext)
         }
 
         let ruleString: String
@@ -169,24 +169,34 @@ class CareRecurrenceRuleFormatter: Formatter {
     }
 
     private func regularIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {
-        return "Every " + shortIntervalSymbol(for: interval, frequency: frequency)
+        return "Every " + (interval == 1 ? "Day" : shortIntervalSymbol(for: interval, frequency: frequency))
     }
 
     private func shortIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {
-        let dateComponents: DateComponents
+        let formatter = Utility.dateComponentsFormatter
+
+        let returnString: String
         switch frequency {
+        case .daily where interval == 1:
+            returnString = "Day"
         case .daily:
-            dateComponents = DateComponents(day: interval)
+            formatter.allowedUnits = .day
+            let dateComponents = DateComponents(day: interval)
+            returnString = formatter.string(from: dateComponents) ?? ""
         case .weekly:
-            dateComponents = DateComponents(weekOfYear: interval)
+            formatter.allowedUnits = .weekday
+            let dateComponents = DateComponents(weekOfYear: interval)
+            returnString = formatter.string(from: dateComponents) ?? ""
         case .monthly:
-            dateComponents = DateComponents(year: interval)
-        default: dateComponents = DateComponents()
+            formatter.allowedUnits = .day
+            let dateComponents = DateComponents(year: interval)
+            returnString = formatter.string(from: dateComponents) ?? ""
+        default:
+            returnString = ""
+
         }
 
-        let returnString = Utility.dateComponentsFormatter.string(from: dateComponents)
-        assert(returnString != nil)
-        return returnString ?? ""
+        return returnString
     }
 
     private func regularStandaloneIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {

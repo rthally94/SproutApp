@@ -18,10 +18,12 @@ struct SproutCareTaskCellViewModel {
         self.image = image
     }
 
-    init(careTask: SproutCareTaskMO) {
+    init(careTask task: SproutCareTaskMO) {
+        let name = task.careInformation?.type?.capitalized ?? "TASK TYPE NAME"
+        let icon = task.careInformation?.iconImage
         let formatter = Utility.careScheduleFormatter
-        let scheduleText = formatter.string(for: careTask.schedule)
+        let scheduleText = formatter.string(for: task.schedule)
 
-        self.init(title: careTask.taskTypeProperties?.displayName, subtitle: scheduleText, image: careTask.taskTypeProperties?.icon)
+        self.init(title: name, subtitle: scheduleText, image: icon)
     }
 }

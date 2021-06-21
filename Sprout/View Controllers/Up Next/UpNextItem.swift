@@ -20,24 +20,28 @@ struct UpNextItem: Hashable {
     }
 
     var subtitle: String? {
-        if let schedule = task.schedule {
+        task.careInformation?.type?.capitalized
+    }
+
+    var schedule: String? {
+        guard let schedule = task.schedule else { return nil }
+
+        switch task.recurrenceRule {
+        case .daily:
+            scheduleFormatter.frequencyStyle = .none
+            return "Every " + scheduleFormatter.string(from: schedule)
+        default:
+            scheduleFormatter.frequencyStyle = .short
             return scheduleFormatter.string(from: schedule)
-        } else {
-            return nil
         }
     }
 
-    var icon: UIImage? {
-        return plant.icon
+    var plantIcon: UIImage? {
+        return plant.icon ?? UIImage.PlaceholderPlantImage
     }
 
-    var daysLate: Int? {
-        guard task.hasSchedule == false,
-              let dueDate = task.dueDate,
-              let daysLate = Calendar.current.dateComponents([.day], from: dueDate, to: Date()).day
-        else { return nil }
-
-        return daysLate < 0 ? 0 : daysLate
+    var scheduleIcon: UIImage? {
+        return task.hasSchedule ? UIImage(systemName: "bell.fill") : UIImage(systemName: "bell.slash")
     }
 
     var isChecked: Bool {
@@ -55,8 +59,8 @@ extension UpNextItem {
         hasher.combine(title)
         hasher.combine(subtitle)
         hasher.combine(isChecked)
-        hasher.combine(icon)
-        hasher.combine(daysLate)
+        hasher.combine(plantIcon)
+        hasher.combine(schedule)
         hasher.combine(plant.id)
         hasher.combine(task.id)
     }
@@ -65,8 +69,8 @@ extension UpNextItem {
         lhs.title == rhs.title
             && lhs.subtitle == rhs.subtitle
             && lhs.isChecked == rhs.isChecked
-            && lhs.icon == rhs.icon
-            && lhs.daysLate == rhs.daysLate
+            && lhs.plantIcon == rhs.plantIcon
+            && lhs.schedule == rhs.schedule
             && lhs.plant.id == rhs.plant.id
             && lhs.task.id == rhs.task.id
     }

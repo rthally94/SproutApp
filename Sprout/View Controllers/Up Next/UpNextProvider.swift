@@ -16,7 +16,7 @@ class UpNextProvider: NSObject {
 
     var doesShowCompletedTasks: Bool = false {
         didSet {
-            fetchedResultsController.fetchRequest.predicate = makePredicate()
+            fetchedResultsController = makeFRC()
             try? fetchedResultsController.performFetch()
         }
     }
@@ -25,10 +25,7 @@ class UpNextProvider: NSObject {
         self.moc = managedObjectContext
         super.init()
 
-        let request = makeFetchRequest()
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.statusDate), cacheName: nil)
-
-        fetchedResultsController.delegate = self
+        fetchedResultsController = makeFRC()
         try! fetchedResultsController.performFetch()
     }
 
@@ -45,8 +42,11 @@ class UpNextProvider: NSObject {
         return moc.object(with: id) as? SproutPlantMO
     }
 
-    private func makeFetchRequest() -> NSFetchRequest<SproutCareTaskMO> {
-        SproutCareTaskMO.upNextFetchRequest()
+    private func makeFRC() -> NSFetchedResultsController<SproutCareTaskMO> {
+        let request = SproutCareTaskMO.upNextFetchRequest()
+        let controller: NSFetchedResultsController<SproutCareTaskMO> = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.statusDate), cacheName: nil)
+        controller.delegate = self
+        return controller
     }
 }
 
@@ -70,10 +70,5 @@ extension UpNextProvider: NSFetchedResultsControllerDelegate {
         newSnapshot.reloadItems(idsToReload)
         self.snapshot = newSnapshot
     }
-}
-
-
-private extension SproutCareTaskMO {
-
 }
 

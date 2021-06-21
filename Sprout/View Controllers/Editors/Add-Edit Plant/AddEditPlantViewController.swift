@@ -112,7 +112,7 @@ class AddEditPlantViewController: UICollectionViewController {
     private func showPlantTypePicker() {
         let vc = PlantTypePickerViewController()
         vc.persistentContainer = storageProvider.persistentContainer
-        vc.selectedType =
+        vc.selectedType = plant?.plantTemplate
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -352,7 +352,7 @@ extension AddEditPlantViewController {
                 }
                 return Item.careDetail(config)
             } else {
-                
+                return nil
             }
         }
 
@@ -564,11 +564,7 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
         guard let image = info[.originalImage] as? UIImage else { return }
 
         // Apply the new selected image
-        do {
-            try plant?.setImage(image)
-        } catch {
-            print("Error setting image: \(error)")
-        }
+        plant?.icon = image
 
         updateUI()
         dismiss(animated: true)
@@ -578,11 +574,8 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
 // MARK: - Plant Type Picker Delegate
 
 extension AddEditPlantViewController: PlantTypePickerDelegate {
-    func plantTypePicker(_: PlantTypePickerViewController, didSelectType plantType: SproutPlantMO) {
-        editingContext.performAndWait { [unowned self] in
-            plant?.scientificName = plantType.scientificName
-            plant?.commonName = plantType.commonName
-        }
+    func plantTypePicker(_: PlantTypePickerViewController, didSelectType plantType: SproutPlantTemplate) {
+        plant?.plantTemplate = plantType
         updateUI()
     }
 }

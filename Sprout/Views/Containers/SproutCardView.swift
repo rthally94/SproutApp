@@ -8,25 +8,15 @@
 import UIKit
 
 class SproutCardView: UIView {
-    let imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        return imageView
-    }()
+    let plantIconView = SproutIconView()
 
     let textLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .headline)
-        label.numberOfLines = 1
+        label.numberOfLines = 2
+        label.textAlignment = .center
         label.lineBreakMode = .byTruncatingTail
         return label
-    }()
-
-    let blurView: UIView = {
-        let view = UIView()
-        view.blurBackground(style: .systemThinMaterial)
-        return view
     }()
 
     override init(frame: CGRect) {
@@ -39,30 +29,22 @@ class SproutCardView: UIView {
         setupViews()
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        blurView.clipsToBounds = true
-        blurView.layer.cornerRadius = 6
-    }
-
     private func setupViews() {
-        addSubview(imageView)
-        addSubview(blurView)
-        blurView.addSubview(textLabel)
+        addSubview(plantIconView)
+        addSubview(textLabel)
 
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        blurView.translatesAutoresizingMaskIntoConstraints = false
+        plantIconView.translatesAutoresizingMaskIntoConstraints = false
         textLabel.translatesAutoresizingMaskIntoConstraints = false
 
-
-        imageView.pinToBoundsOf(self)
-        textLabel.pinToLayoutMarginsOf(blurView)
         NSLayoutConstraint.activate([
-            blurView.leadingAnchor.constraint(equalTo: layoutMarginsGuide.leadingAnchor),
-            blurView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor),
-            blurView.trailingAnchor.constraint(equalTo: layoutMarginsGuide.trailingAnchor),
-            blurView.heightAnchor.constraint(equalToConstant: 44)
+            plantIconView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            plantIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            plantIconView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.75),
+
+            textLabel.topAnchor.constraint(equalToSystemSpacingBelow: plantIconView.bottomAnchor, multiplier: 1.0),
+            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            textLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
+            textLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
 }

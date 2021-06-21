@@ -61,7 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }()
 
         if notificationsAreEnabled != taskNotificationManager.areNotificationsEnabled ||  notificationTimeComponents != taskNotificationManager.scheduledTimeComponents {
-            taskNotificationManager.registerForNotifications()
+            taskNotificationManager.startNotifications()
         } else {
             print("User has disabled notifications in settings")
             taskNotificationManager.stopNotifications()

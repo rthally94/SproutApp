@@ -12,7 +12,7 @@ final class SproutPlantMO: NSManagedObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
 
-        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutPlantMO.id))
+        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutPlantMO.identifier))
         setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.creationDate))
         setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.lastModifiedDate))
     }
@@ -71,6 +71,25 @@ extension SproutPlantMO {
         get {
             let infoSet = careInformation as? Set<SproutCareInformationMO>
             return infoSet?.sorted(by: { $0.type < $1.type } ) ?? []
+        }
+    }
+
+    var plantTemplate: SproutPlantTemplate? {
+        get {
+            if let existing = SproutPlantTemplate.allTypes.first(where: { template in
+                template.scientificName == scientificName
+                    && template.commonName == commonName
+            }) {
+                return existing
+            } else if let scientificName = scientificName, let commonName = commonName {
+                return SproutPlantTemplate(scientificName: scientificName, commonName: commonName)
+            } else {
+                return nil
+            }
+        }
+        set {
+            scientificName = newValue?.scientificName
+            commonName = newValue?.commonName
         }
     }
 }

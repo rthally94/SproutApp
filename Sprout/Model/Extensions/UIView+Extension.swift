@@ -51,4 +51,13 @@ extension UIView {
         insertSubview(blurEffectView, at: 0)
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
+
+    static var spacer: UIView {
+        let view = UIView()
+
+        view.setContentHuggingPriority(.defaultLow-10, for: .vertical)
+        view.setContentHuggingPriority(.defaultLow-10, for: .horizontal)
+
+        return view
+    }
 }

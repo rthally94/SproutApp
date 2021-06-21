@@ -15,12 +15,12 @@
 		FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */; };
 		FB28A8E82649A2DE00B1206E /* SproutChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8E72649A2DE00B1206E /* SproutChipView.swift */; };
 		FB28A8ED264AB7D700B1206E /* CareScheduleFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */; };
+		FB2BE149267CCDC100B26911 /* UIImage+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2BE148267CCDC100B26911 /* UIImage+Constants.swift */; };
 		FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D639266D680600FA9FA1 /* SproutBlurredHeaderView.swift */; };
 		FB43D640266DB4BE00FA9FA1 /* DetailHeroReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D63F266DB4BE00FA9FA1 /* DetailHeroReusableView.swift */; };
 		FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D644266E665E00FA9FA1 /* UserDefaults+Extensions.swift */; };
 		FB43D647266E70BD00FA9FA1 /* Date+RawRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */; };
 		FB4FAB09265EDE7C001A9201 /* HashableClosure.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4FAB08265EDE7C001A9201 /* HashableClosure.swift */; };
-		FB5CB848267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB847267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel */; };
 		FB5CB84E2672624E00A7F60E /* ModelStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB84D2672624E00A7F60E /* ModelStore.swift */; };
 		FB5CB85726726B0600A7F60E /* DayOfWeekPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85626726B0600A7F60E /* DayOfWeekPicker.swift */; };
 		FB5CB85926728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85826728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift */; };
@@ -39,32 +39,21 @@
 		FB6CD65A2657EADD00D7DE82 /* TaskNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6CD6592657EADD00D7DE82 /* TaskNotificationManager.swift */; };
 		FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */; };
 		FB76D341262A592500D00036 /* SproutCareDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB76D340262A592500D00036 /* SproutCareDetailView.swift */; };
-		FB7ED5092614D111008FD1BE /* UIImageTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */; };
-		FB7ED5192615260F008FD1BE /* StorageProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB7ED5182615260F008FD1BE /* StorageProvider.swift */; };
 		FB92AF66262E093D0062DE47 /* SproutCareDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF65262E093D0062DE47 /* SproutCareDetailCell.swift */; };
 		FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */; };
 		FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B94226645BD800629C1B /* SproutLabel.swift */; };
 		FB98B9452667C1C500629C1B /* Notification+CustomNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B9442667C1C500629C1B /* Notification+CustomNames.swift */; };
-		FB98B94826681F3600629C1B /* SproutDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FB98B94626681F3600629C1B /* SproutDataModel.xcdatamodeld */; };
 		FB98B95126691E7500629C1B /* SproutCareTaskSchedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B95026691E7500629C1B /* SproutCareTaskSchedule.swift */; };
 		FB98B95326695C3200629C1B /* Optional+Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B95226695C3200629C1B /* Optional+Comparable.swift */; };
 		FB9C66AA263A539D00CDC15A /* SproutCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9C66A9263A539D00CDC15A /* SproutCardView.swift */; };
-		FB9CF97C267A3C94001CB7B2 /* SproutImageDataMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9CF97B267A3C94001CB7B2 /* SproutImageDataMO.swift */; };
-		FB9CF97E267A4C50001CB7B2 /* ManagedMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9CF97D267A4C50001CB7B2 /* ManagedMetadata.swift */; };
-		FB9CF980267A4F52001CB7B2 /* SproutCareTaskMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9CF97F267A4F52001CB7B2 /* SproutCareTaskMO.swift */; };
-		FB9CF982267A4F7B001CB7B2 /* SproutCareInformationMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9CF981267A4F7B001CB7B2 /* SproutCareInformationMO.swift */; };
 		FB9CF984267B7B15001CB7B2 /* SproutCareTaskRecurrenceRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9CF983267B7B15001CB7B2 /* SproutCareTaskRecurrenceRule.swift */; };
 		FB9CF986267B7B34001CB7B2 /* SproutCareTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9CF985267B7B34001CB7B2 /* SproutCareTypes.swift */; };
 		FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* SproutButtonCell.swift */; };
 		FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */; };
-		FBAF464E2641FE5000854D2C /* CareRecurrenceRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF464D2641FE5000854D2C /* CareRecurrenceRuleTests.swift */; };
-		FBAF46542642087600854D2C /* CareInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF46532642087600854D2C /* CareInfoTests.swift */; };
 		FBB03C122637781C00F7F364 /* SproutHeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C112637781C00F7F364 /* SproutHeroView.swift */; };
 		FBB75BBF264AFBB3000CC823 /* SproutPlantTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB75BBE264AFBB3000CC823 /* SproutPlantTemplate.swift */; };
-		FBC435762678EA77002CABCD /* Managed.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC435752678EA77002CABCD /* Managed.swift */; };
 		FBC4357A2678EF21002CABCD /* UIImage+Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC435792678EF21002CABCD /* UIImage+Thumbnail.swift */; };
 		FBC4358026790989002CABCD /* SproutMarkStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC4357F26790989002CABCD /* SproutMarkStatus.swift */; };
-		FBC43587267926AF002CABCD /* SproutPlantMO.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC43586267926AF002CABCD /* SproutPlantMO.swift */; };
 		FBC7330325DDB4F00048999C /* SproutIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330225DDB4F00048999C /* SproutIconCell.swift */; };
 		FBCA565326740BFC008DBFFC /* PlantGroupSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562926740BFC008DBFFC /* PlantGroupSection.swift */; };
 		FBCA565426740BFC008DBFFC /* PlantsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562A26740BFC008DBFFC /* PlantsProvider.swift */; };
@@ -129,13 +118,30 @@
 		FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIListContentConfiguration+Extension.swift"; sourceTree = "<group>"; };
 		FB28A8E72649A2DE00B1206E /* SproutChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutChipView.swift; sourceTree = "<group>"; };
 		FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareScheduleFormatter.swift; sourceTree = "<group>"; };
+		FB2BE148267CCDC100B26911 /* UIImage+Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Constants.swift"; sourceTree = "<group>"; };
+		FB434E362680AEEF00B3F737 /* SproutDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SproutDataModel.xcdatamodel; sourceTree = "<group>"; };
+		FB434E372680AEEF00B3F737 /* SproutDataModel-v1.0.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SproutDataModel-v1.0.1.xcdatamodel"; sourceTree = "<group>"; };
+		FB434E382680AEEF00B3F737 /* SproutDataModel-v1.0.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SproutDataModel-v1.0.2.xcdatamodel"; sourceTree = "<group>"; };
+		FB434E3A2680AEEF00B3F737 /* GreenHouseDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = GreenHouseDataModel.xcdatamodel; sourceTree = "<group>"; };
+		FB434E3B2680AEEF00B3F737 /* StorageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProvider.swift; sourceTree = "<group>"; };
+		FB434E3D2680AEEF00B3F737 /* ManagedMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedMetadata.swift; sourceTree = "<group>"; };
+		FB434E3E2680AEF000B3F737 /* Managed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Managed.swift; sourceTree = "<group>"; };
+		FB434E402680AEF000B3F737 /* UIImageTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageTransformer.swift; sourceTree = "<group>"; };
+		FB434E422680AEF000B3F737 /* SproutCareTaskMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTaskMO.swift; sourceTree = "<group>"; };
+		FB434E432680AEF000B3F737 /* SproutImageDataMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutImageDataMO.swift; sourceTree = "<group>"; };
+		FB434E442680AEF000B3F737 /* SproutCareInformationMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareInformationMO.swift; sourceTree = "<group>"; };
+		FB434E452680AEF000B3F737 /* SproutPlantMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutPlantMO.swift; sourceTree = "<group>"; };
+		FB434E472680AEF000B3F737 /* SproutDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SproutDataModel.xcdatamodel; sourceTree = "<group>"; };
+		FB434E482680AEF000B3F737 /* SproutDataModel-v1.0.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SproutDataModel-v1.0.1.xcdatamodel"; sourceTree = "<group>"; };
+		FB434E492680AEF000B3F737 /* SproutDataModel-v1.0.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SproutDataModel-v1.0.2.xcdatamodel"; sourceTree = "<group>"; };
+		FB434E4A2680AEF000B3F737 /* SproutDataModel-v1.0.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; name = "SproutDataModel-v1.0.2.xcdatamodel"; path = "SproutDataModel/Sources/SproutDataModel/Core Data/SproutDataModel.xcdatamodeld/SproutDataModel-v1.0.2.xcdatamodel"; sourceTree = SOURCE_ROOT; };
+		FB434E4B2680AEF000B3F737 /* SproutDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; name = SproutDataModel.xcdatamodel; path = "SproutDataModel/Sources/SproutDataModel/Core Data/SproutDataModel.xcdatamodeld/SproutDataModel.xcdatamodel"; sourceTree = SOURCE_ROOT; };
+		FB434E4C2680AEF000B3F737 /* SproutDataModel-v1.0.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; name = "SproutDataModel-v1.0.1.xcdatamodel"; path = "SproutDataModel/Sources/SproutDataModel/Core Data/SproutDataModel.xcdatamodeld/SproutDataModel-v1.0.1.xcdatamodel"; sourceTree = SOURCE_ROOT; };
 		FB43D639266D680600FA9FA1 /* SproutBlurredHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutBlurredHeaderView.swift; sourceTree = "<group>"; };
 		FB43D63F266DB4BE00FA9FA1 /* DetailHeroReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailHeroReusableView.swift; sourceTree = "<group>"; };
 		FB43D644266E665E00FA9FA1 /* UserDefaults+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Extensions.swift"; sourceTree = "<group>"; };
 		FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+RawRepresentable.swift"; sourceTree = "<group>"; };
 		FB4FAB08265EDE7C001A9201 /* HashableClosure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableClosure.swift; sourceTree = "<group>"; };
-		FB5CB8442670F92400A7F60E /* SproutDataModel-v1.0.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SproutDataModel-v1.0.1.xcdatamodel"; sourceTree = "<group>"; };
-		FB5CB847267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; path = "SproutDataModel-1.0.0-1.0.1.xcmappingmodel"; sourceTree = "<group>"; };
 		FB5CB84D2672624E00A7F60E /* ModelStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelStore.swift; sourceTree = "<group>"; };
 		FB5CB85626726B0600A7F60E /* DayOfWeekPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekPicker.swift; sourceTree = "<group>"; };
 		FB5CB85826728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutDayOfWeekPickerCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -156,33 +162,21 @@
 		FB7490E825B1E71200925C29 /* SproutTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SproutTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB7490EC25B1E71200925C29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB76D340262A592500D00036 /* SproutCareDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareDetailView.swift; sourceTree = "<group>"; };
-		FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImageTransformer.swift; sourceTree = "<group>"; };
-		FB7ED5182615260F008FD1BE /* StorageProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageProvider.swift; sourceTree = "<group>"; };
 		FB92AF65262E093D0062DE47 /* SproutCareDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareDetailCell.swift; sourceTree = "<group>"; };
 		FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+DismissKeyboardGesture.swift"; sourceTree = "<group>"; };
 		FB98B94226645BD800629C1B /* SproutLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutLabel.swift; sourceTree = "<group>"; };
 		FB98B9442667C1C500629C1B /* Notification+CustomNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+CustomNames.swift"; sourceTree = "<group>"; };
-		FB98B94726681F3600629C1B /* SproutDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = SproutDataModel.xcdatamodel; sourceTree = "<group>"; };
 		FB98B95026691E7500629C1B /* SproutCareTaskSchedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTaskSchedule.swift; sourceTree = "<group>"; };
 		FB98B95226695C3200629C1B /* Optional+Comparable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Comparable.swift"; sourceTree = "<group>"; };
 		FB9C66A9263A539D00CDC15A /* SproutCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCardView.swift; sourceTree = "<group>"; };
-		FB9CF97B267A3C94001CB7B2 /* SproutImageDataMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutImageDataMO.swift; sourceTree = "<group>"; };
-		FB9CF97D267A4C50001CB7B2 /* ManagedMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedMetadata.swift; sourceTree = "<group>"; };
-		FB9CF97F267A4F52001CB7B2 /* SproutCareTaskMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTaskMO.swift; sourceTree = "<group>"; };
-		FB9CF981267A4F7B001CB7B2 /* SproutCareInformationMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareInformationMO.swift; sourceTree = "<group>"; };
 		FB9CF983267B7B15001CB7B2 /* SproutCareTaskRecurrenceRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTaskRecurrenceRule.swift; sourceTree = "<group>"; };
 		FB9CF985267B7B34001CB7B2 /* SproutCareTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareTypes.swift; sourceTree = "<group>"; };
 		FB9E8C58262D08B400514AAB /* SproutButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutButtonCell.swift; sourceTree = "<group>"; };
 		FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectBackgroundView.swift; sourceTree = "<group>"; };
-		FBAF464D2641FE5000854D2C /* CareRecurrenceRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareRecurrenceRuleTests.swift; sourceTree = "<group>"; };
-		FBAF46532642087600854D2C /* CareInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareInfoTests.swift; sourceTree = "<group>"; };
 		FBB03C112637781C00F7F364 /* SproutHeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutHeroView.swift; sourceTree = "<group>"; };
 		FBB75BBE264AFBB3000CC823 /* SproutPlantTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SproutPlantTemplate.swift; sourceTree = "<group>"; };
-		FBC435752678EA77002CABCD /* Managed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Managed.swift; sourceTree = "<group>"; };
 		FBC435792678EF21002CABCD /* UIImage+Thumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Thumbnail.swift"; sourceTree = "<group>"; };
 		FBC4357F26790989002CABCD /* SproutMarkStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutMarkStatus.swift; sourceTree = "<group>"; };
-		FBC4358326792136002CABCD /* SproutDataModel-v1.0.2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "SproutDataModel-v1.0.2.xcdatamodel"; sourceTree = "<group>"; };
-		FBC43586267926AF002CABCD /* SproutPlantMO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutPlantMO.swift; sourceTree = "<group>"; };
 		FBC7330225DDB4F00048999C /* SproutIconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIconCell.swift; sourceTree = "<group>"; };
 		FBCA562926740BFC008DBFFC /* PlantGroupSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantGroupSection.swift; sourceTree = "<group>"; };
 		FBCA562A26740BFC008DBFFC /* PlantsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantsProvider.swift; sourceTree = "<group>"; };
@@ -276,10 +270,11 @@
 		FB21B70C25B1E5D900D02384 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				FB434E342680AEEF00B3F737 /* Core Data */,
+				FB2BE147267CCDB400B26911 /* Constants */,
 				FB4FAB07265EDE68001A9201 /* Helpers */,
 				FB98B9542669792100629C1B /* Static Data */,
 				FB28A8EB264AB7C100B1206E /* Formatters */,
-				FB6661C72620938200DC8B04 /* Core Data */,
 				FB6C45FA25EFE9F0009ED947 /* Extensions */,
 				FB98B9552669794F00629C1B /* Local Notifications */,
 			);
@@ -294,6 +289,56 @@
 				FB28A8EC264AB7D700B1206E /* CareScheduleFormatter.swift */,
 			);
 			path = Formatters;
+			sourceTree = "<group>";
+		};
+		FB2BE147267CCDB400B26911 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				FB2BE148267CCDC100B26911 /* UIImage+Constants.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
+		FB434E342680AEEF00B3F737 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				FB434E3B2680AEEF00B3F737 /* StorageProvider.swift */,
+				FB434E352680AEEF00B3F737 /* SproutDataModel.xcdatamodeld */,
+				FB434E462680AEF000B3F737 /* SproutDataModel.xcdatamodeld */,
+				FB434E3C2680AEEF00B3F737 /* Protocols */,
+				FB434E412680AEF000B3F737 /* Managed Objects */,
+				FB434E3F2680AEF000B3F737 /* Value Transformers */,
+				FB434E392680AEEF00B3F737 /* GreenHouseDataModel.xcdatamodeld */,
+			);
+			path = "Core Data";
+			sourceTree = "<group>";
+		};
+		FB434E3C2680AEEF00B3F737 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				FB434E3E2680AEF000B3F737 /* Managed.swift */,
+				FB434E3D2680AEEF00B3F737 /* ManagedMetadata.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		FB434E3F2680AEF000B3F737 /* Value Transformers */ = {
+			isa = PBXGroup;
+			children = (
+				FB434E402680AEF000B3F737 /* UIImageTransformer.swift */,
+			);
+			path = "Value Transformers";
+			sourceTree = "<group>";
+		};
+		FB434E412680AEF000B3F737 /* Managed Objects */ = {
+			isa = PBXGroup;
+			children = (
+				FB434E452680AEF000B3F737 /* SproutPlantMO.swift */,
+				FB434E432680AEF000B3F737 /* SproutImageDataMO.swift */,
+				FB434E422680AEF000B3F737 /* SproutCareTaskMO.swift */,
+				FB434E442680AEF000B3F737 /* SproutCareInformationMO.swift */,
+			);
+			path = "Managed Objects";
 			sourceTree = "<group>";
 		};
 		FB43D63B266D918E00FA9FA1 /* Collection View Cells */ = {
@@ -323,14 +368,6 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		FB5CB8492671A2D500A7F60E /* Mapping Models */ = {
-			isa = PBXGroup;
-			children = (
-				FB5CB847267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel */,
-			);
-			path = "Mapping Models";
-			sourceTree = "<group>";
-		};
 		FB5CB85526726AEC00A7F60E /* Pickers */ = {
 			isa = PBXGroup;
 			children = (
@@ -353,19 +390,6 @@
 				FBE8FFE52674060100C9CCFF /* Backgrounds */,
 			);
 			path = Views;
-			sourceTree = "<group>";
-		};
-		FB6661C72620938200DC8B04 /* Core Data */ = {
-			isa = PBXGroup;
-			children = (
-				FB7ED5182615260F008FD1BE /* StorageProvider.swift */,
-				FB98B94626681F3600629C1B /* SproutDataModel.xcdatamodeld */,
-				FBC435722678E9C1002CABCD /* Protocols */,
-				FB98B949266858D700629C1B /* Managed Objects */,
-				FB5CB8492671A2D500A7F60E /* Mapping Models */,
-				FB98B94026629CDB00629C1B /* Value Transformers */,
-			);
-			path = "Core Data";
 			sourceTree = "<group>";
 		};
 		FB6C45FA25EFE9F0009ED947 /* Extensions */ = {
@@ -402,29 +426,8 @@
 			isa = PBXGroup;
 			children = (
 				FB7490EC25B1E71200925C29 /* Info.plist */,
-				FBAF464D2641FE5000854D2C /* CareRecurrenceRuleTests.swift */,
-				FBAF46532642087600854D2C /* CareInfoTests.swift */,
 			);
 			path = SproutTests;
-			sourceTree = "<group>";
-		};
-		FB98B94026629CDB00629C1B /* Value Transformers */ = {
-			isa = PBXGroup;
-			children = (
-				FB7ED5082614D111008FD1BE /* UIImageTransformer.swift */,
-			);
-			path = "Value Transformers";
-			sourceTree = "<group>";
-		};
-		FB98B949266858D700629C1B /* Managed Objects */ = {
-			isa = PBXGroup;
-			children = (
-				FBC43586267926AF002CABCD /* SproutPlantMO.swift */,
-				FB9CF97B267A3C94001CB7B2 /* SproutImageDataMO.swift */,
-				FB9CF97F267A4F52001CB7B2 /* SproutCareTaskMO.swift */,
-				FB9CF981267A4F7B001CB7B2 /* SproutCareInformationMO.swift */,
-			);
-			path = "Managed Objects";
 			sourceTree = "<group>";
 		};
 		FB98B9542669792100629C1B /* Static Data */ = {
@@ -469,15 +472,6 @@
 				FB92AF65262E093D0062DE47 /* SproutCareDetailCell.swift */,
 			);
 			path = "Sprout Cells";
-			sourceTree = "<group>";
-		};
-		FBC435722678E9C1002CABCD /* Protocols */ = {
-			isa = PBXGroup;
-			children = (
-				FBC435752678EA77002CABCD /* Managed.swift */,
-				FB9CF97D267A4C50001CB7B2 /* ManagedMetadata.swift */,
-			);
-			path = Protocols;
 			sourceTree = "<group>";
 		};
 		FBCA562726740BFC008DBFFC /* View Controllers */ = {
@@ -783,7 +777,6 @@
 				FBCA567A2674FB3C008DBFFC /* ListCellConfiguration.swift in Sources */,
 				FB5CB86226739F5D00A7F60E /* SproutDayOfMonthPickerCollectionViewCell.swift in Sources */,
 				FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */,
-				FB9CF97E267A4C50001CB7B2 /* ManagedMetadata.swift in Sources */,
 				FBCA565D26740BFC008DBFFC /* AddEditPlantViewController.swift in Sources */,
 				FBCA565526740BFC008DBFFC /* PlantGroupItem.swift in Sources */,
 				FB6661B2261F9CCF00DC8B04 /* NSPersistentContainer+Extensions.swift in Sources */,
@@ -792,6 +785,7 @@
 				FBCA566B26740BFC008DBFFC /* UpNextViewModel.swift in Sources */,
 				FBB75BBF264AFBB3000CC823 /* SproutPlantTemplate.swift in Sources */,
 				FBCA566526740BFC008DBFFC /* PlantTypesProvider.swift in Sources */,
+				FB2BE149267CCDC100B26911 /* UIImage+Constants.swift in Sources */,
 				FBCA568326757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift in Sources */,
 				FBCA566726740BFC008DBFFC /* TaskEditorViewController.swift in Sources */,
 				FBCA565326740BFC008DBFFC /* PlantGroupSection.swift in Sources */,
@@ -802,28 +796,23 @@
 				FB6C461725F1975F009ED947 /* UIColor+Extension.swift in Sources */,
 				FB98B95126691E7500629C1B /* SproutCareTaskSchedule.swift in Sources */,
 				FB9CF986267B7B34001CB7B2 /* SproutCareTypes.swift in Sources */,
-				FB7ED5192615260F008FD1BE /* StorageProvider.swift in Sources */,
 				FB43D647266E70BD00FA9FA1 /* Date+RawRepresentable.swift in Sources */,
 				FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */,
 				FBCA567D26751F41008DBFFC /* SectionConfiguration.swift in Sources */,
 				FBCA566A26740BFC008DBFFC /* RepeatFrequencyChoices.swift in Sources */,
-				FB98B94826681F3600629C1B /* SproutDataModel.xcdatamodeld in Sources */,
 				FB9CF984267B7B15001CB7B2 /* SproutCareTaskRecurrenceRule.swift in Sources */,
 				FBCA567F2675254D008DBFFC /* TaskDetailItemConfiguration.swift in Sources */,
-				FBC43587267926AF002CABCD /* SproutPlantMO.swift in Sources */,
 				FBCA56782674EE48008DBFFC /* ButtonConfiguration.swift in Sources */,
 				FB6661B6261F9E7700DC8B04 /* NSManagedObjectContext+Extensions.swift in Sources */,
 				FBC7330325DDB4F00048999C /* SproutIconCell.swift in Sources */,
 				FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */,
 				FBF8AC5225DD80AC00E7E8EB /* SproutIconView.swift in Sources */,
 				FBCA566F26740BFD008DBFFC /* UpNextProvider.swift in Sources */,
-				FBC435762678EA77002CABCD /* Managed.swift in Sources */,
 				FBCA565626740BFC008DBFFC /* PlantGroupViewModel.swift in Sources */,
 				FB6CD65A2657EADD00D7DE82 /* TaskNotificationManager.swift in Sources */,
 				FB5CB86026730BF200A7F60E /* DayOfMonthPicker.swift in Sources */,
 				FB28A8E82649A2DE00B1206E /* SproutChipView.swift in Sources */,
 				FB92AF66262E093D0062DE47 /* SproutCareDetailCell.swift in Sources */,
-				FB9CF980267A4F52001CB7B2 /* SproutCareTaskMO.swift in Sources */,
 				FB6661CB2620938F00DC8B04 /* Utility.swift in Sources */,
 				FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */,
 				FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */,
@@ -835,9 +824,7 @@
 				FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */,
 				FBCA565B26740BFC008DBFFC /* PlantDetailViewController.swift in Sources */,
 				FBCA565A26740BFC008DBFFC /* SproutCareTaskCellViewModel.swift in Sources */,
-				FB5CB848267176D300A7F60E /* SproutDataModel-1.0.0-1.0.1.xcmappingmodel in Sources */,
 				FB43D640266DB4BE00FA9FA1 /* DetailHeroReusableView.swift in Sources */,
-				FB9CF97C267A3C94001CB7B2 /* SproutImageDataMO.swift in Sources */,
 				FB0A9F3625DC5D7E0084AED8 /* SproutTextFieldCell.swift in Sources */,
 				FB5CB85926728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift in Sources */,
 				FBCA5676267441EE008DBFFC /* CareDetailItemConfiguration.swift in Sources */,
@@ -853,13 +840,11 @@
 				FB98B9452667C1C500629C1B /* Notification+CustomNames.swift in Sources */,
 				FBB03C122637781C00F7F364 /* SproutHeroView.swift in Sources */,
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
-				FB9CF982267A4F7B001CB7B2 /* SproutCareInformationMO.swift in Sources */,
 				FBCA567426744111008DBFFC /* TextFieldItemConfiguration.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FBCA565426740BFC008DBFFC /* PlantsProvider.swift in Sources */,
 				FB9C66AA263A539D00CDC15A /* SproutCardView.swift in Sources */,
 				FB4FAB09265EDE7C001A9201 /* HashableClosure.swift in Sources */,
-				FB7ED5092614D111008FD1BE /* UIImageTransformer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -867,8 +852,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FBAF464E2641FE5000854D2C /* CareRecurrenceRuleTests.swift in Sources */,
-				FBAF46542642087600854D2C /* CareInfoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1126,14 +1109,39 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		FB98B94626681F3600629C1B /* SproutDataModel.xcdatamodeld */ = {
+		FB434E352680AEEF00B3F737 /* SproutDataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				FBC4358326792136002CABCD /* SproutDataModel-v1.0.2.xcdatamodel */,
-				FB5CB8442670F92400A7F60E /* SproutDataModel-v1.0.1.xcdatamodel */,
-				FB98B94726681F3600629C1B /* SproutDataModel.xcdatamodel */,
+				FB434E362680AEEF00B3F737 /* SproutDataModel.xcdatamodel */,
+				FB434E372680AEEF00B3F737 /* SproutDataModel-v1.0.1.xcdatamodel */,
+				FB434E382680AEEF00B3F737 /* SproutDataModel-v1.0.2.xcdatamodel */,
 			);
-			currentVersion = FBC4358326792136002CABCD /* SproutDataModel-v1.0.2.xcdatamodel */;
+			currentVersion = FB434E362680AEEF00B3F737 /* SproutDataModel.xcdatamodel */;
+			path = SproutDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		FB434E392680AEEF00B3F737 /* GreenHouseDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FB434E3A2680AEEF00B3F737 /* GreenHouseDataModel.xcdatamodel */,
+			);
+			currentVersion = FB434E3A2680AEEF00B3F737 /* GreenHouseDataModel.xcdatamodel */;
+			path = GreenHouseDataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		FB434E462680AEF000B3F737 /* SproutDataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				FB434E4C2680AEF000B3F737 /* SproutDataModel-v1.0.1.xcdatamodel */,
+				FB434E472680AEF000B3F737 /* SproutDataModel.xcdatamodel */,
+				FB434E4A2680AEF000B3F737 /* SproutDataModel-v1.0.2.xcdatamodel */,
+				FB434E482680AEF000B3F737 /* SproutDataModel-v1.0.1.xcdatamodel */,
+				FB434E4B2680AEF000B3F737 /* SproutDataModel.xcdatamodel */,
+				FB434E492680AEF000B3F737 /* SproutDataModel-v1.0.2.xcdatamodel */,
+			);
+			currentVersion = FB434E472680AEF000B3F737 /* SproutDataModel.xcdatamodel */;
 			path = SproutDataModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -12,7 +12,7 @@ final class SproutImageDataMO: NSManagedObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
 
-        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutImageDataMO.id))
+        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutImageDataMO.identifier))
         setPrimitiveValue(Date(), forKey: #keyPath(SproutImageDataMO.creationDate))
         setPrimitiveValue(Date(), forKey: #keyPath(SproutImageDataMO.lastModifiedDate))
     }

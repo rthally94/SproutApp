@@ -12,7 +12,7 @@ final class SproutCareInformationMO: NSManagedObject {
     override func awakeFromInsert() {
         super.awakeFromInsert()
 
-        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutPlantMO.id))
+        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutPlantMO.identifier))
         setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.creationDate))
         setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.lastModifiedDate))
     }
@@ -33,6 +33,11 @@ extension SproutCareInformationMO {
         set {
             tintColor_hex = newValue?.hexString()
         }
+    }
+
+    var iconImage: UIImage? {
+        guard let iconName = icon else { return UIImage.WateringIcon }
+        return UIImage(named: iconName) ?? UIImage(named: iconName) ?? UIImage.WateringIcon
     }
 
     var allTasks: [SproutCareTaskMO] {

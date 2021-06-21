@@ -11,8 +11,12 @@ class SproutCardCell: UICollectionViewCell {
     var cardView = SproutCardView()
 
     var image: UIImage? {
-        get { cardView.imageView.image }
-        set { cardView.imageView.image = newValue }
+        get { cardView.plantIconView.configuration?.image }
+        set {
+            var configuration = cardView.plantIconView.defaultConfiguration()
+            configuration.image = newValue
+            cardView.plantIconView.configuration = configuration
+        }
     }
 
     var text: String? {
@@ -30,18 +34,25 @@ class SproutCardCell: UICollectionViewCell {
         setupViews()
     }
 
-    private func setupViews() {
-        contentView.addSubview(cardView)
-        cardView.translatesAutoresizingMaskIntoConstraints = false
-        cardView.pinToBoundsOf(contentView)
+    override func layoutSubviews() {
+        super.layoutSubviews()
 
-        contentView.layer.cornerRadius = 10
-        contentView.clipsToBounds = true
+        layer.cornerRadius = 20
+        clipsToBounds = true
 
         layer.shadowColor = UIColor.gray.cgColor
         layer.shadowOffset = CGSize(width: 0, height: 5)
         layer.shadowRadius = 2.5
         layer.shadowOpacity = 0.2
+    }
+
+    private func setupViews() {
+        backgroundColor = .secondarySystemGroupedBackground
+        contentView.layoutMargins = .init(top: 10, left: 10, bottom: 10, right: 10)
+
+        contentView.addSubview(cardView)
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.pinToLayoutMarginsOf(contentView)
     }
 
     override func prepareForReuse() {
