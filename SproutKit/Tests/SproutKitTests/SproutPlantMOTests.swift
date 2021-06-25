@@ -26,26 +26,20 @@ final class SproutPlantMOTests: CoreDataTestCase {
     }
 
     func test_WhenPlantIsSaved_MetadataIsUpdated() {
-        let expectation = expectation(description: "Updating property and saving")
         let sut = SproutPlantMO(context: moc)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            do {
-                sut.commonName = "Test"
-                sut.scientificName = "Test"
-                sut.nickname = "Test"
-                try self.moc.save()
-                let now = Date()
-                let lastModifiedDate = try XCTUnwrap(sut.lastModifiedDate)
-                XCTAssertEqual(lastModifiedDate.timeIntervalSinceReferenceDate, now.timeIntervalSinceReferenceDate, accuracy: 0.1)
-            } catch {
-                XCTFail("\(error)")
-            }
-
-            expectation.fulfill()
+        func updatePlant() throws {
+            sut.commonName = "Test"
+            sut.scientificName = "Test"
+            sut.nickname = "Test"
+            try self.moc.save()
+            let now = Date()
+            let lastModifiedDate = try XCTUnwrap(sut.lastModifiedDate)
+            XCTAssertEqual(lastModifiedDate.timeIntervalSinceReferenceDate, now.timeIntervalSinceReferenceDate, accuracy: 0.1)
         }
 
-        wait(for: [expectation], timeout: 5.0)
+        sleep(1)
+        XCTAssertNoThrow(try updatePlant())
     }
 
     func test_WhenPlantIsInsertedWithTemplate_PropertiesAreConfiguredToMatchTemplate() {

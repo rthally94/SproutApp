@@ -26,7 +26,7 @@ public final class SproutCareInformationMO: NSManagedObject {
 
 // Convenience methods for creating care information
 public extension SproutCareInformationMO {
-    @discardableResult static func insertNewCareInformation(of type: SproutCareType, into context: NSManagedObjectContext) -> SproutCareInformationMO {
+    @discardableResult private static func insertNewCareInformation(of type: SproutCareType, into context: NSManagedObjectContext) -> SproutCareInformationMO {
         let newInfo = SproutCareInformationMO(context: context)
         newInfo.type = type.rawValue
         return newInfo

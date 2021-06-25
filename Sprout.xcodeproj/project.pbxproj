@@ -27,7 +27,6 @@
 		FB5CB8662673B7C000A7F60E /* Bool+XOR.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB8652673B7C000A7F60E /* Bool+XOR.swift */; };
 		FB5F348925B63E6900CCE6BC /* SproutScheduledTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5F348825B63E6900CCE6BC /* SproutScheduledTaskCell.swift */; };
 		FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */; };
-		FB6C461725F1975F009ED947 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6C461625F1975F009ED947 /* UIColor+Extension.swift */; };
 		FB6CD6582657E17500D7DE82 /* RemindersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6CD6572657E17500D7DE82 /* RemindersProvider.swift */; };
 		FB6CD65A2657EADD00D7DE82 /* TaskNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6CD6592657EADD00D7DE82 /* TaskNotificationManager.swift */; };
 		FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */; };
@@ -37,6 +36,7 @@
 		FB8D9CA52680C90A0032F390 /* SproutPlantMO+SwiftProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D9CA42680C90A0032F390 /* SproutPlantMO+SwiftProperties.swift */; };
 		FB8D9CAA2680C9980032F390 /* SproutCareType+Properties.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D9CA92680C9980032F390 /* SproutCareType+Properties.swift */; };
 		FB8D9CAC2680DC3D0032F390 /* SproutKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB8D9CAB2680DC3D0032F390 /* SproutKit */; };
+		FB8D9CAE2683B0A60032F390 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D9CAD2683B0A60032F390 /* UIColor+Extensions.swift */; };
 		FB92AF66262E093D0062DE47 /* SproutCareDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF65262E093D0062DE47 /* SproutCareDetailCell.swift */; };
 		FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */; };
 		FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B94226645BD800629C1B /* SproutLabel.swift */; };
@@ -123,7 +123,6 @@
 		FB5CB8652673B7C000A7F60E /* Bool+XOR.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bool+XOR.swift"; sourceTree = "<group>"; };
 		FB5F348825B63E6900CCE6BC /* SproutScheduledTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutScheduledTaskCell.swift; sourceTree = "<group>"; };
 		FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
-		FB6C461625F1975F009ED947 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		FB6CD6572657E17500D7DE82 /* RemindersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersProvider.swift; sourceTree = "<group>"; };
 		FB6CD6592657EADD00D7DE82 /* TaskNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskNotificationManager.swift; sourceTree = "<group>"; };
 		FB73F2962656B60F002F1C55 /* LocalNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalNotificationManager.swift; sourceTree = "<group>"; };
@@ -134,6 +133,7 @@
 		FB8D9CA22680C2D40032F390 /* UIImage+Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Constants.swift"; sourceTree = "<group>"; };
 		FB8D9CA42680C90A0032F390 /* SproutPlantMO+SwiftProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SproutPlantMO+SwiftProperties.swift"; sourceTree = "<group>"; };
 		FB8D9CA92680C9980032F390 /* SproutCareType+Properties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SproutCareType+Properties.swift"; sourceTree = "<group>"; };
+		FB8D9CAD2683B0A60032F390 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		FB92AF65262E093D0062DE47 /* SproutCareDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareDetailCell.swift; sourceTree = "<group>"; };
 		FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+DismissKeyboardGesture.swift"; sourceTree = "<group>"; };
 		FB98B94226645BD800629C1B /* SproutLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutLabel.swift; sourceTree = "<group>"; };
@@ -302,7 +302,6 @@
 				FB8D9C9E2680C2320032F390 /* Manged Objects */,
 				FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */,
 				FB6C45FB25EFEA00009ED947 /* UIView+Extension.swift */,
-				FB6C461625F1975F009ED947 /* UIColor+Extension.swift */,
 				FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */,
 				FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */,
 				FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */,
@@ -312,6 +311,7 @@
 				FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */,
 				FB5CB8652673B7C000A7F60E /* Bool+XOR.swift */,
 				FBC435792678EF21002CABCD /* UIImage+Thumbnail.swift */,
+				FB8D9CAD2683B0A60032F390 /* UIColor+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -710,7 +710,6 @@
 				FBCA566826740BFC008DBFFC /* TaskEditorSection.swift in Sources */,
 				FB76D341262A592500D00036 /* SproutCareDetailView.swift in Sources */,
 				FB6C45FC25EFEA00009ED947 /* UIView+Extension.swift in Sources */,
-				FB6C461725F1975F009ED947 /* UIColor+Extension.swift in Sources */,
 				FB43D647266E70BD00FA9FA1 /* Date+RawRepresentable.swift in Sources */,
 				FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */,
 				FBCA567D26751F41008DBFFC /* SectionConfiguration.swift in Sources */,
@@ -753,6 +752,7 @@
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
 				FBCA567426744111008DBFFC /* TextFieldItemConfiguration.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
+				FB8D9CAE2683B0A60032F390 /* UIColor+Extensions.swift in Sources */,
 				FBCA565426740BFC008DBFFC /* PlantsProvider.swift in Sources */,
 				FB9C66AA263A539D00CDC15A /* SproutCardView.swift in Sources */,
 			);

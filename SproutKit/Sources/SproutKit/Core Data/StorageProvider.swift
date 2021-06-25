@@ -96,7 +96,7 @@ public class StorageProvider {
 }
 
 public extension StorageProvider {
-    func saveContext() {
+    func saveAllContexts() {
         try? editingContext.saveIfNeeded()
         persistentContainer.saveContextIfNeeded()
     }

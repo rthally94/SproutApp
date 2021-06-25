@@ -14,19 +14,4 @@ extension NSManagedObjectContext {
             try self.save()
         }
     }
-
-    func persist(block: @escaping () -> Void, completion: (() -> Void)? = nil) {
-        perform {
-            block()
-            
-            if self.hasChanges {
-                do {
-                    try self.save()
-                } catch {
-                    self.rollback()
-                }
-            }
-            completion?()
-        }
-    }
 }
