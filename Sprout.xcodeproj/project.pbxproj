@@ -46,7 +46,6 @@
 		FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB9E8C58262D08B400514AAB /* SproutButtonCell.swift */; };
 		FBAF46302640527E00854D2C /* RoundedRectBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */; };
 		FBB03C122637781C00F7F364 /* SproutHeroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB03C112637781C00F7F364 /* SproutHeroView.swift */; };
-		FBC4357A2678EF21002CABCD /* UIImage+Thumbnail.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC435792678EF21002CABCD /* UIImage+Thumbnail.swift */; };
 		FBC7330325DDB4F00048999C /* SproutIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330225DDB4F00048999C /* SproutIconCell.swift */; };
 		FBCA565326740BFC008DBFFC /* PlantGroupSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562926740BFC008DBFFC /* PlantGroupSection.swift */; };
 		FBCA565426740BFC008DBFFC /* PlantsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562A26740BFC008DBFFC /* PlantsProvider.swift */; };
@@ -143,7 +142,6 @@
 		FB9E8C58262D08B400514AAB /* SproutButtonCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutButtonCell.swift; sourceTree = "<group>"; };
 		FBAF462F2640527E00854D2C /* RoundedRectBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedRectBackgroundView.swift; sourceTree = "<group>"; };
 		FBB03C112637781C00F7F364 /* SproutHeroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutHeroView.swift; sourceTree = "<group>"; };
-		FBC435792678EF21002CABCD /* UIImage+Thumbnail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Thumbnail.swift"; sourceTree = "<group>"; };
 		FBC7330225DDB4F00048999C /* SproutIconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIconCell.swift; sourceTree = "<group>"; };
 		FBCA562926740BFC008DBFFC /* PlantGroupSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantGroupSection.swift; sourceTree = "<group>"; };
 		FBCA562A26740BFC008DBFFC /* PlantsProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantsProvider.swift; sourceTree = "<group>"; };
@@ -310,7 +308,6 @@
 				FB43D644266E665E00FA9FA1 /* UserDefaults+Extensions.swift */,
 				FB43D646266E70BD00FA9FA1 /* Date+RawRepresentable.swift */,
 				FB5CB8652673B7C000A7F60E /* Bool+XOR.swift */,
-				FBC435792678EF21002CABCD /* UIImage+Thumbnail.swift */,
 				FB8D9CAD2683B0A60032F390 /* UIColor+Extensions.swift */,
 			);
 			path = Extensions;
@@ -697,7 +694,6 @@
 				FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */,
 				FBCA565D26740BFC008DBFFC /* AddEditPlantViewController.swift in Sources */,
 				FBCA565526740BFC008DBFFC /* PlantGroupItem.swift in Sources */,
-				FBC4357A2678EF21002CABCD /* UIImage+Thumbnail.swift in Sources */,
 				FB8D9CA52680C90A0032F390 /* SproutPlantMO+SwiftProperties.swift in Sources */,
 				FB8D9CA02680C2480032F390 /* SproutCareInformationMO+SwiftProperties.swift in Sources */,
 				FBCA566B26740BFC008DBFFC /* UpNextViewModel.swift in Sources */,

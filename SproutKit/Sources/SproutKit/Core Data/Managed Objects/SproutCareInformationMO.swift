@@ -47,20 +47,3 @@ public extension SproutCareInformationMO {
         }
     }
 }
-
-// Fetch Requests
-extension SproutCareInformationMO {
-    static func latestCareInformationFetchRequest(of type: SproutCareType, for plant: SproutPlantMO) -> NSFetchRequest<SproutCareInformationMO> {
-        let request = SproutCareInformationMO.fetchRequest
-
-        let plantPredicate = NSPredicate(format: "%K == %@", #keyPath(SproutCareInformationMO.plant), plant)
-        let careTypePredicate = NSPredicate(format: "%K == %@", #keyPath(SproutCareInformationMO.type), type.rawValue)
-        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [plantPredicate, careTypePredicate])
-
-        let sortByCreationDate = NSSortDescriptor(keyPath: \SproutCareInformationMO.creationDate, ascending: false)
-        request.sortDescriptors = [sortByCreationDate]
-
-        request.fetchLimit = 1
-        return request
-    }
-}

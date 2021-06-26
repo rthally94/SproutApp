@@ -43,15 +43,15 @@
         <attribute name="lastModifiedDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="nickname" optional="YES" attributeType="String" minValueString="1"/>
         <attribute name="scientificName" attributeType="String" minValueString="1"/>
-        <attribute name="thumbnailImage" optional="YES" attributeType="Binary"/>
+        <attribute name="thumbnailImageData" optional="YES" transient="YES" attributeType="Binary"/>
         <relationship name="careInformation" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SproutCareInformationMO" inverseName="plant" inverseEntity="SproutCareInformationMO"/>
         <relationship name="careTasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SproutCareTaskMO" inverseName="plant" inverseEntity="SproutCareTaskMO"/>
         <relationship name="fullImageData" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SproutImageDataMO" inverseName="plant" inverseEntity="SproutImageDataMO"/>
     </entity>
     <elements>
-        <element name="SproutCareInformationMO" positionX="-63" positionY="126" width="128" height="179"/>
-        <element name="SproutCareTaskMO" positionX="-54" positionY="-9" width="128" height="254"/>
-        <element name="SproutImageDataMO" positionX="-54" positionY="135" width="128" height="104"/>
-        <element name="SproutPlantMO" positionX="-63" positionY="-18" width="128" height="179"/>
+        <element name="SproutCareInformationMO" positionX="-546.144775390625" positionY="-106.5860595703125" width="128" height="193"/>
+        <element name="SproutCareTaskMO" positionX="-229.5970458984375" positionY="44.78570556640625" width="128" height="268"/>
+        <element name="SproutImageDataMO" positionX="-538.3106689453125" positionY="422.7913513183594" width="128" height="118"/>
+        <element name="SproutPlantMO" positionX="-824.1928100585938" positionY="135.1866149902344" width="128" height="193"/>
     </elements>
 </model>

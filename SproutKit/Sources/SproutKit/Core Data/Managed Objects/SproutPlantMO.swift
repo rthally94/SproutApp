@@ -17,6 +17,15 @@ public final class SproutPlantMO: NSManagedObject {
         setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.lastModifiedDate))
     }
 
+    public override func awakeFromFetch() {
+        super.awakeFromFetch()
+
+        // Populate thumbnail
+        let fullImage = getImage(preferredSize: .full)
+        let thumbnailData = fullImage?.orientedUp()?.makeThumbnail()?.pngData()
+        setPrimitiveValue(thumbnailData, forKey: #keyPath(SproutPlantMO.thumbnailImageData))
+    }
+
     override public func willSave() {
         super.willSave()
 

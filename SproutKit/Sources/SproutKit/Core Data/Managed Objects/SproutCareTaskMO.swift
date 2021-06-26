@@ -35,69 +35,12 @@ public extension SproutCareTaskMO {
     }
 }
 
-// MARK: - Fetch Requests
-public extension SproutCareTaskMO {
-    static func upNextFetchRequest(includesCompleted: Bool = false) -> NSFetchRequest<SproutCareTaskMO> {
-        let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
-        let sortByDisplayDate = NSSortDescriptor(keyPath: \SproutCareTaskMO.statusDate, ascending: true)
-        let sortByTaskType = NSSortDescriptor(keyPath: \SproutCareTaskMO.careInformation?.type, ascending: true)
-        let sortByPlantName = NSSortDescriptor(keyPath: \SproutCareTaskMO.plant?.nickname, ascending: true)
-        request.sortDescriptors = [sortByDisplayDate, sortByTaskType, sortByPlantName]
-
-        // Shows all tasks that are incomplete
-        let isDuePredicate = NSPredicate(format: "%K == %@", #keyPath(SproutCareTaskMO.status), SproutMarkStatus.due.rawValue)
-        let isLatePredicate = NSPredicate(format: "%K == %@", #keyPath(SproutCareTaskMO.status), SproutMarkStatus.late.rawValue)
-        let isIncompletePredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [isDuePredicate, isLatePredicate])
-
-        // Shows all tasks that are completed today, including completed tasks
-        let isCompletedToday: NSPredicate
-        if includesCompleted {
-            let midnightToday = Calendar.current.startOfDay(for: Date())
-            let midnightTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: midnightToday)!
-             isCompletedToday = NSPredicate(format: "%K >= %@ && %K < %@", #keyPath(SproutCareTaskMO.statusDate), midnightToday as NSDate, #keyPath(SproutCareTaskMO.statusDate), midnightTomorrow as NSDate)
-        } else {
-            isCompletedToday = NSPredicate.init(value: false)
-        }
-
-        let upNextPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [isIncompletePredicate, isCompletedToday])
-        request.predicate = upNextPredicate
-
-        return request
-    }
-
-    static func remindersFetchRequest() -> NSFetchRequest<SproutCareTaskMO> {
-        let request = SproutCareTaskMO.fetchRequest
-
-        let sortByStatusDate = NSSortDescriptor(keyPath: \SproutCareTaskMO.statusDate, ascending: true)
-        let sortByPlantNickname = NSSortDescriptor(keyPath: \SproutCareTaskMO.plant?.nickname, ascending: true)
-        let sortByPlantCommonName = NSSortDescriptor(keyPath: \SproutCareTaskMO.plant?.commonName, ascending: true)
-
-        request.sortDescriptors = [
-            sortByStatusDate,
-            sortByPlantNickname,
-            sortByPlantCommonName
-        ]
-
-        let isDuePredicate = NSPredicate(format: "%K == %@", #keyPath(SproutCareTaskMO.status), SproutMarkStatus.due.rawValue)
-        let isLatePredicate = NSPredicate(format: "%K == %@", #keyPath(SproutCareTaskMO.status), SproutMarkStatus.late.rawValue)
-        let isCareNeededPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [isDuePredicate, isLatePredicate])
-
-        let isScheduledPredicate = NSPredicate(format: "%K == true && %K != nil", #keyPath(SproutCareTaskMO.hasSchedule), #keyPath(SproutCareTaskMO.dueDate))
-
-        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [isCareNeededPredicate, isScheduledPredicate])
-
-        return request
-    }
-}
-
 
 // Swift Properties
 extension SproutCareTaskMO {
     // MARK: - Instance Properties
     var markStatus: SproutMarkStatus {
-        get {
-            SproutMarkStatus(rawValue: status ?? "") ?? .due
-        }
+        SproutMarkStatus(rawValue: status ?? "") ?? .due        
     }
 
     var schedule: SproutCareTaskSchedule? {
