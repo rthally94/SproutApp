@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SproutKit
 
 protocol AddEditPlantViewControllerDelegate: AnyObject {
     func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO)

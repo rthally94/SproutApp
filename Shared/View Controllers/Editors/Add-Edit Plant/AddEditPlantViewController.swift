@@ -8,6 +8,7 @@
 import Combine
 import CoreData
 import UIKit
+import SproutKit
 
 class AddEditPlantViewController: UICollectionViewController {
     // MARK: - Properties
@@ -53,7 +54,8 @@ class AddEditPlantViewController: UICollectionViewController {
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
 
         if plant == nil {
-            self.plant = SproutPlantMO.insertNewPlant(into: editingContext)
+            let template = SproutPlantTemplate.newPlant()
+            self.plant = SproutPlantMO.insertNewPlant(using: template, into: editingContext)
         }
 
         originalNickname = plant?.nickname
@@ -126,13 +128,13 @@ class AddEditPlantViewController: UICollectionViewController {
 
     private func saveChanges() {
         //        delegate?.plantEditor(self, didUpdatePlant: plant)
-        storageProvider.saveContext()
+        storageProvider.saveAllContexts()
     }
 
     private func discardChangesIfAble(completion: @escaping (Bool) -> Void) {
         func discardChanges() {
             storageProvider.editingContext.rollback()
-            storageProvider.saveContext()
+            storageProvider.saveAllContexts()
         }
 
         if hasChanges {

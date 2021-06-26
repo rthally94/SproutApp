@@ -186,8 +186,6 @@ final class SproutCareTaskMOTests: CoreDataTestCase {
         for schedule in testSchedules {
             sut.schedule = schedule
 
-            XCTAssertFalse(sut.hasSchedule, String(describing: schedule))
-            XCTAssertFalse(sut.hasRecurrenceRule, String(describing: schedule))
             XCTAssertEqual(sut.schedule, schedule)
         }
     }
@@ -197,8 +195,7 @@ final class SproutCareTaskMOTests: CoreDataTestCase {
         let startDate = Date()
         let dueDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate)!
         sut.schedule = .init(startDate: startDate, dueDate: dueDate)
-
-        XCTAssertNoThrow(try sut.markAs(.done))
+        sut.markStatus = .done
 
         let newDueDate = Calendar.current.date(byAdding: .day, value: 3, to: startDate)!
         sut.schedule = .init(startDate: startDate, dueDate: newDueDate)
@@ -243,6 +240,20 @@ final class SproutCareTaskMOTests: CoreDataTestCase {
         XCTAssertNoThrow(try testRecurrenceRules())
     }
 
+    func test_MarkAsComplete_WhenTaskIsNotScheduled_TaskIsMarkedAsDone_AndNewTaskIsAdded() {
+        let sut = makeSUT().first!
+        sut.markAsComplete()
+
+        func fetchNewTask() throws {
+            let request = SproutCareTaskMO.dueTasksFetchRequest(plant: sut.plant, careType: sut.careInformation?.careType)
+            let newTask = try moc.fetch(request).first
+            XCTAssertNotEqual(newTask, sut)
+        }
+
+        XCTAssertEqual(sut.markStatus, .done)
+        XCTAssertNoThrow(try fetchNewTask())
+    }
+
 
     // MARK: - Helpers
     private func makeSUT(taskCount: Int = 1, scheduledCount: Int = 0, doneCount: Int = 0) -> [SproutCareTaskMO] {
@@ -254,7 +265,7 @@ final class SproutCareTaskMOTests: CoreDataTestCase {
             }
 
             if doneCount-1 >= index {
-                try? task.markAs(.done)
+                task.markStatus = .done
             }
 
             return task

@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  SproutCareTaskMO+Intents.swift
 //  
 //
 //  Created by Ryan Thally on 6/25/21.
@@ -8,20 +8,20 @@
 import Foundation
 
 extension SproutCareTaskMO {
-    func markAsComplete() {
+    public func markAsComplete() {
+        let dueDate = dueDate ?? Date()
         let midnightToday = Calendar.current.startOfDay(for: Date())
         let midnightTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: midnightToday)!
-        let isTodayTheDueDate = midnightToday <= dueDate && dueDate < midnightTomorrow
 
         if dueDate < midnightToday {
             // Late
-            markAs(.late)
+            markStatus = .late
         } else if dueDate < midnightTomorrow {
             // Today
-            markAs(.done)
+            markStatus = .done
         } else {
             // Early
-            markAs(.done)
+            markStatus = .done
         }
 
         guard let context = managedObjectContext else { return }

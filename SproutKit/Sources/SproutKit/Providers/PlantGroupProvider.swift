@@ -8,14 +8,14 @@
 import CoreData
 import Foundation
 
-final class PlantGroupProvider: CachedProvider {
-    var fetchedIDs: [NSManagedObjectID] = []
-    var objects: [NSManagedObjectID:ManagedObjectType] = [:]
-    let persistentContainer: NSPersistentContainer
+public final class PlantGroupProvider: CachedProvider {
+    public var fetchedIDs: [NSManagedObjectID] = []
+    public var objects: [NSManagedObjectID:ManagedObjectType] = [:]
+    public let persistentContainer: NSPersistentContainer
 
-    init(persistentContainer: NSPersistentContainer) {
+    public init(persistentContainer: NSPersistentContainer) {
         self.persistentContainer = persistentContainer
     }
 
-    typealias ManagedObjectType = SproutPlantMO
+    public typealias ManagedObjectType = SproutPlantMO
 }

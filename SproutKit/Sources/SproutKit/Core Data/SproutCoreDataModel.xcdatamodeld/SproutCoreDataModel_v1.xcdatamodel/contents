@@ -15,8 +15,8 @@
     <entity name="SproutCareTaskMO" representedClassName="SproutKit.SproutCareTaskMO" syncable="YES" codeGenerationType="category">
         <attribute name="creationDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="dueDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="hasRecurrenceRule" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
-        <attribute name="hasSchedule" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="hasRecurrenceRule" transient="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="hasSchedule" transient="YES" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
         <attribute name="identifier" attributeType="String" minValueString="1"/>
         <attribute name="lastModifiedDate" optional="YES" attributeType="Date" derived="YES" derivationExpression="now()" usesScalarValueType="NO"/>
         <attribute name="recurrenceDaysOfMonth" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData" customClassName="Set&lt;Int&gt;"/>

@@ -7,12 +7,12 @@
 
 import Foundation
 
-enum SproutCareTaskRecurrenceRule {
+public enum SproutCareTaskRecurrenceRule {
     case daily(Int)
     case weekly(Int, Set<Int>? = nil)
     case monthly(Int, Set<Int>? = nil)
 
-    func nextDate(after targetDate: Date) -> Date? {
+    public func nextDate(after targetDate: Date) -> Date? {
         switch self {
         case let .daily(interval):
             return Calendar.current.date(byAdding: .day, value: interval, to: targetDate)

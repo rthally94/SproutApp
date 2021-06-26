@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SproutKit
 
 struct PlantIconItemConfiguration: Hashable {
     var image: UIImage?

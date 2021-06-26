@@ -9,7 +9,7 @@ import CoreData
 import Foundation
 
 extension NSPersistentContainer {
-    func saveContextIfNeeded() {
+    public func saveContextIfNeeded() {
         do {
             try viewContext.saveIfNeeded()
         } catch {

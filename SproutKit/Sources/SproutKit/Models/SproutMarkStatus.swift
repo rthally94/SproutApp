@@ -7,13 +7,13 @@
 
 import Foundation
 
-enum SproutMarkStatus: String, Hashable, CustomStringConvertible {
+public enum SproutMarkStatus: String, Hashable, CustomStringConvertible {
     case due
     case done
     case late
     case skipped
 
-    var description: String {
+    public var description: String {
         return self.rawValue
     }
 }

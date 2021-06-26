@@ -22,8 +22,7 @@ public final class SproutPlantMO: NSManagedObject {
 
         // Populate thumbnail
         let fullImage = getImage(preferredSize: .full)
-        let thumbnailData = fullImage?.orientedUp()?.makeThumbnail()?.pngData()
-        setPrimitiveValue(thumbnailData, forKey: #keyPath(SproutPlantMO.thumbnailImageData))
+        thumbnailImageData = fullImage?.orientedUp()?.makeThumbnail()?.pngData()
     }
 
     override public func willSave() {
@@ -36,7 +35,7 @@ public final class SproutPlantMO: NSManagedObject {
 
 // Convenience methods for creating plants
 public extension SproutPlantMO {
-    @discardableResult static func insertNewPlant(into context: NSManagedObjectContext) -> SproutPlantMO {
+    @discardableResult private static func insertNewPlant(into context: NSManagedObjectContext) -> SproutPlantMO {
         let plant = SproutPlantMO(context: context)
 
         return plant

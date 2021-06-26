@@ -7,6 +7,7 @@
 
 import CoreData
 import UIKit
+import SproutKit
 
 class TaskEditorViewController: UIViewController {
     // MARK: - Properties
@@ -69,14 +70,14 @@ class TaskEditorViewController: UIViewController {
 
     @objc private func doneButtonPressed(_: AnyObject) {
         delegate?.taskEditor(self, didUpdateTask: task)
-        storageProvider.saveContext()
+        storageProvider.saveAllContexts()
         dismiss(animated: true)
     }
 
     @objc private func cancelButtonPressed(_: AnyObject) {
         delegate?.taskEditorDidCancel(self)
         storageProvider.editingContext.rollback()
-        storageProvider.saveContext()
+        storageProvider.saveAllContexts()
         dismiss(animated: true)
     }
 
@@ -237,7 +238,7 @@ extension TaskEditorViewController {
             let items: [Item] = RepeatFrequencyChoices.allCases.map { frequency in
                 let rowTitle = frequency.rawValue.capitalized
 
-                let isSelected = self.task.recurrenceRule?.frequency == frequency.rawValue
+                let isSelected = self.task.recurrenceRule != nil ? self.task.recurrenceRule! == frequency : false
 
                 let configuration = ToggleItemConfiguration(text: rowTitle, isOn: isSelected) { [weak self] _ in
                     self?.selectFrequency(frequency)

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SproutKit
 
 protocol TaskEditorDelegate: AnyObject {
     func taskEditor(_ editor: TaskEditorViewController, didUpdateTask task: SproutCareTaskMO)

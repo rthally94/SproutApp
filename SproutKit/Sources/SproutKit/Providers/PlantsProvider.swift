@@ -8,16 +8,16 @@
 import CoreData
 import UIKit
 
-class PlantsProvider: NSObject {
-    typealias Section = String
-    typealias Item = NSManagedObjectID
+public final class PlantsProvider: NSObject {
+    public typealias Section = String
+    public typealias Item = NSManagedObjectID
     
     let moc: NSManagedObjectContext
     fileprivate let fetchedResultsController: NSFetchedResultsController<SproutPlantMO>
     
-    @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
+    @Published public var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
 
-    init(managedObjectContext: NSManagedObjectContext) {
+    public init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext
         
         let request: NSFetchRequest<SproutPlantMO> = SproutPlantMO.fetchRequest()
@@ -33,21 +33,21 @@ class PlantsProvider: NSObject {
         try! fetchedResultsController.performFetch()
     }
     
-    func object(at indexPath: IndexPath) -> SproutPlantMO {
+    public func object(at indexPath: IndexPath) -> SproutPlantMO {
         return fetchedResultsController.object(at: indexPath)
     }
 
-    func object(withID id: NSManagedObjectID) -> SproutPlantMO? {
+    public func object(withID id: NSManagedObjectID) -> SproutPlantMO? {
         return moc.object(with: id) as? SproutPlantMO
     }
 
-    func reload() {
+    public func reload() {
         try! fetchedResultsController.performFetch()
     }
 }
 
 extension PlantsProvider: NSFetchedResultsControllerDelegate {
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+    public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
         var newSnapshot = snapshot as NSDiffableDataSourceSnapshot<Section, Item>
 
         let idsToReload = newSnapshot.itemIdentifiers.filter { identifier in

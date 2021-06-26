@@ -1,15 +1,13 @@
 //
-//  SproutPlantMO+SwiftProperties.swift
-//  Sprout
+//  SproutPlantMO+SwiftAdapters.swift
+//  
 //
-//  Created by Ryan Thally on 6/21/21.
+//  Created by Ryan Thally on 6/26/21.
 //
 
-import SproutKit
 import UIKit
 
-
-extension SproutPlantMO {
+public extension SproutPlantMO {
     var primaryDisplayName: String? {
         return nickname ?? commonName
     }
@@ -26,28 +24,10 @@ extension SproutPlantMO {
 
     var icon: UIImage? {
         get {
-            guard let data = fullImageData?.rawData else { return nil }
-            return UIImage(data: data)
-        }
-
-        set {
-            thumbnailImage = newValue?.orientedUp()?.makeThumbnail()?.pngData()
-
-            if let moc = managedObjectContext, fullImageData == nil {
-                fullImageData = SproutImageDataMO(context: moc)
-            }
-
-            fullImageData?.rawData = newValue?.orientedUp()?.pngData()
-        }
-    }
-
-    var thumbnailIcon: UIImage? {
-        get {
-            guard let data = thumbnailImage else { return nil }
-            return UIImage(data: data)
+            getImage()
         }
         set {
-            thumbnailImage = newValue?.orientedUp()?.makeThumbnail()?.pngData()
+            setImage(newValue)
         }
     }
 

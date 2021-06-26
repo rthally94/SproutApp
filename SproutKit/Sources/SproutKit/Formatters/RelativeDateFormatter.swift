@@ -7,7 +7,7 @@
 
 import Foundation
 
-class RelativeDateFormatter: Formatter {
+public class RelativeDateFormatter: Formatter {
     static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.timeStyle = .none
@@ -32,7 +32,7 @@ class RelativeDateFormatter: Formatter {
         return formatter
     }()
     
-    func string(from date: Date) -> String {
+    public func string(from date: Date) -> String {
         let today = Calendar.current.startOfDay(for: Date())
         let daysToGo = Calendar.current.dateComponents([.day], from: today, to: date).day!
         if daysToGo >= -1 && daysToGo <= 1 {

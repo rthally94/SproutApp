@@ -7,6 +7,7 @@
 
 import CoreData
 import UIKit
+import SproutKit
 
 class PlantDetailViewController: UIViewController {
     private typealias Section = ViewModel.Section

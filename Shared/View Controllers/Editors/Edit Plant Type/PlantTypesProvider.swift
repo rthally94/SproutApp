@@ -7,6 +7,7 @@
 
 import CoreData
 import UIKit
+import SproutKit
 
 class PlantTypesProvider: NSObject {
     let moc: NSManagedObjectContext

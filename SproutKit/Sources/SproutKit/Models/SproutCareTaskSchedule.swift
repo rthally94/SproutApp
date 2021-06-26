@@ -7,17 +7,17 @@
 
 import Foundation
 
-struct SproutCareTaskSchedule {
-    let startDate: Date
-    let dueDate: Date
+public struct SproutCareTaskSchedule {
+    public let startDate: Date
+    public let dueDate: Date
 
-    let recurrenceRule: SproutCareTaskRecurrenceRule?
+    public let recurrenceRule: SproutCareTaskRecurrenceRule?
 
-    init?(startDate: Date, dueDate: Date) {
+    public init?(startDate: Date, dueDate: Date) {
         self.init(startDate: startDate, dueDate: dueDate, recurrenceRule: nil)
     }
 
-    init?(startDate: Date, recurrenceRule: SproutCareTaskRecurrenceRule) {
+    public init?(startDate: Date, recurrenceRule: SproutCareTaskRecurrenceRule) {
         guard let nextPossibleDate = recurrenceRule.nextDate(after: startDate) else { return nil }
         self.init(startDate: startDate, dueDate: nextPossibleDate, recurrenceRule: recurrenceRule)
     }
@@ -34,7 +34,7 @@ struct SproutCareTaskSchedule {
         self.recurrenceRule = recurrenceRule
     }
 
-    var description: String {
+    public var description: String {
         let formatter = Utility.careScheduleFormatter
         return formatter.string(from: self)
     }

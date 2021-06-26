@@ -8,9 +8,14 @@
 import UIKit
 
 extension SproutPlantMO {
-    func setImage(_ newImage: UIImage) {
-        let correcetedImage = newImage.orientedUp()
+    func setImage(_ newImage: UIImage?) {
+        let correcetedImage = newImage?.orientedUp()
         thumbnailImageData = correcetedImage?.makeThumbnail()?.pngData()
+
+        if fullImageData == nil {
+            fullImageData = SproutImageDataMO(context: managedObjectContext!)
+        }
+        
         fullImageData?.rawData = correcetedImage?.pngData()
     }
 

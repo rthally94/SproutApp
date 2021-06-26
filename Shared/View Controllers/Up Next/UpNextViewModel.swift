@@ -8,6 +8,7 @@
 import Combine
 import CoreData
 import UIKit
+import SproutKit
 
 class UpNextViewModel {
     typealias Section = String
@@ -56,7 +57,7 @@ class UpNextViewModel {
 
     func markTaskAsComplete(id: NSManagedObjectID) {
         guard let task = tasksProvider.task(withID: id) else { return }
-        task.markAs(.done)
+        task.markAsComplete()
     }
 
     func showAllCompletedTasks() {

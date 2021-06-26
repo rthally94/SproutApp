@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SproutKit
 
 struct TaskDetailItemConfiguration: Hashable {
     var taskName: String?

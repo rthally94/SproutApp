@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SproutKit
 
 struct CareDetailItemConfiguration: Hashable {
     let image: UIImage?

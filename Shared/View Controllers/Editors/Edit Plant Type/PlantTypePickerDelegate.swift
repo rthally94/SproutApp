@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SproutKit
 
 protocol PlantTypePickerDelegate: AnyObject {
     func plantTypePicker(_ picker: PlantTypePickerViewController, didSelectType plantType: SproutPlantTemplate)

@@ -7,37 +7,37 @@
 
 import Foundation
 
-class CareScheduleFormatter: Formatter {
+public class CareScheduleFormatter: Formatter {
     private let dateFormatter = Utility.dateFormatter
     private let recurrenceRuleFormatter = CareRecurrenceRuleFormatter()
 
-    enum Style {
+    public enum Style {
         case none, short, full
     }
 
-    var frequencyStyle: CareRecurrenceRuleFormatter.Style {
+    public var frequencyStyle: CareRecurrenceRuleFormatter.Style {
         get { recurrenceRuleFormatter.frequencyStyle }
         set { recurrenceRuleFormatter.frequencyStyle = newValue }
     }
-    var valuesStyle: CareRecurrenceRuleFormatter.Style {
+    public var valuesStyle: CareRecurrenceRuleFormatter.Style {
         get { recurrenceRuleFormatter.valuesStyle }
         set { recurrenceRuleFormatter.valuesStyle = newValue }
     }
 
 
-    var dateStyle: Style = .none
-    var formattingContext: Context = .dynamic {
+    public var dateStyle: Style = .none
+    public var formattingContext: Context = .dynamic {
         didSet {
             recurrenceRuleFormatter.formattingContext = formattingContext
         }
     }
 
-    override func string(for obj: Any?) -> String? {
+    override public func string(for obj: Any?) -> String? {
         guard let obj = obj as? SproutCareTaskSchedule else { return nil }
         return string(from: obj)
     }
 
-    func string(from schedule: SproutCareTaskSchedule) -> String {
+    public func string(from schedule: SproutCareTaskSchedule) -> String {
         let frequencyText: String
         if let rule = schedule.recurrenceRule {
             frequencyText = recurrenceRuleFormatter.string(from: rule)
@@ -48,21 +48,21 @@ class CareScheduleFormatter: Formatter {
     }
 }
 
-class CareRecurrenceRuleFormatter: Formatter {
-    enum Style {
+public class CareRecurrenceRuleFormatter: Formatter {
+    public enum Style {
         case none, short, full
     }
 
-    var frequencyStyle: Style = .none
-    var valuesStyle: Style = .none
-    var formattingContext: Context = .dynamic
+    public var frequencyStyle: Style = .none
+    public var valuesStyle: Style = .none
+    public var formattingContext: Context = .dynamic
 
-    override func string(for obj: Any?) -> String? {
+    override public func string(for obj: Any?) -> String? {
         guard let obj = obj as? SproutCareTaskRecurrenceRule else { return nil }
         return string(from: obj)
     }
 
-    func string(from rule: SproutCareTaskRecurrenceRule) -> String {
+    public func string(from rule: SproutCareTaskRecurrenceRule) -> String {
         let frequencyText: String
         let valueText: String
 

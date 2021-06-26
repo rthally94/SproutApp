@@ -41,6 +41,10 @@ public extension SproutPlantTemplate {
         SproutPlantTemplate(scientificName: "Schefflera", commonName: "Umbrella Plant"),
         SproutPlantTemplate(scientificName: "Pilea Peperomiodies", commonName: "Chinese Money Plant"),
     ]
+
+    static func newPlant() -> SproutPlantTemplate {
+        SproutPlantTemplate(scientificName: "NEW PLANT", commonName: "NEW PLANT")
+    }
 }
 
 

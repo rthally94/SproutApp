@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SproutKit
 
 struct SproutCareTaskCellViewModel {
     let title: String?

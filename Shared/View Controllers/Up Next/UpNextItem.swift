@@ -7,6 +7,7 @@
 
 import CoreData
 import UIKit
+import SproutKit
 
 struct UpNextItem: Hashable {
     static let reloadInterval = 2.0
@@ -50,7 +51,7 @@ struct UpNextItem: Hashable {
 
     // MARK: - Task Actions
     func markAsComplete() {
-        task.markAs(.done)
+        task.markAsComplete()
     }
 }
 
