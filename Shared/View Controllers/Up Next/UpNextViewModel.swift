@@ -60,12 +60,13 @@ class UpNextViewModel {
     }
 
     func hidePreviousCompletedTasks() {
-        doesShowAllCompletedTasks = false
-        tasksProvider.doesShowCompletedTasks = false
-        taskMarkerDate = Date()
-    }
+        if doesShowAllCompletedTasks == true {
+            doesShowAllCompletedTasks = false
+            taskMarkerDate = Date()
+        }
 
-    func reloadTasks() {
-        tasksProvider.reloadData()
+        if tasksProvider.doesShowCompletedTasks == true {
+            tasksProvider.doesShowCompletedTasks = false
+        }
     }
 }

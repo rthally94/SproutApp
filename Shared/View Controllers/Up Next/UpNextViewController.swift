@@ -72,7 +72,6 @@ class UpNextViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel.hidePreviousCompletedTasks()
-        viewModel.reloadTasks()
     }
 
     private func setupViews() {
@@ -106,7 +105,6 @@ private extension UpNextViewController {
         UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {[unowned self] cell, indexPath, item in
             guard let task = self.viewModel.task(witID: item), let plantID = task.plant?.objectID, let plant = self.viewModel.plant(withID: plantID) else { return }
             let viewModel = UpNextItem(task: task, plant: plant)
-
             cell.updateWithText(viewModel.title, subtitle: viewModel.subtitle, image: viewModel.plantIcon, valueImage: viewModel.scheduleIcon, valueText: viewModel.schedule)
             let isChecked = viewModel.isChecked
 

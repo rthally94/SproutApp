@@ -10,13 +10,13 @@ import UIKit
 
 final public class UpNextProvider: NSObject {
     let moc: NSManagedObjectContext
-    fileprivate var fetchedResultsController: NSFetchedResultsController<SproutCareTaskMO>!
+    fileprivate var fetchedResultsController: RichFetchedResultsController<SproutCareTaskMO>!
 
     @Published public var snapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>?
 
     public var doesShowCompletedTasks: Bool = false {
         didSet {
-            fetchedResultsController = makeFRC()
+            fetchedResultsController = makeTasksFRC()
             try? fetchedResultsController.performFetch()
         }
     }
@@ -25,13 +25,13 @@ final public class UpNextProvider: NSObject {
         self.moc = managedObjectContext
         super.init()
 
-        fetchedResultsController = makeFRC()
+        fetchedResultsController = makeTasksFRC()
         try! fetchedResultsController.performFetch()
     }
 
 
-    public func object(at indexPath: IndexPath) -> SproutCareTaskMO {
-        return fetchedResultsController.object(at: indexPath)
+    public func object(at indexPath: IndexPath) -> SproutCareTaskMO? {
+        return fetchedResultsController.object(at: indexPath) as? SproutCareTaskMO
     }
 
     public func task(withID id: NSManagedObjectID) -> SproutCareTaskMO? {
@@ -42,15 +42,9 @@ final public class UpNextProvider: NSObject {
         return try? moc.existingObject(with: id) as? SproutPlantMO
     }
 
-    public func reloadData() {
-        var newSnapshot = snapshot
-        newSnapshot?.reloadItems(snapshot?.itemIdentifiers ?? [])
-        snapshot = newSnapshot
-    }
-
-    private func makeFRC() -> NSFetchedResultsController<SproutCareTaskMO> {
+    private func makeTasksFRC() -> RichFetchedResultsController<SproutCareTaskMO> {
         let request = SproutCareTaskMO.upNextFetchRequest()
-        let controller: NSFetchedResultsController<SproutCareTaskMO> = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.statusDate), cacheName: nil)
+        let controller: RichFetchedResultsController<SproutCareTaskMO> = RichFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.statusDate), cacheName: nil)
         controller.delegate = self
         return controller
     }
@@ -66,7 +60,7 @@ extension UpNextProvider: NSFetchedResultsControllerDelegate {
                   oldIndex == newIndex
             else { return false }
 
-            guard (try? controller.managedObjectContext.existingObject(with: identifier))?.isUpdated == true else {
+            guard let task = (try? controller.managedObjectContext.existingObject(with: identifier)) as? SproutCareTaskMO, (task.isUpdated || task.plant?.isUpdated == true) else {
                 return false
             }
 

@@ -85,8 +85,8 @@ extension SproutCareTaskMO {
         return request
     }
 
-    public static func upNextFetchRequest(includesCompleted: Bool = false) -> NSFetchRequest<SproutCareTaskMO> {
-        let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
+    public static func upNextFetchRequest(includesCompleted: Bool = false) -> RichFetchRequest<SproutCareTaskMO> {
+    let request = RichFetchRequest<SproutCareTaskMO>(entityName: SproutCareTaskMO.entityName)
         request.sortDescriptors = [
             SortDescriptors.sortByStatusDate(ascending: true),
             SortDescriptors.sortByTaskType(ascending: true),
@@ -100,6 +100,10 @@ extension SproutCareTaskMO {
         let isCompletedToday = includesCompleted ? Predicates.isDonePredicate(on: Date()) : NSPredicate.init(value: false)
         let upNextPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [isDuePredicate, isCompletedToday])
         request.predicate = upNextPredicate
+
+        request.relationshipKeyPathsForRefreshing = [
+            #keyPath(SproutCareTaskMO.plant.lastModifiedDate)
+        ]
 
         return request
     }
