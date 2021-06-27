@@ -8,7 +8,7 @@
 import UIKit
 
 extension SproutPlantMO {
-    func setImage(_ newImage: UIImage?) {
+    public func setImage(_ newImage: UIImage?) {
         let correcetedImage = newImage?.orientedUp()
         thumbnailImageData = correcetedImage?.makeThumbnail()?.pngData()
 
@@ -19,18 +19,23 @@ extension SproutPlantMO {
         fullImageData?.rawData = correcetedImage?.pngData()
     }
 
-    enum ImageSize {
-        case thumbnail, full
+    public enum ImageSize {
+        case auto, thumbnail, full
     }
 
-    func getImage(preferredSize: ImageSize = .thumbnail) -> UIImage? {
+    public func getImage(preferredSize: ImageSize = .auto) -> UIImage? {
         switch preferredSize {
+        case .auto:
+            if fullImageData?.isFault == false, let imageData = fullImageData?.rawData, let image = UIImage(data: imageData) {
+                return image
+            }
+            fallthrough
+
         case .thumbnail:
             if let imageData = thumbnailImageData, let thumbnailImage = UIImage(data: imageData) {
                 return thumbnailImage
             }
             fallthrough
-
         default:
             if let imageData = fullImageData?.rawData, let fullImage = UIImage(data: imageData) {
                 return fullImage

@@ -35,11 +35,17 @@ final public class UpNextProvider: NSObject {
     }
 
     public func task(withID id: NSManagedObjectID) -> SproutCareTaskMO? {
-        return moc.object(with: id) as? SproutCareTaskMO
+        return try? moc.existingObject(with: id) as? SproutCareTaskMO
     }
 
     public func plant(withID id: NSManagedObjectID) -> SproutPlantMO? {
-        return moc.object(with: id) as? SproutPlantMO
+        return try? moc.existingObject(with: id) as? SproutPlantMO
+    }
+
+    public func reloadData() {
+        var newSnapshot = snapshot
+        newSnapshot?.reloadItems(snapshot?.itemIdentifiers ?? [])
+        snapshot = newSnapshot
     }
 
     private func makeFRC() -> NSFetchedResultsController<SproutCareTaskMO> {
@@ -52,29 +58,24 @@ final public class UpNextProvider: NSObject {
 
 extension UpNextProvider: NSFetchedResultsControllerDelegate {
     public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
+        var newSnapshot = snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>
 
-        DispatchQueue.global(qos: .userInteractive).async {
-            var newSnapshot = snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>
+        let idsToReload = newSnapshot.itemIdentifiers.filter { identifier in
+            guard let oldIndex = self.snapshot?.indexOfItem(identifier),
+                  let newIndex = newSnapshot.indexOfItem(identifier),
+                  oldIndex == newIndex
+            else { return false }
 
-            let idsToReload = newSnapshot.itemIdentifiers.filter { identifier in
-                guard let oldIndex = self.snapshot?.indexOfItem(identifier),
-                      let newIndex = newSnapshot.indexOfItem(identifier),
-                      oldIndex != newIndex
-                else { return false }
-
-                guard (try? controller.managedObjectContext.existingObject(with: identifier))?.isUpdated == true else {
-                    return false
-                }
-
-                return true
+            guard (try? controller.managedObjectContext.existingObject(with: identifier))?.isUpdated == true else {
+                return false
             }
 
-            newSnapshot.reloadItems(idsToReload)
-
-            DispatchQueue.main.async {
-                self.snapshot = newSnapshot
-            }
+            return true
         }
+
+        newSnapshot.reloadItems(idsToReload)
+        self.snapshot = newSnapshot
+
     }
 }
 

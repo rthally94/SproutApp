@@ -17,8 +17,7 @@ class TaskEditorViewController: UIViewController {
 
     let dateFormatter = Utility.dateFormatter
 
-    var storageProvider: StorageProvider
-    var editingContext: NSManagedObjectContext { storageProvider.editingContext }
+    var editingContext: NSManagedObjectContext
 
     var taskID: NSManagedObjectID
     private var task: SproutCareTaskMO {
@@ -34,9 +33,9 @@ class TaskEditorViewController: UIViewController {
 
     // MARK: - Initializers
 
-    init(task: SproutCareTaskMO, storageProvider: StorageProvider = AppDelegate.storageProvider) {
+    init(task: SproutCareTaskMO, editingContext: NSManagedObjectContext) {
         taskID = task.objectID
-        self.storageProvider = storageProvider
+        self.editingContext = editingContext
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -70,14 +69,13 @@ class TaskEditorViewController: UIViewController {
 
     @objc private func doneButtonPressed(_: AnyObject) {
         delegate?.taskEditor(self, didUpdateTask: task)
-        storageProvider.saveAllContexts()
+        try? editingContext.saveIfNeeded()
         dismiss(animated: true)
     }
 
     @objc private func cancelButtonPressed(_: AnyObject) {
         delegate?.taskEditorDidCancel(self)
-        storageProvider.editingContext.rollback()
-        storageProvider.saveAllContexts()
+        editingContext.rollback()
         dismiss(animated: true)
     }
 

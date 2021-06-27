@@ -10,14 +10,14 @@ import UIKit
 public enum SproutCareType: String, Hashable, CaseIterable {
     case watering
 
-    var icon: String? {
+    public var icon: String? {
         switch self {
         case .watering:
             return "drop.fill"
         }
     }
 
-    var tintColorHex: String? {
+    public var tintColorHex: String? {
         switch self {
         case .watering:
             return UIColor.systemBlue.hexString()

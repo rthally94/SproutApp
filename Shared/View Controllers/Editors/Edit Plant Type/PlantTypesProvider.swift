@@ -10,9 +10,7 @@ import UIKit
 import SproutKit
 
 class PlantTypesProvider: NSObject {
-    let moc: NSManagedObjectContext
-
-    private var allTypes: [SproutPlantTemplate]
+    private var allTypes: [SproutPlantTemplate] = SproutPlantTemplate.allTypes
     private var selectedItem: Item?
     @Published var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
 
@@ -30,10 +28,7 @@ class PlantTypesProvider: NSObject {
 
     typealias Item = SproutPlantTemplate
 
-    init(managedObjectContext: NSManagedObjectContext) {
-        moc = managedObjectContext
-        allTypes = SproutPlantTemplate.allTypes
-
+    override init() {
         super.init()
 
         // Make Snapshot

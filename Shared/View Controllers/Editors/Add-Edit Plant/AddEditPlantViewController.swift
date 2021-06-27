@@ -16,12 +16,14 @@ class AddEditPlantViewController: UICollectionViewController {
     typealias Section = ViewModel.Section
     typealias Item = ViewModel.Item
 
-    var storageProvider: StorageProvider
-    var editingContext: NSManagedObjectContext {
-        storageProvider.editingContext
+    var editingContext: NSManagedObjectContext
+    var plantID: NSManagedObjectID?
+
+    private var plant: SproutPlantMO? {
+        guard let id = plantID else { return nil }
+        return try? editingContext.existingObject(with: id) as? SproutPlantMO
     }
 
-    private(set) var plant: SproutPlantMO?
     private var originalNickname: String?
 
     private var unconfiguredCareDetailTypes: [SproutCareType] {
@@ -41,24 +43,12 @@ class AddEditPlantViewController: UICollectionViewController {
     private var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
 
     // MARK: - Initializers
-
-    init(plant: SproutPlantMO? = nil, storageProvider: StorageProvider = AppDelegate.storageProvider) {
-        self.storageProvider = storageProvider
-        let editingContext = storageProvider.editingContext
-
-        // Fetch input plant in editing context or create a new one.
-        if let strongPlant = plant, let editingPlant = editingContext.object(with: strongPlant.objectID) as? SproutPlantMO {
-            self.plant = editingPlant
-        }
+    init(plant: SproutPlantMO, editingContext: NSManagedObjectContext) {
+        self.plantID = plant.objectID
+        self.editingContext = editingContext
 
         super.init(collectionViewLayout: UICollectionViewFlowLayout())
-
-        if plant == nil {
-            let template = SproutPlantTemplate.newPlant()
-            self.plant = SproutPlantMO.insertNewPlant(using: template, into: editingContext)
-        }
-
-        originalNickname = plant?.nickname
+        originalNickname = plant.nickname
 
         collectionView.collectionViewLayout = makeLayout()
     }
@@ -113,28 +103,28 @@ class AddEditPlantViewController: UICollectionViewController {
 
     private func showPlantTypePicker() {
         let vc = PlantTypePickerViewController()
-        vc.persistentContainer = storageProvider.persistentContainer
         vc.selectedType = plant?.plantTemplate
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
 
     private func showCareTaskEditor(for task: SproutCareTaskMO) {
-        let vc = TaskEditorViewController(task: task, storageProvider: storageProvider)
-        vc.storageProvider = storageProvider
+        let vc = TaskEditorViewController(task: task, editingContext: editingContext)
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
     }
 
     private func saveChanges() {
-        //        delegate?.plantEditor(self, didUpdatePlant: plant)
-        storageProvider.saveAllContexts()
+        try? editingContext.saveIfNeeded()
+        
+        if let plant = plant {
+            delegate?.plantEditor(self, didUpdatePlant: plant)
+        }
     }
 
     private func discardChangesIfAble(completion: @escaping (Bool) -> Void) {
         func discardChanges() {
-            storageProvider.editingContext.rollback()
-            storageProvider.saveAllContexts()
+            editingContext.rollback()
         }
 
         if hasChanges {
@@ -566,7 +556,7 @@ extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigat
         guard let image = info[.originalImage] as? UIImage else { return }
 
         // Apply the new selected image
-        plant?.icon = image
+        plant?.setImage(image)
 
         updateUI()
         dismiss(animated: true)

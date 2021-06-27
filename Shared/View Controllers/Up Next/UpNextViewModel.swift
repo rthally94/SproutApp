@@ -35,13 +35,7 @@ class UpNextViewModel {
     }
 
     var taskNeedingCare: Int {
-        let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
-        let midnightToday = Calendar.current.startOfDay(for: Date())
-        let midnightTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: midnightToday)!
-
-        let needsCareTodayPredicate = NSPredicate(format: "%K < %@", #keyPath(SproutCareTaskMO.dueDate), midnightTomorrow as NSDate)
-        request.predicate = needsCareTodayPredicate
-
+        let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.dueTasksFetchRequest(dueOn: Date())
         return (try? persistentContainer.viewContext.count(for: request)) ?? 0
     }
 
@@ -69,5 +63,9 @@ class UpNextViewModel {
         doesShowAllCompletedTasks = false
         tasksProvider.doesShowCompletedTasks = false
         taskMarkerDate = Date()
+    }
+
+    func reloadTasks() {
+        tasksProvider.reloadData()
     }
 }

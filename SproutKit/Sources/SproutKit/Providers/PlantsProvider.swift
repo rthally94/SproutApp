@@ -38,7 +38,7 @@ public final class PlantsProvider: NSObject {
     }
 
     public func object(withID id: NSManagedObjectID) -> SproutPlantMO? {
-        return moc.object(with: id) as? SproutPlantMO
+        return try? moc.existingObject(with: id) as? SproutPlantMO
     }
 
     public func reload() {
@@ -53,7 +53,7 @@ extension PlantsProvider: NSFetchedResultsControllerDelegate {
         let idsToReload = newSnapshot.itemIdentifiers.filter { identifier in
             guard let oldIndex = self.snapshot?.indexOfItem(identifier),
                   let newIndex = newSnapshot.indexOfItem(identifier),
-                  oldIndex != newIndex
+                  oldIndex == newIndex
             else { return false }
 
             guard (try? controller.managedObjectContext.existingObject(with: identifier))?.isUpdated == true else {

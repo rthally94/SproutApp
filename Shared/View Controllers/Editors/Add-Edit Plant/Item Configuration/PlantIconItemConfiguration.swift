@@ -14,6 +14,6 @@ struct PlantIconItemConfiguration: Hashable {
 
 extension PlantIconItemConfiguration {
     init(plant: SproutPlantMO) {
-        image = plant.icon
+        image = plant.getImage(preferredSize: .thumbnail)
     }
 }

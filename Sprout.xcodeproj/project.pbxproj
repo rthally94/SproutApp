@@ -906,7 +906,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
-				INFOPLIST_FILE = Sprout/SproutTests/Info.plist;
+				INFOPLIST_FILE = SproutTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -928,7 +928,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
-				INFOPLIST_FILE = Sprout/SproutTests/Info.plist;
+				INFOPLIST_FILE = SproutTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -38,7 +38,7 @@ struct UpNextItem: Hashable {
     }
 
     var plantIcon: UIImage? {
-        return plant.icon ?? UIImage.PlaceholderPlantImage
+        return plant.getImage() ?? UIImage.PlaceholderPlantImage
     }
 
     var scheduleIcon: UIImage? {

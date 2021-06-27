@@ -22,12 +22,12 @@ public extension SproutPlantMO {
         }
     }
 
-    var icon: UIImage? {
-        get {
-            getImage()
-        }
-        set {
-            setImage(newValue)
+    func asyncLoadImage(completion: @escaping ((UIImage?) -> Void)) {
+        DispatchQueue.global().async { [weak self] in
+            let image = self?.getImage(preferredSize: .full)
+            DispatchQueue.main.async {
+                completion(image)
+            }
         }
     }
 

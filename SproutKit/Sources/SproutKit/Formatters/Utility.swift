@@ -38,6 +38,7 @@ public enum Utility {
 
     public static var careScheduleFormatter: CareScheduleFormatter {
         let formatter = CareScheduleFormatter()
+        formatter.frequencyStyle = .short
         formatter.valuesStyle = .short
         formatter.formattingContext = .standalone
         return formatter

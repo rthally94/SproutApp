@@ -67,7 +67,7 @@ extension SproutCareTaskMO {
         }
     }
 
-    static func dueTasksFetchRequest(dueOn dueDate: Date? = nil, plant: SproutPlantMO? = nil, careType: SproutCareType? = nil) -> NSFetchRequest<SproutCareTaskMO> {
+    public static func dueTasksFetchRequest(dueOn dueDate: Date? = nil, plant: SproutPlantMO? = nil, careType: SproutCareType? = nil) -> NSFetchRequest<SproutCareTaskMO> {
         let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
         request.sortDescriptors = [SortDescriptors.sortByDueDate(ascending: true)]
 

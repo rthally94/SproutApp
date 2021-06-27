@@ -9,7 +9,7 @@ import CoreData
 import Foundation
 
 extension NSManagedObjectContext {
-    func saveIfNeeded() throws {
+    public func saveIfNeeded() throws {
         if self.hasChanges {
             try self.save()
         }

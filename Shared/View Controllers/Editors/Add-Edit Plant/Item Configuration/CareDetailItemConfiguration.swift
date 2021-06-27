@@ -29,8 +29,7 @@ struct CareDetailItemConfiguration: Hashable {
 
 extension CareDetailItemConfiguration {
     init(careTask task: SproutCareTaskMO, handler: (() -> Void)?) {
-        let iconName = task.careInformation?.icon ?? ""
-        let taskIcon = UIImage(named: iconName) ?? UIImage(systemName: iconName) ?? UIImage(systemName: "list.bullet.rectangle")
+        let taskIcon = task.careInformation?.iconImage ?? UIImage(systemName: "list.bullet.rectangle")
 
         let scheduleFormatter = Utility.careScheduleFormatter
         var subtitleText: String?

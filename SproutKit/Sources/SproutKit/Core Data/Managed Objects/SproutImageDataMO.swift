@@ -21,5 +21,6 @@ public final class SproutImageDataMO: NSManagedObject {
         super.willSave()
 
         setPrimitiveValue(Date(), forKey: #keyPath(SproutImageDataMO.lastModifiedDate))
+        plant?.willSave()
     }
 }

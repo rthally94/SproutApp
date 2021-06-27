@@ -71,8 +71,8 @@ class UpNextViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         viewModel.hidePreviousCompletedTasks()
+        viewModel.reloadTasks()
     }
 
     private func setupViews() {

@@ -78,12 +78,15 @@ class PlantGroupViewController: UIViewController {
     func showPlantDetail(for plant: SproutPlantMO) {
         let vc = PlantDetailViewController()
         vc.persistentContainer = viewModel.persistentContainer
-        vc.plant = plant
+        vc.plantID = plant.objectID
         navigationController?.pushViewController(vc, animated: true)
     }
 
     func showNewPlantEditor() {
-        let vc = AddEditPlantViewController(storageProvider: AppDelegate.storageProvider)
+        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        editingContext.parent = viewModel.persistentContainer.viewContext
+        let newPlant = SproutPlantMO.insertNewPlant(using: .newPlant(), into: editingContext)
+        let vc = AddEditPlantViewController(plant: newPlant, editingContext: editingContext)
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }
@@ -109,7 +112,7 @@ extension PlantGroupViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<SproutCardCell, Item> {
         return UICollectionView.CellRegistration<SproutCardCell, Item>() {[unowned self] cell, indexPath, item in
             guard let plant = self.viewModel.plant(withID: item) else { return }
-            cell.image = plant.icon ?? UIImage.PlaceholderPlantImage
+            cell.image = plant.getImage() ?? UIImage.PlaceholderPlantImage
             cell.text = plant.primaryDisplayName
         }
     }

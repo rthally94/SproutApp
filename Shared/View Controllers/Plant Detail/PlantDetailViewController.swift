@@ -22,7 +22,11 @@ class PlantDetailViewController: UIViewController {
         persistentContainer.viewContext
     }
 
-    var plant: SproutPlantMO?
+    var plantID: NSManagedObjectID?
+    var plant: SproutPlantMO? {
+        guard let id = plantID else { return nil }
+        return try? viewContext.existingObject(with: id) as? SproutPlantMO
+    }
 
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
@@ -48,7 +52,10 @@ class PlantDetailViewController: UIViewController {
     
     //MARK: - Actions
     @objc private func editPlant() {
-        let vc = AddEditPlantViewController(plant: plant, storageProvider: AppDelegate.storageProvider)
+        guard let plant = plant else { return }
+        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        editingContext.parent = viewContext
+        let vc = AddEditPlantViewController(plant: plant, editingContext: editingContext)
         vc.delegate = self
         present(vc.wrappedInNavigationController(), animated: true)
     }
@@ -178,7 +185,7 @@ private extension PlantDetailViewController {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [weak self] cell, indexPath, item in
             switch item {
             case let .careTask(id):
-                guard let task = self?.viewContext.object(with: id) as? SproutCareTaskMO else { break }
+                guard let task = try? self?.viewContext.existingObject(with: id) as? SproutCareTaskMO else { break }
                 let viewModel = SproutCareTaskCellViewModel(careTask: task)
                 var config = UIListContentConfiguration.valueCell()
                 config.image = viewModel.image
@@ -187,8 +194,6 @@ private extension PlantDetailViewController {
                 config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
                 config.prefersSideBySideTextAndSecondaryText = false
                 cell.contentConfiguration = config
-            default:
-                return
             }
         }
     }
@@ -199,10 +204,10 @@ private extension PlantDetailViewController {
             view.subtitleText = plant?.secondaryDisplayName
 
             var iconConfig = view.defaultIconConfiguration()
-            iconConfig.image = plant?.icon ?? UIImage.PlaceholderPlantImage
+            iconConfig.image = plant?.getImage() ?? UIImage.PlaceholderPlantImage
             view.iconConfiguration = iconConfig
 
-            view.backgroundImage = plant?.icon ?? UIImage.PlaceholderPlantImage
+            view.backgroundImage = plant?.getImage() ?? UIImage.PlaceholderPlantImage
         }
     }
 
@@ -242,12 +247,17 @@ extension PlantDetailViewController: UICollectionViewDelegate {
 // MARK: - Plant Editor Delegate
 extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
     func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
+        guard let existingPlant = try? viewContext.existingObject(with: plant.objectID) else { return }
 
-        if plant.isDeleted {
+        if existingPlant.isDeleted {
             navigationController?.popViewController(animated: false)
         }
 
-        persistentContainer.saveContextIfNeeded()
+        if existingPlant.isUpdated {
+            self.dataSource.apply(makeSnapshot(), animatingDifferences: false)
+        }
+
+        try? viewContext.saveIfNeeded()
     }
 }
 
