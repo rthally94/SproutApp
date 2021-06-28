@@ -5,17 +5,13 @@
 //  Created by Ryan Thally on 1/15/21.
 //
 
+import Combine
 import CoreData
 import UIKit
 import SproutKit
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    static var hasLaunched: Bool {
-        get { UserDefaults.standard.bool(forKey: UserDefaults.Keys.hasLaunched) }
-        set { UserDefaults.standard.setValue(newValue, forKey: UserDefaults.Keys.hasLaunched) }
-    }
-
     static var storageProvider: StorageProvider {
         (UIApplication.shared.delegate as! AppDelegate).storageProvider
     }
@@ -28,19 +24,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         persistentContainer.viewContext
     }
 
-    var storageProvider = StorageProvider()
-    var taskNotificationManager = TaskNotificationManager()
+    let storageProvider = StorageProvider()
+    var taskNotificationManager: TaskNotificationManager!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        NotificationCenter.default.addObserver(self, selector: #selector(updateNotificationsState), name: UserDefaults.didChangeNotification, object: nil)
-
-        updateNotificationsState()
+        taskNotificationManager = TaskNotificationManager()
         return true
     }
 
     // MARK: UISceneSession Lifecycle
-
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
         // Use this method to select a configuration to create the new scene with.
@@ -51,22 +44,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-    }
-
-    @objc private func updateNotificationsState() {
-        let notificationsAreEnabled = UserDefaults.standard.bool(forKey: .dailyDigestIsEnabled)
-
-        let notificationTimeComponents: DateComponents = {
-            guard let dateTimeString = UserDefaults.standard.string(forKey: .dailyDigestDate), let dateTime = Date(rawValue: dateTimeString) else { return DateComponents() }
-            return Calendar.current.dateComponents([.hour, .minute], from: dateTime)
-        }()
-
-        if notificationsAreEnabled != taskNotificationManager.areNotificationsEnabled ||  notificationTimeComponents != taskNotificationManager.scheduledTimeComponents {
-            taskNotificationManager.startNotifications()
-        } else {
-            print("User has disabled notifications in settings")
-            taskNotificationManager.stopNotifications()
-        }
     }
 }
 

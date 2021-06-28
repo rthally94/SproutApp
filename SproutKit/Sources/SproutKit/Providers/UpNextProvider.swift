@@ -43,7 +43,7 @@ final public class UpNextProvider: NSObject {
     }
 
     private func makeTasksFRC() -> RichFetchedResultsController<SproutCareTaskMO> {
-        let request = SproutCareTaskMO.upNextFetchRequest()
+        let request = SproutCareTaskMO.upNextFetchRequest(includesCompleted: doesShowCompletedTasks)
         let controller: RichFetchedResultsController<SproutCareTaskMO> = RichFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.statusDate), cacheName: nil)
         controller.delegate = self
         return controller

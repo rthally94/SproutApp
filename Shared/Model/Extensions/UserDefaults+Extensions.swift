@@ -30,3 +30,27 @@ extension UserDefaults {
         setValue(newValue, forKey: key.rawValue)
     }
 }
+
+extension UserDefaults {
+    @objc var hasLaunched: Bool {
+        get { bool(forKey: .hasLaunched) }
+        set { setValue(newValue, forKey: .hasLaunched) }
+    }
+
+    @objc var dailyDigestIsEnabled: Bool {
+        get { bool(forKey: .dailyDigestIsEnabled) }
+        set { setValue(newValue, forKey: .dailyDigestIsEnabled)}
+    }
+
+    @objc var dailyDigestDate: Date? {
+        get {
+            guard let dateTimeString = string(forKey: .dailyDigestDate),
+                  let dateTime = Date(rawValue: dateTimeString)
+            else { return nil }
+            return dateTime
+        }
+        set {
+            setValue(newValue, forKey: .dailyDigestDate)
+        }
+    }
+}

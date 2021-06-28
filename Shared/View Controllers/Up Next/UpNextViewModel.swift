@@ -31,7 +31,30 @@ class UpNextViewModel {
     var persistentContainer = AppDelegate.persistentContainer
 
     var snapshot: AnyPublisher<Snapshot?, Never> {
-        tasksProvider.$snapshot.eraseToAnyPublisher()
+        tasksProvider.$snapshot
+            .map { oldSnapshot in
+                var newSnapshot = Snapshot()
+
+                oldSnapshot?.sectionIdentifiers.forEach({ section in
+                    if let sectionDate = self.stringToDateFormatter.date(from: section) {
+                        let newSectionDate = Calendar.current.startOfDay(for: sectionDate)
+                        let newSectionDateFormatted = self.stringToDateFormatter.string(from: newSectionDate)
+                        if !newSnapshot.sectionIdentifiers.contains(newSectionDateFormatted) {
+                            newSnapshot.appendSections([newSectionDateFormatted])
+                        }
+                        
+                        let items = oldSnapshot?.itemIdentifiers(inSection: section) ?? []
+                        newSnapshot.appendItems(items, toSection: newSectionDateFormatted)
+                    } else {
+                        newSnapshot.appendSections([section])
+                        let items = oldSnapshot?.itemIdentifiers(inSection: section) ?? []
+                        newSnapshot.appendItems(items, toSection: section)
+                    }
+                })
+
+                return newSnapshot
+            }
+            .eraseToAnyPublisher()
     }
 
     var taskNeedingCare: Int {

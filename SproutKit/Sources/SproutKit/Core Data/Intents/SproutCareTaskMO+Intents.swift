@@ -28,5 +28,6 @@ extension SproutCareTaskMO {
         guard let typeKey = careInformation?.type, let type = SproutCareType(rawValue: typeKey) else { return }
         let newTask = Self.insertNewTask(of: type, into: context)
         newTask.schedule = schedule
+        newTask.plant = plant
     }
 }

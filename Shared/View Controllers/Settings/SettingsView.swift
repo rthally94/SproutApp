@@ -11,6 +11,10 @@ struct SettingsView: View {
     @AppStorage(UserDefaults.Keys.dailyDigestIsEnabled.rawValue) var isDailyDigestEnabled = false
     @AppStorage(UserDefaults.Keys.dailyDigestDate.rawValue) var dailyDigestDate = Calendar.current.date(bySettingHour: 7, minute: 30, second: 0, of: Date())!
 
+    #if DEBUG
+    var storageProvider = AppDelegate.storageProvider
+    #endif
+
     var body: some View {
         NavigationView {
             Form {
@@ -56,6 +60,22 @@ struct SettingsView: View {
                         }
                     )
                 }
+
+                #if DEBUG
+                Section(header: Text("Debugging Controls")) {
+                    Button(action: {
+                        storageProvider.deleteAllData()
+                    }, label: {
+                        Label("Delete All Data", systemImage: "trash.fill")
+                    })
+
+                    Button(action: {
+                        storageProvider.loadSampleData()
+                    }, label: {
+                        Label("Load Sample Data", systemImage: "books.vertical.fill")
+                    })
+                }
+                #endif
             }
             .navigationTitle("Settings")
         }

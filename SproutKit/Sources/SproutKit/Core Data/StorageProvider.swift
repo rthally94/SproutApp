@@ -53,6 +53,21 @@ public class StorageProvider {
         case inMemory, persisted
     }
 
+    public func deleteAllData() {
+        guard let url = persistentContainer.persistentStoreCoordinator.persistentStores.first?.url,
+              let type = persistentContainer.persistentStoreCoordinator.persistentStores.first?.type
+        else {
+            return
+        }
+        
+        do {
+            try persistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: url, ofType: type, options: nil)
+        } catch {
+            print("Unable to delete persistent store: \(error)")
+
+        }
+    }
+
     public func loadSampleData() {
         persistentContainer.performBackgroundTask { context in
             do {

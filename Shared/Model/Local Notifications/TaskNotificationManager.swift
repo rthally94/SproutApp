@@ -13,88 +13,70 @@ final class TaskNotificationManager {
     private lazy var remindersProvider = ReminderNotificationProvider(managedObjectContext: persistentContainer.newBackgroundContext())
     private lazy var notificationsManager = LocalNotificationManager()
     
-    private var cancellables = Set<AnyCancellable>()
+    private var cancellables: Set<AnyCancellable> = []
 
-
-    var areNotificationsEnabled: Bool {
-        !cancellables.isEmpty
-    }
-
+    var areNotificationsAuthorized: Bool = false
     var scheduledTimeComponents = DateComponents()
+
+    init() {
+        subscribeToNotificationPropertyChanges()
+        subscribeToReminders()
+    }
 
     func registerForNotifications() {
         notificationsManager.requestAuthorization { [weak self] granted in
             guard let self = self else { return }
-            if granted {
-                self.startNotifications()
-            }
+            self.areNotificationsAuthorized = granted
         }
     }
     
-    func startNotifications() {
-        registerForNotifications()
-        remindersProvider.updateData()
-//        remindersProvider.$data
-//            .map { data in
-//                data?.reduce(into: [LocalNotification](), { notifications, taskData in
-//                    let dueDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: taskData.key)
-//                    let timeComponents: DateComponents
-//                    if let userTimeString = UserDefaults.standard.string(forKey: .dailyDigestDate),
-//                       let userTime = Date(rawValue: userTimeString) {
-//                        timeComponents = Calendar.current.dateComponents([.hour, .minute], from: userTime)
-//                    } else {
-//                        timeComponents = DateComponents(hour: 7, minute: 30)
-//                    }
-//                    let notificationTimeComponents = DateComponents(year: dueDateComponents.year, month: dueDateComponents.month, day: dueDateComponents.day, hour: timeComponents.hour, minute: timeComponents.minute)
-//
-//                    let tasks = taskData.value
-//                    let taskPlantNames = tasks.compactMap { $0.plant?.nickname ?? $0.plant?.commonName }
-//                    let taskCount = tasks.reduce(0) { currentCount, task in
-//                        task.historyLog == nil ? currentCount + 1 : currentCount
-//                    }
-//                    
-//                    let notificationTitle = "Plant Care Due Today"
-//                    var notificationBody: String?
-//
-//                    switch taskCount {
-//                    case 1:
-//                        if let reminderList = ListFormatter().string(from: taskPlantNames) {
-//                            notificationBody = reminderList + " needs care today."
-//                        }
-//                    case 2, 3:
-//                        if let reminderList = ListFormatter().string(from: taskPlantNames) {
-//                            notificationBody = reminderList + " need care today."
-//                        }
-//                    case 4...:
-//                        let remainingItemsCount = taskCount - 3
-//                        var items = Array(taskPlantNames.prefix(3))
-//                        items.append("\(remainingItemsCount) other plants need care today.")
-//                        
-//                        notificationBody = ListFormatter().string(from: items)
-//                    default:
-//                        break
-//                    }
-//                    
-//                    let notification = LocalNotification(id: UUID().uuidString, title: notificationTitle, body: notificationBody, badgeValue: taskCount, datetime: notificationTimeComponents)
-//                    notifications.append(notification)
-//                }) ?? []
-//            }
-//            .sink { [weak self] data in
-//                guard let self = self else { return }
-//                if let scheduledDateComponents = data.first?.datetime {
-//                    self.scheduledTimeComponents = DateComponents(hour: scheduledDateComponents.hour, minute: scheduledDateComponents.minute)
-//                }
-//
-//                DispatchQueue.main.async {
-//                    self.notificationsManager.removeAllScheduledNotifications()
-//                    self.notificationsManager.scheduleNotifications(data)
-//                }
-//            }
-//            .store(in: &cancellables)
+    func updateNotifications() {
+        if !areNotificationsAuthorized {
+            registerForNotifications()
+        }
+
+        if UserDefaults.standard.dailyDigestIsEnabled {
+            remindersProvider.updateData()
+        } else {
+            print("--- USER DISABLED NOTIFICATIONS ---")
+        }
     }
-    
-    func stopNotifications() {
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
+
+    private func subscribeToNotificationPropertyChanges() {
+        UserDefaults.standard
+            .publisher(for: \.dailyDigestIsEnabled)
+            .combineLatest(UserDefaults.standard.publisher(for: \.dailyDigestDate))
+            .debounce(for: 0.5, scheduler: RunLoop.main)
+            .compactMap { isEnabled, date -> (Bool, Date)? in
+                if date == nil {
+                    return nil
+                } else {
+                    return (isEnabled, date!)
+                }
+            }
+            .sink { [weak self] isEnabled, dateTime in
+                guard let self = self else { return }
+                self.updateNotifications()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func subscribeToReminders() {
+        remindersProvider.$data
+            .compactMap { $0 }  // Unwrap Optional
+            .removeDuplicates()
+            .sink { [weak self] notifications in
+                guard let self = self else { return }
+                if let scheduledDateComponents = notifications.first?.datetime {
+                    self.scheduledTimeComponents = DateComponents(hour: scheduledDateComponents.hour, minute: scheduledDateComponents.minute)
+                }
+
+                DispatchQueue.main.async {
+                    self.notificationsManager.removeAllScheduledNotifications()
+                    self.notificationsManager.scheduleNotifications(notifications)
+                    print("--- NOTIFICATIONS SCHEDULED ---")
+                }
+            }
+            .store(in: &cancellables)
     }
 }

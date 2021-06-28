@@ -15,25 +15,6 @@ struct LocalNotification: Hashable {
     let badgeValue: Int
     let datetime: DateComponents
     
-    init(id: String, title: String?, body: String?, badgeValue: Int, datetime: DateComponents) {
-        self.id = id
-        self.title = title
-        self.body = body
-        self.badgeValue = badgeValue
-        self.datetime = datetime
-    }
-    
-    init?(request: UNNotificationRequest) {
-        self.id = request.identifier
-        self.title = request.content.title
-        self.body = request.content.body
-        
-        self.badgeValue = request.content.userInfo["badgeValue"] as? Int ?? 0
-        
-        guard let trigger = request.trigger as? UNCalendarNotificationTrigger else { return nil }
-        self.datetime = trigger.dateComponents
-    }
-    
     func makeRequest() -> UNNotificationRequest {
         let content = UNMutableNotificationContent()
         if let title = title {
@@ -54,10 +35,24 @@ struct LocalNotification: Hashable {
     }
 }
 
+extension LocalNotification {
+    init?(request: UNNotificationRequest) {
+        self.id = request.identifier
+        self.title = request.content.title
+        self.body = request.content.body
+
+        self.badgeValue = request.content.userInfo["badgeValue"] as? Int ?? 0
+
+        guard let trigger = request.trigger as? UNCalendarNotificationTrigger else { return nil }
+        self.datetime = trigger.dateComponents
+    }
+}
+
 class LocalNotificationManager: NSObject, ObservableObject {
     static var shared = LocalNotificationManager()
     @Published var settings: UNNotificationSettings?
-    
+
+
     override init() {
         super.init()
         UNUserNotificationCenter.current().delegate = self

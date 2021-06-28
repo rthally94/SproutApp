@@ -109,7 +109,7 @@ extension SproutCareTaskMO {
     }
 
     public static func remindersFetchRequest() -> NSFetchRequest<SproutCareTaskMO> {
-        let request = SproutCareTaskMO.fetchRequest
+        let request = NSFetchRequest<SproutCareTaskMO>(entityName: SproutCareTaskMO.entityName)
 
         request.sortDescriptors = [
             SortDescriptors.sortByStatusDate(ascending: true),

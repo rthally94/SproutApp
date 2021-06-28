@@ -1,6 +1,6 @@
 //
 //  RelationshipKeyPathsObserver.swift
-//  
+//  See https://www.avanderlee.com/swift/nsfetchedresultscontroller-observe-relationship-changes/
 //
 //  Created by Ryan Thally on 6/27/21.
 //

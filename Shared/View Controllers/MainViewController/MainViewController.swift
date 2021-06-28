@@ -74,7 +74,7 @@ class MainViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        let isFirstLaunch = !AppDelegate.hasLaunched
+        let isFirstLaunch = !UserDefaults.standard.hasLaunched
         if isFirstLaunch {
             showInitialConfiguration()
         }
@@ -91,11 +91,11 @@ class MainViewController: UIViewController {
 
         let loadSampleDataAction = UIAlertAction(title: "Load Data", style: .default, handler: { sender in
             AppDelegate.storageProvider.loadSampleData()
-            AppDelegate.hasLaunched = true
+            UserDefaults.standard.hasLaunched = true
         })
 
         let skipConfigAction = UIAlertAction(title: "Skip Setup", style: .cancel, handler: { sender in
-            AppDelegate.hasLaunched = true
+            UserDefaults.standard.hasLaunched = true
         })
 
         alertController.addAction(skipConfigAction)
