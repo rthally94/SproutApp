@@ -89,16 +89,11 @@ class AddEditPlantViewController: UICollectionViewController {
     // MARK: - Actions
 
     @objc private func cancelButtonPressed(sender _: AnyObject) {
-        discardChangesIfAble { [weak self] success in
-            if success {
-                self?.dismiss(animated: true)
-            }
-        }
+        delegate?.plantEditorDidCancel(self)
     }
 
     @objc private func saveButtonPressed(sender _: AnyObject) {
         saveChanges()
-        dismiss(animated: true)
     }
 
     private func showPlantTypePicker() {
@@ -581,7 +576,6 @@ extension AddEditPlantViewController: TaskEditorDelegate {
 }
 
 // MARK: - UIAdaptivePresentationControllerDelegate
-
 extension AddEditPlantViewController: UIAdaptivePresentationControllerDelegate {
     // Decides if a pull down gesture should dismiss the editor
     func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {

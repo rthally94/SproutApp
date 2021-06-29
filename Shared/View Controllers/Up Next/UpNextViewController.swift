@@ -52,6 +52,7 @@ class UpNextViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         dataSource = makeDataSource()
 
         viewModel.snapshot

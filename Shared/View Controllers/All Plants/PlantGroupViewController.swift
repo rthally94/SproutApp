@@ -12,11 +12,14 @@ import SproutKit
 
 class PlantGroupViewController: UIViewController {
     // MARK: - Properties
-    typealias Item = PlantGroupViewModel.Item
-    typealias Section = PlantGroupViewModel.Section
+    typealias Item = PlantsProvider.Item
+    typealias Section = PlantsProvider.Section
     typealias Snapshot = PlantGroupViewModel.Snapshot
 
-    var viewModel: PlantGroupViewModel!
+    weak var coordinator: PlantsCoordinator?
+
+    var persistentContainer: NSPersistentContainer!
+    var plantsProvider: PlantsProvider!
     
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellables = Set<AnyCancellable>()
@@ -36,33 +39,16 @@ class PlantGroupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationController?.delegate = self
         dataSource = makeDataSource()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewPlant))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPlantButtonPressed))
+        title = "Your Plants"
 
-        viewModel.snapshot
+        plantsProvider.$snapshot
             .sink(receiveValue: { [weak self] snapshot in
                 if let snapshot = snapshot {
                     self?.dataSource.apply(snapshot)
                 }
             })
-            .store(in: &cancellables)
-
-        viewModel.$navigationTitle
-            .assign(to: \.title, on: self)
-            .store(in: &cancellables)
-
-        viewModel.$presentedView
-            .sink {[unowned self] view in
-                switch view {
-                case .newPlant:
-                    self.showNewPlantEditor()
-                case let .plantDetail(plant):
-                    self.showPlantDetail(for: plant)
-                default:
-                    break
-                }
-            }
             .store(in: &cancellables)
     }
 
@@ -71,24 +57,20 @@ class PlantGroupViewController: UIViewController {
     }
 
     // MARK: - Actions
-    @objc func addNewPlant() {
-        viewModel.addNewPlant()
+    @objc func addPlantButtonPressed() {
+        showNewPlantEditor()
     }
 
-    func showPlantDetail(for plant: SproutPlantMO) {
-        let vc = PlantDetailViewController()
-        vc.persistentContainer = viewModel.persistentContainer
-        vc.plantID = plant.objectID
-        navigationController?.pushViewController(vc, animated: true)
+    private func showPlantDetail(for plant: SproutPlantMO) {
+        coordinator?.showDetail(plant: plant)
     }
 
-    func showNewPlantEditor() {
-        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = viewModel.persistentContainer.viewContext
-        let newPlant = SproutPlantMO.insertNewPlant(using: .newPlant(), into: editingContext)
-        let vc = AddEditPlantViewController(plant: newPlant, editingContext: editingContext)
-        vc.delegate = self
-        present(vc.wrappedInNavigationController(), animated: true)
+    private func showNewPlantEditor() {
+        coordinator?.addNewPlant()
+    }
+
+    private func showPlantEditor(for plant: SproutPlantMO) {
+        coordinator?.edit(plant: plant)
     }
 }
 
@@ -111,7 +93,7 @@ extension PlantGroupViewController {
 
     func makeCellRegistration() -> UICollectionView.CellRegistration<SproutCardCell, Item> {
         return UICollectionView.CellRegistration<SproutCardCell, Item>() {[unowned self] cell, indexPath, item in
-            guard let plant = self.viewModel.plant(withID: item) else { return }
+            guard let plant = plantsProvider.object(withID: item) else { return }
             cell.image = plant.getImage() ?? UIImage.PlaceholderPlantImage
             cell.text = plant.primaryDisplayName
         }
@@ -131,43 +113,23 @@ extension PlantGroupViewController {
 // MARK: - UICollectionViewDelegate
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        viewModel.selectPlant(at: indexPath)
+        let plant = plantsProvider.object(at: indexPath)
+        coordinator?.showDetail(plant: plant)
     }
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { suggestedActions in
+        let plant = plantsProvider.object(at: indexPath)
+
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) {[weak self] suggestedActions in
             let editAction = UIAction(title: "Edit Plant", image: UIImage(systemName: "pencil")) { action in
-                print("I should edit the plant")
+                self?.coordinator?.edit(plant: plant)
             }
 
             let deleteAction = UIAction(title: "Delete Plant", image: UIImage(systemName: "trash.fill"), attributes: .destructive) { action in
-                print("I should delete the plant")
+                self?.coordinator?.delete(plant: plant)
             }
 
             return UIMenu(title: "", children: [editAction, deleteAction])
-        }
-    }
-}
-
-// MARK: - PlantEditorDelegate
-extension PlantGroupViewController: AddEditPlantViewControllerDelegate {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
-        viewModel.showList()
-
-        viewModel.persistentContainer.viewContext.refresh(plant, mergeChanges: true)
-        viewModel.persistentContainer.saveContextIfNeeded()
-    }
-
-    func plantEditorDidCancel(_ editor: AddEditPlantViewController) {
-        viewModel.showList()
-    }
-}
-
-// MARK: - UINavigationControllerDelegate
-extension PlantGroupViewController: UINavigationControllerDelegate {
-    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if viewController == self {
-            viewModel.showList()
         }
     }
 }

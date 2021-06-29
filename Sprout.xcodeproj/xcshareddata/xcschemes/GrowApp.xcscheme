@@ -95,6 +95,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "Sprout"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

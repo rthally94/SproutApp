@@ -34,9 +34,6 @@ class MainViewController: UIViewController {
     lazy var plantGroupVC: some UIViewController = {
         let vc = PlantGroupViewController()
 
-        let viewModel = PlantGroupViewModel(persistentContainer: persistentContainer)
-        vc.viewModel = viewModel
-
         let nav = vc.wrappedInNavigationController()
         nav.navigationBar.prefersLargeTitles = true
         
