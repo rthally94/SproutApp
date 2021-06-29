@@ -17,19 +17,25 @@ enum PlantGroupView {
     case plantDetail(SproutPlantMO)
 }
 
-class PlantGroupViewModel {
+class PlantGroupViewModel: ObservableObject {
     typealias Section = String
     typealias Item = NSManagedObjectID
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    private lazy var plantsProvider = PlantsProvider(managedObjectContext: persistentContainer.viewContext)
-    var persistentContainer = AppDelegate.persistentContainer
+    private var plantsProvider: PlantsProvider
+    var persistentContainer: NSPersistentContainer
 
     @Published private(set) var presentedView: PlantGroupView = .initial
     @Published private(set) var navigationTitle: String? = "Your Plants"
 
     var snapshot: AnyPublisher<Snapshot?, Never> {
-        plantsProvider.$snapshot.eraseToAnyPublisher()
+        plantsProvider.$snapshot
+            .eraseToAnyPublisher()
+    }
+
+    init(persistentContainer: NSPersistentContainer) {
+        self.persistentContainer = persistentContainer
+        plantsProvider = PlantsProvider(managedObjectContext: persistentContainer.viewContext)
     }
 
     // MARK: - Task Methods

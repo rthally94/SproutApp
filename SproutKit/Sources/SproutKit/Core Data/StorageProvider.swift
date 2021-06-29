@@ -10,7 +10,7 @@ import UIKit
 
 public class StorageProvider {
     public static var managedObjectModel: NSManagedObjectModel = {
-//        let bundle = Bundle(for: StorageProvider.self)
+        //        let bundle = Bundle(for: StorageProvider.self)
         guard let url = Bundle.module.url(forResource: "SproutCoreDataModel", withExtension: "momd") else {
             fatalError("Failed to get url for SproutCoreDataModel.momd")
         }
@@ -54,14 +54,18 @@ public class StorageProvider {
     }
 
     public func deleteAllData() {
-        guard let url = persistentContainer.persistentStoreCoordinator.persistentStores.first?.url,
-              let type = persistentContainer.persistentStoreCoordinator.persistentStores.first?.type
+        guard let store = persistentContainer.persistentStoreCoordinator.persistentStores.first(where: {
+            $0.url?.absoluteString.contains("SproutCoreDataModel") == true
+        }),
+        let url = store.url
         else {
             return
         }
-        
+
         do {
-            try persistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: url, ofType: type, options: nil)
+            persistentContainer.viewContext.reset()
+            try persistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: url, ofType: store.type, options: nil)
+            try persistentContainer.persistentStoreCoordinator.addPersistentStore(ofType: store.type, configurationName: nil, at: url, options: nil)
         } catch {
             print("Unable to delete persistent store: \(error)")
 

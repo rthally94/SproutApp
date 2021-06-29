@@ -51,7 +51,11 @@ struct UpNextItem: Hashable {
 
     // MARK: - Task Actions
     func markAsComplete() {
-        task.markAsComplete()
+        task.managedObjectContext?.performAndWait {
+            task.markAsComplete()
+        }
+
+        try? task.managedObjectContext?.saveIfNeeded()
     }
 }
 

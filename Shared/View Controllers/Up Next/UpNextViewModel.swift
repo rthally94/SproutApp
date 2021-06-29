@@ -26,6 +26,7 @@ class UpNextViewModel {
 
     @Published private(set) var doesShowAllCompletedTasks = true
     @Published private(set) var taskMarkerDate: Date = Date()
+    @Published private var areUpdatesEnabled: Bool = false
 
     private lazy var tasksProvider = UpNextProvider(managedObjectContext: persistentContainer.viewContext)
     var persistentContainer = AppDelegate.persistentContainer
@@ -34,23 +35,39 @@ class UpNextViewModel {
         tasksProvider.$snapshot
             .map { oldSnapshot in
                 var newSnapshot = Snapshot()
+                if let oldSnapshot = oldSnapshot {
+                    oldSnapshot.sectionIdentifiers.forEach({ section in
+                        if let sectionDate = self.stringToDateFormatter.date(from: section) {
+                            let newSectionDate = Calendar.current.startOfDay(for: sectionDate)
+                            let newSectionDateFormatted = self.stringToDateFormatter.string(from: newSectionDate)
+                            if !newSnapshot.sectionIdentifiers.contains(newSectionDateFormatted) {
+                                newSnapshot.appendSections([newSectionDateFormatted])
+                            }
 
-                oldSnapshot?.sectionIdentifiers.forEach({ section in
-                    if let sectionDate = self.stringToDateFormatter.date(from: section) {
-                        let newSectionDate = Calendar.current.startOfDay(for: sectionDate)
-                        let newSectionDateFormatted = self.stringToDateFormatter.string(from: newSectionDate)
-                        if !newSnapshot.sectionIdentifiers.contains(newSectionDateFormatted) {
-                            newSnapshot.appendSections([newSectionDateFormatted])
+                            let items = oldSnapshot.itemIdentifiers(inSection: section)
+                            newSnapshot.appendItems(items, toSection: newSectionDateFormatted)
+                        } else {
+                            newSnapshot.appendSections([section])
+                            let items = oldSnapshot.itemIdentifiers(inSection: section)
+                            newSnapshot.appendItems(items, toSection: section)
                         }
-                        
-                        let items = oldSnapshot?.itemIdentifiers(inSection: section) ?? []
-                        newSnapshot.appendItems(items, toSection: newSectionDateFormatted)
-                    } else {
-                        newSnapshot.appendSections([section])
-                        let items = oldSnapshot?.itemIdentifiers(inSection: section) ?? []
-                        newSnapshot.appendItems(items, toSection: section)
+                    })
+
+                    let idsToReload = newSnapshot.itemIdentifiers.filter { identifier in
+                        guard let oldIndex = oldSnapshot.indexOfItem(identifier),
+                              let newIndex = newSnapshot.indexOfItem(identifier),
+                              oldIndex == newIndex
+                        else { return false }
+
+                        let task = self.task(witID: identifier)
+                        let plant = task?.plant
+                        guard task?.isUpdated == true || plant?.isUpdated == true else { return false }
+
+                        return true
                     }
-                })
+
+                    newSnapshot.reloadItems(idsToReload)
+                }
 
                 return newSnapshot
             }
@@ -91,5 +108,14 @@ class UpNextViewModel {
         if tasksProvider.doesShowCompletedTasks == true {
             tasksProvider.doesShowCompletedTasks = false
         }
+    }
+
+    func startUpdates() {
+        areUpdatesEnabled = true
+//        tasksProvider.reloadData()
+    }
+
+    func stopUpdates() {
+        areUpdatesEnabled = false
     }
 }

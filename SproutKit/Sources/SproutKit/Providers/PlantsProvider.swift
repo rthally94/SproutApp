@@ -13,24 +13,16 @@ public final class PlantsProvider: NSObject {
     public typealias Item = NSManagedObjectID
     
     let moc: NSManagedObjectContext
-    fileprivate let fetchedResultsController: NSFetchedResultsController<SproutPlantMO>
+    fileprivate var fetchedResultsController: NSFetchedResultsController<SproutPlantMO>!
     
     @Published public var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
 
     public init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext
-        
-        let request: NSFetchRequest<SproutPlantMO> = SproutPlantMO.fetchRequest()
-        let sortByNickname = NSSortDescriptor(keyPath: \SproutPlantMO.nickname, ascending: true)
-        let sortByCommonName = NSSortDescriptor(keyPath: \SproutPlantMO.commonName, ascending: true)
-        request.sortDescriptors = [sortByNickname, sortByCommonName]
-        
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        
         super.init()
-        
-        fetchedResultsController.delegate = self
-        try! fetchedResultsController.performFetch()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(persistentStoreCoordinatorStoresDidChangeNotification(notification:)), name: .NSPersistentStoreCoordinatorStoresDidChange, object: nil)
+        restartFRC()
     }
     
     public func object(at indexPath: IndexPath) -> SproutPlantMO {
@@ -41,8 +33,25 @@ public final class PlantsProvider: NSObject {
         return try? moc.existingObject(with: id) as? SproutPlantMO
     }
 
-    public func reload() {
+    @objc private func persistentStoreCoordinatorStoresDidChangeNotification(notification: NSNotification) {
+        if let addedStores = notification.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore], addedStores.contains(where: { store in
+            store.url?.absoluteString.contains("SproutCoreDataModel") == true
+        }) {
+            print("SproutCoreDataModelAdded. Restarting Provider")
+            restartFRC()
+        }
+    }
+
+    private func restartFRC() {
+        fetchedResultsController = makeFRC()
         try! fetchedResultsController.performFetch()
+    }
+
+    private func makeFRC() -> NSFetchedResultsController<SproutPlantMO> {
+        let request = SproutPlantMO.allPlantsFetchRequest()
+        let frc = NSFetchedResultsController<SproutPlantMO>(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        frc.delegate = self
+        return frc
     }
 }
 

@@ -72,6 +72,12 @@ class UpNextViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel.hidePreviousCompletedTasks()
+        viewModel.startUpdates()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewModel.stopUpdates()
     }
 
     private func setupViews() {
@@ -112,8 +118,8 @@ private extension UpNextViewController {
                 cell.accessories = [ .checkmark() ]
             } else {
                 cell.accessories = [
-                    .todoAccessory(actionHandler: {[weak self] _ in
-                        self?.viewModel.markTaskAsComplete(id: item)
+                    .todoAccessory(actionHandler: {_ in
+                        viewModel.markAsComplete()
                     })
                 ]
             }

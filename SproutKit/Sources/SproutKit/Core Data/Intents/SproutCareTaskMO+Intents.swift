@@ -24,10 +24,12 @@ extension SproutCareTaskMO {
             markStatus = .done
         }
 
-        guard let context = managedObjectContext else { return }
-        guard let typeKey = careInformation?.type, let type = SproutCareType(rawValue: typeKey) else { return }
-        let newTask = Self.insertNewTask(of: type, into: context)
-        newTask.schedule = schedule
-        newTask.plant = plant
+        guard let context = self.managedObjectContext else { return }
+        context.performAndWait {
+            guard let typeKey = self.careInformation?.type, let type = SproutCareType(rawValue: typeKey) else { return }
+            let newTask = Self.insertNewTask(of: type, into: context)
+            newTask.schedule = self.schedule
+            newTask.plant = self.plant
+        }
     }
 }

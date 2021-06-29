@@ -16,7 +16,7 @@ class PlantGroupViewController: UIViewController {
     typealias Section = PlantGroupViewModel.Section
     typealias Snapshot = PlantGroupViewModel.Snapshot
 
-    var viewModel: PlantGroupViewModel = PlantGroupViewModel()
+    var viewModel: PlantGroupViewModel!
     
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellables = Set<AnyCancellable>()
