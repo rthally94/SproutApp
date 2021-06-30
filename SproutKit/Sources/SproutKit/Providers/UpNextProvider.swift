@@ -15,25 +15,28 @@ final public class UpNextProvider: NSObject {
 
     private let stringToDateFormatter = Utility.ISODateFormatter
 
-    let moc: NSManagedObjectContext
+    var moc: NSManagedObjectContext {
+        fetchedResultsController.managedObjectContext
+    }
+
     fileprivate var fetchedResultsController: RichFetchedResultsController<SproutCareTaskMO>!
 
     @Published public var snapshot: Snapshot?
 
     public var doesShowCompletedTasks: Bool = false {
         didSet {
-            fetchedResultsController = makeTasksFRC()
-            try? fetchedResultsController.performFetch()
+            fetchedResultsController = makeTasksFRC(context: moc)
+            try! fetchedResultsController.performFetch()
         }
     }
 
     public init(managedObjectContext: NSManagedObjectContext) {
-        self.moc = managedObjectContext
         super.init()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(persistentStoreCoordinatorStoresDidChangeNotification(notification:)), name: .NSPersistentStoreCoordinatorStoresDidChange, object: nil)
+        fetchedResultsController = makeTasksFRC(context: managedObjectContext)
+        try! fetchedResultsController.performFetch()
 
-        restartFRC()
+        NotificationCenter.default.addObserver(self, selector: #selector(persistentStoreCoordinatorStoresDidChangeNotification(notification:)), name: .NSPersistentStoreCoordinatorStoresDidChange, object: nil)
     }
 
 
@@ -59,13 +62,13 @@ final public class UpNextProvider: NSObject {
     }
 
     private func restartFRC() {
-        fetchedResultsController = makeTasksFRC()
+        fetchedResultsController = makeTasksFRC(context: moc)
         try! fetchedResultsController.performFetch()
     }
 
-    private func makeTasksFRC() -> RichFetchedResultsController<SproutCareTaskMO> {
+    private func makeTasksFRC(context: NSManagedObjectContext) -> RichFetchedResultsController<SproutCareTaskMO> {
         let request = SproutCareTaskMO.upNextFetchRequest(includesCompleted: doesShowCompletedTasks)
-        let controller: RichFetchedResultsController<SproutCareTaskMO> = RichFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.upNextGroupingDate), cacheName: nil)
+        let controller: RichFetchedResultsController<SproutCareTaskMO> = RichFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: #keyPath(SproutCareTaskMO.upNextGroupingDate), cacheName: nil)
         controller.delegate = self
         return controller
     }
@@ -80,10 +83,16 @@ extension UpNextProvider: NSFetchedResultsControllerDelegate {
                   let newIndex = newSnapshot.indexOfItem(identifier)
             else { return false }
 
-            let completed = newIndex <= oldIndex
+            guard let oldSection = self.snapshot?.sectionIdentifier(containingItem: identifier),
+                  let newSection = newSnapshot.sectionIdentifier(containingItem: identifier)
+            else { return false }
+
+            let completed = oldSection != newSection
+            let updated = newIndex == oldIndex
+
             let task = self.task(withID: identifier)
             let plant = task?.plant
-            guard task?.isUpdated == true || plant?.isUpdated == true || completed else { return false }
+            guard ((task?.isUpdated == true || plant?.isUpdated == true) && updated) || completed else { return false }
 
             return true
         }

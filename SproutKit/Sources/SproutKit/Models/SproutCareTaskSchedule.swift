@@ -23,14 +23,17 @@ public struct SproutCareTaskSchedule {
     }
 
     init?(startDate: Date, dueDate: Date, recurrenceRule: SproutCareTaskRecurrenceRule?) {
+        let midnightStartDate = Calendar.current.startOfDay(for: startDate)
+        let midnightDueDate = Calendar.current.startOfDay(for: dueDate)
+
         if recurrenceRule != nil {
-            guard dueDate == recurrenceRule?.nextDate(after: startDate) else { return nil }
+            guard midnightDueDate == recurrenceRule?.nextDate(after: midnightStartDate) else { return nil }
         } else {
-            guard dueDate > startDate else { return nil }
+            guard midnightDueDate > midnightStartDate else { return nil }
         }
 
-        self.startDate = startDate
-        self.dueDate = dueDate
+        self.startDate = midnightStartDate
+        self.dueDate = midnightDueDate
         self.recurrenceRule = recurrenceRule
     }
 

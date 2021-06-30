@@ -23,6 +23,12 @@
 		FB4A1E5B268B88FC004DED91 /* PlantsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E5A268B88FC004DED91 /* PlantsCoordinator.swift */; };
 		FB4A1E5D268B894B004DED91 /* UpNextCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E5C268B894B004DED91 /* UpNextCoordinator.swift */; };
 		FB4A1E5F268B9A46004DED91 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E5E268B9A46004DED91 /* MainCoordinator.swift */; };
+		FB4A1E69268CC4B7004DED91 /* PlantDeleting.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E68268CC4B7004DED91 /* PlantDeleting.swift */; };
+		FB4A1E6B268CCAAF004DED91 /* PlantCreating.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E6A268CCAAF004DED91 /* PlantCreating.swift */; };
+		FB4A1E6D268CCB32004DED91 /* PlantEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E6C268CCB32004DED91 /* PlantEditing.swift */; };
+		FB4A1E6F268CCB62004DED91 /* PlantShowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E6E268CCB61004DED91 /* PlantShowing.swift */; };
+		FB4A1E72268CCBB6004DED91 /* PlantListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E71268CCBB6004DED91 /* PlantListCoordinator.swift */; };
+		FB4A1E74268CCBEC004DED91 /* PlantDetailCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E73268CCBEC004DED91 /* PlantDetailCoordinator.swift */; };
 		FB5CB85726726B0600A7F60E /* DayOfWeekPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85626726B0600A7F60E /* DayOfWeekPicker.swift */; };
 		FB5CB85926728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85826728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift */; };
 		FB5CB85C2672A72300A7F60E /* SproutCapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85B2672A72300A7F60E /* SproutCapsuleButton.swift */; };
@@ -112,6 +118,12 @@
 		FB4A1E5A268B88FC004DED91 /* PlantsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantsCoordinator.swift; sourceTree = "<group>"; };
 		FB4A1E5C268B894B004DED91 /* UpNextCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpNextCoordinator.swift; sourceTree = "<group>"; };
 		FB4A1E5E268B9A46004DED91 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		FB4A1E68268CC4B7004DED91 /* PlantDeleting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDeleting.swift; sourceTree = "<group>"; };
+		FB4A1E6A268CCAAF004DED91 /* PlantCreating.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantCreating.swift; sourceTree = "<group>"; };
+		FB4A1E6C268CCB32004DED91 /* PlantEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantEditing.swift; sourceTree = "<group>"; };
+		FB4A1E6E268CCB61004DED91 /* PlantShowing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantShowing.swift; sourceTree = "<group>"; };
+		FB4A1E71268CCBB6004DED91 /* PlantListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantListCoordinator.swift; sourceTree = "<group>"; };
+		FB4A1E73268CCBEC004DED91 /* PlantDetailCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailCoordinator.swift; sourceTree = "<group>"; };
 		FB5CB85626726B0600A7F60E /* DayOfWeekPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekPicker.swift; sourceTree = "<group>"; };
 		FB5CB85826728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutDayOfWeekPickerCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB5CB85B2672A72300A7F60E /* SproutCapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCapsuleButton.swift; sourceTree = "<group>"; };
@@ -263,12 +275,42 @@
 		FB4A1E55268B86F8004DED91 /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
-				FB4A1E56268B8705004DED91 /* Coordinator.swift */,
+				FB4A1E60268CB234004DED91 /* Protocols */,
 				FB4A1E5A268B88FC004DED91 /* PlantsCoordinator.swift */,
 				FB4A1E5C268B894B004DED91 /* UpNextCoordinator.swift */,
 				FB4A1E5E268B9A46004DED91 /* MainCoordinator.swift */,
 			);
 			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		FB4A1E60268CB234004DED91 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				FB4A1E56268B8705004DED91 /* Coordinator.swift */,
+				FB4A1E67268CC49C004DED91 /* Plant Coordinators */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		FB4A1E67268CC49C004DED91 /* Plant Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				FB4A1E71268CCBB6004DED91 /* PlantListCoordinator.swift */,
+				FB4A1E73268CCBEC004DED91 /* PlantDetailCoordinator.swift */,
+				FB4A1E70268CCB85004DED91 /* Plant Intents */,
+			);
+			path = "Plant Coordinators";
+			sourceTree = "<group>";
+		};
+		FB4A1E70268CCB85004DED91 /* Plant Intents */ = {
+			isa = PBXGroup;
+			children = (
+				FB4A1E68268CC4B7004DED91 /* PlantDeleting.swift */,
+				FB4A1E6A268CCAAF004DED91 /* PlantCreating.swift */,
+				FB4A1E6C268CCB32004DED91 /* PlantEditing.swift */,
+				FB4A1E6E268CCB61004DED91 /* PlantShowing.swift */,
+			);
+			path = "Plant Intents";
 			sourceTree = "<group>";
 		};
 		FB5CB85526726AEC00A7F60E /* Pickers */ = {
@@ -664,6 +706,7 @@
 				FBCA568526757F31008DBFFC /* DayOfMonthPickerConfiguration.swift in Sources */,
 				FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */,
 				FBCA565E26740BFC008DBFFC /* AddEditPlantViewControllerDelegate.swift in Sources */,
+				FB4A1E72268CCBB6004DED91 /* PlantListCoordinator.swift in Sources */,
 				FBCA566E26740BFD008DBFFC /* UpNextItem.swift in Sources */,
 				FB4A1E5F268B9A46004DED91 /* MainCoordinator.swift in Sources */,
 				FBCA567A2674FB3C008DBFFC /* ListCellConfiguration.swift in Sources */,
@@ -674,6 +717,7 @@
 				FBCA568326757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift in Sources */,
 				FBCA566726740BFC008DBFFC /* TaskEditorViewController.swift in Sources */,
 				FB6CD6582657E17500D7DE82 /* RemindersProvider.swift in Sources */,
+				FB4A1E6B268CCAAF004DED91 /* PlantCreating.swift in Sources */,
 				FB8D9CA32680C2D40032F390 /* UIImage+Constants.swift in Sources */,
 				FBCA566826740BFC008DBFFC /* TaskEditorSection.swift in Sources */,
 				FB76D341262A592500D00036 /* SproutCareDetailView.swift in Sources */,
@@ -689,6 +733,7 @@
 				FBF8AC5225DD80AC00E7E8EB /* SproutIconView.swift in Sources */,
 				FB6CD65A2657EADD00D7DE82 /* TaskNotificationManager.swift in Sources */,
 				FB5CB86026730BF200A7F60E /* DayOfMonthPicker.swift in Sources */,
+				FB4A1E69268CC4B7004DED91 /* PlantDeleting.swift in Sources */,
 				FB28A8E82649A2DE00B1206E /* SproutChipView.swift in Sources */,
 				FB92AF66262E093D0062DE47 /* SproutCareDetailCell.swift in Sources */,
 				FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */,
@@ -707,11 +752,13 @@
 				FB0A9F3625DC5D7E0084AED8 /* SproutTextFieldCell.swift in Sources */,
 				FB5CB85926728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift in Sources */,
 				FBCA5676267441EE008DBFFC /* CareDetailItemConfiguration.swift in Sources */,
+				FB4A1E6F268CCB62004DED91 /* PlantShowing.swift in Sources */,
 				FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */,
 				FBCA565826740BFC008DBFFC /* SettingsView.swift in Sources */,
 				FBEB4972260CBEF800F6060C /* SproutCardCell.swift in Sources */,
 				FBCA565726740BFC008DBFFC /* PlantGroupViewController.swift in Sources */,
 				FB4A1E57268B8705004DED91 /* Coordinator.swift in Sources */,
+				FB4A1E6D268CCB32004DED91 /* PlantEditing.swift in Sources */,
 				FBCA566626740BFC008DBFFC /* TaskEditorDelegate.swift in Sources */,
 				FB5CB85C2672A72300A7F60E /* SproutCapsuleButton.swift in Sources */,
 				FBCA566426740BFC008DBFFC /* PlantTypePickerViewController.swift in Sources */,
@@ -720,6 +767,7 @@
 				FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */,
 				FBCA567426744111008DBFFC /* TextFieldItemConfiguration.swift in Sources */,
 				FB4A1E5D268B894B004DED91 /* UpNextCoordinator.swift in Sources */,
+				FB4A1E74268CCBEC004DED91 /* PlantDetailCoordinator.swift in Sources */,
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FB8D9CAE2683B0A60032F390 /* UIColor+Extensions.swift in Sources */,
 				FB9C66AA263A539D00CDC15A /* SproutCardView.swift in Sources */,

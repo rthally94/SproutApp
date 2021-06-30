@@ -17,6 +17,8 @@ class PlantDetailViewController: UIViewController {
     let dateComponentsFormatter = Utility.dateComponentsFormatter
     let careDateFormatter = Utility.relativeDateFormatter
 
+    weak var coordinator: PlantDetailCoordinator?
+
     var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
     var viewContext: NSManagedObjectContext {
         persistentContainer.viewContext
@@ -30,6 +32,9 @@ class PlantDetailViewController: UIViewController {
 
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
+    func reload() {
+        dataSource.apply(makeSnapshot(), animatingDifferences: false)
+    }
     
     // MARK: - View Life Cycle
     override func loadView() {
@@ -53,11 +58,7 @@ class PlantDetailViewController: UIViewController {
     //MARK: - Actions
     @objc private func editPlant() {
         guard let plant = plant else { return }
-        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = viewContext
-        let vc = AddEditPlantViewController(plant: plant, editingContext: editingContext)
-        vc.delegate = self
-        present(vc.wrappedInNavigationController(), animated: true)
+        coordinator?.edit(plant: plant)
     }
 }
 
@@ -245,21 +246,21 @@ extension PlantDetailViewController: UICollectionViewDelegate {
 }
 
 // MARK: - Plant Editor Delegate
-extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
-    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
-        guard let existingPlant = try? viewContext.existingObject(with: plant.objectID) else { return }
-
-        if existingPlant.isDeleted {
-            navigationController?.popViewController(animated: false)
-        }
-
-        if existingPlant.isUpdated {
-            self.dataSource.apply(makeSnapshot(), animatingDifferences: false)
-        }
-
-        try? viewContext.saveIfNeeded()
-    }
-}
+//extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
+//    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
+//        guard let existingPlant = try? viewContext.existingObject(with: plant.objectID) else { return }
+//
+//        if existingPlant.isDeleted {
+//            navigationController?.popViewController(animated: false)
+//        }
+//
+//        if existingPlant.isUpdated {
+//            self.dataSource.apply(makeSnapshot(), animatingDifferences: false)
+//        }
+//
+//        try? viewContext.saveIfNeeded()
+//    }
+//}
 
 extension UICollectionView {
     static let elementKindLayoutHeader = "element-kind-layout-header"

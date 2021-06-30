@@ -16,7 +16,7 @@ class PlantGroupViewController: UIViewController {
     typealias Section = PlantsProvider.Section
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    weak var coordinator: PlantsCoordinator?
+    weak var coordinator: PlantListCoordinator?
 
     var persistentContainer: NSPersistentContainer!
     var plantsProvider: PlantsProvider!
@@ -63,11 +63,11 @@ class PlantGroupViewController: UIViewController {
     }
 
     private func showPlantDetail(for plant: SproutPlantMO) {
-        coordinator?.showDetail(plant: plant)
+        coordinator?.showDetail(for: plant)
     }
 
     private func showNewPlantEditor() {
-        coordinator?.addNewPlant()
+        coordinator?.createNewPlant()
     }
 
     private func showPlantEditor(for plant: SproutPlantMO) {
@@ -115,7 +115,7 @@ extension PlantGroupViewController {
 extension PlantGroupViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let plant = plantsProvider.object(at: indexPath)
-        coordinator?.showDetail(plant: plant)
+        coordinator?.showDetail(for: plant)
     }
 
     func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

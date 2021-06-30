@@ -39,8 +39,6 @@ public class StorageProvider {
         })
         
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
-        persistentContainer.viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
-
         persistentContainer.viewContext.shouldDeleteInaccessibleFaults = true
     }
 

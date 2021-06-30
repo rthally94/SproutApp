@@ -37,7 +37,6 @@ public final class SproutPlantMO: NSManagedObject {
 public extension SproutPlantMO {
     @discardableResult private static func insertNewPlant(into context: NSManagedObjectContext) -> SproutPlantMO {
         let plant = SproutPlantMO(context: context)
-
         return plant
     }
 

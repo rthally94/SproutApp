@@ -29,23 +29,26 @@ final class PlantsCoordinator: NSObject, Coordinator {
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.pushViewController(vc, animated: false)
     }
+}
 
-    func showDetail(plant: SproutPlantMO) {
-        let vc = PlantDetailViewController()
-        vc.persistentContainer = persistentContainer
-        vc.plantID = plant.objectID
-        navigationController.pushViewController(vc, animated: true)
-    }
+extension PlantsCoordinator: PlantListCoordinator {
+    func createNewPlant() {
+        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
+        editingContext.parent = persistentContainer.viewContext
 
-    func addNewPlant() {
-        let newPlant = SproutPlantMO.insertNewPlant(using: .newPlant(), into: persistentContainer.viewContext)
-        edit(plant: newPlant)
+        let newPlant = SproutPlantMO.insertNewPlant(using: .newPlant(), into: editingContext)
+        showPlantEditor(plant: newPlant, context: editingContext)
     }
 
     func edit(plant: SproutPlantMO) {
+        guard let parentContext = plant.managedObjectContext else { return }
         let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = persistentContainer.viewContext
-        let vc = AddEditPlantViewController(plant: plant, editingContext: editingContext)
+        editingContext.parent = parentContext
+        showPlantEditor(plant: plant, context: editingContext)
+    }
+
+    private func showPlantEditor(plant: SproutPlantMO, context: NSManagedObjectContext) {
+        let vc = AddEditPlantViewController(plant: plant, editingContext: context)
         vc.delegate = self
         navigationController.present(vc.wrappedInNavigationController(), animated: true)
     }
@@ -54,11 +57,32 @@ final class PlantsCoordinator: NSObject, Coordinator {
         persistentContainer.viewContext.delete(plant)
         persistentContainer.saveContextIfNeeded()
     }
+
+    func showDetail(for plant: SproutPlantMO) {
+        let vc = PlantDetailViewController()
+        vc.coordinator = self
+        vc.persistentContainer = persistentContainer
+        vc.plantID = plant.objectID
+        navigationController.pushViewController(vc, animated: true)
+    }
 }
+
+extension PlantsCoordinator: PlantDetailCoordinator { }
 
 extension PlantsCoordinator: AddEditPlantViewControllerDelegate {
     func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
+        do {
+            try editor.editingContext.saveIfNeeded()
+        } catch {
+            editor.editingContext.rollback()
+        }
+        
         guard let plant = try? persistentContainer.viewContext.existingObject(with: plant.objectID) else { return }
+
+        if plant.isUpdated, let detailVC = navigationController.topViewController as? PlantDetailViewController {
+            detailVC.reload()
+        }
+
         persistentContainer.viewContext.refresh(plant, mergeChanges: true)
         persistentContainer.saveContextIfNeeded()
         editor.dismiss(animated: true)

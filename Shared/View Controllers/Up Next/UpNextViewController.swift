@@ -98,6 +98,7 @@ private extension UpNextViewController {
             guard let task = self.provider.task(withID: item), let plantID = task.plant?.objectID, let plant = self.provider.plant(withID: plantID) else { return }
 
             cell.plantName = plant.primaryDisplayName
+            cell.plantImage = plant.getImage()
             cell.taskType = task.careInformation?.type?.capitalized
             cell.taskScheduleIcon = UIImage(systemName: task.hasSchedule ? "bell.fill" : "bell.slash")
             cell.taskScheduleText = task.schedule?.description ?? "Not scheduled"

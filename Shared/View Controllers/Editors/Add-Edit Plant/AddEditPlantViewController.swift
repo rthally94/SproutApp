@@ -21,7 +21,12 @@ class AddEditPlantViewController: UICollectionViewController {
 
     private var plant: SproutPlantMO? {
         guard let id = plantID else { return nil }
-        return try? editingContext.existingObject(with: id) as? SproutPlantMO
+        do {
+            return try editingContext.existingObject(with: id) as? SproutPlantMO
+        } catch {
+            print("Unable to get plant with id \(plantID) in context: \(error)")
+            return nil
+        }
     }
 
     private var originalNickname: String?
@@ -110,23 +115,16 @@ class AddEditPlantViewController: UICollectionViewController {
     }
 
     private func saveChanges() {
-        try? editingContext.saveIfNeeded()
-        
         if let plant = plant {
             delegate?.plantEditor(self, didUpdatePlant: plant)
         }
     }
 
     private func discardChangesIfAble(completion: @escaping (Bool) -> Void) {
-        func discardChanges() {
-            editingContext.rollback()
-        }
-
         if hasChanges {
             let message = isNew ? "Are you sure you want to discard this new plant?" : "Are you sure you want to discard your changes?"
             let alert = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
             let discardAction = UIAlertAction(title: "Discard Changes", style: .destructive, handler: { _ in
-                discardChanges()
                 completion(true)
             })
             let continueAction = UIAlertAction(title: "Continue Editing", style: .cancel, handler: { _ in
@@ -137,7 +135,6 @@ class AddEditPlantViewController: UICollectionViewController {
             alert.addAction(continueAction)
             present(alert, animated: true)
         } else {
-            discardChanges()
             completion(true)
         }
     }

@@ -34,8 +34,6 @@ final class UpNextCoordinator: NSObject, Coordinator {
     // MARK: - Intents
     func markAsComplete(task: SproutCareTaskMO) {
         persistentContainer.performBackgroundTask { context in
-            context.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-
             guard let backgroundTask = try? context.existingObject(with: task.objectID) as? SproutCareTaskMO else { return }
             backgroundTask.markAsComplete()
 
