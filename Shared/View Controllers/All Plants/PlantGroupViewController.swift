@@ -14,7 +14,7 @@ class PlantGroupViewController: UIViewController {
     // MARK: - Properties
     typealias Item = PlantsProvider.Item
     typealias Section = PlantsProvider.Section
-    typealias Snapshot = PlantGroupViewModel.Snapshot
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
     weak var coordinator: PlantsCoordinator?
 
@@ -40,6 +40,7 @@ class PlantGroupViewController: UIViewController {
         super.viewDidLoad()
 
         dataSource = makeDataSource()
+
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addPlantButtonPressed))
         title = "Your Plants"
 

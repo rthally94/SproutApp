@@ -10,7 +10,6 @@ import UIKit
 import SproutKit
 
 struct UpNextItem: Hashable {
-    static let reloadInterval = 2.0
     let scheduleFormatter = Utility.careScheduleFormatter
 
     var task: SproutCareTaskMO
@@ -47,15 +46,6 @@ struct UpNextItem: Hashable {
 
     var isChecked: Bool {
         task.markStatus == .done
-    }
-
-    // MARK: - Task Actions
-    func markAsComplete() {
-        task.managedObjectContext?.performAndWait {
-            task.markAsComplete()
-        }
-
-        try? task.managedObjectContext?.saveIfNeeded()
     }
 }
 

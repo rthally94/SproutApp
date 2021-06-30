@@ -44,50 +44,42 @@ private extension UICellConfigurationState {
 }
 
 class SproutListCell: UICollectionViewListCell {
-    private var title: String?
-    private var subtitle: String?
-    private var valueImage: UIImage?
-    private var valueText: String?
-    private var plantImage: UIImage?
-    
-    func updateWithText(_ title: String?, subtitle: String?, image: UIImage?, valueImage: UIImage? = nil, valueText: String? = nil) {
-        var updated = false
-        if self.title != title {
-            self.title = title
-            updated = true
+    var plantName: String? {
+        didSet {
+            setNeedsUpdateConfiguration()
         }
+    }
 
-        if self.subtitle != subtitle {
-            self.subtitle = subtitle
-            updated = true
+    var taskType: String? {
+        didSet {
+            setNeedsUpdateConfiguration()
         }
+    }
 
-        if self.plantImage != image {
-            self.plantImage = image
-            updated = true
+    var taskScheduleIcon: UIImage? {
+        didSet {
+            setNeedsUpdateConfiguration()
         }
+    }
 
-        if self.valueText != valueText {
-            self.valueText = valueText
-            updated = true
+    var taskScheduleText: String? {
+        didSet {
+            setNeedsUpdateConfiguration()
         }
+    }
 
-        if self.valueImage != valueImage {
-            self.valueImage = valueImage
-            updated = true
-        }
-
-        if updated {
+    var plantImage: UIImage? {
+        didSet {
             setNeedsUpdateConfiguration()
         }
     }
     
     override var configurationState: UICellConfigurationState {
         var state = super.configurationState
-        state.title = title
-        state.subtitle = subtitle
-        state.valueImage = valueImage
-        state.valueText = valueText
+        state.title = plantName
+        state.subtitle = taskType
+        state.valueImage = taskScheduleIcon
+        state.valueText = taskScheduleText
         state.image = plantImage
         return state
     }
@@ -96,10 +88,11 @@ class SproutListCell: UICollectionViewListCell {
         super.prepareForReuse()
 
         plantImage = nil
-        title = nil
-        subtitle = nil
-        valueImage = nil
-        valueText = nil
+        plantName = nil
+        taskType = nil
+        taskScheduleIcon = nil
+        taskScheduleText = nil
+        accessories = []
     }
 }
 

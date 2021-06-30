@@ -12,11 +12,20 @@ import SproutKit
 
 class UpNextViewController: UIViewController {
     // MARK: - Properties
-    typealias Section = UpNextViewModel.Section
-    typealias Item = UpNextViewModel.Item
-    typealias Snapshot = UpNextViewModel.Snapshot
+    typealias Section = UpNextProvider.Section
+    typealias Item = UpNextProvider.Item
+    typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    var viewModel: UpNextViewModel = UpNextViewModel()
+    var coordinator: UpNextCoordinator!
+    var persistentContainer: NSPersistentContainer!
+    var provider: UpNextProvider!
+
+    private var showsCompletedTasks: Bool = false {
+        didSet {
+            configureNavBar(showsAllTasks: showsCompletedTasks)
+            provider.doesShowCompletedTasks = showsCompletedTasks
+        }
+    }
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellables: Set<AnyCancellable> = []
@@ -32,11 +41,11 @@ class UpNextViewController: UIViewController {
         let completedRemindersAction: UIAction
         if showsAllTasks {
             completedRemindersAction = UIAction(title: "Hide Completed", image: UIImage(systemName: "eye.slash")) { [unowned self] _ in
-                self.viewModel.hidePreviousCompletedTasks()
+                self.showsCompletedTasks = false
             }
         } else {
             completedRemindersAction = UIAction(title: "Show Completed", image: UIImage(systemName: "eye")) { [unowned self] _ in
-                self.viewModel.showAllCompletedTasks()
+                self.showsCompletedTasks = true
             }
         }
 
@@ -46,7 +55,6 @@ class UpNextViewController: UIViewController {
 
     // MARK: - View Life Cycle
     override func loadView() {
-        super.loadView()
         setupViews()
     }
 
@@ -54,42 +62,19 @@ class UpNextViewController: UIViewController {
         super.viewDidLoad()
 
         dataSource = makeDataSource()
+        showsCompletedTasks = false
 
-        viewModel.snapshot
+        provider.$snapshot
             .sink {[weak self] snapshot in
                 if let snapshot = snapshot {
                     self?.dataSource.apply(snapshot)
                 }
             }
             .store(in: &cancellables)
-
-        viewModel.$doesShowAllCompletedTasks
-            .sink { [weak self] showsAllTasks in
-                self?.configureNavBar(showsAllTasks: showsAllTasks)
-            }
-            .store(in: &cancellables)
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        viewModel.hidePreviousCompletedTasks()
-        viewModel.startUpdates()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        viewModel.stopUpdates()
     }
 
     private func setupViews() {
-        view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
-        ])
+        view = collectionView
     }
 
     private func configureNavBar(showsAllTasks: Bool) {
@@ -110,21 +95,23 @@ private extension UpNextViewController {
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {
         UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {[unowned self] cell, indexPath, item in
-            guard let task = self.viewModel.task(witID: item), let plantID = task.plant?.objectID, let plant = self.viewModel.plant(withID: plantID) else { return }
-            let viewModel = UpNextItem(task: task, plant: plant)
-            cell.updateWithText(viewModel.title, subtitle: viewModel.subtitle, image: viewModel.plantIcon, valueImage: viewModel.scheduleIcon, valueText: viewModel.schedule)
-            let isChecked = viewModel.isChecked
+            guard let task = self.provider.task(withID: item), let plantID = task.plant?.objectID, let plant = self.provider.plant(withID: plantID) else { return }
 
+            cell.plantName = plant.primaryDisplayName
+            cell.taskType = task.careInformation?.type?.capitalized
+            cell.taskScheduleIcon = UIImage(systemName: task.hasSchedule ? "bell.fill" : "bell.slash")
+            cell.taskScheduleText = task.schedule?.description ?? "Not scheduled"
+
+            let isChecked = task.markStatus == .done
             if isChecked {
                 cell.accessories = [ .checkmark() ]
             } else {
                 cell.accessories = [
-                    .todoAccessory(actionHandler: {_ in
-                        viewModel.markAsComplete()
+                    .todoAccessory(actionHandler: {[weak self] _ in
+                        self?.coordinator.markAsComplete(task: task)
                     })
                 ]
             }
-
         }
     }
 

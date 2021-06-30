@@ -36,7 +36,14 @@ public struct SproutCareTaskSchedule {
 
     public var description: String {
         let formatter = Utility.careScheduleFormatter
-        return formatter.string(from: self)
+        switch recurrenceRule {
+        case .daily:
+            formatter.frequencyStyle = .none
+            return "Every " + formatter.string(from: self)
+        default:
+            formatter.frequencyStyle = .short
+            return formatter.string(from: self)
+        }
     }
 }
 

@@ -23,13 +23,6 @@ public class StorageProvider {
     }()
 
     public let persistentContainer: NSPersistentContainer
-    public lazy var editingContext: NSManagedObjectContext = {
-        let viewContext = persistentContainer.viewContext
-        let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = viewContext
-        editingContext.undoManager = UndoManager()
-        return editingContext
-    }()
     
     public init(storeType: StoreType = .persisted) {
         ValueTransformer.setValueTransformer(UIImageTransformer(), forName: NSValueTransformerName("UIImageValueTransformer"))
@@ -46,6 +39,8 @@ public class StorageProvider {
         })
         
         persistentContainer.viewContext.automaticallyMergesChangesFromParent = true
+        persistentContainer.viewContext.mergePolicy = NSMergeByPropertyStoreTrumpMergePolicy
+
         persistentContainer.viewContext.shouldDeleteInaccessibleFaults = true
     }
 
@@ -115,8 +110,7 @@ public class StorageProvider {
 }
 
 public extension StorageProvider {
-    func saveAllContexts() {
-        try? editingContext.saveIfNeeded()
+    func saveContextIfNeeded() {
         persistentContainer.saveContextIfNeeded()
     }
 }

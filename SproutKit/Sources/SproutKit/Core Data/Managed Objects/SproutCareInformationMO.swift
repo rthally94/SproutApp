@@ -12,15 +12,15 @@ public final class SproutCareInformationMO: NSManagedObject {
     override public func awakeFromInsert() {
         super.awakeFromInsert()
 
-        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutPlantMO.identifier))
-        setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.creationDate))
-        setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.lastModifiedDate))
+        setPrimitiveValue(UUID().uuidString, forKey: #keyPath(SproutCareInformationMO.identifier))
+        setPrimitiveValue(Date(), forKey: #keyPath(SproutCareInformationMO.creationDate))
+        setPrimitiveValue(Date(), forKey: #keyPath(SproutCareInformationMO.lastModifiedDate))
     }
 
     override public func willSave() {
         super.willSave()
 
-        setPrimitiveValue(Date(), forKey: #keyPath(SproutPlantMO.lastModifiedDate))
+        setPrimitiveValue(Date(), forKey: #keyPath(SproutCareInformationMO.lastModifiedDate))
     }
 }
 

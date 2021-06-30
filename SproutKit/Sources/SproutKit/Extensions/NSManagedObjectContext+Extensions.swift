@@ -9,9 +9,12 @@ import CoreData
 import Foundation
 
 extension NSManagedObjectContext {
-    public func saveIfNeeded() throws {
+    @discardableResult public func saveIfNeeded() throws -> Bool {
         if self.hasChanges {
             try self.save()
+            return true
         }
+
+        return false
     }
 }

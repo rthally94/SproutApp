@@ -9,10 +9,16 @@ import CoreData
 import UIKit
 
 final public class UpNextProvider: NSObject {
+    public typealias Section = String
+    public typealias Item = NSManagedObjectID
+    public typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+
+    private let stringToDateFormatter = Utility.ISODateFormatter
+
     let moc: NSManagedObjectContext
     fileprivate var fetchedResultsController: RichFetchedResultsController<SproutCareTaskMO>!
 
-    @Published public var snapshot: NSDiffableDataSourceSnapshot<String, NSManagedObjectID>?
+    @Published public var snapshot: Snapshot?
 
     public var doesShowCompletedTasks: Bool = false {
         didSet {
@@ -59,7 +65,7 @@ final public class UpNextProvider: NSObject {
 
     private func makeTasksFRC() -> RichFetchedResultsController<SproutCareTaskMO> {
         let request = SproutCareTaskMO.upNextFetchRequest(includesCompleted: doesShowCompletedTasks)
-        let controller: RichFetchedResultsController<SproutCareTaskMO> = RichFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.statusDate), cacheName: nil)
+        let controller: RichFetchedResultsController<SproutCareTaskMO> = RichFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: #keyPath(SproutCareTaskMO.upNextGroupingDate), cacheName: nil)
         controller.delegate = self
         return controller
     }
@@ -67,7 +73,23 @@ final public class UpNextProvider: NSObject {
 
 extension UpNextProvider: NSFetchedResultsControllerDelegate {
     public func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChangeContentWith snapshot: NSDiffableDataSourceSnapshotReference) {
-        self.snapshot = snapshot as NSDiffableDataSourceSnapshot<String, NSManagedObjectID>
+        var newSnapshot = snapshot as Snapshot
+
+        let idsToReload = newSnapshot.itemIdentifiers.filter { identifier in
+            guard let oldIndex = self.snapshot?.indexOfItem(identifier),
+                  let newIndex = newSnapshot.indexOfItem(identifier)
+            else { return false }
+
+            let completed = newIndex <= oldIndex
+            let task = self.task(withID: identifier)
+            let plant = task?.plant
+            guard task?.isUpdated == true || plant?.isUpdated == true || completed else { return false }
+
+            return true
+        }
+
+        newSnapshot.reloadItems(idsToReload)
+        self.snapshot = newSnapshot
     }
 }
 

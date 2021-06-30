@@ -22,6 +22,9 @@ public extension SproutCareTaskMO {
             default:
                 statusDate = Date()
             }
+
+            updateUpNextGroupingDate()
+            
         }
     }
 

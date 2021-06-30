@@ -16,9 +16,6 @@ class MainViewController: UIViewController {
 
     lazy var upNextVC: some UIViewController = { [unowned self] in
         let vc = UpNextViewController()
-        let viewModel = UpNextViewModel()
-        viewModel.persistentContainer = persistentContainer
-        vc.viewModel = viewModel
 
         let nav = vc.wrappedInNavigationController()
         nav.navigationBar.prefersLargeTitles = true
