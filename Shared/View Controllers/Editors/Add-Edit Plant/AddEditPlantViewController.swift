@@ -94,11 +94,12 @@ class AddEditPlantViewController: UICollectionViewController {
     // MARK: - Actions
 
     @objc private func cancelButtonPressed(sender _: AnyObject) {
-        delegate?.plantEditorDidCancel(self)
+        delegate?.plantEditorDidFinish(self)
     }
 
     @objc private func saveButtonPressed(sender _: AnyObject) {
         saveChanges()
+        delegate?.plantEditorDidFinish(self)
     }
 
     private func showPlantTypePicker() {

@@ -11,6 +11,8 @@ import UIKit
 import SproutKit
 
 class UpNextViewController: UIViewController {
+    static let iconConfiguration = UIImage.SymbolConfiguration(textStyle: .title3)
+
     // MARK: - Properties
     typealias Section = UpNextProvider.Section
     typealias Item = UpNextProvider.Item
@@ -32,7 +34,7 @@ class UpNextViewController: UIViewController {
 
     lazy var collectionView: UICollectionView = { [unowned self] in
         let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        cv.backgroundColor = .systemBackground
+        cv.backgroundColor = .systemGroupedBackground
         cv.delegate = self
         return cv
     }()
@@ -40,11 +42,11 @@ class UpNextViewController: UIViewController {
     private func makeOptionsMenu(showsAllTasks: Bool) -> UIMenu {
         let completedRemindersAction: UIAction
         if showsAllTasks {
-            completedRemindersAction = UIAction(title: "Hide Completed", image: UIImage(systemName: "eye.slash")) { [unowned self] _ in
+            completedRemindersAction = UIAction(title: "Hide Recently Completed", image: UIImage(systemName: "eye.slash")) { [unowned self] _ in
                 self.showsCompletedTasks = false
             }
         } else {
-            completedRemindersAction = UIAction(title: "Show Completed", image: UIImage(systemName: "eye")) { [unowned self] _ in
+            completedRemindersAction = UIAction(title: "Show Recently Completed", image: UIImage(systemName: "eye")) { [unowned self] _ in
                 self.showsCompletedTasks = true
             }
         }
@@ -88,9 +90,48 @@ class UpNextViewController: UIViewController {
 private extension UpNextViewController {
     func makeLayout() -> UICollectionViewLayout {
         var config = UICollectionLayoutListConfiguration(appearance: .sidebar)
-        config.backgroundColor = .systemBackground
+
+        config.trailingSwipeActionsConfigurationProvider = {[weak self] indexPath in
+            guard let task = self?.provider.object(at: indexPath), let dueDate = task.dueDate, task.markStatus == .due else { return nil }
+            let isDueToday = Calendar.current.isDateInToday(dueDate)
+            let isEarly = Date() < Calendar.current.startOfDay(for: dueDate)
+
+            let markAsDoneAction = UIContextualAction(style: .normal, title: "Mark as done") {action, sourceView, completion in
+                self?.coordinator.markAsComplete(task: task)
+                completion(true)
+            }
+            markAsDoneAction.backgroundColor = .systemGreen
+            markAsDoneAction.image = UIImage(systemName: "checkmark.circle.fill", withConfiguration: Self.iconConfiguration)
+
+            let addEarlyLog = UIContextualAction(style: .normal, title: "Add Additional Log") {action, sourceView, completion in
+                self?.coordinator.markAsComplete(task: task)
+                completion(true)
+            }
+            addEarlyLog.backgroundColor = .systemBlue
+            addEarlyLog.image = UIImage(systemName: "calendar.badge.plus", withConfiguration: Self.iconConfiguration)
+
+
+            let actions: [UIContextualAction]
+            if isDueToday {
+                actions = [markAsDoneAction]
+            } else if isEarly {
+                actions = [addEarlyLog]
+            } else {
+                actions = []
+            }
+
+            return UISwipeActionsConfiguration(actions: actions)
+        }
+
+        config.backgroundColor = .systemBackground 
+
+        var separatorConfig = UIListSeparatorConfiguration(listAppearance: .sidebar)
+        separatorConfig.bottomSeparatorVisibility = .hidden
+        config.separatorConfiguration = separatorConfig
+
         config.headerMode = .supplementary
-        return UICollectionViewCompositionalLayout.list(using: config)
+        let layout = UICollectionViewCompositionalLayout.list(using: config)
+        return layout
     }
 
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {
@@ -104,13 +145,27 @@ private extension UpNextViewController {
             cell.taskScheduleText = task.schedule?.description ?? "Not scheduled"
 
             let isChecked = task.markStatus == .done
-            if isChecked {
-                cell.accessories = [ .checkmark() ]
+            let isDueToday: Bool
+            if let dueDate = task.dueDate {
+                isDueToday = Calendar.current.isDateInToday(dueDate)
             } else {
+                isDueToday = false
+            }
+
+            if isChecked {
+                cell.accessories = [ .checkmarkAccessory() ]
+            } else if isDueToday {
                 cell.accessories = [
                     .todoAccessory(actionHandler: {[weak self] _ in
                         self?.coordinator.markAsComplete(task: task)
                     })
+                ]
+            } else {
+                cell.accessories = [
+                    .buttonAccessory(
+                        tintColor: .systemGray3,
+                        action: UIAction(image: UIImage(systemName: "clock")) { _ in }
+                    )
                 ]
             }
         }
@@ -120,11 +175,14 @@ private extension UpNextViewController {
         return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) {[unowned self] cell, elementKind, indexPath in
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-            var configuration = UIListContentConfiguration.largeGroupedHeader()
-
             guard let date = Utility.ISODateFormatter.date(from: section) else { return }
+
+            var configuration = UIListContentConfiguration.largeGroupedHeader()
             configuration.text = Utility.relativeDateFormatter.string(from: date)
             cell.contentConfiguration = configuration
+
+            let backgroundConfiguration = UIBackgroundConfiguration.listSidebarHeader()
+            cell.backgroundConfiguration = backgroundConfiguration
         }
     }
 

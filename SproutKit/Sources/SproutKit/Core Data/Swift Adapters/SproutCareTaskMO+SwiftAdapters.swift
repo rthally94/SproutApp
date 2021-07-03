@@ -16,9 +16,9 @@ public extension SproutCareTaskMO {
         }
         set {
             status = newValue.rawValue
-            switch newValue {
-            case .due:
-                statusDate = dueDate
+            switch (newValue, dueDate) {
+            case (.due, let dueDate?):
+                statusDate = Calendar.current.startOfDay(for: dueDate)
             default:
                 statusDate = Date()
             }

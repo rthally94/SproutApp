@@ -10,14 +10,15 @@ import UIKit
 class SproutBlurredHeaderView: UIView {
     var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 24, weight: .semibold)
         label.setContentHuggingPriority(.defaultHigh+1, for: .vertical)
         return label
     }()
 
     var subtitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        label.font = UIFont.preferredFont(forTextStyle: .body)
+        label.textColor = .secondaryLabel
         label.setContentHuggingPriority(.defaultHigh, for: .vertical)
         return label
     }()
@@ -27,6 +28,7 @@ class SproutBlurredHeaderView: UIView {
         stack.axis = .vertical
         stack.distribution = .fillProportionally
         stack.alignment = .center
+        stack.spacing = 6
         return stack
     }()
 
@@ -61,7 +63,7 @@ class SproutBlurredHeaderView: UIView {
         titleLabel.isHidden = titleLabel.text == nil
         subtitleLabel.isHidden = subtitleLabel.text == nil
 
-        applyBackgroundBlur()
+//        applyBackgroundBlur()
     }
 
     private func applyBackgroundBlur() {

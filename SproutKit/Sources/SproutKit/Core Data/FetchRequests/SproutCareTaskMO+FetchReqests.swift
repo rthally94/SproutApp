@@ -102,7 +102,10 @@ extension SproutCareTaskMO {
         request.predicate = upNextPredicate
 
         request.relationshipKeyPathsForRefreshing = [
-            #keyPath(SproutCareTaskMO.plant.lastModifiedDate)
+            #keyPath(SproutCareTaskMO.plant.nickname),
+            #keyPath(SproutCareTaskMO.plant.commonName),
+            #keyPath(SproutCareTaskMO.plant.scientificName),
+            #keyPath(SproutCareTaskMO.plant.thumbnailImageData)
         ]
 
         return request

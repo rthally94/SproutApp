@@ -99,88 +99,34 @@ class SproutListCell: UICollectionViewListCell {
 class SproutScheduledTaskCell: SproutListCell {
     private let dateFormatter = Utility.dateFormatter
     private let dateComponentsFormatter = Utility.dateComponentsFormatter
+    private let upNextView = SproutUpNextView()
 
-    private func defaultListContentConfiguration() -> UIListContentConfiguration {
-        var config = UIListContentConfiguration.valueCell()
-        config.textProperties.font = UIFont.preferredFont(forTextStyle: .headline)
-        config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        config.prefersSideBySideTextAndSecondaryText = false
-        return config
+    private var needsLayout = true
+    private func setupViewIfNeeded() {
+        guard needsLayout else { return }
+
+        contentView.addSubview(upNextView)
+        upNextView.translatesAutoresizingMaskIntoConstraints = false
+        let constraints = [
+            upNextView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
+            upNextView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
+            upNextView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
+            upNextView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
+        ]
+
+        constraints.forEach { constraint in
+            constraint.priority-=1
+        }
+
+        NSLayoutConstraint.activate(constraints)
+
+
+        needsLayout = false
     }
-    private lazy var listContentView = UIListContentView(configuration: defaultListContentConfiguration())
-    
-    private let plantIconView = SproutIconView()
 
-    private let plantNameLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.preferredFont(forTextStyle: .headline)
-        label.tintColor = .secondaryLabel
-        return label
-    }()
-
-    private let taskTypeLabel: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.tintColor = .secondaryLabel
-        return label
-    }()
-
-    private let taskScheduleLabel: SproutLabel = {
-        let label = SproutLabel()
-        label.font = UIFont.preferredFont(forTextStyle: .subheadline)
-        label.style = .titleAndIconLabelStyle
-        label.tintColor = .secondaryLabel
-        return label
-    }()
-
-    private lazy var textStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [plantNameLabel, taskTypeLabel, UIView.spacer, taskScheduleLabel])
-        stack.axis = .vertical
-        stack.alignment = .leading
-        stack.distribution = .fill
-        return stack
-    }()
-
-    private var customViewConstraints: (plantIconTop: NSLayoutConstraint, plantIconLeading: NSLayoutConstraint, plantIconWidth: NSLayoutConstraint, plantIconHeight: NSLayoutConstraint)?
-    
-    private func setupViewsIfNeeded() {
-        guard customViewConstraints == nil else { return }
-        contentView.addSubview(textStack)
-        contentView.addSubview(plantIconView)
-        
-        textStack.translatesAutoresizingMaskIntoConstraints = false
-        plantIconView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let constraints = (
-            plantIconTop: plantIconView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            plantIconLeading: plantIconView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
-            plantIconWidth: plantIconView.widthAnchor.constraint(equalTo: contentView.layoutMarginsGuide.widthAnchor, multiplier: 0.24),
-            plantIconHeight: plantIconView.heightAnchor.constraint(equalTo: plantIconView.widthAnchor)
-        )
-
-        constraints.plantIconTop.priority-=1
-        constraints.plantIconLeading.priority-=1
-        constraints.plantIconHeight.priority-=1
-        constraints.plantIconWidth.priority-=1
-        
-        NSLayoutConstraint.activate([
-            constraints.plantIconTop,
-            constraints.plantIconLeading,
-            constraints.plantIconHeight,
-            constraints.plantIconWidth,
-            plantIconView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
-
-            textStack.topAnchor.constraint(equalTo: plantIconView.topAnchor),
-            textStack.leadingAnchor.constraint(equalToSystemSpacingAfter: plantIconView.trailingAnchor, multiplier: 2.0),
-            textStack.bottomAnchor.constraint(equalTo: plantIconView.bottomAnchor),
-            textStack.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
-        ])
-        customViewConstraints = constraints
-    }
-    
     private var separatorConstraint: NSLayoutConstraint?
     private func updateSeparatorConstraint() {
-        guard let textLayoutGuide = listContentView.textLayoutGuide else { return }
+        guard let textLayoutGuide = upNextView.textLayoutGuide else { return }
         if let existingConstraint = separatorConstraint, existingConstraint.isActive {
             return
         }
@@ -191,25 +137,17 @@ class SproutScheduledTaskCell: SproutListCell {
     }
     
     override func updateConfiguration(using state: UICellConfigurationState) {
-        setupViewsIfNeeded()
-        
-        var content = defaultListContentConfiguration().updated(for: state)
-        content.directionalLayoutMargins.leading = 0
+        setupViewIfNeeded()
 
         // Configure for just the task
-        plantNameLabel.text = state.title
-        taskTypeLabel.text = state.subtitle
-        taskScheduleLabel.image = state.valueImage
-        taskScheduleLabel.text = state.valueText
+        upNextView.plantNameLabel.text = state.title
+        upNextView.taskTypeLabel.text = state.subtitle
+        upNextView.taskScheduleLabel.image = state.valueImage
+        upNextView.taskScheduleLabel.text = state.valueText
 
-        var iconConfig = plantIconView.defaultConfiguration()
+        var iconConfig = upNextView.plantIconView.defaultConfiguration()
         iconConfig.image = state.image
-//        iconConfig.cornerStyle = .circle
-        plantIconView.configuration = iconConfig
-        
-        content.image = nil
-        content.axesPreservingSuperviewLayoutMargins = []
-        listContentView.configuration = content
+        upNextView.plantIconView.configuration = iconConfig
 
         updateSeparatorConstraint()
     }

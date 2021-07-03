@@ -44,7 +44,7 @@ struct SproutIconConfiguration: Hashable {
         case .circle:
             return min(rect.width, rect.height) / 2
         case .roundedRect:
-            return min(rect.width, rect.height) / 10
+            return min(rect.width, rect.height) / 5
         default:
             return 0
         }

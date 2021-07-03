@@ -29,6 +29,8 @@
 		FB4A1E6F268CCB62004DED91 /* PlantShowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E6E268CCB61004DED91 /* PlantShowing.swift */; };
 		FB4A1E72268CCBB6004DED91 /* PlantListCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E71268CCBB6004DED91 /* PlantListCoordinator.swift */; };
 		FB4A1E74268CCBEC004DED91 /* PlantDetailCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E73268CCBEC004DED91 /* PlantDetailCoordinator.swift */; };
+		FB4A1E76268CEC4C004DED91 /* EditorCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E75268CEC4C004DED91 /* EditorCoordinator.swift */; };
+		FB4A1E7A268F63B2004DED91 /* SproutUpNextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4A1E79268F63B2004DED91 /* SproutUpNextView.swift */; };
 		FB5CB85726726B0600A7F60E /* DayOfWeekPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85626726B0600A7F60E /* DayOfWeekPicker.swift */; };
 		FB5CB85926728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85826728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift */; };
 		FB5CB85C2672A72300A7F60E /* SproutCapsuleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB5CB85B2672A72300A7F60E /* SproutCapsuleButton.swift */; };
@@ -124,6 +126,8 @@
 		FB4A1E6E268CCB61004DED91 /* PlantShowing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantShowing.swift; sourceTree = "<group>"; };
 		FB4A1E71268CCBB6004DED91 /* PlantListCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantListCoordinator.swift; sourceTree = "<group>"; };
 		FB4A1E73268CCBEC004DED91 /* PlantDetailCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailCoordinator.swift; sourceTree = "<group>"; };
+		FB4A1E75268CEC4C004DED91 /* EditorCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorCoordinator.swift; sourceTree = "<group>"; };
+		FB4A1E79268F63B2004DED91 /* SproutUpNextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutUpNextView.swift; sourceTree = "<group>"; };
 		FB5CB85626726B0600A7F60E /* DayOfWeekPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekPicker.swift; sourceTree = "<group>"; };
 		FB5CB85826728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutDayOfWeekPickerCollectionViewCell.swift; sourceTree = "<group>"; };
 		FB5CB85B2672A72300A7F60E /* SproutCapsuleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCapsuleButton.swift; sourceTree = "<group>"; };
@@ -279,6 +283,7 @@
 				FB4A1E5A268B88FC004DED91 /* PlantsCoordinator.swift */,
 				FB4A1E5C268B894B004DED91 /* UpNextCoordinator.swift */,
 				FB4A1E5E268B9A46004DED91 /* MainCoordinator.swift */,
+				FB4A1E75268CEC4C004DED91 /* EditorCoordinator.swift */,
 			);
 			path = Coordinators;
 			sourceTree = "<group>";
@@ -566,6 +571,7 @@
 				FB43D639266D680600FA9FA1 /* SproutBlurredHeaderView.swift */,
 				FB9C66A9263A539D00CDC15A /* SproutCardView.swift */,
 				FBB03C112637781C00F7F364 /* SproutHeroView.swift */,
+				FB4A1E79268F63B2004DED91 /* SproutUpNextView.swift */,
 			);
 			path = Containers;
 			sourceTree = "<group>";
@@ -739,6 +745,7 @@
 				FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */,
 				FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */,
 				FBCA566D26740BFD008DBFFC /* UpNextViewController.swift in Sources */,
+				FB4A1E76268CEC4C004DED91 /* EditorCoordinator.swift in Sources */,
 				FB5CB8642673A43400A7F60E /* CircleButtonCollectionViewCell.swift in Sources */,
 				FB5CB8662673B7C000A7F60E /* Bool+XOR.swift in Sources */,
 				FBCA566926740BFC008DBFFC /* TaskEditorItem.swift in Sources */,
@@ -759,6 +766,7 @@
 				FBCA565726740BFC008DBFFC /* PlantGroupViewController.swift in Sources */,
 				FB4A1E57268B8705004DED91 /* Coordinator.swift in Sources */,
 				FB4A1E6D268CCB32004DED91 /* PlantEditing.swift in Sources */,
+				FB4A1E7A268F63B2004DED91 /* SproutUpNextView.swift in Sources */,
 				FBCA566626740BFC008DBFFC /* TaskEditorDelegate.swift in Sources */,
 				FB5CB85C2672A72300A7F60E /* SproutCapsuleButton.swift in Sources */,
 				FBCA566426740BFC008DBFFC /* PlantTypePickerViewController.swift in Sources */,
@@ -854,7 +862,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -909,7 +917,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -928,7 +936,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = Shared/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -950,7 +958,7 @@
 				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = Shared/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

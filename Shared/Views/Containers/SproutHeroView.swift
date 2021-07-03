@@ -55,12 +55,12 @@ class SproutHeroView: UIView {
         NSLayoutConstraint.activate([
             iconView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: 16),
             iconView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
-            iconView.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 0.5),
+            iconView.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 0.4),
 
             headerTextView.topAnchor.constraint(equalToSystemSpacingBelow: iconView.bottomAnchor, multiplier: 2.0),
             headerTextView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
             headerTextView.widthAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.widthAnchor),
-            headerTextView.bottomAnchor.constraint(equalTo: layoutMarginsGuide.bottomAnchor, constant: -16)
+            headerTextView.bottomAnchor.constraint(lessThanOrEqualTo: layoutMarginsGuide.bottomAnchor, constant: -16)
         ])
     }
 }

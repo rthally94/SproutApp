@@ -8,31 +8,24 @@
 import UIKit
 
 extension UICellAccessory {
-    static func taskTodoAccessory(actionHandler: @escaping UIActionHandler) -> UICellAccessory {
+    static func buttonAccessory(tintColor: UIColor?, action: UIAction) -> UICellAccessory {
         let placement = UICellAccessory.Placement.trailing(displayed: .whenNotEditing)
-        
-        let todoAction: UIAction = .init(title: "Task Name", handler: actionHandler)
-        let todoButton = UIButton(type: .system, primaryAction: todoAction)
-        
-        let configuration = UICellAccessory.CustomViewConfiguration(customView: todoButton, placement: placement)
+        let todoButton = UIButton(type: .system, primaryAction: action)
+        todoButton.tintColor = tintColor
 
-        todoButton.contentEdgeInsets = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
-        todoButton.layer.borderColor = configuration.tintColor?.cgColor
-        todoButton.layer.borderWidth = 3
-        
+        let configuration = UICellAccessory.CustomViewConfiguration(customView: todoButton, placement: placement)
         let todoAccessory = UICellAccessory.customView(configuration: configuration)
         return todoAccessory
     }
     
     static func todoAccessory(actionHandler: @escaping UIActionHandler) -> UICellAccessory {
-        let placement = UICellAccessory.Placement.trailing(displayed: .whenNotEditing)
-        
-        let todoAction: UIAction = .init(image: UIImage(systemName: "circle"), handler: actionHandler)
-        let todoButton = UIButton(type: .system, primaryAction: todoAction)
-        
-        let configuration = UICellAccessory.CustomViewConfiguration(customView: todoButton, placement: placement)
-        let todoAccessory = UICellAccessory.customView(configuration: configuration)
-        return todoAccessory
+        let action = UIAction(image: UIImage(systemName: "circle"), handler: actionHandler)
+        return .buttonAccessory(tintColor: .systemGray3, action: action)
+    }
+
+    static func checkmarkAccessory() -> UICellAccessory {
+        let action = UIAction(image: UIImage(systemName: "checkmark.circle.fill")) { _ in }
+        return buttonAccessory(tintColor: .systemGreen, action: action)
     }
     
     static func toggleAccessory(isOn: Bool, action: UIAction?) -> UICellAccessory {

@@ -80,7 +80,6 @@ private extension PlantDetailViewController {
 
         enum Item: Hashable {
             case careTask(id: NSManagedObjectID)
-            //            case careTask(image: UIImage? = nil, taskName: String, taskSchedule: String?)
         }
     }
 }

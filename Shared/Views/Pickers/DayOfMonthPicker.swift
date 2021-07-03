@@ -10,15 +10,19 @@ import UIKit
 class DayOfMonthPicker: UIControl {
     static let dayRange = Array(1...31)
     static let itemsPerRow = 7
-    static var numberOfRows: Int { (dayRange.count % itemsPerRow) + 1 }
+    static var numberOfRows: Int { (dayRange.count / itemsPerRow) + 1 }
     static let rowSpacing: CGFloat = 8
 
     func makeCalendarGrid() -> UIStackView {
         let rowStacks: [UIStackView] = Array(0..<Self.numberOfRows).map { rowIndex in
-            let items: [UIButton] = Array(0..<Self.itemsPerRow).map { columnIndex in
+            let items: [UIView] = Array(0..<Self.itemsPerRow).map { columnIndex in
                 let index = (rowIndex * Self.itemsPerRow) + columnIndex
-                let value = index + 1
-                return makeButton(dayValue: value)
+                if index < Self.dayRange.endIndex {
+                    let value = Self.dayRange[index]
+                    return makeButton(dayValue: value)
+                } else {
+                    return UIView()
+                }
             }
 
             let rowStack = UIStackView(arrangedSubviews: items)

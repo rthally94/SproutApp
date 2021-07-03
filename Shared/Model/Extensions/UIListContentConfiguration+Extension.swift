@@ -19,7 +19,7 @@ extension UIListContentConfiguration {
         config.imageToTextPadding = 5
         
         config.axesPreservingSuperviewLayoutMargins = .vertical
-        config.directionalLayoutMargins.leading = 0
+//        config.directionalLayoutMargins.leading = 0
         
         config.prefersSideBySideTextAndSecondaryText = true
         return config

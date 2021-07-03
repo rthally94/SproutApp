@@ -77,11 +77,11 @@ final class SproutCareTaskMOTests: CoreDataTestCase {
 
         func fetchTasks() throws {
             let request = SproutCareTaskMO.upNextFetchRequest(includesCompleted: false)
-            let fetchedTasks = try moc.fetch(request)
+            let fetchedTasks = try moc.fetch(request) as? [SproutCareTaskMO]
 
-            let allMatch = fetchedTasks.allSatisfy { fetchedTask in
+            let allMatch = fetchedTasks?.allSatisfy { fetchedTask in
                 sut.contains(fetchedTask)
-            }
+            } ?? false
 
             XCTAssertTrue(allMatch)
         }
@@ -105,11 +105,11 @@ final class SproutCareTaskMOTests: CoreDataTestCase {
 
         func fetchTasks() throws {
             let request = SproutCareTaskMO.upNextFetchRequest(includesCompleted: true)
-            let fetchedTasks = try moc.fetch(request)
+            let fetchedTasks = try moc.fetch(request) as? [SproutCareTaskMO]
 
-            let allMatch = fetchedTasks.allSatisfy { fetchedTask in
+            let allMatch = fetchedTasks?.allSatisfy { fetchedTask in
                 sut.contains(fetchedTask)
-            }
+            } ?? false
 
             XCTAssertTrue(allMatch)
         }
@@ -151,8 +151,12 @@ final class SproutCareTaskMOTests: CoreDataTestCase {
         let dueDate = Calendar.current.date(byAdding: .day, value: 1, to: startDate)!
         sut.schedule = .init(startDate: startDate, dueDate: dueDate)
 
+        let expectedStartDate = Calendar.current.startOfDay(for: startDate)
+        let expectedDueDate = Calendar.current.startOfDay(for: dueDate)
+
         XCTAssertTrue(sut.hasSchedule)
-        XCTAssertEqual(sut.startDate, startDate)
+        XCTAssertEqual(sut.startDate, expectedStartDate)
+        XCTAssertEqual(sut.dueDate, expectedDueDate)
         XCTAssertEqual(sut.dueDate, sut.statusDate)
     }
 
@@ -200,7 +204,8 @@ final class SproutCareTaskMOTests: CoreDataTestCase {
         let newDueDate = Calendar.current.date(byAdding: .day, value: 3, to: startDate)!
         sut.schedule = .init(startDate: startDate, dueDate: newDueDate)
 
-        XCTAssertEqual(sut.dueDate, dueDate)
+        let expectedDueDate = Calendar.current.startOfDay(for: dueDate)
+        XCTAssertEqual(sut.dueDate, expectedDueDate)
     }
 
     func test_GettingSchedule_WhenTaskHasNoSchedule_NilIsReturned() {
