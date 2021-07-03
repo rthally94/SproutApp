@@ -145,10 +145,14 @@ private extension UpNextViewController {
             cell.taskScheduleText = task.schedule?.description ?? "Not scheduled"
 
             let isChecked = task.markStatus == .done
+
             let isDueToday: Bool
+            let isEarly: Bool
             if let dueDate = task.dueDate {
                 isDueToday = Calendar.current.isDateInToday(dueDate)
+                isEarly = Date() < Calendar.current.startOfDay(for: dueDate)
             } else {
+                isEarly = false
                 isDueToday = false
             }
 
@@ -160,11 +164,18 @@ private extension UpNextViewController {
                         self?.coordinator.markAsComplete(task: task)
                     })
                 ]
-            } else {
+            } else if isEarly {
                 cell.accessories = [
                     .buttonAccessory(
                         tintColor: .systemGray3,
                         action: UIAction(image: UIImage(systemName: "clock")) { _ in }
+                    )
+                ]
+            } else {
+                cell.accessories = [
+                    .buttonAccessory(
+                        tintColor: .systemOrange,
+                        action: UIAction(image: UIImage(systemName: "exclamationmark.circle")) { _ in }
                     )
                 ]
             }
