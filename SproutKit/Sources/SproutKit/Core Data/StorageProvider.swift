@@ -67,36 +67,21 @@ public class StorageProvider {
 
     public func loadSampleData() {
         persistentContainer.performBackgroundTask { context in
-            do {
-                // General Plant Config
-                SproutPlantTemplate.sampleData.enumerated().forEach { index, template in
-                    let samplePlant = SproutPlantMO.insertNewPlant(using: template, into: context)
-                    samplePlant.nickname = "My Sample Plant \(index+1)"
+            let latePlant = SproutPlantMO.insertNewPlant(using: .sampleData[0], into: context)
+            latePlant.nickname = "Late Care"
+            self.makeLateTask(plant: latePlant, context: context)
 
-                    // Add a task
-                    let schedule: SproutCareTaskSchedule = {
-                        let recurrenceRule: SproutCareTaskRecurrenceRule
-                        switch index {
-                        case 0:
-                            recurrenceRule = SproutCareTaskRecurrenceRule.daily(1)
-                        case 1:
-                            recurrenceRule = SproutCareTaskRecurrenceRule.weekly(1, [2,4,6])
-                        case 2:
-                            recurrenceRule = SproutCareTaskRecurrenceRule.monthly(1, [1, 15])
-                        default:
-                            recurrenceRule = SproutCareTaskRecurrenceRule.daily(7)
-                        }
+            let duePlant = SproutPlantMO.insertNewPlant(using: .sampleData[1], into: context)
+            duePlant.nickname = "Due Care"
+            self.makeDueTask(plant: duePlant, context: context)
 
-                        return SproutCareTaskSchedule(startDate: Calendar.current.startOfDay(for: Date()), recurrenceRule: recurrenceRule)!
-                    }()
+            let earlyPlant = SproutPlantMO.insertNewPlant(using: .sampleData[1], into: context)
+            earlyPlant.nickname = "Early Care"
+            self.makeEarlyTask(plant: earlyPlant, context: context)
 
-                    let sampleTask = SproutCareTaskMO.insertNewTask(of: .watering, into: context)
-                    sampleTask.schedule = schedule
-
-                    sampleTask.careInformation?.plant = samplePlant
-                    samplePlant.addToCareTasks(sampleTask)
-                }
-            }
+            let unscheduledPlant = SproutPlantMO.insertNewPlant(using: .sampleData[1], into: context)
+            unscheduledPlant.nickname = "Unscheduled Care"
+            self.makeEarlyTask(plant: unscheduledPlant, context: context)
 
             do {
                 try context.saveIfNeeded()
@@ -104,6 +89,46 @@ public class StorageProvider {
                 print("Unable to save changes to background context: \(error)")
             }
         }
+    }
+
+    @discardableResult private func makeLateTask(plant: SproutPlantMO, context: NSManagedObjectContext) -> SproutCareTaskMO {
+        let lateTask = SproutCareTaskMO.insertNewTask(of: .watering, into: context)
+        let lateStartDate = Calendar.current.date(byAdding: .day, value: -2, to: Date())!
+        let lateTaskSchedule = SproutCareTaskSchedule(startDate: lateStartDate, recurrenceRule: .daily(1))
+        lateTask.schedule = lateTaskSchedule
+
+        lateTask.careInformation?.plant = plant
+        plant.addToCareTasks(lateTask)
+        return lateTask
+    }
+
+    @discardableResult private func makeDueTask(plant: SproutPlantMO, context: NSManagedObjectContext) -> SproutCareTaskMO {
+        let dueTask = SproutCareTaskMO.insertNewTask(of: .watering, into: context)
+        let dueStartDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+        let dueTaskSchedule = SproutCareTaskSchedule(startDate: dueStartDate, recurrenceRule: .daily(1))
+        dueTask.schedule = dueTaskSchedule
+
+        dueTask.careInformation?.plant = plant
+        plant.addToCareTasks(dueTask)
+        return dueTask
+    }
+
+    @discardableResult private func makeEarlyTask(plant: SproutPlantMO, context: NSManagedObjectContext) -> SproutCareTaskMO {
+        let earlyTask = SproutCareTaskMO.insertNewTask(of: .watering, into: context)
+        let earlyStartDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+        let earlyTaskSchedule = SproutCareTaskSchedule(startDate: earlyStartDate, recurrenceRule: .daily(2))
+        earlyTask.schedule = earlyTaskSchedule
+
+        earlyTask.careInformation?.plant = plant
+        plant.addToCareTasks(earlyTask)
+        return earlyTask
+    }
+
+    @discardableResult private func makeUnscheduledTask(plant: SproutPlantMO, context: NSManagedObjectContext) -> SproutCareTaskMO {
+        let unscheduledTask = SproutCareTaskMO.insertNewTask(of: .watering, into: context)
+        unscheduledTask.careInformation?.plant = plant
+        plant.addToCareTasks(unscheduledTask)
+        return unscheduledTask
     }
 }
 
