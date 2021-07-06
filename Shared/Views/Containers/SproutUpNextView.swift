@@ -13,6 +13,8 @@ class SproutUpNextView: UIView {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .headline)
         label.textColor = .label
+        label.allowsDefaultTighteningForTruncation = true
+        label.numberOfLines = 2
         return label
     }()
 
@@ -41,7 +43,7 @@ class SproutUpNextView: UIView {
     }()
 
     private lazy var textStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [plantNameLabel, taskTypeLabel])
+        let stack = UIStackView(arrangedSubviews: [plantNameLabel, UIView.spacer, taskTypeLabel])
         stack.axis = .vertical
         stack.alignment = .leading
         stack.distribution = .fill

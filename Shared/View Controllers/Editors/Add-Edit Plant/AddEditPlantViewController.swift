@@ -324,12 +324,16 @@ extension AddEditPlantViewController {
 
         // Unconfigured Care Details
         let unconfiguredCareItems: [Item] = unconfiguredCareDetailTypes.map { templateTask in
-            let info = SproutCareInformationMO.fetchOrInsertCareInformation(of: templateTask, for: plant, in: editingContext)
-            let config = CareDetailItemConfiguration(careInformation: info) { [weak self] in
+//            let info = SproutCareInformationMO.fetchOrInsertCareInformation(of: templateTask, for: plant, in: editingContext)
+            let config = CareDetailItemConfiguration(taskType: templateTask) { [weak self] in
                 guard let self = self, let plant = self.plant else { return }
 
                 let newTask = SproutCareTaskMO.insertNewTask(of: templateTask, into: self.editingContext)
                 plant.addToCareTasks(newTask)
+                if let newInfo = newTask.careInformation, plant.careInformation?.contains(newInfo) == false {
+                    plant.addToCareInformation(newInfo)
+                }
+
                 self.showCareTaskEditor(for: newTask)
             }
 

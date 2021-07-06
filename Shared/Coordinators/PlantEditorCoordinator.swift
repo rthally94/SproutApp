@@ -11,7 +11,7 @@ import SproutKit
 
 protocol EditorCoordinatorDelegate: AnyObject {
     func editorCoordinator(_ coordinator: PlantEditorCoordinator, didUpdatePlant plant: SproutPlantMO)
-    func editorCoordinatorDidFinish(_ coordinator: PlantEditorCoordinator)
+    func editorCoordinatorDidFinish(_ coordinator: PlantEditorCoordinator, status: DismissStatus)
 }
 
 final class PlantEditorCoordinator: NSObject, EditPlantCoordinator {
@@ -38,8 +38,8 @@ final class PlantEditorCoordinator: NSObject, EditPlantCoordinator {
     }
 
     func start() {
-        guard let plant = try? managedObjectContext.existingObject(with: plantID) as? SproutPlantMO else {
-            delegate?.editorCoordinatorDidFinish(self)
+        guard let plant = plant else {
+            delegate?.editorCoordinatorDidFinish(self, status: .finished)
             return
         }
 
@@ -94,26 +94,16 @@ extension PlantEditorCoordinator: AddEditPlantViewControllerDelegate {
 
     func plantEditorDidFinish(_ editor: AddEditPlantViewController, status: DismissStatus) {
         switch status {
-        case .saved:
-            do {
-                try managedObjectContext.saveIfNeeded()
-            } catch {
-                print("\(#function) - Error saving managedObjectContext. Rolling Back: \(error)")
-                managedObjectContext.rollback()
-            }
-            delegate?.editorCoordinatorDidFinish(self)
-
         case .canceled where hasChanges():
             requestToDiscardChanges {[weak self] granted in
                 if granted {
                     guard let self = self else { return }
-                    self.managedObjectContext.rollback()
-                    self.delegate?.editorCoordinatorDidFinish(self)
+                    self.delegate?.editorCoordinatorDidFinish(self, status: .canceled)
                 }
             }
 
         default:
-            delegate?.editorCoordinatorDidFinish(self)
+            delegate?.editorCoordinatorDidFinish(self, status: status)
         }
     }
 }
@@ -160,8 +150,7 @@ extension PlantEditorCoordinator: UIAdaptivePresentationControllerDelegate {
             requestToDiscardChanges { [weak self] granted in
                 if granted {
                     guard let self = self else { return }
-                    self.managedObjectContext.rollback()
-                    self.delegate?.editorCoordinatorDidFinish(self)
+                    self.delegate?.editorCoordinatorDidFinish(self, status: .canceled)
                 }
             }
         }

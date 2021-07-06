@@ -68,19 +68,19 @@ public class StorageProvider {
     public func loadSampleData() {
         persistentContainer.performBackgroundTask { context in
             let latePlant = SproutPlantMO.insertNewPlant(using: .sampleData[0], into: context)
-            latePlant.nickname = "Late Care"
+            latePlant.nickname = "Sample Plant: Late Care"
             self.makeLateTask(plant: latePlant, context: context)
 
             let duePlant = SproutPlantMO.insertNewPlant(using: .sampleData[1], into: context)
-            duePlant.nickname = "Due Care"
+            duePlant.nickname = "Sample Plant: Due Care"
             self.makeDueTask(plant: duePlant, context: context)
 
             let earlyPlant = SproutPlantMO.insertNewPlant(using: .sampleData[2], into: context)
-            earlyPlant.nickname = "Early Care"
+            earlyPlant.nickname = "Sample Plant: Early Care"
             self.makeEarlyTask(plant: earlyPlant, context: context)
 
             let unscheduledPlant = SproutPlantMO.insertNewPlant(using: .sampleData[3], into: context)
-            unscheduledPlant.nickname = "Any Time Care"
+            unscheduledPlant.nickname = "Sample Plant: Any Time Care"
             self.makeUnscheduledTask(plant: unscheduledPlant, context: context)
 
             do {

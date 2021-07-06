@@ -93,15 +93,13 @@ class UpNextViewController: UIViewController {
     }
 }
 
+// MARK: - Collection View Configuration
 private extension UpNextViewController {
     func makeLayout() -> UICollectionViewLayout {
         var config = UICollectionLayoutListConfiguration(appearance: .sidebar)
 
         config.trailingSwipeActionsConfigurationProvider = {[weak self] indexPath in
-            guard let task = self?.provider.object(at: indexPath), let dueDate = task.dueDate, task.markStatus == .due else { return nil }
-            let isDueToday = Calendar.current.isDateInToday(dueDate)
-            let isEarly = Date() < Calendar.current.startOfDay(for: dueDate)
-
+            guard let task = self?.provider.object(at: indexPath), task.markStatus == .due else { return nil }
             let markAsDoneAction = UIContextualAction(style: .normal, title: "Mark as done") {action, sourceView, completion in
                 self?.coordinator.markAsComplete(task: task)
                 completion(true)
@@ -116,13 +114,25 @@ private extension UpNextViewController {
             addEarlyLog.backgroundColor = .systemBlue
             addEarlyLog.image = UIImage(systemName: "calendar.badge.plus", withConfiguration: Self.iconConfiguration)
 
-
             let actions: [UIContextualAction]
-            if isDueToday {
-                actions = [markAsDoneAction]
-            } else if isEarly {
-                actions = [addEarlyLog]
+            let isDueToday: Bool
+            let isEarly: Bool
+            if let dueDate = task.dueDate {
+                isDueToday = Calendar.current.isDateInToday(dueDate)
+                isEarly = Date() < Calendar.current.startOfDay(for: dueDate)
             } else {
+                isDueToday = true
+                isEarly = false
+            }
+
+            switch (isDueToday, isEarly) {
+            case (false, true):
+                // Early - Show clock
+                actions = [addEarlyLog]
+            case (true, false):
+                // Due or not scheduled - show circle
+                actions = [markAsDoneAction]
+            default:
                 actions = []
             }
 
@@ -140,6 +150,7 @@ private extension UpNextViewController {
         return layout
     }
 
+    // MARK: - Cell Registrations
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {
         UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {[unowned self] cell, indexPath, item in
             guard let task = self.provider.task(withID: item), let plantID = task.plant?.objectID, let plant = self.provider.plant(withID: plantID) else { return }

@@ -35,7 +35,7 @@ extension PlantsCoordinator: PlantListCoordinator {
     func createNewPlant() {
         let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         editingContext.parent = persistentContainer.viewContext
-        let newPlant = SproutPlantMO.insertNewPlant(using: .newPlant(), into: editingContext)
+        let newPlant = SproutPlantMO.insertNewPlant(into: editingContext)
         showPlantEditor(plant: newPlant)
     }
 
@@ -51,8 +51,8 @@ extension PlantsCoordinator: PlantListCoordinator {
             navigationController: UINavigationController(),
             plant: plant
         ) else { return }
-        coordinator.delegate = self
 
+        coordinator.delegate = self
         childCoordinators.append(coordinator)
         coordinator.start()
         navigationController.present(coordinator.navigationController, animated: true)
@@ -76,22 +76,35 @@ extension PlantsCoordinator: PlantDetailCoordinator { }
 
 extension PlantsCoordinator: EditorCoordinatorDelegate {
     func editorCoordinator(_ coordinator: PlantEditorCoordinator, didUpdatePlant plant: SproutPlantMO) {
-        if (try? persistentContainer.viewContext.existingObject(with: plant.objectID))?.isUpdated == true,
-            let detailVC = navigationController.topViewController as? PlantDetailViewController {
+        if let detailVC = navigationController.topViewController as? PlantDetailViewController {
             detailVC.reload()
         }
 
-        do {
-            try coordinator.managedObjectContext.saveIfNeeded()
-        } catch {
-            coordinator.managedObjectContext.rollback()
+        if let plant = try? persistentContainer.viewContext.existingObject(with: plant.objectID) {
+            persistentContainer.viewContext.refresh(plant, mergeChanges: true)
         }
-
-        persistentContainer.viewContext.refresh(plant, mergeChanges: true)
-        persistentContainer.saveContextIfNeeded()
     }
 
-    func editorCoordinatorDidFinish(_ coordinator: PlantEditorCoordinator) {
+    func editorCoordinatorDidFinish(_ coordinator: PlantEditorCoordinator, status: DismissStatus) {
+        switch status {
+        case .canceled:
+            coordinator.managedObjectContext.rollback()
+        case .saved:
+            do {
+                try coordinator.managedObjectContext.saveIfNeeded()
+            } catch {
+                print("\(#function) - Unable to save context: \(error)")
+            }
+            persistentContainer.saveContextIfNeeded()
+
+            if let detailVC = navigationController.topViewController as? PlantDetailViewController {
+                detailVC.reload()
+            }
+
+        default:
+            break
+        }
+
         if let index = childCoordinators.firstIndex(where: { $0 === coordinator }) {
             childCoordinators.remove(at: index)
         }

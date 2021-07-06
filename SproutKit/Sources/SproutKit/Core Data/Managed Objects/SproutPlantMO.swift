@@ -35,13 +35,14 @@ public final class SproutPlantMO: NSManagedObject {
 
 // Convenience methods for creating plants
 public extension SproutPlantMO {
-    @discardableResult private static func insertNewPlant(into context: NSManagedObjectContext) -> SproutPlantMO {
+    @discardableResult static func insertNewPlant(into context: NSManagedObjectContext) -> SproutPlantMO {
         let plant = SproutPlantMO(context: context)
         return plant
     }
 
     @discardableResult static func insertNewPlant(using template: SproutPlantTemplate, into context: NSManagedObjectContext) -> SproutPlantMO {
         let newPlant = insertNewPlant(into: context)
+
         newPlant.scientificName = template.scientificName
         newPlant.commonName = template.commonName
 
