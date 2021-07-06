@@ -103,14 +103,12 @@ extension PlantEditorCoordinator: AddEditPlantViewControllerDelegate {
             }
             delegate?.editorCoordinatorDidFinish(self)
 
-        case .canceled:
-            if hasChanges() {
-                requestToDiscardChanges {[weak self] granted in
-                    if granted {
-                        guard let self = self else { return }
-                        self.managedObjectContext.rollback()
-                        self.delegate?.editorCoordinatorDidFinish(self)
-                    }
+        case .canceled where hasChanges():
+            requestToDiscardChanges {[weak self] granted in
+                if granted {
+                    guard let self = self else { return }
+                    self.managedObjectContext.rollback()
+                    self.delegate?.editorCoordinatorDidFinish(self)
                 }
             }
 
