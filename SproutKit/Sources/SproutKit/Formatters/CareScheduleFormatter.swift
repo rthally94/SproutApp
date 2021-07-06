@@ -19,6 +19,7 @@ public class CareScheduleFormatter: Formatter {
         get { recurrenceRuleFormatter.frequencyStyle }
         set { recurrenceRuleFormatter.frequencyStyle = newValue }
     }
+    
     public var valuesStyle: CareRecurrenceRuleFormatter.Style {
         get { recurrenceRuleFormatter.valuesStyle }
         set { recurrenceRuleFormatter.valuesStyle = newValue }
@@ -30,6 +31,11 @@ public class CareScheduleFormatter: Formatter {
         didSet {
             recurrenceRuleFormatter.formattingContext = formattingContext
         }
+    }
+
+    public var includesDeterminerPhrase: Bool {
+        get { recurrenceRuleFormatter.includesDeterminerPhrase }
+        set { recurrenceRuleFormatter.includesDeterminerPhrase = newValue }
     }
 
     override public func string(for obj: Any?) -> String? {
@@ -55,7 +61,8 @@ public class CareRecurrenceRuleFormatter: Formatter {
 
     public var frequencyStyle: Style = .none
     public var valuesStyle: Style = .none
-    public var formattingContext: Context = .dynamic
+    public var formattingContext: Context = .standalone
+    public var includesDeterminerPhrase: Bool = false
 
     override public func string(for obj: Any?) -> String? {
         guard let obj = obj as? SproutCareTaskRecurrenceRule else { return nil }
@@ -91,14 +98,13 @@ public class CareRecurrenceRuleFormatter: Formatter {
         let ruleString: String
 
         switch formattingContext {
+        case .standalone where !frequencyText.isEmpty && !valueText.isEmpty:
+            ruleString = frequencyText + " • " + valueText
         case .standalone:
-            if !frequencyText.isEmpty, !valueText.isEmpty {
-                ruleString = frequencyText + " • " + valueText
-            } else {
-                ruleString = frequencyText + valueText
-            }
+            ruleString = frequencyText + valueText
         default:
-            ruleString = "Not Implemented"
+            print("CareRecurrenceRuleFormatter - Formatting context not implemented: \(formattingContext)")
+            ruleString = ""
         }
 
         return ruleString
@@ -169,7 +175,7 @@ public class CareRecurrenceRuleFormatter: Formatter {
     }
 
     private func regularIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {
-        return "Every " + (interval == 1 ? "Day" : shortIntervalSymbol(for: interval, frequency: frequency))
+        return shortIntervalSymbol(for: interval, frequency: frequency)
     }
 
     private func shortIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {
@@ -191,12 +197,9 @@ public class CareRecurrenceRuleFormatter: Formatter {
             formatter.allowedUnits = .day
             let dateComponents = DateComponents(year: interval)
             returnString = formatter.string(from: dateComponents) ?? ""
-        default:
-            returnString = ""
-
         }
 
-        return returnString
+        return (includesDeterminerPhrase ? "Every " : "") + returnString
     }
 
     private func regularStandaloneIntervalSymbol(for interval: Int, frequency: SproutCareTaskRecurrenceRule) -> String {
@@ -236,10 +239,10 @@ public class CareRecurrenceRuleFormatter: Formatter {
         let weekdayString: String
         switch style {
         case .short:
-            weekdayString = weekdayStrings.joined(separator: ", ")
+            weekdayString = (includesDeterminerPhrase ? "Every " : "") + weekdayStrings.joined(separator: ", ")
         case .full:
             let formatter = ListFormatter()
-            weekdayString = "Every " + (formatter.string(from: weekdayStrings) ?? weekdayStrings.joined(separator: ", "))
+            weekdayString = (includesDeterminerPhrase ? "Every " : "") + (formatter.string(from: weekdayStrings) ?? weekdayStrings.joined(separator: ", "))
         default:
             weekdayString = ""
         }
@@ -258,10 +261,10 @@ public class CareRecurrenceRuleFormatter: Formatter {
         let dayString: String
         switch style {
         case .short:
-            dayString = dayStrings.joined(separator: ", ")
+            dayString = (includesDeterminerPhrase ? "Each " : "") + dayStrings.joined(separator: ", ")
         case .full:
             let formatter = ListFormatter()
-            dayString = "Every " + (formatter.string(from: dayStrings) ?? dayStrings.joined(separator: ", "))
+            dayString = (includesDeterminerPhrase ? "Each " : "") + (formatter.string(from: dayStrings) ?? dayStrings.joined(separator: ", "))
         default:
             dayString = ""
         }

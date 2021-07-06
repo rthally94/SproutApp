@@ -22,8 +22,14 @@ struct SproutCareTaskCellViewModel {
     init(careTask task: SproutCareTaskMO) {
         let name = task.careInformation?.type?.capitalized ?? "TASK TYPE NAME"
         let icon = task.careInformation?.iconImage
-        let formatter = Utility.careScheduleFormatter
-        let scheduleText = formatter.string(for: task.schedule)
+
+        let scheduleText: String
+        if let schedule = task.schedule {
+            let formatter = Utility.careScheduleFormatter
+            scheduleText = formatter.string(from: schedule)
+        } else {
+            scheduleText = "Any Time"
+        }
 
         self.init(title: name, subtitle: scheduleText, image: icon)
     }

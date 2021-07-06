@@ -47,7 +47,7 @@ extension PlantsCoordinator: PlantListCoordinator {
     }
 
     private func showPlantEditor(plant: SproutPlantMO) {
-        guard let coordinator = EditorCoordinator(
+        guard let coordinator = PlantEditorCoordinator(
             navigationController: UINavigationController(),
             plant: plant
         ) else { return }
@@ -75,7 +75,7 @@ extension PlantsCoordinator: PlantListCoordinator {
 extension PlantsCoordinator: PlantDetailCoordinator { }
 
 extension PlantsCoordinator: EditorCoordinatorDelegate {
-    func editorCoordinator(_ coordinator: EditorCoordinator, didUpdatePlant plant: SproutPlantMO) {
+    func editorCoordinator(_ coordinator: PlantEditorCoordinator, didUpdatePlant plant: SproutPlantMO) {
         if (try? persistentContainer.viewContext.existingObject(with: plant.objectID))?.isUpdated == true,
             let detailVC = navigationController.topViewController as? PlantDetailViewController {
             detailVC.reload()
@@ -91,7 +91,7 @@ extension PlantsCoordinator: EditorCoordinatorDelegate {
         persistentContainer.saveContextIfNeeded()
     }
 
-    func editorCoordinatorDidFinish(_ coordinator: EditorCoordinator) {
+    func editorCoordinatorDidFinish(_ coordinator: PlantEditorCoordinator) {
         if let index = childCoordinators.firstIndex(where: { $0 === coordinator }) {
             childCoordinators.remove(at: index)
         }

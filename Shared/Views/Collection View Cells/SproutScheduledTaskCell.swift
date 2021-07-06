@@ -141,9 +141,20 @@ class SproutScheduledTaskCell: SproutListCell {
 
         // Configure for just the task
         upNextView.plantNameLabel.text = state.title
-        upNextView.taskTypeLabel.text = state.subtitle
-        upNextView.taskScheduleLabel.image = state.valueImage
-        upNextView.taskScheduleLabel.text = state.valueText
+
+        let subtitleString: String?
+        switch(state.subtitle, state.valueText) {
+        case let (subtitle?, value?):
+            subtitleString = subtitle + " • " + value
+        case let (subtitle?, _):
+            subtitleString = subtitle
+        case let (_, value?):
+            subtitleString = value
+        default:
+            subtitleString = nil
+        }
+
+        upNextView.taskTypeLabel.text = subtitleString
 
         var iconConfig = upNextView.plantIconView.defaultConfiguration()
         iconConfig.image = state.image

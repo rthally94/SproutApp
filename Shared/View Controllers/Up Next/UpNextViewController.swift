@@ -12,6 +12,12 @@ import SproutKit
 
 class UpNextViewController: UIViewController {
     static let iconConfiguration = UIImage.SymbolConfiguration(textStyle: .title3)
+    static let scheduleFormatter: CareScheduleFormatter = {
+        let formatter = CareScheduleFormatter()
+        formatter.includesDeterminerPhrase = true
+        formatter.valuesStyle = .short
+        return formatter
+    }()
 
     // MARK: - Properties
     typealias Section = UpNextProvider.Section
@@ -142,7 +148,12 @@ private extension UpNextViewController {
             cell.plantImage = plant.getImage()
             cell.taskType = task.careInformation?.type?.capitalized
             cell.taskScheduleIcon = UIImage(systemName: task.hasSchedule ? "bell.fill" : "bell.slash")
-            cell.taskScheduleText = task.schedule?.description ?? "Not scheduled"
+
+            if let schedule = task.schedule {
+                cell.taskScheduleText = Self.scheduleFormatter.string(from: schedule)
+            } else {
+                cell.taskScheduleText = "Any Time"
+            }
 
             let isChecked = task.markStatus == .done
 
@@ -153,31 +164,38 @@ private extension UpNextViewController {
                 isEarly = Date() < Calendar.current.startOfDay(for: dueDate)
             } else {
                 isEarly = false
-                isDueToday = false
+                isDueToday = true
             }
 
-            if isChecked {
+            switch (isChecked, isDueToday, isEarly) {
+            case (true, _, _):
+                // Done
                 cell.accessories = [ .checkmarkAccessory() ]
-            } else if isDueToday {
-                cell.accessories = [
-                    .todoAccessory(actionHandler: {[weak self] _ in
-                        self?.coordinator.markAsComplete(task: task)
-                    })
-                ]
-            } else if isEarly {
+            case (false, false, true):
+                // Early - Show clock
                 cell.accessories = [
                     .buttonAccessory(
                         tintColor: .systemGray3,
                         action: UIAction(image: UIImage(systemName: "clock")) { _ in }
                     )
                 ]
-            } else {
+            case (false, false, false):
+                // Late - Show Exclamation
                 cell.accessories = [
                     .buttonAccessory(
                         tintColor: .systemOrange,
                         action: UIAction(image: UIImage(systemName: "exclamationmark.circle")) { _ in }
                     )
                 ]
+            case (false, true, false):
+                // Due or not scheduled - show circle
+                cell.accessories = [
+                    .todoAccessory(actionHandler: {[weak self] _ in
+                        self?.coordinator.markAsComplete(task: task)
+                    })
+                ]
+            default:
+                cell.accessories = []
             }
         }
     }

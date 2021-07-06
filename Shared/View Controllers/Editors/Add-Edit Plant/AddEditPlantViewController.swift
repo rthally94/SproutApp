@@ -44,7 +44,7 @@ class AddEditPlantViewController: UICollectionViewController {
         })
     }
 
-    weak var delegate: AddEditPlantViewControllerDelegate?
+    weak var delegate: EditPlantCoordinator?
     private var dataSource: UICollectionViewDiffableDataSource<ViewModel.Section, ViewModel.Item>!
 
     // MARK: - Initializers
@@ -102,17 +102,16 @@ class AddEditPlantViewController: UICollectionViewController {
         delegate?.plantEditorDidFinish(self)
     }
 
+    private func showImagePicker(preferredType: UIImagePickerController.SourceType = .photoLibrary) {
+        delegate?.showImagePicker(source: preferredType)
+    }
+
     private func showPlantTypePicker() {
-        let vc = PlantTypePickerViewController()
-        vc.selectedType = plant?.plantTemplate
-        vc.delegate = self
-        navigationController?.pushViewController(vc, animated: true)
+        delegate?.showPlantTypePicker(currentType: plant?.plantTemplate)
     }
 
     private func showCareTaskEditor(for task: SproutCareTaskMO) {
-        let vc = TaskEditorViewController(task: task, editingContext: editingContext)
-        vc.delegate = self
-        navigationController?.pushViewController(vc, animated: true)
+        delegate?.edit(task: task)
     }
 
     private func saveChanges() {
@@ -144,7 +143,7 @@ class AddEditPlantViewController: UICollectionViewController {
         navigationItem.rightBarButtonItem?.isEnabled = canSave
     }
 
-    private func updateUI(animated: Bool = true) {
+    func updateUI(animated: Bool = true) {
         updateNavButtons()
         applySnapshot(animatingDifferences: animated)
     }
@@ -525,51 +524,6 @@ private extension AddEditPlantViewController {
             //            configuration.secondaryText = itemCount == 1 ? "\(itemCount) task" : "\(itemCount) tasks"
             cell.contentConfiguration = configuration
         }
-    }
-}
-
-// MARK: - Plant Icon Picker Delegate
-
-extension AddEditPlantViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    func showImagePicker(preferredType: UIImagePickerController.SourceType = .photoLibrary) {
-        let imagePicker = UIImagePickerController()
-
-        imagePicker.delegate = self
-
-        if UIImagePickerController.isSourceTypeAvailable(preferredType) {
-            imagePicker.sourceType = preferredType
-        } else {
-            imagePicker.sourceType = .photoLibrary
-        }
-
-        present(imagePicker, animated: true)
-    }
-
-    func imagePickerController(_: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
-        guard let image = info[.originalImage] as? UIImage else { return }
-
-        // Apply the new selected image
-        plant?.setImage(image)
-
-        updateUI()
-        dismiss(animated: true)
-    }
-}
-
-// MARK: - Plant Type Picker Delegate
-
-extension AddEditPlantViewController: PlantTypePickerDelegate {
-    func plantTypePicker(_: PlantTypePickerViewController, didSelectType plantType: SproutPlantTemplate) {
-        plant?.plantTemplate = plantType
-        updateUI()
-    }
-}
-
-// MARK: - Plant Task Editor Delegate
-
-extension AddEditPlantViewController: TaskEditorDelegate {
-    internal func taskEditor(_: TaskEditorViewController, didUpdateTask _: SproutCareTaskMO) {
-        updateUI()
     }
 }
 

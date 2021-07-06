@@ -35,6 +35,8 @@ extension CareDetailItemConfiguration {
         var subtitleText: String?
         if let schedule = task.schedule {
             subtitleText = scheduleFormatter.string(from: schedule)
+        } else {
+            subtitleText = "Any Time"
         }
 
         self.init(image: taskIcon, title: task.careInformation?.type?.capitalized, subtitle: subtitleText, handler: handler)

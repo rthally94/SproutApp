@@ -41,11 +41,10 @@ class SproutUpNextView: UIView {
     }()
 
     private lazy var textStack: UIStackView = {
-        let stack = UIStackView(arrangedSubviews: [plantNameLabel, taskTypeLabel, taskScheduleLabel])
+        let stack = UIStackView(arrangedSubviews: [plantNameLabel, taskTypeLabel])
         stack.axis = .vertical
         stack.alignment = .leading
-        stack.distribution = .fillEqually
-        stack.spacing = 6
+        stack.distribution = .fill
         return stack
     }()
 

@@ -75,13 +75,13 @@ public class StorageProvider {
             duePlant.nickname = "Due Care"
             self.makeDueTask(plant: duePlant, context: context)
 
-            let earlyPlant = SproutPlantMO.insertNewPlant(using: .sampleData[1], into: context)
+            let earlyPlant = SproutPlantMO.insertNewPlant(using: .sampleData[2], into: context)
             earlyPlant.nickname = "Early Care"
             self.makeEarlyTask(plant: earlyPlant, context: context)
 
-            let unscheduledPlant = SproutPlantMO.insertNewPlant(using: .sampleData[1], into: context)
-            unscheduledPlant.nickname = "Unscheduled Care"
-            self.makeEarlyTask(plant: unscheduledPlant, context: context)
+            let unscheduledPlant = SproutPlantMO.insertNewPlant(using: .sampleData[3], into: context)
+            unscheduledPlant.nickname = "Any Time Care"
+            self.makeUnscheduledTask(plant: unscheduledPlant, context: context)
 
             do {
                 try context.saveIfNeeded()
