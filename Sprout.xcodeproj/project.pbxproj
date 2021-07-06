@@ -12,6 +12,7 @@
 		FB06768B269494C9005F022A /* EditPlantCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB06768A269494C9005F022A /* EditPlantCoordinator.swift */; };
 		FB06768D26949E69005F022A /* PlantTypePicking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB06768C26949E69005F022A /* PlantTypePicking.swift */; };
 		FB06768F2694A0A6005F022A /* TaskEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB06768E2694A0A6005F022A /* TaskEditing.swift */; };
+		FB0676912694C11C005F022A /* AppIconAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB0676902694C11C005F022A /* AppIconAssets.xcassets */; };
 		FB0A9F3625DC5D7E0084AED8 /* SproutTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0A9F3525DC5D7E0084AED8 /* SproutTextFieldCell.swift */; };
 		FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */; };
 		FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B6F925B1E5CC00D02384 /* SceneDelegate.swift */; };
@@ -112,6 +113,7 @@
 		FB06768A269494C9005F022A /* EditPlantCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPlantCoordinator.swift; sourceTree = "<group>"; };
 		FB06768C26949E69005F022A /* PlantTypePicking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantTypePicking.swift; sourceTree = "<group>"; };
 		FB06768E2694A0A6005F022A /* TaskEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskEditing.swift; sourceTree = "<group>"; };
+		FB0676902694C11C005F022A /* AppIconAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIconAssets.xcassets; sourceTree = "<group>"; };
 		FB0A9F3525DC5D7E0084AED8 /* SproutTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutTextFieldCell.swift; sourceTree = "<group>"; };
 		FB21B6F425B1E5CC00D02384 /* Sprout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sprout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -608,6 +610,7 @@
 				FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */,
 				FB21B6F925B1E5CC00D02384 /* SceneDelegate.swift */,
 				FB21B70025B1E5CC00D02384 /* Assets.xcassets */,
+				FB0676902694C11C005F022A /* AppIconAssets.xcassets */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -698,6 +701,7 @@
 			files = (
 				FB21B70425B1E5CC00D02384 /* LaunchScreen.storyboard in Resources */,
 				FB21B70125B1E5CC00D02384 /* Assets.xcassets in Resources */,
+				FB0676912694C11C005F022A /* AppIconAssets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -950,10 +954,10 @@
 		FB21B70925B1E5CC00D02384 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "Nature Icon";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Leaf-Gradient";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = Shared/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
@@ -972,10 +976,10 @@
 		FB21B70A25B1E5CC00D02384 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "Nature Icon";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Leaf-Gradient";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = GXQ52XLH6S;
 				INFOPLIST_FILE = Shared/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
