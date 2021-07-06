@@ -10,5 +10,5 @@ import SproutKit
 
 protocol AddEditPlantViewControllerDelegate: AnyObject {
     func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO)
-    func plantEditorDidFinish(_ editor: AddEditPlantViewController)
+    func plantEditorDidFinish(_ editor: AddEditPlantViewController, status: DismissStatus)
 }

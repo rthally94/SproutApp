@@ -25,14 +25,16 @@ final class PlantEditorCoordinator: NSObject, EditPlantCoordinator {
     }
 
     init?(navigationController: UINavigationController,
-         plant: SproutPlantMO) {
+          plant: SproutPlantMO) {
+        self.navigationController = navigationController
 
         guard let context = plant.managedObjectContext else { return nil }
-        self.navigationController = navigationController
         self.managedObjectContext = context
         self.plantID = plant.objectID
 
         super.init()
+
+        navigationController.presentationController?.delegate = self
     }
 
     func start() {
@@ -78,6 +80,11 @@ final class PlantEditorCoordinator: NSObject, EditPlantCoordinator {
             rootVC.updateUI(animated: animated)
         }
     }
+
+    private func hasChanges() -> Bool {
+        guard let rootVC = navigationController.viewControllers.first as? AddEditPlantViewController else { return false }
+        return rootVC.hasChanges
+    }
 }
 
 extension PlantEditorCoordinator: AddEditPlantViewControllerDelegate {
@@ -85,8 +92,31 @@ extension PlantEditorCoordinator: AddEditPlantViewControllerDelegate {
         delegate?.editorCoordinator(self, didUpdatePlant: plant)
     }
 
-    func plantEditorDidFinish(_ editor: AddEditPlantViewController) {
-        delegate?.editorCoordinatorDidFinish(self)
+    func plantEditorDidFinish(_ editor: AddEditPlantViewController, status: DismissStatus) {
+        switch status {
+        case .saved:
+            do {
+                try managedObjectContext.saveIfNeeded()
+            } catch {
+                print("\(#function) - Error saving managedObjectContext. Rolling Back: \(error)")
+                managedObjectContext.rollback()
+            }
+            delegate?.editorCoordinatorDidFinish(self)
+
+        case .canceled:
+            if hasChanges() {
+                requestToDiscardChanges {[weak self] granted in
+                    if granted {
+                        guard let self = self else { return }
+                        self.managedObjectContext.rollback()
+                        self.delegate?.editorCoordinatorDidFinish(self)
+                    }
+                }
+            }
+
+        default:
+            delegate?.editorCoordinatorDidFinish(self)
+        }
     }
 }
 
@@ -121,5 +151,38 @@ extension PlantEditorCoordinator: TaskEditorDelegate {
 
     func taskEditorDidCancel(_ editor: TaskEditorViewController) {
         editor.dismiss(animated: true)
+    }
+}
+
+// MARK: - UIAdaptivePresentationControllerDelegate
+extension PlantEditorCoordinator: UIAdaptivePresentationControllerDelegate {
+    // Decides if a pull down gesture should dismiss the editor
+    func presentationControllerShouldDismiss(_ controller: UIPresentationController) -> Bool {
+        if hasChanges() {
+            requestToDiscardChanges { [weak self] granted in
+                if granted {
+                    guard let self = self else { return }
+                    self.managedObjectContext.rollback()
+                    self.delegate?.editorCoordinatorDidFinish(self)
+                }
+            }
+        }
+
+        return !hasChanges()
+    }
+
+    private func requestToDiscardChanges(completion: @escaping (Bool) -> Void) {
+        let message = "Are you sure you want to discard your changes?"
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
+        let discardAction = UIAlertAction(title: "Discard Changes", style: .destructive, handler: { _ in
+            completion(true)
+        })
+        let continueAction = UIAlertAction(title: "Continue Editing", style: .cancel, handler: { _ in
+            completion(false)
+        })
+
+        alert.addAction(discardAction)
+        alert.addAction(continueAction)
+        navigationController.present(alert, animated: true)
     }
 }

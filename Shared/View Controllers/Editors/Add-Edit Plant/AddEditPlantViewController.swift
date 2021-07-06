@@ -87,19 +87,21 @@ class AddEditPlantViewController: UICollectionViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.presentationController?.delegate = self
         updateUI()
     }
 
     // MARK: - Actions
 
     @objc private func cancelButtonPressed(sender _: AnyObject) {
-        delegate?.plantEditorDidFinish(self)
+        delegate?.plantEditorDidFinish(self, status: .canceled)
     }
 
     @objc private func saveButtonPressed(sender _: AnyObject) {
-        saveChanges()
-        delegate?.plantEditorDidFinish(self)
+        if let plant = plant {
+            delegate?.plantEditor(self, didUpdatePlant: plant)
+        }
+
+        delegate?.plantEditorDidFinish(self, status: .saved)
     }
 
     private func showImagePicker(preferredType: UIImagePickerController.SourceType = .photoLibrary) {
@@ -114,30 +116,7 @@ class AddEditPlantViewController: UICollectionViewController {
         delegate?.edit(task: task)
     }
 
-    private func saveChanges() {
-        if let plant = plant {
-            delegate?.plantEditor(self, didUpdatePlant: plant)
-        }
-    }
 
-    private func discardChangesIfAble(completion: @escaping (Bool) -> Void) {
-        if hasChanges {
-            let message = isNew ? "Are you sure you want to discard this new plant?" : "Are you sure you want to discard your changes?"
-            let alert = UIAlertController(title: nil, message: message, preferredStyle: .actionSheet)
-            let discardAction = UIAlertAction(title: "Discard Changes", style: .destructive, handler: { _ in
-                completion(true)
-            })
-            let continueAction = UIAlertAction(title: "Continue Editing", style: .cancel, handler: { _ in
-                completion(false)
-            })
-
-            alert.addAction(discardAction)
-            alert.addAction(continueAction)
-            present(alert, animated: true)
-        } else {
-            completion(true)
-        }
-    }
 
     private func updateNavButtons() {
         navigationItem.rightBarButtonItem?.isEnabled = canSave
@@ -200,7 +179,7 @@ extension AddEditPlantViewController {
         isNew ? "New Plant" : "Edit Plant"
     }
 
-    private var hasChanges: Bool {
+    var hasChanges: Bool {
         let areObjectsUpdated = !editingContext.updatedObjects.isEmpty
         let isNameUpdated = originalNickname != plant?.nickname
 
@@ -245,8 +224,6 @@ extension AddEditPlantViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: textFieldCellRegistration, for: indexPath, item: item)
             case .careDetail, .listCell:
                 return collectionView.dequeueConfiguredReusableCell(using: listCellRegistration, for: indexPath, item: item)
-            default:
-                return nil
             }
         }
 
@@ -524,21 +501,5 @@ private extension AddEditPlantViewController {
             //            configuration.secondaryText = itemCount == 1 ? "\(itemCount) task" : "\(itemCount) tasks"
             cell.contentConfiguration = configuration
         }
-    }
-}
-
-// MARK: - UIAdaptivePresentationControllerDelegate
-extension AddEditPlantViewController: UIAdaptivePresentationControllerDelegate {
-    // Decides if a pull down gesture should dismiss the editor
-    func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {
-        if hasChanges {
-            discardChangesIfAble { [weak self] success in
-                if success {
-                    self?.dismiss(animated: true)
-                }
-            }
-        }
-
-        return !hasChanges
     }
 }
