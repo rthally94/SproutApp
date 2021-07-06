@@ -74,6 +74,7 @@ class IconCellContentView: UIView & UIContentView {
         layer.shadowOpacity = 0.5
         layer.shadowOffset = CGSize(width: 0, height: 5)
         layer.shadowRadius = 5
+        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.width/2).cgPath
     }
     
     private var appliedContentConfiguration: IconCellContentConfiguration!

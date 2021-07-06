@@ -39,6 +39,7 @@ class SproutHeroView: UIView {
         iconView.layer.shadowOpacity = 0.25
         iconView.layer.shadowRadius = 1
         iconView.layer.shadowOffset = CGSize(width: 2, height: 2)
+        iconView.layer.shadowPath = UIBezierPath(roundedRect: iconView.bounds, cornerRadius: iconView.bounds.width/2).cgPath
     }
 
     private func setupViews() {

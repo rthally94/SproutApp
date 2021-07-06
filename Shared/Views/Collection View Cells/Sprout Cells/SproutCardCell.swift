@@ -39,11 +39,6 @@ class SproutCardCell: UICollectionViewCell {
 
         layer.cornerRadius = 20
         clipsToBounds = true
-
-        layer.shadowColor = UIColor.gray.cgColor
-        layer.shadowOffset = CGSize(width: 0, height: 5)
-        layer.shadowRadius = 2.5
-        layer.shadowOpacity = 0.2
     }
 
     private func setupViews() {
@@ -52,7 +47,21 @@ class SproutCardCell: UICollectionViewCell {
 
         contentView.addSubview(cardView)
         cardView.translatesAutoresizingMaskIntoConstraints = false
-        cardView.pinToLayoutMarginsOf(contentView)
+
+        let top = cardView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor)
+        let leading = cardView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor)
+        let bottom = cardView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor)
+        let trailing = cardView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
+
+        top.priority-=1
+        leading.priority-=1
+
+        NSLayoutConstraint.activate([
+            top,
+            leading,
+            bottom,
+            trailing
+        ])
     }
 
     override func prepareForReuse() {

@@ -19,6 +19,14 @@ class SproutCardView: UIView {
         return label
     }()
 
+    private lazy var contentStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [plantIconView, textLabel])
+        stack.axis = .vertical
+        stack.alignment = .center
+        stack.distribution = .fill
+        return stack
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -30,21 +38,11 @@ class SproutCardView: UIView {
     }
 
     private func setupViews() {
-        addSubview(plantIconView)
-        addSubview(textLabel)
+        addSubview(contentStack)
+        contentStack.translatesAutoresizingMaskIntoConstraints = false
+        contentStack.pinToBoundsOf(self)
 
         plantIconView.translatesAutoresizingMaskIntoConstraints = false
-        textLabel.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            plantIconView.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            plantIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            plantIconView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.75),
-
-            textLabel.topAnchor.constraint(equalToSystemSpacingBelow: plantIconView.bottomAnchor, multiplier: 1.0),
-            textLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-            textLabel.bottomAnchor.constraint(equalTo: bottomAnchor),
-            textLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-        ])
+        plantIconView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.75).isActive = true
     }
 }

@@ -107,18 +107,21 @@ class SproutScheduledTaskCell: SproutListCell {
 
         contentView.addSubview(upNextView)
         upNextView.translatesAutoresizingMaskIntoConstraints = false
-        let constraints = [
-            upNextView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor),
-            upNextView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor),
-            upNextView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor),
-            upNextView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
-        ]
 
-        constraints.forEach { constraint in
-            constraint.priority-=1
-        }
+        let top = upNextView.topAnchor.constraint(equalTo: contentView.layoutMarginsGuide.topAnchor)
+        let leading = upNextView.leadingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.leadingAnchor)
+        let bottom = upNextView.bottomAnchor.constraint(equalTo: contentView.layoutMarginsGuide.bottomAnchor)
+        let trailing = upNextView.trailingAnchor.constraint(equalTo: contentView.layoutMarginsGuide.trailingAnchor)
 
-        NSLayoutConstraint.activate(constraints)
+        top.priority -= 1
+        leading.priority -= 1
+        
+        NSLayoutConstraint.activate([
+            top,
+            leading,
+            bottom,
+            trailing
+        ])
 
 
         needsLayout = false
