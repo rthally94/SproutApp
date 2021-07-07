@@ -8,13 +8,41 @@
 import SwiftUI
 
 struct Header: View {
+    var image: Image
+    var title: Text
+    var subtitle: Text?
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        GeometryReader { geometry in
+            VStack(alignment: .center) {
+                Spacer()
+                image
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: geometry.size.width/3)
+
+                title
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.green)
+                    .multilineTextAlignment(.center)
+
+                if let subtitle = subtitle {
+                    subtitle
+                        .multilineTextAlignment(.center)
+                }
+                Spacer()
+
+                HStack {
+                    Spacer()
+                }
+            }
+        }
     }
 }
 
 struct Header_Previews: PreviewProvider {
     static var previews: some View {
-        Header()
+        Header(image: Image(systemName: "person.fill"), title: Text("Title"))
     }
 }

@@ -7,14 +7,37 @@
 
 import SwiftUI
 
-struct PageView: View {
+struct PageView<Header: View, Controls: View>: View {
+    @ViewBuilder var header: (() -> Header)
+    @ViewBuilder var controls: (() -> Controls)
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            VStack {
+                Spacer()
+                header()
+            }
+
+            VStack {
+                Spacer()
+                controls()
+            }
+
+            HStack {
+                Spacer()
+            }
+        }
+        .padding()
     }
 }
 
 struct PageView_Previews: PreviewProvider {
     static var previews: some View {
-        PageView()
+        PageView {
+            Text("Header")
+        } controls: {
+            Text("Controls")
+        }
+
     }
 }

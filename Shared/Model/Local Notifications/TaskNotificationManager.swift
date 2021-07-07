@@ -23,16 +23,16 @@ final class TaskNotificationManager {
         subscribeToReminders()
     }
 
-    func registerForNotifications() {
-        notificationsManager.requestAuthorization { [weak self] granted in
-            guard let self = self else { return }
-            self.areNotificationsAuthorized = granted
-        }
+    func registerForNotifications(completion: @escaping (Bool) -> Void ) {
+        notificationsManager.requestAuthorization(completion: completion)
     }
     
     func updateNotifications() {
         if !areNotificationsAuthorized {
-            registerForNotifications()
+            registerForNotifications {[weak self] granted in
+                guard let self = self else { return }
+                self.areNotificationsAuthorized = granted
+            }
         }
 
         if UserDefaults.standard.dailyDigestIsEnabled {

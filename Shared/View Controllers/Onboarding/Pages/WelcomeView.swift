@@ -9,22 +9,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     @Binding var currentPage: Int
-
-    fileprivate func headerView() -> some View {
-        return VStack(alignment: .center) {
-            Image(systemName: "leaf.fill")
-                .resizable()
-                .frame(width: 100, height: 100)
-
-            Text("Welcome to Sprout")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .foregroundColor(.green)
-
-            Text("Your plant care companion")
-        }
-    }
-
+    
     fileprivate func buttons() -> some View {
         return VStack {
             Button(action: showNextPage, label: {
@@ -36,7 +21,7 @@ struct WelcomeView: View {
             .frame(maxWidth: .infinity)
             .accentColor(.white)
             .background(Capsule().foregroundColor(.green))
-
+            
             Button(action: skipOnboarding, label: {
                 Label("Skip Setup", systemImage: "xmark.circle.fill")
                     .labelStyle(TitleOnlyLabelStyle())
@@ -45,26 +30,22 @@ struct WelcomeView: View {
             .padding()
         }
     }
-
+    
     var body: some View {
-        VStack {
-            Spacer()
-            headerView()
-            Spacer()
-
+        PageView {
+            Header(image: Image(systemName: "leaf.fill"), title: Text("Welcome to Sprout"), subtitle: Text("Your plant care companion."))
+        } controls: {
             buttons()
-
-            HStack {
-                Spacer()
-            }
         }
-        .padding()
-    }
 
+    }
+    
     fileprivate func showNextPage() {
-        currentPage += 1
+        withAnimation {
+            currentPage += 1
+        }
     }
-
+    
     fileprivate func skipOnboarding() {
         currentPage = 0
     }
@@ -75,3 +56,5 @@ struct WhatsNew_Previews: PreviewProvider {
         WelcomeView(currentPage: .constant(1))
     }
 }
+
+

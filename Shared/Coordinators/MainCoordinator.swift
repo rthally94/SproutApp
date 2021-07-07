@@ -12,7 +12,7 @@ import UIKit
 final class MainCoordinator: NSObject, Coordinator {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
-    var mainController: UIViewController?
+    var mainController: UITabBarController?
     var persistentContainer: NSPersistentContainer
 
     init(navigationController: UINavigationController, persistentContainer: NSPersistentContainer) {
@@ -60,8 +60,10 @@ final class MainCoordinator: NSObject, Coordinator {
     }
 
     private func showOnboarding() {
-        let vc = UIViewController()
+        let vc = OnboardingViewController()
+        vc.coordinator = self
         vc.modalPresentationStyle = .fullScreen
-        mainController?.present(vc, animated: true)
+        mainController?.viewControllers?.first?
+            .present(vc, animated: true)
     }
 }

@@ -5,8 +5,8 @@
 //  Created by Ryan Thally on 7/7/21.
 //
 
-import Foundation
+import UIKit
 
 protocol WelcomePresentable {
-    func
+    func viewController(_ viewController: UIViewController, didFinishWithStatus: DismissStatus)
 }

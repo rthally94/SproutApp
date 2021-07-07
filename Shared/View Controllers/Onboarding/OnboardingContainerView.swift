@@ -8,8 +8,21 @@
 import SwiftUI
 
 struct OnboardingContainerView: View {
+    @State private var currentPage = 0
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        TabView(selection: $currentPage) {
+            WelcomeView(currentPage: $currentPage)
+                .transition(.slide)
+                .tag(0)
+            Notifications(currentPage: $currentPage)
+                .transition(.slide)
+                .tag(1)
+            Text("Page 3")
+                .transition(.slide)
+                .tag(2)
+        }
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never ))
     }
 }
 
