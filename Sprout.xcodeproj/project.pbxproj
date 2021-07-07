@@ -19,7 +19,7 @@
 		FB06769B2695E572005F022A /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB06769A2695E572005F022A /* Notifications.swift */; };
 		FB06769E2695E81D005F022A /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB06769D2695E81D005F022A /* PageView.swift */; };
 		FB0676A02695E856005F022A /* Header.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB06769F2695E856005F022A /* Header.swift */; };
-		FB0676A22695FCBB005F022A /* OnboardingHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0676A12695FCBB005F022A /* OnboardingHostingController.swift */; };
+		FB0676A22695FCBB005F022A /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0676A12695FCBB005F022A /* OnboardingViewController.swift */; };
 		FB0A9F3625DC5D7E0084AED8 /* SproutTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0A9F3525DC5D7E0084AED8 /* SproutTextFieldCell.swift */; };
 		FB21B6F825B1E5CC00D02384 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */; };
 		FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B6F925B1E5CC00D02384 /* SceneDelegate.swift */; };
@@ -99,6 +99,7 @@
 		FBCA568526757F31008DBFFC /* DayOfMonthPickerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA568426757F31008DBFFC /* DayOfMonthPickerConfiguration.swift */; };
 		FBD20AE4260FC6B7008915E1 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */; };
 		FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */; };
+		FBD8A7E82696430F00EB716B /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD8A7E72696430F00EB716B /* SampleData.swift */; };
 		FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */; };
 		FBEB4972260CBEF800F6060C /* SproutCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4971260CBEF800F6060C /* SproutCardCell.swift */; };
 		FBF8AC5225DD80AC00E7E8EB /* SproutIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBF8AC5125DD80AC00E7E8EB /* SproutIconView.swift */; };
@@ -127,7 +128,7 @@
 		FB06769A2695E572005F022A /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		FB06769D2695E81D005F022A /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		FB06769F2695E856005F022A /* Header.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Header.swift; sourceTree = "<group>"; };
-		FB0676A12695FCBB005F022A /* OnboardingHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingHostingController.swift; sourceTree = "<group>"; };
+		FB0676A12695FCBB005F022A /* OnboardingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
 		FB0A9F3525DC5D7E0084AED8 /* SproutTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutTextFieldCell.swift; sourceTree = "<group>"; };
 		FB21B6F425B1E5CC00D02384 /* Sprout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sprout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB21B6F725B1E5CC00D02384 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -211,6 +212,7 @@
 		FBCA568426757F31008DBFFC /* DayOfMonthPickerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfMonthPickerConfiguration.swift; sourceTree = "<group>"; };
 		FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutSymbolSymbolIconView.swift; sourceTree = "<group>"; };
+		FBD8A7E72696430F00EB716B /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICellAccessory+Extensions.swift"; sourceTree = "<group>"; };
 		FBEB4971260CBEF800F6060C /* SproutCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SproutCardCell.swift; sourceTree = "<group>"; };
 		FBF8AC5125DD80AC00E7E8EB /* SproutIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIconView.swift; sourceTree = "<group>"; };
@@ -238,7 +240,7 @@
 		FB0676922695D114005F022A /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				FB0676A12695FCBB005F022A /* OnboardingHostingController.swift */,
+				FB0676A12695FCBB005F022A /* OnboardingViewController.swift */,
 				FB0676972695DFAA005F022A /* OnboardingContainerView.swift */,
 				FB06769C2695E80D005F022A /* Components */,
 				FB0676992695E27F005F022A /* Pages */,
@@ -251,6 +253,7 @@
 			children = (
 				FB0676932695D126005F022A /* WelcomeView.swift */,
 				FB06769A2695E572005F022A /* Notifications.swift */,
+				FBD8A7E72696430F00EB716B /* SampleData.swift */,
 			);
 			path = Pages;
 			sourceTree = "<group>";
@@ -787,6 +790,7 @@
 				FB5CB86226739F5D00A7F60E /* SproutDayOfMonthPickerCollectionViewCell.swift in Sources */,
 				FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */,
 				FBCA565D26740BFC008DBFFC /* AddEditPlantViewController.swift in Sources */,
+				FBD8A7E82696430F00EB716B /* SampleData.swift in Sources */,
 				FBCA566526740BFC008DBFFC /* PlantTypesProvider.swift in Sources */,
 				FBCA568326757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift in Sources */,
 				FB06769B2695E572005F022A /* Notifications.swift in Sources */,
@@ -812,7 +816,7 @@
 				FB5CB86026730BF200A7F60E /* DayOfMonthPicker.swift in Sources */,
 				FB4A1E69268CC4B7004DED91 /* PlantDeleting.swift in Sources */,
 				FB28A8E82649A2DE00B1206E /* SproutChipView.swift in Sources */,
-				FB0676A22695FCBB005F022A /* OnboardingHostingController.swift in Sources */,
+				FB0676A22695FCBB005F022A /* OnboardingViewController.swift in Sources */,
 				FB92AF66262E093D0062DE47 /* SproutCareDetailCell.swift in Sources */,
 				FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */,
 				FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */,

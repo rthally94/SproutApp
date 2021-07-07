@@ -22,10 +22,6 @@ final class MainCoordinator: NSObject, Coordinator {
 
     func start() {
         showMain()
-
-        if !UserDefaults.standard.hasLaunched {
-            showOnboarding()
-        }
     }
 
     private func showMain() {
@@ -59,11 +55,16 @@ final class MainCoordinator: NSObject, Coordinator {
         mainController = vc
     }
 
-    private func showOnboarding() {
+    func showOnboarding() {
         let vc = OnboardingViewController()
         vc.coordinator = self
         vc.modalPresentationStyle = .fullScreen
         mainController?.viewControllers?.first?
             .present(vc, animated: true)
+    }
+    
+    func onboardingViewController(_ onboardingController: OnboardingViewController, didFinishWithStatus: DismissStatus) {
+        UserDefaults.standard.hasLaunched = true
+        onboardingController.dismiss(animated: true)
     }
 }

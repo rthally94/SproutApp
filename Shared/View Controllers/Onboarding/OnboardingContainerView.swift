@@ -8,17 +8,18 @@
 import SwiftUI
 
 struct OnboardingContainerView: View {
+    @Binding var isVisible: Bool
     @State private var currentPage = 0
 
     var body: some View {
         TabView(selection: $currentPage) {
-            WelcomeView(currentPage: $currentPage)
+            WelcomeView(isVisible: $isVisible, currentPage: $currentPage)
                 .transition(.slide)
                 .tag(0)
-            Notifications(currentPage: $currentPage)
+            Notifications(isVisible: $isVisible, currentPage: $currentPage)
                 .transition(.slide)
                 .tag(1)
-            Text("Page 3")
+            SampleData(isVisible: $isVisible, currentPage: $currentPage)
                 .transition(.slide)
                 .tag(2)
         }
@@ -28,6 +29,6 @@ struct OnboardingContainerView: View {
 
 struct OnboardingContainerView_Previews: PreviewProvider {
     static var previews: some View {
-        OnboardingContainerView()
+        OnboardingContainerView(isVisible: .constant(true))
     }
 }

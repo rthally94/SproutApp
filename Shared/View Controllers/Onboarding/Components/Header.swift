@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct Header: View {
-    var image: Image
+struct Header<ImageType: View>: View {
+    var image: ImageType
     var title: Text
     var subtitle: Text?
 
@@ -17,8 +17,6 @@ struct Header: View {
             VStack(alignment: .center) {
                 Spacer()
                 image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
                     .frame(width: geometry.size.width/3)
 
                 title

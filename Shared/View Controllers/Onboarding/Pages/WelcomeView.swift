@@ -8,32 +8,12 @@
 import SwiftUI
 
 struct WelcomeView: View {
+    @Binding var isVisible: Bool
     @Binding var currentPage: Int
-    
-    fileprivate func buttons() -> some View {
-        return VStack {
-            Button(action: showNextPage, label: {
-                Label("Get Started", systemImage: "arrowshape.turn.up.right.fill")
-                    .labelStyle(TitleOnlyLabelStyle())
-            })
-            .font(.title3.bold())
-            .padding()
-            .frame(maxWidth: .infinity)
-            .accentColor(.white)
-            .background(Capsule().foregroundColor(.green))
-            
-            Button(action: skipOnboarding, label: {
-                Label("Skip Setup", systemImage: "xmark.circle.fill")
-                    .labelStyle(TitleOnlyLabelStyle())
-            })
-            .accentColor(.secondary)
-            .padding()
-        }
-    }
     
     var body: some View {
         PageView {
-            Header(image: Image(systemName: "leaf.fill"), title: Text("Welcome to Sprout"), subtitle: Text("Your plant care companion."))
+            Header(image: makeIconImage(), title: Text("Welcome to Sprout"), subtitle: Text("Your plant care companion."))
         } controls: {
             buttons()
         }
@@ -47,13 +27,41 @@ struct WelcomeView: View {
     }
     
     fileprivate func skipOnboarding() {
-        currentPage = 0
+        isVisible = false
+    }
+    
+    fileprivate func makeIconImage() -> some View {
+        Image("Leaf-Dev")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .cornerRadius(30)
+    }
+    
+    fileprivate func buttons() -> some View {
+        return VStack {
+            Button(action: showNextPage, label: {
+                Label("Get Started", systemImage: "arrowshape.turn.up.right.fill")
+                    .labelStyle(TitleOnlyLabelStyle())
+                    .frame(maxWidth: .infinity)
+                    .font(.title3.bold())
+                    .padding()
+            })
+            .accentColor(.white)
+            .background(Capsule().foregroundColor(.green))
+            
+            Button(action: skipOnboarding, label: {
+                Label("Skip Setup", systemImage: "xmark.circle.fill")
+                    .labelStyle(TitleOnlyLabelStyle())
+            })
+            .font(.title3)
+            .frame(minHeight: 44)
+        }
     }
 }
 
 struct WhatsNew_Previews: PreviewProvider {
     static var previews: some View {
-        WelcomeView(currentPage: .constant(1))
+        WelcomeView(isVisible: .constant(true), currentPage: .constant(1))
     }
 }
 

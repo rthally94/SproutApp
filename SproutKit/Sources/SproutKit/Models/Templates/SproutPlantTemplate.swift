@@ -33,7 +33,9 @@ public extension SproutPlantTemplate {
         SproutPlantTemplate(scientificName: "Schefflera", commonName: "Umbrella Plant"),
         SproutPlantTemplate(scientificName: "Codiaeum", commonName: "Croton"),
         SproutPlantTemplate(scientificName: "Philodendron Scandens", commonName: "Philodendron"),
-    ]
+    ].sorted { lhs, rhs in
+        lhs.commonName < rhs.commonName
+    }
 
     static let sampleData: [SproutPlantTemplate] = [
         SproutPlantTemplate(scientificName: "Ficus Lyrata", commonName: "Fiddle Leaf Fig"),
