@@ -71,7 +71,6 @@
 		FBC7330325DDB4F00048999C /* SproutIconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBC7330225DDB4F00048999C /* SproutIconCell.swift */; };
 		FBCA565726740BFC008DBFFC /* PlantGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA562D26740BFC008DBFFC /* PlantGroupViewController.swift */; };
 		FBCA565826740BFC008DBFFC /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563126740BFC008DBFFC /* SettingsView.swift */; };
-		FBCA565926740BFC008DBFFC /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563326740BFC008DBFFC /* MainViewController.swift */; };
 		FBCA565A26740BFC008DBFFC /* SproutCareTaskCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563526740BFC008DBFFC /* SproutCareTaskCellViewModel.swift */; };
 		FBCA565B26740BFC008DBFFC /* PlantDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563626740BFC008DBFFC /* PlantDetailViewController.swift */; };
 		FBCA565D26740BFC008DBFFC /* AddEditPlantViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA563B26740BFC008DBFFC /* AddEditPlantViewController.swift */; };
@@ -184,7 +183,6 @@
 		FBC7330225DDB4F00048999C /* SproutIconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIconCell.swift; sourceTree = "<group>"; };
 		FBCA562D26740BFC008DBFFC /* PlantGroupViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantGroupViewController.swift; sourceTree = "<group>"; };
 		FBCA563126740BFC008DBFFC /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		FBCA563326740BFC008DBFFC /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		FBCA563526740BFC008DBFFC /* SproutCareTaskCellViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SproutCareTaskCellViewModel.swift; sourceTree = "<group>"; };
 		FBCA563626740BFC008DBFFC /* PlantDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantDetailViewController.swift; sourceTree = "<group>"; };
 		FBCA563B26740BFC008DBFFC /* AddEditPlantViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddEditPlantViewController.swift; sourceTree = "<group>"; };
@@ -514,7 +512,6 @@
 			isa = PBXGroup;
 			children = (
 				FB4A1E58268B887B004DED91 /* SproutTabBarController.swift */,
-				FBCA563326740BFC008DBFFC /* MainViewController.swift */,
 			);
 			path = MainViewController;
 			sourceTree = "<group>";
@@ -768,7 +765,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB5CB85726726B0600A7F60E /* DayOfWeekPicker.swift in Sources */,
-				FBCA565926740BFC008DBFFC /* MainViewController.swift in Sources */,
 				FB06768B269494C9005F022A /* EditPlantCoordinator.swift in Sources */,
 				FBCA5681267526BD008DBFFC /* ToggleItemConfiguration.swift in Sources */,
 				FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */,

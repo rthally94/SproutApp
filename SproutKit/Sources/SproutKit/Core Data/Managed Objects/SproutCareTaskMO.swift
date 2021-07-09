@@ -36,8 +36,8 @@ public final class SproutCareTaskMO: NSManagedObject {
     }
 
     func updateUpNextGroupingDate() {
-        if let statusDate = statusDate {
-            setPrimitiveValue(Calendar.current.startOfDay(for: statusDate), forKey: #keyPath(SproutCareTaskMO.upNextGroupingDate))
+        if let date = dueDate {
+            setPrimitiveValue(Calendar.current.startOfDay(for: date), forKey: #keyPath(SproutCareTaskMO.upNextGroupingDate))
         } else {
             setPrimitiveValue(nil, forKey: #keyPath(SproutCareTaskMO.upNextGroupingDate))
         }

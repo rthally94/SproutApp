@@ -26,7 +26,7 @@ public final class RelationshipKeyPathsObserver<ResultType: NSFetchRequestResult
         super.init()
 
         NotificationCenter.default.addObserver(self, selector: #selector(contextDidChangeNotification(notification:)), name: .NSManagedObjectContextObjectsDidChange, object: fetchedResultsController.managedObjectContext)
-        NotificationCenter.default.addObserver(self, selector: #selector(contextDidSaveNotificataion(notification:)), name: .NSManagedObjectContextWillSave, object: fetchedResultsController.managedObjectContext)
+        NotificationCenter.default.addObserver(self, selector: #selector(contextWillSaveNotificataion(notification:)), name: .NSManagedObjectContextWillSave, object: fetchedResultsController.managedObjectContext)
     }
 
     @objc private func contextDidChangeNotification(notification: NSNotification) {
@@ -35,7 +35,7 @@ public final class RelationshipKeyPathsObserver<ResultType: NSFetchRequestResult
         self.updatedObjectIDs = self.updatedObjectIDs.union(updatedObjectIDs)
     }
 
-    @objc private func contextDidSaveNotificataion(notification: NSNotification) {
+    @objc private func contextWillSaveNotificataion(notification: NSNotification) {
         guard !updatedObjectIDs.isEmpty else { return }
         guard let fetchedObjects = fetchedResultsController.fetchedObjects as? [NSManagedObject], !fetchedObjects.isEmpty else { return }
         fetchedObjects.forEach { object in

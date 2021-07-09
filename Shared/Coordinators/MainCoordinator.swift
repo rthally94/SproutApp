@@ -28,7 +28,7 @@ final class MainCoordinator: NSObject, Coordinator {
         let vc = SproutTabBarController()
         vc.coordinator = self
 
-        let upNext = UpNextCoordinator(navigationController: UINavigationController(), persistentContainer: AppDelegate.persistentContainer)
+        let upNext = UpNextCoordinator(navigationController: UINavigationController(), storageProvider: AppDelegate.storageProvider)
         let plants = PlantsCoordinator(navigationController: UINavigationController(), persistentContainer: AppDelegate.persistentContainer)
         let settingsVC: UIViewController = {
             let view = SettingsView()

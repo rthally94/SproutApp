@@ -25,12 +25,5 @@ extension SproutCareTaskMO {
             // Early
             markStatus = .done
         }
-
-        guard let context = self.managedObjectContext else { return }
-        do {
-            try SproutCareTaskMO.insertNewTask(from: self, into: context)
-        } catch {
-            print("Unable to create new task from template: \(error)")
-        }
     }
 }

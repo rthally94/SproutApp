@@ -56,10 +56,24 @@ extension SproutCareTaskMO {
             return NSCompoundPredicate(andPredicateWithSubpredicates: [isDonePredicate, isInSameDayAsDatePredicate])
         }
 
+        static func statusDatePredicate(startingOn startDate: Date? =  nil, endingBefore endDate: Date? = nil) -> NSPredicate {
+            let startDatePredicate = startDate != nil ? NSPredicate(format: "%K >= %@", #keyPath(SproutCareTaskMO.statusDate), startDate! as NSDate) : NSPredicate(value: true)
+            let endDatePredicate = endDate != nil ? NSPredicate(format: "%K < %@", #keyPath(SproutCareTaskMO.statusDate), endDate! as NSDate) : NSPredicate(value: true)
+
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [startDatePredicate, endDatePredicate])
+        }
+
+        static func dueDatePredicate(startingOn startDate: Date? = nil, endingBefore endDate: Date? = nil) -> NSPredicate {
+            let startDatePredicate = startDate != nil ? NSPredicate(format: "%K >= %@", #keyPath(SproutCareTaskMO.dueDate), startDate! as NSDate) : NSPredicate(value: true)
+            let endDatePredicate = endDate != nil ? NSPredicate(format: "%K < %@", #keyPath(SproutCareTaskMO.dueDate), endDate! as NSDate) : NSPredicate(value: true)
+
+            return NSCompoundPredicate(andPredicateWithSubpredicates: [startDatePredicate, endDatePredicate])
+        }
+
         static func dueDatePredicate(on dueDate: Date) -> NSPredicate {
             let midnightStartDate = Calendar.current.startOfDay(for: dueDate)
             let midnightAfterStartDate = Calendar.current.date(byAdding: .day, value: 1, to: midnightStartDate)!
-            return NSPredicate(format: "%K >= %@ AND %K < %@", #keyPath(SproutCareTaskMO.dueDate), midnightStartDate as NSDate, #keyPath(SproutCareTaskMO.dueDate), midnightAfterStartDate as NSDate)
+            return dueDatePredicate(startingOn: midnightStartDate, endingBefore: midnightAfterStartDate)
         }
 
         static func isScheduledPredicate() -> NSPredicate {
@@ -85,10 +99,10 @@ extension SproutCareTaskMO {
         return request
     }
 
-    public static func upNextFetchRequest(includesCompleted: Bool = false) -> RichFetchRequest<SproutCareTaskMO> {
+    public static func upNextFetchRequest(includesCompletedAfter completionMarkDate: Date?) -> RichFetchRequest<SproutCareTaskMO> {
     let request = RichFetchRequest<SproutCareTaskMO>(entityName: SproutCareTaskMO.entityName)
         request.sortDescriptors = [
-            SortDescriptors.sortByStatusDate(ascending: true),
+            SortDescriptors.sortByDueDate(ascending: true),
             SortDescriptors.sortByTaskType(ascending: true),
             SortDescriptors.sortByPlantNickname(ascending: true)
         ]
@@ -96,9 +110,12 @@ extension SproutCareTaskMO {
         // Shows all tasks that are incomplete
         let isDuePredicate = Predicates.statusPredicate(for: .due)
 
+        let isDonePredicate = Predicates.statusPredicate(for: .done)
+        let isDoneDateFilterPredicate = Predicates.statusDatePredicate(startingOn: completionMarkDate, endingBefore: nil)
+        let isDoneAfterMarkDatePredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [isDonePredicate, isDoneDateFilterPredicate])
+
         // Shows all tasks that are completed today, including completed tasks
-        let isCompletedToday = includesCompleted ? Predicates.isDonePredicate(on: Date()) : NSPredicate.init(value: false)
-        let upNextPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [isDuePredicate, isCompletedToday])
+        let upNextPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [isDuePredicate, isDoneAfterMarkDatePredicate])
         request.predicate = upNextPredicate
 
         request.relationshipKeyPathsForRefreshing = [
