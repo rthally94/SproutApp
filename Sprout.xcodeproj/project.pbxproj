@@ -25,6 +25,7 @@
 		FB21B6FA25B1E5CC00D02384 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB21B6F925B1E5CC00D02384 /* SceneDelegate.swift */; };
 		FB21B70125B1E5CC00D02384 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB21B70025B1E5CC00D02384 /* Assets.xcassets */; };
 		FB21B70425B1E5CC00D02384 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB21B70225B1E5CC00D02384 /* LaunchScreen.storyboard */; };
+		FB23C9122698E6D700FFF2F4 /* CareTaskItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB23C9112698E6D700FFF2F4 /* CareTaskItemConfiguration.swift */; };
 		FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */; };
 		FB28A8E82649A2DE00B1206E /* SproutChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8E72649A2DE00B1206E /* SproutChipView.swift */; };
 		FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D639266D680600FA9FA1 /* SproutBlurredHeaderView.swift */; };
@@ -134,6 +135,7 @@
 		FB21B6F925B1E5CC00D02384 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		FB21B70025B1E5CC00D02384 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB21B70325B1E5CC00D02384 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		FB23C9112698E6D700FFF2F4 /* CareTaskItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareTaskItemConfiguration.swift; sourceTree = "<group>"; };
 		FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIListContentConfiguration+Extension.swift"; sourceTree = "<group>"; };
 		FB28A8E72649A2DE00B1206E /* SproutChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutChipView.swift; sourceTree = "<group>"; };
 		FB434E4D2680B05A00B3F737 /* SproutKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SproutKit; sourceTree = "<group>"; };
@@ -305,6 +307,14 @@
 				FB98B9552669794F00629C1B /* Local Notifications */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		FB23C9102698E6B600FFF2F4 /* Item Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				FB23C9112698E6D700FFF2F4 /* CareTaskItemConfiguration.swift */,
+			);
+			path = "Item Configurations";
 			sourceTree = "<group>";
 		};
 		FB434E502680C10800B3F737 /* Frameworks */ = {
@@ -519,6 +529,7 @@
 		FBCA563426740BFC008DBFFC /* Plant Detail */ = {
 			isa = PBXGroup;
 			children = (
+				FB23C9102698E6B600FFF2F4 /* Item Configurations */,
 				FBCA563626740BFC008DBFFC /* PlantDetailViewController.swift */,
 				FBCA563526740BFC008DBFFC /* SproutCareTaskCellViewModel.swift */,
 			);
@@ -815,6 +826,7 @@
 				FB0676A22695FCBB005F022A /* OnboardingViewController.swift in Sources */,
 				FB92AF66262E093D0062DE47 /* SproutCareDetailCell.swift in Sources */,
 				FB9E8C59262D08B400514AAB /* SproutButtonCell.swift in Sources */,
+				FB23C9122698E6D700FFF2F4 /* CareTaskItemConfiguration.swift in Sources */,
 				FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */,
 				FB06768726948C29005F022A /* ImagePicking.swift in Sources */,
 				FBCA566D26740BFD008DBFFC /* UpNextViewController.swift in Sources */,

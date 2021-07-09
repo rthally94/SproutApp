@@ -12,17 +12,17 @@ import UIKit
 final class PlantsCoordinator: NSObject, Coordinator {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
-    var persistentContainer: NSPersistentContainer
+    var storageProvider: StorageProvider
 
-    init(navigationController: UINavigationController, persistentContainer: NSPersistentContainer) {
+    init(navigationController: UINavigationController, storageProvider: StorageProvider) {
         self.navigationController = navigationController
-        self.persistentContainer = persistentContainer
+        self.storageProvider = storageProvider
     }
 
     func start() {
         let vc = PlantGroupViewController()
-        vc.persistentContainer = persistentContainer
-        vc.plantsProvider = PlantsProvider(managedObjectContext: persistentContainer.viewContext)
+        vc.persistentContainer = storageProvider.persistentContainer
+        vc.plantsProvider = PlantsProvider(managedObjectContext: storageProvider.persistentContainer.viewContext)
         vc.coordinator = self
 
         vc.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "leaf.fill"), tag: 1)
@@ -34,7 +34,7 @@ final class PlantsCoordinator: NSObject, Coordinator {
 extension PlantsCoordinator: PlantListCoordinator {
     func createNewPlant() {
         let editingContext = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
-        editingContext.parent = persistentContainer.viewContext
+        editingContext.parent = storageProvider.persistentContainer.viewContext
         let newPlant = SproutPlantMO.insertNewPlant(into: editingContext)
         showPlantEditor(plant: newPlant)
     }
@@ -59,15 +59,13 @@ extension PlantsCoordinator: PlantListCoordinator {
     }
 
     func delete(plant: SproutPlantMO) {
-        persistentContainer.viewContext.delete(plant)
-        persistentContainer.saveContextIfNeeded()
+        storageProvider.persistentContainer.viewContext.delete(plant)
+        storageProvider.persistentContainer.saveContextIfNeeded()
     }
 
     func showDetail(for plant: SproutPlantMO) {
-        let vc = PlantDetailViewController()
-        vc.coordinator = self
-        vc.persistentContainer = persistentContainer
-        vc.plantID = plant.objectID
+        guard let vc = PlantDetailViewController(plant: plant.objectID, storageProvider: storageProvider) else { return }
+        vc.delegate = self
         navigationController.pushViewController(vc, animated: true)
     }
 }
@@ -80,8 +78,8 @@ extension PlantsCoordinator: EditorCoordinatorDelegate {
             detailVC.reload()
         }
 
-        if let plant = try? persistentContainer.viewContext.existingObject(with: plant.objectID) {
-            persistentContainer.viewContext.refresh(plant, mergeChanges: true)
+        if let plant = try? storageProvider.persistentContainer.viewContext.existingObject(with: plant.objectID) {
+            storageProvider.persistentContainer.viewContext.refresh(plant, mergeChanges: true)
         }
     }
 
@@ -95,7 +93,7 @@ extension PlantsCoordinator: EditorCoordinatorDelegate {
             } catch {
                 print("\(#function) - Unable to save context: \(error)")
             }
-            persistentContainer.saveContextIfNeeded()
+            storageProvider.persistentContainer.saveContextIfNeeded()
 
             if let detailVC = navigationController.topViewController as? PlantDetailViewController {
                 detailVC.reload()

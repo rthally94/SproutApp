@@ -17,18 +17,39 @@ class PlantDetailViewController: UIViewController {
     let dateComponentsFormatter = Utility.dateComponentsFormatter
     let careDateFormatter = Utility.relativeDateFormatter
 
-    weak var coordinator: PlantDetailCoordinator?
+    weak var delegate: PlantDetailCoordinator?
 
-    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+    var storageProvider: StorageProvider
     var viewContext: NSManagedObjectContext {
-        persistentContainer.viewContext
+        storageProvider.persistentContainer.viewContext
     }
 
-    var plantID: NSManagedObjectID?
-    var plant: SproutPlantMO? {
-        guard let id = plantID else { return nil }
-        return try? viewContext.existingObject(with: id) as? SproutPlantMO
+    var plant: SproutPlantMO
+
+    private var upNextTasks: [SproutCareTaskMO] {
+        let request = SproutCareTaskMO.upNextFetchRequest(includesCompletedAfter: Date())
+        let currentPredicate = request.predicate ?? NSPredicate(value: true)
+        let plantPredicate = NSPredicate(format: "%K == %@", #keyPath(SproutCareTaskMO.plant), plant)
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [plantPredicate, currentPredicate])
+
+        let tasks = (try? viewContext.fetch(request) as? [SproutCareTaskMO]) ?? []
+        return tasks
     }
+
+    init?(plant: NSManagedObjectID, storageProvider: StorageProvider) {
+        guard let existingPlant = try? storageProvider.persistentContainer.viewContext.existingObject(with: plant) as? SproutPlantMO else { return nil }
+        self.plant = existingPlant
+        self.storageProvider = storageProvider
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) cannot be used. PlantDetailViewController requires dependency injection.")
+    }
+
+
+
 
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
@@ -57,8 +78,7 @@ class PlantDetailViewController: UIViewController {
     
     //MARK: - Actions
     @objc private func editPlant() {
-        guard let plant = plant else { return }
-        coordinator?.edit(plant: plant)
+        delegate?.edit(plant: plant)
     }
 }
 
@@ -66,20 +86,22 @@ class PlantDetailViewController: UIViewController {
 private extension PlantDetailViewController {
     enum ViewModel {
         enum Section: Hashable, CaseIterable {
+            case upNext
             case tasks
 
             var headerText: String? {
                 switch self {
+                case .upNext:
+                    return "Up Next"
                 case .tasks:
                     return "All Tasks"
-                default:
-                    return nil
                 }
             }
         }
 
         enum Item: Hashable {
-            case careTask(id: NSManagedObjectID)
+            case careTask(CareTaskItemConfiguration)
+            case careDetail(id: NSManagedObjectID)
         }
     }
 }
@@ -99,16 +121,10 @@ private extension PlantDetailViewController {
             let section: NSCollectionLayoutSection
 
             switch sectionKind {
-            case .tasks:
+            case .upNext, .tasks:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
                 config.headerMode = sectionKind.headerText != nil ? .supplementary : .none
                 section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
-            }
-
-            if sectionKind.headerText != nil {
-                let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(44))
-                let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                section.boundarySupplementaryItems = [headerItem]
             }
             return section
         }
@@ -136,6 +152,8 @@ private extension PlantDetailViewController {
             switch item {
             case .careTask:
                 return collectionView.dequeueConfiguredReusableCell(using: taskCellRegistraion, for: indexPath, item: item)
+            case .careDetail:
+                return collectionView.dequeueConfiguredReusableCell(using: taskCellRegistraion, for: indexPath, item: item)
             }
         }
 
@@ -160,21 +178,31 @@ private extension PlantDetailViewController {
 // MARK: Snapshots
 private extension PlantDetailViewController {
     private func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
-        guard let plant = plant else { fatalError("Unable to show detail view for plant - \(plant)") }
-
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections(Section.allCases)
+
+        let upNextItems: [Item] = upNextTasks.map { task in
+            let configuration = CareTaskItemConfiguration(task: task)
+            return Item.careTask(configuration)
+        }
+
+        if !upNextItems.isEmpty {
+            snapshot.appendSections([.upNext])
+            snapshot.appendItems(upNextItems, toSection: .upNext)
+        }
 
         // All Tasks
-        let items: [Item] = plant.allCareInformation.compactMap({ info in
+        let allTaskItems: [Item] = plant.allCareInformation.compactMap({ info in
             if let task = info.latestTask {
-                return Item.careTask(id: task.objectID)
+                return Item.careDetail(id: task.objectID)
             } else {
                 return nil
             }
         })
+        if !allTaskItems.isEmpty {
+            snapshot.appendSections([.tasks])
+            snapshot.appendItems(allTaskItems, toSection: .tasks)
+        }
 
-        snapshot.appendItems(items, toSection: .tasks)
         return snapshot
     }
 }
@@ -184,7 +212,16 @@ private extension PlantDetailViewController {
     private func makeUICollectionListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
         UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [weak self] cell, indexPath, item in
             switch item {
-            case let .careTask(id):
+            case let .careTask(configuration):
+                var config = UIListContentConfiguration.valueCell()
+                config.image = configuration.icon
+                config.text = configuration.taskName
+                config.secondaryText = configuration.taskSchedule
+                config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
+                config.prefersSideBySideTextAndSecondaryText = false
+                cell.contentConfiguration = config
+
+            case let .careDetail(id):
                 guard let task = try? self?.viewContext.existingObject(with: id) as? SproutCareTaskMO else { break }
                 let viewModel = SproutCareTaskCellViewModel(careTask: task)
                 var config = UIListContentConfiguration.valueCell()
@@ -200,14 +237,14 @@ private extension PlantDetailViewController {
 
     private func makeDetailHeroRegistration() -> UICollectionView.SupplementaryRegistration<DetailHeroReusableView> {
         UICollectionView.SupplementaryRegistration<DetailHeroReusableView>(elementKind: UICollectionView.elementKindLayoutHeader) { [unowned self] view, elementKind, indexPath in
-            view.titleText = plant?.primaryDisplayName
-            view.subtitleText = plant?.secondaryDisplayName
+            view.titleText = plant.primaryDisplayName
+            view.subtitleText = plant.secondaryDisplayName
 
             var iconConfig = view.defaultIconConfiguration()
-            iconConfig.image = plant?.getImage() ?? UIImage.PlaceholderPlantImage
+            iconConfig.image = plant.getImage() ?? UIImage.PlaceholderPlantImage
             view.iconConfiguration = iconConfig
 
-            view.backgroundImage = plant?.getImage() ?? UIImage.PlaceholderPlantImage
+            view.backgroundImage = plant.getImage() ?? UIImage.PlaceholderPlantImage
         }
     }
 
@@ -243,23 +280,6 @@ extension PlantDetailViewController: UICollectionViewDelegate {
         }
     }
 }
-
-// MARK: - Plant Editor Delegate
-//extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
-//    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
-//        guard let existingPlant = try? viewContext.existingObject(with: plant.objectID) else { return }
-//
-//        if existingPlant.isDeleted {
-//            navigationController?.popViewController(animated: false)
-//        }
-//
-//        if existingPlant.isUpdated {
-//            self.dataSource.apply(makeSnapshot(), animatingDifferences: false)
-//        }
-//
-//        try? viewContext.saveIfNeeded()
-//    }
-//}
 
 extension UICollectionView {
     static let elementKindLayoutHeader = "element-kind-layout-header"
