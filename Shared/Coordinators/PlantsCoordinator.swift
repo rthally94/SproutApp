@@ -25,7 +25,7 @@ final class PlantsCoordinator: NSObject, Coordinator {
         vc.plantsProvider = PlantsProvider(managedObjectContext: persistentContainer.viewContext)
         vc.coordinator = self
 
-        vc.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "house.fill"), tag: 1)
+        vc.tabBarItem = UITabBarItem(title: "Plants", image: UIImage(systemName: "leaf.fill"), tag: 1)
         navigationController.navigationBar.prefersLargeTitles = true
         navigationController.pushViewController(vc, animated: false)
     }

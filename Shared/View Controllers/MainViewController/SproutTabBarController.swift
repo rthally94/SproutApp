@@ -10,4 +10,12 @@ import SwiftUI
 
 class SproutTabBarController: UITabBarController {
     weak var coordinator: MainCoordinator?
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if !UserDefaults.standard.hasLaunched {
+            coordinator?.showOnboarding()
+        }
+    }
 }

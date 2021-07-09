@@ -12,7 +12,7 @@ import UIKit
 final class MainCoordinator: NSObject, Coordinator {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
-    var mainController: UIViewController?
+    var mainController: UITabBarController?
     var persistentContainer: NSPersistentContainer
 
     init(navigationController: UINavigationController, persistentContainer: NSPersistentContainer) {
@@ -22,17 +22,13 @@ final class MainCoordinator: NSObject, Coordinator {
 
     func start() {
         showMain()
-
-        if !UserDefaults.standard.hasLaunched {
-            showOnboarding()
-        }
     }
 
     private func showMain() {
         let vc = SproutTabBarController()
         vc.coordinator = self
 
-        let upNext = UpNextCoordinator(navigationController: UINavigationController(), persistentContainer: AppDelegate.persistentContainer)
+        let upNext = UpNextCoordinator(navigationController: UINavigationController(), storageProvider: AppDelegate.storageProvider)
         let plants = PlantsCoordinator(navigationController: UINavigationController(), persistentContainer: AppDelegate.persistentContainer)
         let settingsVC: UIViewController = {
             let view = SettingsView()
@@ -59,9 +55,16 @@ final class MainCoordinator: NSObject, Coordinator {
         mainController = vc
     }
 
-    private func showOnboarding() {
-        let vc = UIViewController()
+    func showOnboarding() {
+        let vc = OnboardingViewController()
+        vc.coordinator = self
         vc.modalPresentationStyle = .fullScreen
-        mainController?.present(vc, animated: true)
+        mainController?.viewControllers?.first?
+            .present(vc, animated: true)
+    }
+    
+    func onboardingViewController(_ onboardingController: OnboardingViewController, didFinishWithStatus: DismissStatus) {
+        UserDefaults.standard.hasLaunched = true
+        onboardingController.dismiss(animated: true)
     }
 }

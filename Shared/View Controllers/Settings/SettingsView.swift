@@ -64,15 +64,22 @@ struct SettingsView: View {
                 #if DEBUG
                 Section(header: Text("Debugging Controls")) {
                     Button(action: {
-                        storageProvider.deleteAllData()
-                    }, label: {
-                        Label("Delete All Data", systemImage: "trash.fill")
-                    })
-
-                    Button(action: {
                         storageProvider.loadSampleData()
                     }, label: {
                         Label("Load Sample Data", systemImage: "books.vertical.fill")
+                    })
+                    
+                    Button(action: {
+                        storageProvider.deleteAllData()
+                    }, label: {
+                        Label("Delete All Data", systemImage: "trash")
+                    })
+                    
+                    Button(action: {
+                        storageProvider.deleteAllData()
+                        UserDefaults.standard.hasLaunched = false
+                    }, label: {
+                        Label("Reset All Content and Settings", systemImage: "trash.fill")
                     })
                 }
                 #endif

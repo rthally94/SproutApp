@@ -23,17 +23,17 @@ final public class UpNextProvider: NSObject {
 
     @Published public var snapshot: Snapshot?
 
-    public var doesShowCompletedTasks: Bool = false {
+    public var completedTaskDateMarker: Date? {
         didSet {
             fetchedResultsController = makeTasksFRC(context: moc)
             try! fetchedResultsController.performFetch()
         }
     }
 
-    public init(managedObjectContext: NSManagedObjectContext) {
+    public init(storageProvider: StorageProvider) {
         super.init()
 
-        fetchedResultsController = makeTasksFRC(context: managedObjectContext)
+        fetchedResultsController = makeTasksFRC(context: storageProvider.persistentContainer.viewContext)
         try! fetchedResultsController.performFetch()
 
         NotificationCenter.default.addObserver(self, selector: #selector(persistentStoreCoordinatorStoresDidChangeNotification(notification:)), name: .NSPersistentStoreCoordinatorStoresDidChange, object: nil)
@@ -67,7 +67,7 @@ final public class UpNextProvider: NSObject {
     }
 
     private func makeTasksFRC(context: NSManagedObjectContext) -> RichFetchedResultsController<SproutCareTaskMO> {
-        let request = SproutCareTaskMO.upNextFetchRequest(includesCompleted: doesShowCompletedTasks)
+        let request = SproutCareTaskMO.upNextFetchRequest(includesCompletedAfter: completedTaskDateMarker)
         let controller: RichFetchedResultsController<SproutCareTaskMO> = RichFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: #keyPath(SproutCareTaskMO.upNextGroupingDate), cacheName: nil)
         controller.delegate = self
         return controller
@@ -83,16 +83,11 @@ extension UpNextProvider: NSFetchedResultsControllerDelegate {
                   let newIndex = newSnapshot.indexOfItem(identifier)
             else { return false }
 
-            guard let oldSection = self.snapshot?.sectionIdentifier(containingItem: identifier),
-                  let newSection = newSnapshot.sectionIdentifier(containingItem: identifier)
-            else { return false }
-
-            let completed = oldSection != newSection
-            let updated = newIndex == oldIndex
+            let sameIndex = newIndex == oldIndex
 
             let task = self.task(withID: identifier)
             let plant = task?.plant
-            guard ((task?.isUpdated == true || plant?.isUpdated == true) && updated) || completed else { return false }
+            guard (task?.isUpdated == true || plant?.isUpdated == true) && sameIndex else { return false }
 
             return true
         }

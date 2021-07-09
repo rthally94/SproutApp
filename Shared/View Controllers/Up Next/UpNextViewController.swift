@@ -24,36 +24,50 @@ class UpNextViewController: UIViewController {
     typealias Item = UpNextProvider.Item
     typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-    var coordinator: UpNextCoordinator!
-    var persistentContainer: NSPersistentContainer!
-    var provider: UpNextProvider!
+    weak var delegate: UpNextCoordinator?
+    var dataProvider: UpNextProvider
+
+    init(dataProvider: UpNextProvider) {
+        self.dataProvider = dataProvider
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     private var showsCompletedTasks: Bool = false {
         didSet {
-            configureNavBar(showsAllTasks: showsCompletedTasks)
-            provider.doesShowCompletedTasks = showsCompletedTasks
+            completedTasksDidChange()
         }
+    }
+
+    private var lastOpenedDate: Date? {
+        didSet {
+            completedTasksDidChange()
+        }
+    }
+
+    private func completedTasksDidChange() {
+        configureNavBar(showsAllTasks: showsCompletedTasks)
+        dataProvider.completedTaskDateMarker = lastOpenedDate
     }
 
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
     private var cancellables: Set<AnyCancellable> = []
-
-    lazy var collectionView: UICollectionView = { [unowned self] in
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
-        cv.backgroundColor = .systemGroupedBackground
-        cv.delegate = self
-        return cv
-    }()
+    private var collectionView: UICollectionView!
 
     private func makeOptionsMenu(showsAllTasks: Bool) -> UIMenu {
         let completedRemindersAction: UIAction
         if showsAllTasks {
-            completedRemindersAction = UIAction(title: "Hide Recently Completed", image: UIImage(systemName: "eye.slash")) { [unowned self] _ in
+            completedRemindersAction = UIAction(title: "Hide Completed", image: UIImage(systemName: "eye.slash")) { [unowned self] _ in
                 self.showsCompletedTasks = false
+                self.lastOpenedDate = Date()
             }
         } else {
-            completedRemindersAction = UIAction(title: "Show Recently Completed", image: UIImage(systemName: "eye")) { [unowned self] _ in
+            completedRemindersAction = UIAction(title: "Show Completed", image: UIImage(systemName: "eye")) { [unowned self] _ in
                 self.showsCompletedTasks = true
+                self.lastOpenedDate = Calendar.current.startOfDay(for: Date())
             }
         }
 
@@ -63,16 +77,18 @@ class UpNextViewController: UIViewController {
 
     // MARK: - View Life Cycle
     override func loadView() {
-        setupViews()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeLayout())
+        collectionView.backgroundColor = .systemGroupedBackground
+        collectionView.delegate = self
+        view = collectionView
+        self.collectionView = collectionView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         dataSource = makeDataSource()
-        showsCompletedTasks = false
-
-        provider.$snapshot
+        dataProvider.$snapshot
             .sink {[weak self] snapshot in
                 if let snapshot = snapshot {
                     self?.dataSource.apply(snapshot)
@@ -81,14 +97,13 @@ class UpNextViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    private func setupViews() {
-        view = collectionView
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        lastOpenedDate = Date()
     }
 
     private func configureNavBar(showsAllTasks: Bool) {
-        title = "Up Next"
-        navigationController?.navigationBar.prefersLargeTitles = true
-
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "ellipsis"), menu: makeOptionsMenu(showsAllTasks: showsAllTasks))
     }
 }
@@ -99,20 +114,21 @@ private extension UpNextViewController {
         var config = UICollectionLayoutListConfiguration(appearance: .sidebar)
 
         config.trailingSwipeActionsConfigurationProvider = {[weak self] indexPath in
-            guard let task = self?.provider.object(at: indexPath), task.markStatus == .due else { return nil }
+            guard let self = self else { return UISwipeActionsConfiguration() }
+            guard let task = self.dataProvider.object(at: indexPath), task.markStatus == .due else { return nil }
             let markAsDoneAction = UIContextualAction(style: .normal, title: "Mark as done") {action, sourceView, completion in
-                self?.coordinator.markAsComplete(task: task)
+                self.delegate?.markAsComplete(task: task)
                 completion(true)
             }
             markAsDoneAction.backgroundColor = .systemGreen
             markAsDoneAction.image = UIImage(systemName: "checkmark.circle.fill", withConfiguration: Self.iconConfiguration)
 
-            let addEarlyLog = UIContextualAction(style: .normal, title: "Add Additional Log") {action, sourceView, completion in
-                self?.coordinator.markAsComplete(task: task)
+            let addEarlyLogAction = UIContextualAction(style: .normal, title: "Add Additional Log") { action, sourceView, completion in
+                self.delegate?.markAsComplete(task: task)
                 completion(true)
             }
-            addEarlyLog.backgroundColor = .systemBlue
-            addEarlyLog.image = UIImage(systemName: "calendar.badge.plus", withConfiguration: Self.iconConfiguration)
+            addEarlyLogAction.backgroundColor = .systemBlue
+            addEarlyLogAction.image = UIImage(systemName: "calendar.badge.plus", withConfiguration: Self.iconConfiguration)
 
             let actions: [UIContextualAction]
             let isDueToday: Bool
@@ -128,9 +144,11 @@ private extension UpNextViewController {
             switch (isDueToday, isEarly) {
             case (false, true):
                 // Early - Show clock
-                actions = [addEarlyLog]
+                actions = [addEarlyLogAction]
             case (true, false):
                 // Due or not scheduled - show circle
+                actions = [markAsDoneAction]
+            case (false, false):
                 actions = [markAsDoneAction]
             default:
                 actions = []
@@ -153,7 +171,7 @@ private extension UpNextViewController {
     // MARK: - Cell Registrations
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {
         UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {[unowned self] cell, indexPath, item in
-            guard let task = self.provider.task(withID: item), let plantID = task.plant?.objectID, let plant = self.provider.plant(withID: plantID) else { return }
+            guard let task = self.dataProvider.task(withID: item), let plantID = task.plant?.objectID, let plant = self.dataProvider.plant(withID: plantID) else { return }
 
             cell.plantName = plant.primaryDisplayName
             cell.plantImage = plant.getImage()
@@ -195,14 +213,16 @@ private extension UpNextViewController {
                 cell.accessories = [
                     .buttonAccessory(
                         tintColor: .systemOrange,
-                        action: UIAction(image: UIImage(systemName: "exclamationmark.circle")) { _ in }
+                        action: UIAction(image: UIImage(systemName: "exclamationmark.circle")) { _ in
+                            self.delegate?.markAsComplete(task: task)
+                        }
                     )
                 ]
             case (false, true, false):
                 // Due or not scheduled - show circle
                 cell.accessories = [
-                    .todoAccessory(actionHandler: {[weak self] _ in
-                        self?.coordinator.markAsComplete(task: task)
+                    .todoAccessory(actionHandler: { _ in
+                        self.delegate?.markAsComplete(task: task)
                     })
                 ]
             default:
@@ -215,10 +235,14 @@ private extension UpNextViewController {
         return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) {[unowned self] cell, elementKind, indexPath in
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
-            guard let date = Utility.ISODateFormatter.date(from: section) else { return }
 
             var configuration = UIListContentConfiguration.largeGroupedHeader()
-            configuration.text = Utility.relativeDateFormatter.string(from: date)
+            if let date = Utility.ISODateFormatter.date(from: section) {
+                configuration.text = Utility.relativeDateFormatter.string(from: date)
+            } else {
+                configuration.text = "Any Time"
+            }
+
             cell.contentConfiguration = configuration
 
             let backgroundConfiguration = UIBackgroundConfiguration.listSidebarHeader()
