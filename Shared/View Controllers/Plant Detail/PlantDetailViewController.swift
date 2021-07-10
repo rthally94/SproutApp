@@ -10,6 +10,8 @@ import UIKit
 import SproutKit
 
 class PlantDetailViewController: UIViewController {
+    private static let maxNumberOfHistoryItems = 5
+
     private typealias Section = ViewModel.Section
     private typealias Item = ViewModel.Item
 
@@ -48,7 +50,7 @@ class PlantDetailViewController: UIViewController {
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
 
     func refreshUI(animated: Bool = true) {
-        dataSource.apply(makeSnapshot(), animatingDifferences: animated)
+        applySnapshot(animatingDifferences: animated)
     }
     
     // MARK: - View Life Cycle
@@ -81,13 +83,13 @@ private extension PlantDetailViewController {
     enum ViewModel {
         enum Section: Hashable, CaseIterable {
             case upNext
-            case tasks
+            case careInfo
 
             var headerText: String? {
                 switch self {
                 case .upNext:
                     return "Up Next"
-                case .tasks:
+                case .careInfo:
                     return "All Tasks"
                 }
             }
@@ -95,7 +97,8 @@ private extension PlantDetailViewController {
 
         enum Item: Hashable {
             case careTask(CareTaskItemConfiguration)
-            case careDetail(id: NSManagedObjectID)
+            case careDetail(CareDetailItemConfiguration)
+            case careHistory(CareHistoryConfiguration)
         }
     }
 }
@@ -115,7 +118,7 @@ private extension PlantDetailViewController {
             let section: NSCollectionLayoutSection
 
             switch sectionKind {
-            case .upNext, .tasks:
+            case .upNext, .careInfo:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
                 config.headerMode = sectionKind.headerText != nil ? .supplementary : .none
                 section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
@@ -148,6 +151,8 @@ private extension PlantDetailViewController {
                 return collectionView.dequeueConfiguredReusableCell(using: taskCellRegistraion, for: indexPath, item: item)
             case .careDetail:
                 return collectionView.dequeueConfiguredReusableCell(using: taskCellRegistraion, for: indexPath, item: item)
+            case .careHistory:
+                return collectionView.dequeueConfiguredReusableCell(using: taskCellRegistraion, for: indexPath, item: item)
             }
         }
 
@@ -171,9 +176,12 @@ private extension PlantDetailViewController {
 
 // MARK: Snapshots
 private extension PlantDetailViewController {
-    private func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
+    private func applySnapshot(animatingDifferences: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
+        snapshot.appendSections([.upNext, .careInfo])
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
 
+        var upNextSectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
         let upNextItems: [Item] = upNextTasks.map { task in
             let configuration = CareTaskItemConfiguration(task: task) { [unowned self] in
                 self.delegate?.markTaskAsComplete(task)
@@ -183,31 +191,35 @@ private extension PlantDetailViewController {
         }
 
         if !upNextItems.isEmpty {
-            snapshot.appendSections([.upNext])
-            snapshot.appendItems(upNextItems, toSection: .upNext)
+            upNextSectionSnapshot.append(upNextItems)
+            dataSource.apply(upNextSectionSnapshot, to: .upNext, animatingDifferences: animatingDifferences)
         }
 
         // All Tasks
-        let allTaskItems: [Item] = plant.allCareInformation.compactMap({ info in
-            if let task = info.latestTask {
-                return Item.careDetail(id: task.objectID)
-            } else {
-                return nil
+        var allTasksSectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        for taskType in plant.allCareInformation {
+            let careDetailConfig = CareDetailItemConfiguration(careInformation: taskType, handler: {
+                print("Should show history items")
+            })
+            let careDetailItem = Item.careDetail(careDetailConfig)
+
+            let historyItems: [Item] = taskType.completedTasks.prefix(Self.maxNumberOfHistoryItems).map { history in
+                let config = CareHistoryConfiguration(task: history)
+                return Item.careHistory(config)
             }
-        })
-        if !allTaskItems.isEmpty {
-            snapshot.appendSections([.tasks])
-            snapshot.appendItems(allTaskItems, toSection: .tasks)
+
+            allTasksSectionSnapshot.append([careDetailItem])
+            allTasksSectionSnapshot.append(historyItems, to: careDetailItem)
         }
 
-        return snapshot
+        dataSource.apply(allTasksSectionSnapshot, to: .careInfo, animatingDifferences: animatingDifferences)
     }
 }
 
 // MARK: Cell Registrations
 private extension PlantDetailViewController {
     private func makeUICollectionListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [weak self] cell, indexPath, item in
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
             switch item {
             case let .careTask(configuration):
                 var config = UIListContentConfiguration.valueCell()
@@ -230,16 +242,26 @@ private extension PlantDetailViewController {
                     ]
                 }
 
-            case let .careDetail(id):
-                guard let task = try? self?.viewContext.existingObject(with: id) as? SproutCareTaskMO else { break }
-                let viewModel = SproutCareTaskCellViewModel(careTask: task)
+            case let .careDetail(configuration):
                 var config = UIListContentConfiguration.valueCell()
-                config.image = viewModel.image
-                config.text = viewModel.title
-                config.secondaryText = viewModel.subtitle
+                config.image = configuration.image
+                config.text = configuration.title
+                config.secondaryText = configuration.subtitle
                 config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
                 config.prefersSideBySideTextAndSecondaryText = false
                 cell.contentConfiguration = config
+                cell.accessories = [.outlineDisclosure()]
+
+            case let .careHistory(configuration):
+                var cellConfiguration = UIListContentConfiguration.valueCell()
+                cellConfiguration.image = configuration.icon
+                cellConfiguration.text = configuration.status?.rawValue.capitalized
+
+                if let date = configuration.statusDate {
+                cellConfiguration.secondaryText = Utility.dateFormatter.string(from: date)
+                }
+
+                cell.contentConfiguration = cellConfiguration
                 cell.accessories = []
             }
         }

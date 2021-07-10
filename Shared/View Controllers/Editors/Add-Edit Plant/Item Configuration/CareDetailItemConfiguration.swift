@@ -46,13 +46,17 @@ extension CareDetailItemConfiguration {
         let iconName = taskType.icon ?? "list.bullet.rectangle"
         let taskIcon = UIImage(named: iconName) ?? UIImage(systemName: iconName)
 
-        self.init(image: taskIcon, title: taskType.rawValue.capitalized, subtitle: "Configure", handler: handler)
+        let taskName = taskType.rawValue.capitalized
+        let subtitleText = "Configure"
+
+        self.init(image: taskIcon, title: taskName, subtitle: subtitleText, handler: handler)
     }
 
     init(careInformation careInfo: SproutCareInformationMO, handler: (() -> Void)? ) {
-        let iconName = careInfo.icon ?? ""
-        let taskIcon = UIImage(named: iconName) ?? UIImage(systemName: iconName) ?? UIImage(systemName: "list.bullet.rectangle")
+        let taskIcon = careInfo.iconImage
+        let taskName = careInfo.type?.capitalized
+        let scheduleText = careInfo.latestTask?.schedule?.description ?? "Any Time"
 
-        self.init(image: taskIcon, title: careInfo.type?.capitalized, subtitle: "Configure", handler: handler)
+        self.init(image: taskIcon, title: taskName, subtitle: scheduleText, handler: handler)
     }
 }
