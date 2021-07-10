@@ -117,14 +117,14 @@ private extension UpNextViewController {
             guard let self = self else { return UISwipeActionsConfiguration() }
             guard let task = self.dataProvider.object(at: indexPath), task.markStatus == .due else { return nil }
             let markAsDoneAction = UIContextualAction(style: .normal, title: "Mark as done") {action, sourceView, completion in
-                self.delegate?.markAsComplete(task: task)
+                self.delegate?.markTaskAsComplete(task)
                 completion(true)
             }
             markAsDoneAction.backgroundColor = .systemGreen
             markAsDoneAction.image = UIImage(systemName: "checkmark.circle.fill", withConfiguration: Self.iconConfiguration)
 
             let addEarlyLogAction = UIContextualAction(style: .normal, title: "Add Additional Log") { action, sourceView, completion in
-                self.delegate?.markAsComplete(task: task)
+                self.delegate?.markTaskAsComplete(task)
                 completion(true)
             }
             addEarlyLogAction.backgroundColor = .systemBlue
@@ -214,7 +214,7 @@ private extension UpNextViewController {
                     .buttonAccessory(
                         tintColor: .systemOrange,
                         action: UIAction(image: UIImage(systemName: "exclamationmark.circle")) { _ in
-                            self.delegate?.markAsComplete(task: task)
+                            self.delegate?.markTaskAsComplete(task)
                         }
                     )
                 ]
@@ -222,7 +222,7 @@ private extension UpNextViewController {
                 // Due or not scheduled - show circle
                 cell.accessories = [
                     .todoAccessory(actionHandler: { _ in
-                        self.delegate?.markAsComplete(task: task)
+                        self.delegate?.markTaskAsComplete(task)
                     })
                 ]
             default:

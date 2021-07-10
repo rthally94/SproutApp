@@ -81,6 +81,27 @@ extension SproutCareTaskMO {
         }
     }
 
+    public static func needsCareOnDateFetchRequest(date: Date, plant: SproutPlantMO? = nil) -> NSFetchRequest<SproutCareTaskMO> {
+        let midnightTargetDate = Calendar.current.startOfDay(for: date)
+        let midnightNextDay = Calendar.current.date(byAdding: .day, value: 1, to: midnightTargetDate)!
+
+        let dueOnOrBeforeTargetDatePredicate = Predicates.dueDatePredicate(endingBefore: midnightNextDay)
+        let doneInTargetDayPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [Predicates.statusPredicate(for: .done), Predicates.statusDatePredicate(startingOn: midnightTargetDate, endingBefore: midnightNextDay)])
+        let completedTasksPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [dueOnOrBeforeTargetDatePredicate, doneInTargetDayPredicate])
+        let tasksPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [dueOnOrBeforeTargetDatePredicate, completedTasksPredicate])
+
+
+        let plantPredicate = plant != nil ? Predicates.plantPredicate(for: plant!) : NSPredicate(value: true)
+
+        let sortByDueDate = SortDescriptors.sortByDueDate(ascending: true)
+        let sortByTaskType = SortDescriptors.sortByTaskType(ascending: true)
+
+        let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
+        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [tasksPredicate, plantPredicate])
+        request.sortDescriptors = [sortByDueDate, sortByTaskType]
+        return request
+    }
+
     public static func dueTasksFetchRequest(dueOn dueDate: Date? = nil, plant: SproutPlantMO? = nil, careType: SproutCareType? = nil) -> NSFetchRequest<SproutCareTaskMO> {
         let request: NSFetchRequest<SproutCareTaskMO> = SproutCareTaskMO.fetchRequest()
         request.sortDescriptors = [SortDescriptors.sortByDueDate(ascending: true)]

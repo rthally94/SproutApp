@@ -26,6 +26,7 @@
 		FB21B70125B1E5CC00D02384 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB21B70025B1E5CC00D02384 /* Assets.xcassets */; };
 		FB21B70425B1E5CC00D02384 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB21B70225B1E5CC00D02384 /* LaunchScreen.storyboard */; };
 		FB23C9122698E6D700FFF2F4 /* CareTaskItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB23C9112698E6D700FFF2F4 /* CareTaskItemConfiguration.swift */; };
+		FB23C9142699E2AB00FFF2F4 /* TaskMarking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB23C9132699E2AB00FFF2F4 /* TaskMarking.swift */; };
 		FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */; };
 		FB28A8E82649A2DE00B1206E /* SproutChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8E72649A2DE00B1206E /* SproutChipView.swift */; };
 		FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D639266D680600FA9FA1 /* SproutBlurredHeaderView.swift */; };
@@ -136,6 +137,7 @@
 		FB21B70025B1E5CC00D02384 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB21B70325B1E5CC00D02384 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FB23C9112698E6D700FFF2F4 /* CareTaskItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareTaskItemConfiguration.swift; sourceTree = "<group>"; };
+		FB23C9132699E2AB00FFF2F4 /* TaskMarking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskMarking.swift; sourceTree = "<group>"; };
 		FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIListContentConfiguration+Extension.swift"; sourceTree = "<group>"; };
 		FB28A8E72649A2DE00B1206E /* SproutChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutChipView.swift; sourceTree = "<group>"; };
 		FB434E4D2680B05A00B3F737 /* SproutKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SproutKit; sourceTree = "<group>"; };
@@ -386,6 +388,7 @@
 				FB06768C26949E69005F022A /* PlantTypePicking.swift */,
 				FB06768E2694A0A6005F022A /* TaskEditing.swift */,
 				FB0676952695DA5D005F022A /* WelcomePresentable.swift */,
+				FB23C9132699E2AB00FFF2F4 /* TaskMarking.swift */,
 			);
 			path = Intents;
 			sourceTree = "<group>";
@@ -817,6 +820,7 @@
 				FBCA567F2675254D008DBFFC /* TaskDetailItemConfiguration.swift in Sources */,
 				FBCA56782674EE48008DBFFC /* ButtonConfiguration.swift in Sources */,
 				FBC7330325DDB4F00048999C /* SproutIconCell.swift in Sources */,
+				FB23C9142699E2AB00FFF2F4 /* TaskMarking.swift in Sources */,
 				FB73F2972656B60F002F1C55 /* LocalNotificationManager.swift in Sources */,
 				FBF8AC5225DD80AC00E7E8EB /* SproutIconView.swift in Sources */,
 				FB6CD65A2657EADD00D7DE82 /* TaskNotificationManager.swift in Sources */,

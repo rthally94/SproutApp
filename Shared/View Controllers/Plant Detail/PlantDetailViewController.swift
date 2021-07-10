@@ -27,12 +27,8 @@ class PlantDetailViewController: UIViewController {
     var plant: SproutPlantMO
 
     private var upNextTasks: [SproutCareTaskMO] {
-        let request = SproutCareTaskMO.upNextFetchRequest(includesCompletedAfter: Date())
-        let currentPredicate = request.predicate ?? NSPredicate(value: true)
-        let plantPredicate = NSPredicate(format: "%K == %@", #keyPath(SproutCareTaskMO.plant), plant)
-        request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [plantPredicate, currentPredicate])
-
-        let tasks = (try? viewContext.fetch(request) as? [SproutCareTaskMO]) ?? []
+        let request = SproutCareTaskMO.needsCareOnDateFetchRequest(date: Date(), plant: plant)
+        let tasks = (try? viewContext.fetch(request)) ?? []
         return tasks
     }
 
@@ -48,13 +44,11 @@ class PlantDetailViewController: UIViewController {
         fatalError("init(coder:) cannot be used. PlantDetailViewController requires dependency injection.")
     }
 
-
-
-
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    func reload() {
-        dataSource.apply(makeSnapshot(), animatingDifferences: false)
+
+    func refreshUI(animated: Bool = true) {
+        dataSource.apply(makeSnapshot(), animatingDifferences: animated)
     }
     
     // MARK: - View Life Cycle
@@ -73,7 +67,7 @@ class PlantDetailViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPlant))
 
-        dataSource.apply(makeSnapshot())
+        refreshUI(animated: false)
     }
     
     //MARK: - Actions
@@ -181,7 +175,10 @@ private extension PlantDetailViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 
         let upNextItems: [Item] = upNextTasks.map { task in
-            let configuration = CareTaskItemConfiguration(task: task)
+            let configuration = CareTaskItemConfiguration(task: task) { [unowned self] in
+                self.delegate?.markTaskAsComplete(task)
+                self.refreshUI()
+            }
             return Item.careTask(configuration)
         }
 
@@ -221,6 +218,18 @@ private extension PlantDetailViewController {
                 config.prefersSideBySideTextAndSecondaryText = false
                 cell.contentConfiguration = config
 
+                if configuration.isDue {
+                    cell.accessories = [
+                        .todoAccessory(actionHandler: { _ in
+                            configuration.handler?()
+                        })
+                    ]
+                } else {
+                    cell.accessories = [
+                        .checkmarkAccessory()
+                    ]
+                }
+
             case let .careDetail(id):
                 guard let task = try? self?.viewContext.existingObject(with: id) as? SproutCareTaskMO else { break }
                 let viewModel = SproutCareTaskCellViewModel(careTask: task)
@@ -231,6 +240,7 @@ private extension PlantDetailViewController {
                 config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
                 config.prefersSideBySideTextAndSecondaryText = false
                 cell.contentConfiguration = config
+                cell.accessories = []
             }
         }
     }

@@ -75,7 +75,7 @@ extension PlantsCoordinator: PlantDetailCoordinator { }
 extension PlantsCoordinator: EditorCoordinatorDelegate {
     func editorCoordinator(_ coordinator: PlantEditorCoordinator, didUpdatePlant plant: SproutPlantMO) {
         if let detailVC = navigationController.topViewController as? PlantDetailViewController {
-            detailVC.reload()
+            detailVC.refreshUI()
         }
 
         if let plant = try? storageProvider.persistentContainer.viewContext.existingObject(with: plant.objectID) {
@@ -96,7 +96,7 @@ extension PlantsCoordinator: EditorCoordinatorDelegate {
             storageProvider.persistentContainer.saveContextIfNeeded()
 
             if let detailVC = navigationController.topViewController as? PlantDetailViewController {
-                detailVC.reload()
+                detailVC.refreshUI()
             }
 
         default:
