@@ -224,6 +224,7 @@ private extension PlantDetailViewController {
             case let .careTask(configuration):
                 var config = UIListContentConfiguration.valueCell()
                 config.image = configuration.icon
+                config.imageProperties.tintColor = configuration.tintColor
                 config.text = configuration.taskName
                 config.secondaryText = configuration.taskSchedule
                 config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
@@ -245,6 +246,7 @@ private extension PlantDetailViewController {
             case let .careDetail(configuration):
                 var config = UIListContentConfiguration.valueCell()
                 config.image = configuration.image
+                config.imageProperties.tintColor = configuration.tintColor
                 config.text = configuration.title
                 config.secondaryText = configuration.subtitle
                 config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)

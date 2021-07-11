@@ -13,6 +13,7 @@ struct CareTaskItemConfiguration {
     let taskName: String?
     let taskSchedule: String?
     let status: SproutMarkStatus?
+    let tintColor: UIColor?
     let handler: (() -> Void)?
 
     var isDue: Bool {
@@ -42,6 +43,13 @@ extension CareTaskItemConfiguration {
         taskName = task.careInformation?.type?.capitalized
         taskSchedule = task.schedule?.description
         status = task.markStatus
+
+        if let hex = task.careInformation?.careType?.tintColorHex {
+            tintColor = UIColor(hex: hex)
+        } else {
+            tintColor = nil
+        }
+        
         self.handler = handler
     }
 }
