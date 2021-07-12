@@ -275,10 +275,10 @@ private extension PlantDetailViewController {
             view.subtitleText = plant.secondaryDisplayName
 
             var iconConfig = view.defaultIconConfiguration()
-            iconConfig.image = plant.getImage() ?? UIImage.PlaceholderPlantImage
+            iconConfig.image = plant.getImage(preferredSize: .thumbnail) ?? UIImage.PlaceholderPlantImage
             view.iconConfiguration = iconConfig
 
-            view.backgroundImage = plant.getImage() ?? UIImage.PlaceholderPlantImage
+            view.backgroundImage = plant.getImage(preferredSize: .thumbnail) ?? UIImage.PlaceholderPlantImage
         }
     }
 

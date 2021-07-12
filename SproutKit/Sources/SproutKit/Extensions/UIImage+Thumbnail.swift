@@ -10,11 +10,15 @@ import UIKit
 extension UIImage {
     func makeThumbnail() -> UIImage? {
         guard let imageData = self.orientedUp()?.pngData() else { return nil }
+        let targetSize = 300
+
+        let multipler = min(CGFloat(targetSize) / min(self.size.width, self.size.height), 1.0)
+        let maxSideSize = max(self.size.width, self.size.height) * multipler
 
         let options = [
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceCreateThumbnailFromImageAlways: true,
-            kCGImageSourceThumbnailMaxPixelSize: 300
+            kCGImageSourceThumbnailMaxPixelSize: maxSideSize
         ] as CFDictionary
 
         guard let source = CGImageSourceCreateWithData(imageData as CFData, nil) else { return nil }
