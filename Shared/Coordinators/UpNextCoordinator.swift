@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 import SproutKit
 
-final class UpNextCoordinator: NSObject, Coordinator {
+final class UpNextCoordinator: NSObject, Coordinator, TaskMarking {
     var childCoordinators: [Coordinator] = []
     var navigationController: UINavigationController
     var storageProvider: StorageProvider
@@ -31,24 +31,23 @@ final class UpNextCoordinator: NSObject, Coordinator {
         navigationController.pushViewController(vc, animated: false)
     }
 
-    // MARK: - Intents
-    func markAsComplete(task: SproutCareTaskMO) {
+    // Intents
+    func markTaskAsComplete(_ task: SproutCareTaskMO) {
         guard let context = task.managedObjectContext else { return }
         context.perform {
-            guard let backgroundTask = try? context.existingObject(with: task.objectID) as? SproutCareTaskMO else { return }
-            backgroundTask.markAsComplete()
+            task.markAsComplete()
 
             do {
                 let result = try context.saveIfNeeded()
-                print("Background Context Saved: ", result)
+                print("Task status saved to context: ", result)
             } catch {
-                print("Error saving background context: \(error)")
+                print("Error saving task status to context: \(error)")
                 context.rollback()
             }
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.storageProvider.persistentContainer.performBackgroundTask { context in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            context.perform {
                 do {
                     try SproutCareTaskMO.insertNewTask(from: task, into: context)
                 } catch {
@@ -57,9 +56,9 @@ final class UpNextCoordinator: NSObject, Coordinator {
 
                 do {
                     let result = try context.saveIfNeeded()
-                    print("Background Context Saved: ", result)
+                    print("New task saved in context: ", result)
                 } catch {
-                    print("Error saving background context: \(error)")
+                    print("Error saving new task to context: \(error)")
                     context.rollback()
                 }
             }

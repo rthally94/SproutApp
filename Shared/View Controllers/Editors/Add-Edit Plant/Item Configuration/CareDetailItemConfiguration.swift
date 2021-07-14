@@ -12,24 +12,27 @@ struct CareDetailItemConfiguration: Hashable {
     let image: UIImage?
     let title: String?
     let subtitle: String?
+    let tintColor: UIColor?
     let handler: (() -> Void)?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(image)
         hasher.combine(title)
         hasher.combine(subtitle)
+        hasher.combine(tintColor)
     }
 
     static func == (lhs: CareDetailItemConfiguration, rhs: CareDetailItemConfiguration) -> Bool {
         lhs.image == rhs.image
             && lhs.title == rhs.title
             && lhs.subtitle == rhs.subtitle
+            && lhs.tintColor == rhs.tintColor
     }
 }
 
 extension CareDetailItemConfiguration {
     init(careTask task: SproutCareTaskMO, handler: (() -> Void)?) {
-        let taskIcon = task.careInformation?.iconImage ?? UIImage(systemName: "list.bullet.rectangle")
+        let taskIcon = task.careInformation?.iconImage ?? UIImage(systemName: "heart.text.square.fill")
 
         let scheduleFormatter = Utility.careScheduleFormatter
         var subtitleText: String?
@@ -39,20 +42,37 @@ extension CareDetailItemConfiguration {
             subtitleText = "Any Time"
         }
 
-        self.init(image: taskIcon, title: task.careInformation?.type?.capitalized, subtitle: subtitleText, handler: handler)
+        var tintColor: UIColor?
+        if let hex = task.careInformation?.careType?.tintColorHex {
+            tintColor = UIColor(hex: hex)
+        }
+
+        self.init(image: taskIcon, title: task.careInformation?.type?.capitalized, subtitle: subtitleText, tintColor: tintColor, handler: handler)
     }
 
     init(taskType: SproutCareType, handler: (() -> Void)? ) {
-        let iconName = taskType.icon ?? "list.bullet.rectangle"
+        let iconName = taskType.icon ?? "heart.text.square.fill"
         let taskIcon = UIImage(named: iconName) ?? UIImage(systemName: iconName)
 
-        self.init(image: taskIcon, title: taskType.rawValue.capitalized, subtitle: "Configure", handler: handler)
+        let taskName = taskType.rawValue.capitalized
+        let subtitleText = "Configure"
+        var tintColor: UIColor?
+        if let hex = taskType.tintColorHex {
+            tintColor = UIColor(hex: hex)
+        }
+
+        self.init(image: taskIcon, title: taskName, subtitle: subtitleText, tintColor: tintColor, handler: handler)
     }
 
     init(careInformation careInfo: SproutCareInformationMO, handler: (() -> Void)? ) {
-        let iconName = careInfo.icon ?? ""
-        let taskIcon = UIImage(named: iconName) ?? UIImage(systemName: iconName) ?? UIImage(systemName: "list.bullet.rectangle")
+        let taskIcon = careInfo.iconImage
+        let taskName = careInfo.type?.capitalized
+        let scheduleText = careInfo.latestTask?.schedule?.description ?? "Any Time"
+        var tintColor: UIColor?
+        if let hex = careInfo.careType?.tintColorHex {
+            tintColor = UIColor(hex: hex)
+        }
 
-        self.init(image: taskIcon, title: careInfo.type?.capitalized, subtitle: "Configure", handler: handler)
+        self.init(image: taskIcon, title: taskName, subtitle: scheduleText, tintColor: tintColor, handler: handler)
     }
 }

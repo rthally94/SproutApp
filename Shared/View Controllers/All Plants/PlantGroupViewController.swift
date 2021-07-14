@@ -95,7 +95,7 @@ extension PlantGroupViewController {
     func makeCellRegistration() -> UICollectionView.CellRegistration<SproutCardCell, Item> {
         return UICollectionView.CellRegistration<SproutCardCell, Item>() {[unowned self] cell, indexPath, item in
             guard let plant = plantsProvider.object(withID: item) else { return }
-            cell.image = plant.getImage() ?? UIImage.PlaceholderPlantImage
+            cell.image = plant.getImage(preferredSize: .thumbnail) ?? UIImage.PlaceholderPlantImage
             cell.text = plant.primaryDisplayName
         }
     }

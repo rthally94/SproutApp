@@ -10,6 +10,8 @@ import UIKit
 import SproutKit
 
 class PlantDetailViewController: UIViewController {
+    private static let maxNumberOfHistoryItems = 5
+
     private typealias Section = ViewModel.Section
     private typealias Item = ViewModel.Item
 
@@ -17,23 +19,38 @@ class PlantDetailViewController: UIViewController {
     let dateComponentsFormatter = Utility.dateComponentsFormatter
     let careDateFormatter = Utility.relativeDateFormatter
 
-    weak var coordinator: PlantDetailCoordinator?
+    weak var delegate: PlantDetailCoordinator?
 
-    var persistentContainer: NSPersistentContainer = AppDelegate.persistentContainer
+    var storageProvider: StorageProvider
     var viewContext: NSManagedObjectContext {
-        persistentContainer.viewContext
+        storageProvider.persistentContainer.viewContext
     }
 
-    var plantID: NSManagedObjectID?
-    var plant: SproutPlantMO? {
-        guard let id = plantID else { return nil }
-        return try? viewContext.existingObject(with: id) as? SproutPlantMO
+    var plant: SproutPlantMO
+
+    private var upNextTasks: [SproutCareTaskMO] {
+        let request = SproutCareTaskMO.needsCareOnDateFetchRequest(date: Date(), plant: plant)
+        let tasks = (try? viewContext.fetch(request)) ?? []
+        return tasks
+    }
+
+    init?(plant: NSManagedObjectID, storageProvider: StorageProvider) {
+        guard let existingPlant = try? storageProvider.persistentContainer.viewContext.existingObject(with: plant) as? SproutPlantMO else { return nil }
+        self.plant = existingPlant
+        self.storageProvider = storageProvider
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) cannot be used. PlantDetailViewController requires dependency injection.")
     }
 
     private var collectionView: UICollectionView!
     private var dataSource: UICollectionViewDiffableDataSource<Section, Item>!
-    func reload() {
-        dataSource.apply(makeSnapshot(), animatingDifferences: false)
+
+    func refreshUI(animated: Bool = true) {
+        applySnapshot(animatingDifferences: animated)
     }
     
     // MARK: - View Life Cycle
@@ -52,13 +69,12 @@ class PlantDetailViewController: UIViewController {
         navigationItem.largeTitleDisplayMode = .never
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(editPlant))
 
-        dataSource.apply(makeSnapshot())
+        refreshUI(animated: false)
     }
     
     //MARK: - Actions
     @objc private func editPlant() {
-        guard let plant = plant else { return }
-        coordinator?.edit(plant: plant)
+        delegate?.edit(plant: plant)
     }
 }
 
@@ -66,20 +82,23 @@ class PlantDetailViewController: UIViewController {
 private extension PlantDetailViewController {
     enum ViewModel {
         enum Section: Hashable, CaseIterable {
-            case tasks
+            case upNext
+            case careInfo
 
             var headerText: String? {
                 switch self {
-                case .tasks:
+                case .upNext:
+                    return "Up Next"
+                case .careInfo:
                     return "All Tasks"
-                default:
-                    return nil
                 }
             }
         }
 
         enum Item: Hashable {
-            case careTask(id: NSManagedObjectID)
+            case careTask(CareTaskItemConfiguration)
+            case careDetail(CareDetailItemConfiguration)
+            case careHistory(CareHistoryConfiguration)
         }
     }
 }
@@ -99,16 +118,10 @@ private extension PlantDetailViewController {
             let section: NSCollectionLayoutSection
 
             switch sectionKind {
-            case .tasks:
+            case .upNext, .careInfo:
                 var config = UICollectionLayoutListConfiguration(appearance: .insetGrouped)
                 config.headerMode = sectionKind.headerText != nil ? .supplementary : .none
                 section = NSCollectionLayoutSection.list(using: config, layoutEnvironment: layoutEnvironment)
-            }
-
-            if sectionKind.headerText != nil {
-                let headerFooterSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(44))
-                let headerItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerFooterSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                section.boundarySupplementaryItems = [headerItem]
             }
             return section
         }
@@ -136,6 +149,10 @@ private extension PlantDetailViewController {
             switch item {
             case .careTask:
                 return collectionView.dequeueConfiguredReusableCell(using: taskCellRegistraion, for: indexPath, item: item)
+            case .careDetail:
+                return collectionView.dequeueConfiguredReusableCell(using: taskCellRegistraion, for: indexPath, item: item)
+            case .careHistory:
+                return collectionView.dequeueConfiguredReusableCell(using: taskCellRegistraion, for: indexPath, item: item)
             }
         }
 
@@ -159,55 +176,109 @@ private extension PlantDetailViewController {
 
 // MARK: Snapshots
 private extension PlantDetailViewController {
-    private func makeSnapshot() -> NSDiffableDataSourceSnapshot<Section, Item> {
-        guard let plant = plant else { fatalError("Unable to show detail view for plant - \(plant)") }
-
+    private func applySnapshot(animatingDifferences: Bool = true) {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-        snapshot.appendSections(Section.allCases)
+        snapshot.appendSections([.upNext, .careInfo])
+        dataSource.apply(snapshot, animatingDifferences: animatingDifferences)
+
+        var upNextSectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        let upNextItems: [Item] = upNextTasks.map { task in
+            let configuration = CareTaskItemConfiguration(task: task) { [unowned self] in
+                self.delegate?.markTaskAsComplete(task)
+                self.refreshUI()
+            }
+            return Item.careTask(configuration)
+        }
+
+        if !upNextItems.isEmpty {
+            upNextSectionSnapshot.append(upNextItems)
+            dataSource.apply(upNextSectionSnapshot, to: .upNext, animatingDifferences: animatingDifferences)
+        }
 
         // All Tasks
-        let items: [Item] = plant.allCareInformation.compactMap({ info in
-            if let task = info.latestTask {
-                return Item.careTask(id: task.objectID)
-            } else {
-                return nil
-            }
-        })
+        var allTasksSectionSnapshot = NSDiffableDataSourceSectionSnapshot<Item>()
+        for taskType in plant.allCareInformation {
+            let careDetailConfig = CareDetailItemConfiguration(careInformation: taskType, handler: {
+                print("Should show history items")
+            })
+            let careDetailItem = Item.careDetail(careDetailConfig)
 
-        snapshot.appendItems(items, toSection: .tasks)
-        return snapshot
+            let historyItems: [Item] = taskType.completedTasks.prefix(Self.maxNumberOfHistoryItems).map { history in
+                let config = CareHistoryConfiguration(task: history)
+                return Item.careHistory(config)
+            }
+
+            allTasksSectionSnapshot.append([careDetailItem])
+            allTasksSectionSnapshot.append(historyItems, to: careDetailItem)
+        }
+
+        dataSource.apply(allTasksSectionSnapshot, to: .careInfo, animatingDifferences: animatingDifferences)
     }
 }
 
 // MARK: Cell Registrations
 private extension PlantDetailViewController {
     private func makeUICollectionListCellRegistration() -> UICollectionView.CellRegistration<UICollectionViewListCell, Item> {
-        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { [weak self] cell, indexPath, item in
+        UICollectionView.CellRegistration<UICollectionViewListCell, Item> { cell, indexPath, item in
             switch item {
-            case let .careTask(id):
-                guard let task = try? self?.viewContext.existingObject(with: id) as? SproutCareTaskMO else { break }
-                let viewModel = SproutCareTaskCellViewModel(careTask: task)
+            case let .careTask(configuration):
                 var config = UIListContentConfiguration.valueCell()
-                config.image = viewModel.image
-                config.text = viewModel.title
-                config.secondaryText = viewModel.subtitle
+                config.image = configuration.icon
+                config.imageProperties.tintColor = configuration.tintColor
+                config.text = configuration.taskName
+                config.secondaryText = configuration.taskSchedule
                 config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
                 config.prefersSideBySideTextAndSecondaryText = false
                 cell.contentConfiguration = config
+
+                if configuration.isDue {
+                    cell.accessories = [
+                        .dueTaskAccessory(actionHandler: { _ in
+                            configuration.handler?()
+                        })
+                    ]
+                } else {
+                    cell.accessories = [
+                        .doneTaskAccessory()
+                    ]
+                }
+
+            case let .careDetail(configuration):
+                var config = UIListContentConfiguration.valueCell()
+                config.image = configuration.image
+                config.imageProperties.tintColor = configuration.tintColor
+                config.text = configuration.title
+                config.secondaryText = configuration.subtitle
+                config.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
+                config.prefersSideBySideTextAndSecondaryText = false
+                cell.contentConfiguration = config
+                cell.accessories = [.outlineDisclosure()]
+
+            case let .careHistory(configuration):
+                var cellConfiguration = UIListContentConfiguration.valueCell()
+                cellConfiguration.image = configuration.icon
+                cellConfiguration.text = configuration.status?.rawValue.capitalized
+
+                if let date = configuration.statusDate {
+                cellConfiguration.secondaryText = Utility.dateFormatter.string(from: date)
+                }
+
+                cell.contentConfiguration = cellConfiguration
+                cell.accessories = []
             }
         }
     }
 
     private func makeDetailHeroRegistration() -> UICollectionView.SupplementaryRegistration<DetailHeroReusableView> {
         UICollectionView.SupplementaryRegistration<DetailHeroReusableView>(elementKind: UICollectionView.elementKindLayoutHeader) { [unowned self] view, elementKind, indexPath in
-            view.titleText = plant?.primaryDisplayName
-            view.subtitleText = plant?.secondaryDisplayName
+            view.titleText = plant.primaryDisplayName
+            view.subtitleText = plant.secondaryDisplayName
 
             var iconConfig = view.defaultIconConfiguration()
-            iconConfig.image = plant?.getImage() ?? UIImage.PlaceholderPlantImage
+            iconConfig.image = plant.getImage(preferredSize: .thumbnail) ?? UIImage.PlaceholderPlantImage
             view.iconConfiguration = iconConfig
 
-            view.backgroundImage = plant?.getImage() ?? UIImage.PlaceholderPlantImage
+            view.backgroundImage = plant.getImage(preferredSize: .thumbnail) ?? UIImage.PlaceholderPlantImage
         }
     }
 
@@ -243,23 +314,6 @@ extension PlantDetailViewController: UICollectionViewDelegate {
         }
     }
 }
-
-// MARK: - Plant Editor Delegate
-//extension PlantDetailViewController: AddEditPlantViewControllerDelegate {
-//    func plantEditor(_ editor: AddEditPlantViewController, didUpdatePlant plant: SproutPlantMO) {
-//        guard let existingPlant = try? viewContext.existingObject(with: plant.objectID) else { return }
-//
-//        if existingPlant.isDeleted {
-//            navigationController?.popViewController(animated: false)
-//        }
-//
-//        if existingPlant.isUpdated {
-//            self.dataSource.apply(makeSnapshot(), animatingDifferences: false)
-//        }
-//
-//        try? viewContext.saveIfNeeded()
-//    }
-//}
 
 extension UICollectionView {
     static let elementKindLayoutHeader = "element-kind-layout-header"

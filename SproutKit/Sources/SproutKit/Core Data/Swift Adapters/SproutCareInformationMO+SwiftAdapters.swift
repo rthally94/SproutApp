@@ -45,6 +45,12 @@ public extension SproutCareInformationMO {
         }) ?? []
     }
 
+    var completedTasks: [SproutCareTaskMO] {
+        let taskSet = tasks as? Set<SproutCareTaskMO>
+        let allDone = taskSet?.filter({ $0.markStatus != .due })
+        return allDone?.sorted(by: { $0.statusDate > $1.statusDate }) ?? []
+    }
+
     var latestTask: SproutCareTaskMO? {
         allTasks.first
     }

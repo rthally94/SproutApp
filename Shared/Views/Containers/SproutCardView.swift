@@ -9,6 +9,10 @@ import UIKit
 
 class SproutCardView: UIView {
     let plantIconView = SproutIconView()
+    var iconConfiguration: SproutIconConfiguration {
+        get { plantIconView.configuration }
+        set { plantIconView.configuration = newValue }
+    }
 
     let textLabel: UILabel = {
         let label = UILabel()
@@ -19,13 +23,17 @@ class SproutCardView: UIView {
         return label
     }()
 
-    private lazy var contentStack: UIStackView = {
+    private lazy var contentStack: UIStackView = { [unowned self] in
         let stack = UIStackView(arrangedSubviews: [plantIconView, textLabel])
         stack.axis = .vertical
         stack.alignment = .center
-        stack.distribution = .fill
+        stack.distribution = .fillProportionally
         return stack
     }()
+
+    convenience init() {
+        self.init(frame: .zero)
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -42,7 +50,6 @@ class SproutCardView: UIView {
         contentStack.translatesAutoresizingMaskIntoConstraints = false
         contentStack.pinToBoundsOf(self)
 
-        plantIconView.translatesAutoresizingMaskIntoConstraints = false
         plantIconView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.75).isActive = true
     }
 }

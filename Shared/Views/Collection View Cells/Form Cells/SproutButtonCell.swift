@@ -101,7 +101,7 @@ class SproutButtonCell: ButtonCell {
         return view
     }()
 
-    private lazy var stack: UIStackView = {
+    private lazy var stack: UIStackView = { [unowned self] in
         let view = UIStackView(arrangedSubviews: [imageView, textLabel])
         view.axis = .horizontal
         view.alignment = .center

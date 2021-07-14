@@ -5,6 +5,7 @@
 //  Created by Ryan Thally on 4/1/21.
 //
 
+import Combine
 import CoreData
 import UIKit
 
@@ -17,8 +18,8 @@ public final class PlantsProvider: NSObject {
     }
 
     fileprivate var fetchedResultsController: NSFetchedResultsController<SproutPlantMO>!
-    
     @Published public var snapshot: NSDiffableDataSourceSnapshot<Section, Item>?
+    private var cancellables: Set<AnyCancellable> = []
 
     public init(managedObjectContext: NSManagedObjectContext) {
         super.init()
@@ -26,7 +27,11 @@ public final class PlantsProvider: NSObject {
         fetchedResultsController = makeFRC(context: managedObjectContext)
         try! fetchedResultsController.performFetch()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(persistentStoreCoordinatorStoresDidChangeNotification(notification:)), name: .NSPersistentStoreCoordinatorStoresDidChange, object: nil)
+        NotificationCenter.default.publisher(for: .NSPersistentStoreCoordinatorStoresDidChange)
+            .sink(receiveValue: {[weak self] notification in
+                self?.persistentStoreCoordinatorStoresDidChangeNotification(notification: notification)
+            })
+            .store(in: &cancellables)
     }
     
     public func object(at indexPath: IndexPath) -> SproutPlantMO {
@@ -37,7 +42,7 @@ public final class PlantsProvider: NSObject {
         return try? moc.existingObject(with: id) as? SproutPlantMO
     }
 
-    @objc private func persistentStoreCoordinatorStoresDidChangeNotification(notification: NSNotification) {
+    private func persistentStoreCoordinatorStoresDidChangeNotification(notification: Notification) {
         if let addedStores = notification.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore], addedStores.contains(where: { store in
             store.url?.absoluteString.contains("SproutCoreDataModel") == true
         }) {

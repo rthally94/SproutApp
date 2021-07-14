@@ -7,4 +7,4 @@
 
 import Foundation
 
-protocol PlantDetailCoordinator: Coordinator, PlantEditing, PlantDeleting { }
+protocol PlantDetailCoordinator: Coordinator, PlantEditing, PlantDeleting, TaskMarking { }

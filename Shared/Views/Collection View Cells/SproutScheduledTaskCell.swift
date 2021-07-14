@@ -158,10 +158,7 @@ class SproutScheduledTaskCell: SproutListCell {
         }
 
         upNextView.taskTypeLabel.text = subtitleString
-
-        var iconConfig = upNextView.plantIconView.defaultConfiguration()
-        iconConfig.image = state.image
-        upNextView.plantIconView.configuration = iconConfig
+        upNextView.iconConfiguration.image = state.image
 
         updateSeparatorConstraint()
     }

@@ -29,7 +29,7 @@ final class MainCoordinator: NSObject, Coordinator {
         vc.coordinator = self
 
         let upNext = UpNextCoordinator(navigationController: UINavigationController(), storageProvider: AppDelegate.storageProvider)
-        let plants = PlantsCoordinator(navigationController: UINavigationController(), persistentContainer: AppDelegate.persistentContainer)
+        let plants = PlantsCoordinator(navigationController: UINavigationController(), storageProvider: AppDelegate.storageProvider)
         let settingsVC: UIViewController = {
             let view = SettingsView()
             let hostedView = UIHostingController(rootView: view)

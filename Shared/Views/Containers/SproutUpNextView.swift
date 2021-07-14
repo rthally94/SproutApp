@@ -9,6 +9,12 @@ import UIKit
 
 class SproutUpNextView: UIView {
     let plantIconView = SproutIconView()
+
+    var iconConfiguration: SproutIconConfiguration {
+        get { plantIconView.configuration }
+        set { plantIconView.configuration = newValue }
+    }
+
     let plantNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.preferredFont(forTextStyle: .headline)
@@ -33,7 +39,7 @@ class SproutUpNextView: UIView {
         return label
     }()
 
-    private lazy var containerStack: UIStackView = {
+    private lazy var contentStack: UIStackView = { [unowned self] in
         let stack = UIStackView(arrangedSubviews: [plantIconView, textStack])
         stack.axis = .horizontal
         stack.distribution = .fill
@@ -42,7 +48,7 @@ class SproutUpNextView: UIView {
         return stack
     }()
 
-    private lazy var textStack: UIStackView = {
+    private lazy var textStack: UIStackView = { [unowned self] in
         let stack = UIStackView(arrangedSubviews: [plantNameLabel, UIView.spacer, taskTypeLabel])
         stack.axis = .vertical
         stack.alignment = .leading
@@ -55,6 +61,10 @@ class SproutUpNextView: UIView {
     }
 
     private var customViewConstraints: (top: NSLayoutConstraint, leading: NSLayoutConstraint, bottom: NSLayoutConstraint, trailing: NSLayoutConstraint)?
+
+    convenience init() {
+        self.init(frame: .zero)
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -69,20 +79,15 @@ class SproutUpNextView: UIView {
     private func setupViewsIfNeeded() {
         guard customViewConstraints == nil else { return }
 
-        addSubview(containerStack)
-        containerStack.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(contentStack)
+        contentStack.translatesAutoresizingMaskIntoConstraints = false
 
         let constraints = (
-            top: containerStack.topAnchor.constraint(equalTo: topAnchor),
-            leading: containerStack.leadingAnchor.constraint(equalTo: leadingAnchor),
-            bottom: containerStack.bottomAnchor.constraint(equalTo: bottomAnchor),
-            trailing: containerStack.trailingAnchor.constraint(equalTo: trailingAnchor)
+            top: contentStack.topAnchor.constraint(equalTo: topAnchor),
+            leading: contentStack.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bottom: contentStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+            trailing: contentStack.trailingAnchor.constraint(equalTo: trailingAnchor)
         )
-
-        plantIconView.translatesAutoresizingMaskIntoConstraints = false
-        let plantIconWidth = plantIconView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.2)
-        plantIconWidth.priority-=1
-        plantIconWidth.isActive = true
 
         NSLayoutConstraint.activate([
             constraints.top,
@@ -90,6 +95,10 @@ class SproutUpNextView: UIView {
             constraints.bottom,
             constraints.trailing
         ])
+
+        let plantIconWidth = plantIconView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.2)
+        plantIconWidth.priority-=1
+        plantIconWidth.isActive = true
 
         customViewConstraints = constraints
     }

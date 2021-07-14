@@ -480,6 +480,7 @@ private extension AddEditPlantViewController {
                 cellConfiguration.image = config.image
                 cellConfiguration.text = config.title
                 cellConfiguration.secondaryText = config.subtitle
+                cellConfiguration.imageProperties.tintColor = config.tintColor
                 cellConfiguration.secondaryTextProperties.font = UIFont.preferredFont(forTextStyle: .caption1)
                 cellConfiguration.prefersSideBySideTextAndSecondaryText = false
                 cell.contentConfiguration = cellConfiguration

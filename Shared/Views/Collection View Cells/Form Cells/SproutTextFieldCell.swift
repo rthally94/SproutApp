@@ -100,7 +100,7 @@ class SproutTextFieldCell: TextFieldCell {
     private func defaultListContentConfiguration() -> UIListContentConfiguration { return .cell() }
     private lazy var listContentView = UIListContentView(configuration: defaultListContentConfiguration())
     private let textField = UITextField()
-    private lazy var stack: UIStackView = {
+    private lazy var stack: UIStackView = { [unowned self] in
         let stack = UIStackView(arrangedSubviews: [listContentView, textField])
         stack.alignment = .center
         stack.axis = .horizontal

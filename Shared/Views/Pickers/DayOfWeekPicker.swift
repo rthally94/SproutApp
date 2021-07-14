@@ -16,7 +16,7 @@ class DayOfWeekPicker: UIControl {
     private(set) var selection: Set<Int> = []
     var minimumSelectionCount: Int = 1
 
-    private lazy var weekdayStack: UIStackView = {
+    private lazy var weekdayStack: UIStackView = { [unowned self] in
         let buttons: [UIButton] = weekdayItems.sorted(by: {$0.key < $1.key}).map { weekday, _ in
             makeButton(weekdayValue: weekday)
         }

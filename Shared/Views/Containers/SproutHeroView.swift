@@ -20,8 +20,6 @@ class SproutHeroView: UIView {
         return imageView
     }()
 
-    private var needsLayout = false
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupViews()
@@ -30,16 +28,6 @@ class SproutHeroView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupViews()
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        iconView.layer.shadowColor = UIColor.black.cgColor
-        iconView.layer.shadowOpacity = 0.25
-        iconView.layer.shadowRadius = 1
-        iconView.layer.shadowOffset = CGSize(width: 2, height: 2)
-        iconView.layer.shadowPath = UIBezierPath(roundedRect: iconView.bounds, cornerRadius: iconView.bounds.width/2).cgPath
     }
 
     private func setupViews() {
@@ -57,6 +45,7 @@ class SproutHeroView: UIView {
             iconView.topAnchor.constraint(equalTo: layoutMarginsGuide.topAnchor, constant: 16),
             iconView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
             iconView.widthAnchor.constraint(equalTo: layoutMarginsGuide.widthAnchor, multiplier: 0.4),
+            iconView.heightAnchor.constraint(equalTo: iconView.widthAnchor),
 
             headerTextView.topAnchor.constraint(equalToSystemSpacingBelow: iconView.bottomAnchor, multiplier: 2.0),
             headerTextView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),

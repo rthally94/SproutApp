@@ -117,14 +117,14 @@ private extension UpNextViewController {
             guard let self = self else { return UISwipeActionsConfiguration() }
             guard let task = self.dataProvider.object(at: indexPath), task.markStatus == .due else { return nil }
             let markAsDoneAction = UIContextualAction(style: .normal, title: "Mark as done") {action, sourceView, completion in
-                self.delegate?.markAsComplete(task: task)
+                self.delegate?.markTaskAsComplete(task)
                 completion(true)
             }
             markAsDoneAction.backgroundColor = .systemGreen
             markAsDoneAction.image = UIImage(systemName: "checkmark.circle.fill", withConfiguration: Self.iconConfiguration)
 
             let addEarlyLogAction = UIContextualAction(style: .normal, title: "Add Additional Log") { action, sourceView, completion in
-                self.delegate?.markAsComplete(task: task)
+                self.delegate?.markTaskAsComplete(task)
                 completion(true)
             }
             addEarlyLogAction.backgroundColor = .systemBlue
@@ -170,11 +170,12 @@ private extension UpNextViewController {
 
     // MARK: - Cell Registrations
     func makeTaskCellRegistration() -> UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {
-        UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {[unowned self] cell, indexPath, item in
+        UICollectionView.CellRegistration<SproutScheduledTaskCell, Item> {[weak self] cell, indexPath, item in
+            guard let self = self else { return }
             guard let task = self.dataProvider.task(withID: item), let plantID = task.plant?.objectID, let plant = self.dataProvider.plant(withID: plantID) else { return }
 
             cell.plantName = plant.primaryDisplayName
-            cell.plantImage = plant.getImage()
+            cell.plantImage = plant.getImage(preferredSize: .thumbnail)
             cell.taskType = task.careInformation?.type?.capitalized
             cell.taskScheduleIcon = UIImage(systemName: task.hasSchedule ? "bell.fill" : "bell.slash")
 
@@ -199,13 +200,13 @@ private extension UpNextViewController {
             switch (isChecked, isDueToday, isEarly) {
             case (true, _, _):
                 // Done
-                cell.accessories = [ .checkmarkAccessory() ]
+                cell.accessories = [ .doneTaskAccessory() ]
             case (false, false, true):
                 // Early - Show clock
                 cell.accessories = [
                     .buttonAccessory(
                         tintColor: .systemGray3,
-                        action: UIAction(image: UIImage(systemName: "clock")) { _ in }
+                        action: UIAction(image: UIImage(systemName: "clock")) {_ in }
                     )
                 ]
             case (false, false, false):
@@ -214,15 +215,15 @@ private extension UpNextViewController {
                     .buttonAccessory(
                         tintColor: .systemOrange,
                         action: UIAction(image: UIImage(systemName: "exclamationmark.circle")) { _ in
-                            self.delegate?.markAsComplete(task: task)
+                            self.delegate?.markTaskAsComplete(task)
                         }
                     )
                 ]
             case (false, true, false):
                 // Due or not scheduled - show circle
                 cell.accessories = [
-                    .todoAccessory(actionHandler: { _ in
-                        self.delegate?.markAsComplete(task: task)
+                    .dueTaskAccessory(actionHandler: { _ in
+                        self.delegate?.markTaskAsComplete(task)
                     })
                 ]
             default:
@@ -232,7 +233,8 @@ private extension UpNextViewController {
     }
 
     func createHeaderRegistration() -> UICollectionView.SupplementaryRegistration<UICollectionViewListCell> {
-        return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) {[unowned self] cell, elementKind, indexPath in
+        return UICollectionView.SupplementaryRegistration<UICollectionViewListCell>(elementKind: UICollectionView.elementKindSectionHeader) {[weak self] cell, elementKind, indexPath in
+            guard let self = self else { return }
             guard elementKind == UICollectionView.elementKindSectionHeader else { return }
             let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
 
