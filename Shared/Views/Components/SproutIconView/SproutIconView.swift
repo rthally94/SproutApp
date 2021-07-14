@@ -28,6 +28,7 @@ class SproutIconView: UIView {
 
     private let contentView = UIImageView(frame: .zero)
     private func applyConfiguration(_ newConfiguration: SproutIconConfiguration) {
+        appliedIconConfiguration = newConfiguration
         // Update to the new View
         switch configuration.iconType {
         case .image:
@@ -39,6 +40,7 @@ class SproutIconView: UIView {
         }
 
         contentView.image = configuration.image
+        setNeedsLayout()
     }
 
     convenience init() {
@@ -79,15 +81,19 @@ class SproutIconView: UIView {
 
 extension SproutIconView {
     private func applyLayoutMarginsMargins() {
+        let newLayoutMargins: NSDirectionalEdgeInsets
         switch configuration.iconType {
         case .image:
-            directionalLayoutMargins = .zero
+            newLayoutMargins = .zero
         default:
             let widthInset = (bounds.width * 0.4) / 2
             let heightInset = (bounds.height * 0.4) / 2
-            directionalLayoutMargins = .init(top: heightInset, leading: widthInset, bottom: heightInset, trailing: widthInset)
+            newLayoutMargins = .init(top: heightInset, leading: widthInset, bottom: heightInset, trailing: widthInset)
         }
-//        setNeedsLayout()
+
+        if newLayoutMargins != directionalLayoutMargins {
+            directionalLayoutMargins = newLayoutMargins
+        }
     }
 
     private func applyCornerRadius() {

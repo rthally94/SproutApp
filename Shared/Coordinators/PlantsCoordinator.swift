@@ -96,7 +96,7 @@ extension PlantsCoordinator: EditorCoordinatorDelegate {
             storageProvider.persistentContainer.saveContextIfNeeded()
 
             if let detailVC = navigationController.topViewController as? PlantDetailViewController {
-                detailVC.refreshUI()
+                detailVC.refreshUI(animated: false)
             }
 
         default:
