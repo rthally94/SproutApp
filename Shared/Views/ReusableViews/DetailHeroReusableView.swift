@@ -22,7 +22,7 @@ class DetailHeroReusableView: UICollectionReusableView {
         view.iconView.defaultConfiguration()
     }
 
-    var iconConfiguration: SproutIconConfiguration? {
+    var iconConfiguration: SproutIconConfiguration {
         get { view.iconView.configuration }
         set { view.iconView.configuration = newValue }
     }

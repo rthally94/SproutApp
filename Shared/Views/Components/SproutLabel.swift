@@ -29,7 +29,7 @@ class SproutLabel: UIView {
 
     var textLabel = UILabel()
 
-    private lazy var stack: UIStackView = {
+    private lazy var stack: UIStackView = { [unowned self] in
         let stack = UIStackView(arrangedSubviews: [imageView, textLabel])
         stack.axis = .horizontal
         stack.spacing = 8

@@ -21,6 +21,14 @@ extension SproutPlantMO {
     static func allPlantsFetchRequest() -> NSFetchRequest<SproutPlantMO> {
         let request: NSFetchRequest<SproutPlantMO> = SproutPlantMO.fetchRequest()
         request.sortDescriptors = [SortDescriptors.sortByNickname, SortDescriptors.sortByCreationDate]
+        request.propertiesToFetch = [
+            #keyPath(SproutPlantMO.creationDate),
+            #keyPath(SproutPlantMO.nickname),
+
+            #keyPath(SproutPlantMO.commonName),
+            #keyPath(SproutPlantMO.scientificName),
+            #keyPath(SproutPlantMO.thumbnailImageData)
+        ]
         return request
     }
 }

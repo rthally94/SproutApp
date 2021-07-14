@@ -16,6 +16,7 @@ extension UIImage {
         let maxSideSize = max(self.size.width, self.size.height) * multipler
 
         let options = [
+            kCGImageSourceShouldAllowFloat: true,
             kCGImageSourceCreateThumbnailWithTransform: true,
             kCGImageSourceCreateThumbnailFromImageAlways: true,
             kCGImageSourceThumbnailMaxPixelSize: maxSideSize

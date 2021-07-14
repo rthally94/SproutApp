@@ -44,7 +44,7 @@
         <attribute name="lastModifiedDate" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="nickname" optional="YES" attributeType="String" minValueString="1"/>
         <attribute name="scientificName" attributeType="String" minValueString="1"/>
-        <attribute name="thumbnailImageData" optional="YES" transient="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="thumbnailImageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <relationship name="careInformation" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SproutCareInformationMO" inverseName="plant" inverseEntity="SproutCareInformationMO"/>
         <relationship name="careTasks" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SproutCareTaskMO" inverseName="plant" inverseEntity="SproutCareTaskMO"/>
         <relationship name="fullImageData" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SproutImageDataMO" inverseName="plant" inverseEntity="SproutImageDataMO"/>

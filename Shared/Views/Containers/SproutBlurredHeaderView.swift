@@ -23,7 +23,7 @@ class SproutBlurredHeaderView: UIView {
         return label
     }()
 
-    private lazy var textStack: UIStackView = {
+    private lazy var textStack: UIStackView = { [unowned self] in
         let stack = UIStackView(arrangedSubviews: [titleLabel, subtitleLabel])
         stack.axis = .vertical
         stack.distribution = .fillProportionally

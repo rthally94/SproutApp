@@ -15,15 +15,20 @@ class ReminderNotificationProvider: NSObject {
     
     @Published var data: [LocalNotification]?
     private let request = SproutCareTaskMO.remindersFetchRequest()
+    private var cancellables: Set<AnyCancellable> = []
 
     init(managedObjectContext: NSManagedObjectContext) {
         self.moc = managedObjectContext
         super.init()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(contextDidSave), name: .NSManagedObjectContextDidSave, object: moc)
+        NotificationCenter.default.publisher(for: .NSManagedObjectContextDidSave, object: moc)
+            .sink { [weak self] notification in
+                self?.contextDidSave()
+            }
+            .store(in: &cancellables)
     }
 
-    @objc private func contextDidSave() {
+    private func contextDidSave() {
         updateData()
     }
     

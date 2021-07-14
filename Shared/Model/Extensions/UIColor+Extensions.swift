@@ -48,4 +48,31 @@ extension UIColor {
             return UIColor.darkText
         }
     }
+
+    private func makeColor(componentsDelta: CGFloat) -> UIColor {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        return UIColor(
+            red: add(componentsDelta, toComponent: red),
+            green: add(componentsDelta, toComponent: red),
+            blue: add(componentsDelta, toComponent: red),
+            alpha: add(componentsDelta, toComponent: red)
+        )
+    }
+
+    private func add(_ value: CGFloat, toComponent: CGFloat) -> CGFloat {
+        return max(0, min(1, value + toComponent))
+    }
+
+    func lighter(componentsDelta: CGFloat = 0.1) -> UIColor {
+        return makeColor(componentsDelta: componentsDelta)
+    }
+
+    func darker(componentsDelta: CGFloat = 0.1) -> UIColor {
+        return makeColor(componentsDelta: -1 * componentsDelta)
+    }
 }

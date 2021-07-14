@@ -8,14 +8,12 @@
 import UIKit
 
 class SproutCardCell: UICollectionViewCell {
-    var cardView = SproutCardView()
+    let cardView = SproutCardView()
 
     var image: UIImage? {
-        get { cardView.plantIconView.configuration?.image }
+        get { cardView.iconConfiguration.image }
         set {
-            var configuration = cardView.plantIconView.defaultConfiguration()
-            configuration.image = newValue
-            cardView.plantIconView.configuration = configuration
+            cardView.iconConfiguration.image = newValue
         }
     }
 

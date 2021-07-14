@@ -233,13 +233,13 @@ private extension PlantDetailViewController {
 
                 if configuration.isDue {
                     cell.accessories = [
-                        .todoAccessory(actionHandler: { _ in
+                        .dueTaskAccessory(actionHandler: { _ in
                             configuration.handler?()
                         })
                     ]
                 } else {
                     cell.accessories = [
-                        .checkmarkAccessory()
+                        .doneTaskAccessory()
                     ]
                 }
 

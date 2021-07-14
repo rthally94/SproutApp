@@ -28,6 +28,7 @@
 		FB23C9122698E6D700FFF2F4 /* CareTaskItemConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB23C9112698E6D700FFF2F4 /* CareTaskItemConfiguration.swift */; };
 		FB23C9142699E2AB00FFF2F4 /* TaskMarking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB23C9132699E2AB00FFF2F4 /* TaskMarking.swift */; };
 		FB23C918269A446200FFF2F4 /* CareHistoryConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB23C917269A446200FFF2F4 /* CareHistoryConfiguration.swift */; };
+		FB23C91A269CA5AD00FFF2F4 /* SproutIconConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB23C919269CA5AD00FFF2F4 /* SproutIconConfiguration.swift */; };
 		FB24CEFB26025DA0002D14DF /* UIListContentConfiguration+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */; };
 		FB28A8E82649A2DE00B1206E /* SproutChipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB28A8E72649A2DE00B1206E /* SproutChipView.swift */; };
 		FB43D63A266D680600FA9FA1 /* SproutBlurredHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB43D639266D680600FA9FA1 /* SproutBlurredHeaderView.swift */; };
@@ -99,7 +100,6 @@
 		FBCA568326757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA568226757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift */; };
 		FBCA568526757F31008DBFFC /* DayOfMonthPickerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCA568426757F31008DBFFC /* DayOfMonthPickerConfiguration.swift */; };
 		FBD20AE4260FC6B7008915E1 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */; };
-		FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */; };
 		FBD8A7E82696430F00EB716B /* SampleData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBD8A7E72696430F00EB716B /* SampleData.swift */; };
 		FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */; };
 		FBEB4972260CBEF800F6060C /* SproutCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBEB4971260CBEF800F6060C /* SproutCardCell.swift */; };
@@ -139,6 +139,7 @@
 		FB23C9112698E6D700FFF2F4 /* CareTaskItemConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareTaskItemConfiguration.swift; sourceTree = "<group>"; };
 		FB23C9132699E2AB00FFF2F4 /* TaskMarking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskMarking.swift; sourceTree = "<group>"; };
 		FB23C917269A446200FFF2F4 /* CareHistoryConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareHistoryConfiguration.swift; sourceTree = "<group>"; };
+		FB23C919269CA5AD00FFF2F4 /* SproutIconConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutIconConfiguration.swift; sourceTree = "<group>"; };
 		FB24CEFA26025DA0002D14DF /* UIListContentConfiguration+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIListContentConfiguration+Extension.swift"; sourceTree = "<group>"; };
 		FB28A8E72649A2DE00B1206E /* SproutChipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutChipView.swift; sourceTree = "<group>"; };
 		FB434E4D2680B05A00B3F737 /* SproutKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = SproutKit; sourceTree = "<group>"; };
@@ -213,7 +214,6 @@
 		FBCA568226757F1D008DBFFC /* DayOfWeekPickerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfWeekPickerConfiguration.swift; sourceTree = "<group>"; };
 		FBCA568426757F31008DBFFC /* DayOfMonthPickerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayOfMonthPickerConfiguration.swift; sourceTree = "<group>"; };
 		FBD20AE3260FC6B7008915E1 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
-		FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutSymbolSymbolIconView.swift; sourceTree = "<group>"; };
 		FBD8A7E72696430F00EB716B /* SampleData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleData.swift; sourceTree = "<group>"; };
 		FBEB4958260BEB9700F6060C /* UICellAccessory+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICellAccessory+Extensions.swift"; sourceTree = "<group>"; };
 		FBEB4971260CBEF800F6060C /* SproutCardCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SproutCardCell.swift; sourceTree = "<group>"; };
@@ -439,7 +439,7 @@
 			isa = PBXGroup;
 			children = (
 				FBF8AC5125DD80AC00E7E8EB /* SproutIconView.swift */,
-				FBD20AE7260FDB44008915E1 /* SproutSymbolSymbolIconView.swift */,
+				FB23C919269CA5AD00FFF2F4 /* SproutIconConfiguration.swift */,
 			);
 			path = SproutIconView;
 			sourceTree = "<group>";
@@ -784,6 +784,7 @@
 				FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */,
 				FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */,
 				FBCA566326740BFC008DBFFC /* PlantTypePickerDelegate.swift in Sources */,
+				FB23C91A269CA5AD00FFF2F4 /* SproutIconConfiguration.swift in Sources */,
 				FBCA567226744062008DBFFC /* PlantIconItemConfiguration.swift in Sources */,
 				FB5F348925B63E6900CCE6BC /* SproutScheduledTaskCell.swift in Sources */,
 				FBCA566C26740BFC008DBFFC /* UpNextSection.swift in Sources */,
@@ -850,7 +851,6 @@
 				FB5CB85926728A2600A7F60E /* SproutDayOfWeekPickerCollectionViewCell.swift in Sources */,
 				FBCA5676267441EE008DBFFC /* CareDetailItemConfiguration.swift in Sources */,
 				FB4A1E6F268CCB62004DED91 /* PlantShowing.swift in Sources */,
-				FBD20AE8260FDB44008915E1 /* SproutSymbolSymbolIconView.swift in Sources */,
 				FBCA565826740BFC008DBFFC /* SettingsView.swift in Sources */,
 				FBEB4972260CBEF800F6060C /* SproutCardCell.swift in Sources */,
 				FBCA565726740BFC008DBFFC /* PlantGroupViewController.swift in Sources */,

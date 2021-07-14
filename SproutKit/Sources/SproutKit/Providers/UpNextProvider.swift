@@ -5,6 +5,7 @@
 //  Created by Ryan Thally on 4/29/21.
 //
 
+import Combine
 import CoreData
 import UIKit
 
@@ -20,8 +21,8 @@ final public class UpNextProvider: NSObject {
     }
 
     fileprivate var fetchedResultsController: RichFetchedResultsController<SproutCareTaskMO>!
-
     @Published public var snapshot: Snapshot?
+    private var cancellables: Set<AnyCancellable> = []
 
     public var completedTaskDateMarker: Date? {
         didSet {
@@ -36,7 +37,11 @@ final public class UpNextProvider: NSObject {
         fetchedResultsController = makeTasksFRC(context: storageProvider.persistentContainer.viewContext)
         try! fetchedResultsController.performFetch()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(persistentStoreCoordinatorStoresDidChangeNotification(notification:)), name: .NSPersistentStoreCoordinatorStoresDidChange, object: nil)
+        NotificationCenter.default.publisher(for: .NSPersistentStoreCoordinatorStoresDidChange)
+            .sink(receiveValue: { [weak self] notification in
+                self?.persistentStoreCoordinatorStoresDidChangeNotification(notification: notification)
+            })
+            .store(in: &cancellables)
     }
 
 
@@ -52,7 +57,7 @@ final public class UpNextProvider: NSObject {
         return try? moc.existingObject(with: id) as? SproutPlantMO
     }
 
-    @objc private func persistentStoreCoordinatorStoresDidChangeNotification(notification: NSNotification) {
+    @objc private func persistentStoreCoordinatorStoresDidChangeNotification(notification: Notification) {
         if let addedStores = notification.userInfo?[NSAddedPersistentStoresKey] as? [NSPersistentStore], addedStores.contains(where: { store in
             store.url?.absoluteString.contains("SproutCoreDataModel") == true
         }) {

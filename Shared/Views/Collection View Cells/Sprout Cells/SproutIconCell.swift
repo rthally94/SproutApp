@@ -39,11 +39,17 @@ struct IconCellContentConfiguration: UIContentConfiguration, Hashable {
 }
 
 class IconCellContentView: UIView & UIContentView {
+    let plantIconView = SproutIconView()
+
+    var iconConfiguration: SproutIconConfiguration {
+        get { plantIconView.configuration }
+        set { plantIconView.configuration = newValue }
+    }
+
     init(configuration: IconCellContentConfiguration) {
         super.init(frame: .zero)
-        
         self.configuration = configuration
-        setupInternalViews()
+        setupView()
     }
     
     required init?(coder: NSCoder) {
@@ -57,37 +63,29 @@ class IconCellContentView: UIView & UIContentView {
             apply(configuration: newConfig)
         }
     }
-    
-    private let plantIcon = SproutIconView()
-    
-    func setupInternalViews() {
-        addSubview(plantIcon)
-        plantIcon.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            plantIcon.centerXAnchor.constraint(equalTo: centerXAnchor),
-            plantIcon.centerYAnchor.constraint(equalTo: centerYAnchor),
-            plantIcon.heightAnchor.constraint(equalTo: heightAnchor),
-            plantIcon.widthAnchor.constraint(equalTo: plantIcon.heightAnchor),
-        ])
 
-        layer.shadowColor = UIColor.gray.cgColor
-        layer.shadowOpacity = 0.5
-        layer.shadowOffset = CGSize(width: 0, height: 5)
-        layer.shadowRadius = 5
-        layer.shadowPath = UIBezierPath(roundedRect: bounds, cornerRadius: bounds.width/2).cgPath
+    private func setupView() {
+        addSubview(plantIconView)
+        plantIconView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            plantIconView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            plantIconView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            plantIconView.heightAnchor.constraint(equalTo: heightAnchor),
+            plantIconView.widthAnchor.constraint(equalTo: plantIconView.heightAnchor),
+        ])
     }
-    
+
     private var appliedContentConfiguration: IconCellContentConfiguration!
     private func apply(configuration: IconCellContentConfiguration) {
         guard appliedContentConfiguration != configuration else { return }
         appliedContentConfiguration = configuration
         
         // configure view
-        var config = plantIcon.defaultConfiguration()
+        var config = plantIconView.defaultConfiguration()
         config.image = appliedContentConfiguration.image
         config.tintColor = appliedContentConfiguration.tintColor
         config.symbolConfiguration = appliedContentConfiguration.symbolConfiguration
 
-        plantIcon.configuration = config
+        iconConfiguration = config
     }
 }

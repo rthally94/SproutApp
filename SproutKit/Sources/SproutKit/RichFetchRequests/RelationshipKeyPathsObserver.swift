@@ -5,6 +5,7 @@
 //  Created by Ryan Thally on 6/27/21.
 //
 
+import Combine
 import CoreData
 import Foundation
 
@@ -13,6 +14,7 @@ public final class RelationshipKeyPathsObserver<ResultType: NSFetchRequestResult
     private unowned let fetchedResultsController: RichFetchedResultsController<ResultType>
 
     private var updatedObjectIDs: Set<NSManagedObjectID> = []
+    private var cancellables: Set<AnyCancellable> = []
 
     public init?(keyPaths: Set<String>, fetchedResultsController: RichFetchedResultsController<ResultType>) {
         guard !keyPaths.isEmpty else { return nil }
@@ -25,17 +27,26 @@ public final class RelationshipKeyPathsObserver<ResultType: NSFetchRequestResult
 
         super.init()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(contextDidChangeNotification(notification:)), name: .NSManagedObjectContextObjectsDidChange, object: fetchedResultsController.managedObjectContext)
-        NotificationCenter.default.addObserver(self, selector: #selector(contextWillSaveNotificataion(notification:)), name: .NSManagedObjectContextWillSave, object: fetchedResultsController.managedObjectContext)
+        NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange, object: fetchedResultsController.managedObjectContext)
+            .sink { [weak self] notification in
+                self?.contextDidChangeNotification(notification: notification)
+            }
+            .store(in: &cancellables)
+
+        NotificationCenter.default.publisher(for: .NSManagedObjectContextWillSave, object: fetchedResultsController.managedObjectContext)
+            .sink { [weak self] notification in
+                self?.contextWillSaveNotificataion(notification: notification)
+            }
+            .store(in: &cancellables)
     }
 
-    @objc private func contextDidChangeNotification(notification: NSNotification) {
+    @objc private func contextDidChangeNotification(notification: Notification) {
         guard let updatedObjects = notification.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject> else { return }
         guard let updatedObjectIDs = updatedObjects.updatedObjectIDs(for: keyPaths), !updatedObjectIDs.isEmpty else { return }
         self.updatedObjectIDs = self.updatedObjectIDs.union(updatedObjectIDs)
     }
 
-    @objc private func contextWillSaveNotificataion(notification: NSNotification) {
+    @objc private func contextWillSaveNotificataion(notification: Notification) {
         guard !updatedObjectIDs.isEmpty else { return }
         guard let fetchedObjects = fetchedResultsController.fetchedObjects as? [NSManagedObject], !fetchedObjects.isEmpty else { return }
         fetchedObjects.forEach { object in
