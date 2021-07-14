@@ -9,6 +9,7 @@ import UIKit
 import SproutKit
 
 struct TaskDetailItemConfiguration: Hashable {
+    var id: String
     var taskName: String?
     var taskIcon: UIImage?
 
@@ -19,13 +20,24 @@ struct TaskDetailItemConfiguration: Hashable {
 }
 
 extension TaskDetailItemConfiguration {
+    static func ==(lhs: TaskDetailItemConfiguration, rhs: TaskDetailItemConfiguration) -> Bool {
+        rhs.id == lhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+extension TaskDetailItemConfiguration {
     init(careTask: SproutCareTaskMO) {
+        let id = careTask.identifier ?? UUID().uuidString
         let taskName = careTask.careInformation?.type?.capitalized ?? "Unknown Task"
         let taskIcon = careTask.careInformation?.iconImage
         let taskSchedule = careTask.schedule?.description ?? "No schedule"
         let taskScheduleIcon = careTask.hasSchedule ? "bell.fill" : "bell.slash"
         let tintColor = careTask.careInformation?.tintColor
 
-        self.init(taskName: taskName, taskIcon: taskIcon, taskValueText: taskSchedule, taskValueIcon: taskScheduleIcon, tintColor: tintColor)
+        self.init(id: id, taskName: taskName, taskIcon: taskIcon, taskValueText: taskSchedule, taskValueIcon: taskScheduleIcon, tintColor: tintColor)
     }
 }

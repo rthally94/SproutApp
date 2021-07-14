@@ -7,24 +7,39 @@
 
 import Foundation
 
-enum TaskEditorSection: Hashable {
-    case detailHeader(SectionConfiguration)
-    case scheduleGeneral(SectionConfiguration)
-    case recurrenceFrequency(SectionConfiguration)
-    case recurrenceValue(SectionConfiguration)
+struct TaskEditorSection {
+    let id: UUID
+    var header: String?
+    var footer: String?
+    var layout: Layout
+    var children: [TaskEditorItem]
+
+    var showsHeader: Bool {
+        header != nil
+    }
+
+    var showsFooter: Bool {
+        footer != nil
+    }
+
+    enum Layout: Hashable {
+        case header
+        case list
+    }
+}
+
+extension TaskEditorSection: Hashable {
+    static func ==(lhs: TaskEditorSection, rhs: TaskEditorSection) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 extension TaskEditorSection {
-    func configuration() -> SectionConfiguration {
-        switch self {
-        case let .detailHeader(config):
-            return config
-        case let .scheduleGeneral(config):
-            return config
-        case let .recurrenceFrequency(config):
-            return config
-        case let .recurrenceValue(config):
-            return config
-        }
+    init(header: String? = nil, footer: String? = nil, layout: Layout, children: [TaskEditorItem]) {
+        self.init(id: UUID(), header: header, footer: footer, layout: layout, children: children)
     }
 }

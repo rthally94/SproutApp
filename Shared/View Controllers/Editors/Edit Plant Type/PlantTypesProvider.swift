@@ -45,8 +45,9 @@ class PlantTypesProvider: NSObject {
     }
 
     func reloadItems(_ items: [Item]) {
+        let idsToReload = Array(Set(items))
         var newSnapshot = snapshot
-        newSnapshot?.reloadItems(items)
+        newSnapshot?.reloadItems(idsToReload)
         snapshot = newSnapshot
     }
 }
