@@ -20,8 +20,8 @@ struct SectionConfiguration: Hashable {
     }
 }
 
-extension SectionConfiguration {
-    init(header: String? = nil, footer: String? = nil) {
-        self.init(headerText: header, footerText: footer)
-    }
-}
+//extension SectionConfiguration {
+//    init(header: String? = nil, footer: String? = nil) {
+//        self.init(headerText: header, footerText: footer)
+//    }
+//}

@@ -80,6 +80,7 @@ class DayOfMonthPicker: UIControl {
 
     // MARK: - Actions
     func setSelection(_ selection: Set<Int>) {
+        guard selection != self.selection else { return }
         guard selection.count >= minimumSelectionCount else { return }
         let changes = self.selection.symmetricDifference(selection)
         self.selection = selection
