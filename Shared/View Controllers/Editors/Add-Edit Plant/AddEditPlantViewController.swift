@@ -98,6 +98,10 @@ class AddEditPlantViewController: UICollectionViewController {
 
     @objc private func saveButtonPressed(sender _: AnyObject) {
         if let plant = plant {
+            if plant.nickname == nil || plant.nickname?.isEmpty == true {
+                plant.nickname = plant.commonName
+            }
+
             delegate?.plantEditor(self, didUpdatePlant: plant)
         }
 
