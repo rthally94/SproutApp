@@ -12,7 +12,10 @@ extension UICellAccessory {
         let placement = UICellAccessory.Placement.trailing(displayed: .whenNotEditing)
         let button = UIButton(primaryAction: action)
         button.tintColor = tintColor
+
         button.sizeToFit()
+        let size = button.systemLayoutSizeFitting(CGSize(width: 44, height: 44))
+        button.frame.size = size
 
         let configuration = UICellAccessory.CustomViewConfiguration(customView: button, placement: placement)
         let buttonAccessory = UICellAccessory.customView(configuration: configuration)
