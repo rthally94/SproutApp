@@ -32,6 +32,7 @@ final class MainCoordinator: NSObject, Coordinator {
         let plants = PlantsCoordinator(navigationController: UINavigationController(), storageProvider: AppDelegate.storageProvider)
         let settingsVC: UIViewController = {
             let view = SettingsView()
+                .environment(\.managedObjectContext, persistentContainer.viewContext)
             let hostedView = UIHostingController(rootView: view)
             hostedView.tabBarItem = UITabBarItem(title: "Settings", image: UIImage(systemName: "gear"), selectedImage: UIImage(systemName: "gear"))
             hostedView.tabBarItem.tag = 3

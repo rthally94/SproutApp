@@ -10,7 +10,7 @@ import Foundation
 import SproutKit
 
 final class AllModelTypesViewModel: ObservableObject {
-    @Published private(set) var counts = [(String, Int)]()
+    @Published private(set) var counts = [(UUID, NSEntityDescription, Int)]()
     
     var viewContext: NSManagedObjectContext?
     
@@ -21,12 +21,9 @@ final class AllModelTypesViewModel: ObservableObject {
         SproutImageDataMO.self
     ]
     
-    private var fetchRequests: [NSFetchRequest<NSFetchRequestResult>] {
-        allTypes.map {
-            let request = $0.fetchRequest()
-            
-            return request
-        }
+    private func makeFetchRequest(entityType: NSManagedObject.Type) -> NSFetchRequest<NSFetchRequestResult> {
+        let request = entityType.fetchRequest()
+        return request
     }
     
     func fetchCounts() {
@@ -35,14 +32,13 @@ final class AllModelTypesViewModel: ObservableObject {
             return
         }
         
-        let allCounts = fetchRequests.reduce(into: [String: Int](), { counts, request in
-            let count = try? context.count(for: request)
-            counts[request.entityName!] = count ?? 0
-        })
-        
-        counts = allCounts.sorted(by: { lhs, rhs in
-            lhs.key < rhs.key
-                && lhs.value < rhs.value
+        counts = allTypes.map { type -> (UUID, NSEntityDescription, Int) in
+            let count = try? context.count(for: makeFetchRequest(entityType: type))
+            return (UUID(), type.entity(), count ?? 0)
+        }
+        .sorted(by: { lhs, rhs in
+            lhs.1.name < rhs.1.name
+                && lhs.2 < rhs.2
         })
     }
 }

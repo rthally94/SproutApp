@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB0260E426AC1DAD00E093F5 /* DataListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0260E326AC1DAD00E093F5 /* DataListView.swift */; };
 		FB06768726948C29005F022A /* ImagePicking.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB06768626948C29005F022A /* ImagePicking.swift */; };
 		FB06768926948E61005F022A /* DismissStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB06768826948E61005F022A /* DismissStatus.swift */; };
 		FB06768B269494C9005F022A /* EditPlantCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB06768A269494C9005F022A /* EditPlantCoordinator.swift */; };
@@ -119,6 +120,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FB0260E326AC1DAD00E093F5 /* DataListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataListView.swift; sourceTree = "<group>"; };
 		FB06768626948C29005F022A /* ImagePicking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicking.swift; sourceTree = "<group>"; };
 		FB06768826948E61005F022A /* DismissStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissStatus.swift; sourceTree = "<group>"; };
 		FB06768A269494C9005F022A /* EditPlantCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditPlantCoordinator.swift; sourceTree = "<group>"; };
@@ -469,6 +471,7 @@
 			children = (
 				FB8ED10D26AC145D00CD7822 /* AllModelTypesList.swift */,
 				FB8ED10F26AC149C00CD7822 /* AllModelTypesViewModel.swift */,
+				FB0260E326AC1DAD00E093F5 /* DataListView.swift */,
 			);
 			path = CoreDataExplorer;
 			sourceTree = "<group>";
@@ -822,6 +825,7 @@
 				FB06769B2695E572005F022A /* Notifications.swift in Sources */,
 				FBCA566726740BFC008DBFFC /* TaskEditorViewController.swift in Sources */,
 				FB0676942695D126005F022A /* WelcomeView.swift in Sources */,
+				FB0260E426AC1DAD00E093F5 /* DataListView.swift in Sources */,
 				FB6CD6582657E17500D7DE82 /* RemindersProvider.swift in Sources */,
 				FB4A1E6B268CCAAF004DED91 /* PlantCreating.swift in Sources */,
 				FB0676962695DA5D005F022A /* WelcomePresentable.swift in Sources */,

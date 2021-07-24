@@ -10,13 +10,13 @@ import UIKit
 extension SproutPlantMO {
     public func setImage(_ newImage: UIImage?) {
         let correcetedImage = newImage?.orientedUp()
-        thumbnailImageData = correcetedImage?.makeThumbnail()?.jpegData(compressionQuality: 0.8)
+        thumbnailImageData = correcetedImage?.makeThumbnail()?.jpegData(compressionQuality: 0.6)
 
         if fullImageData == nil {
             fullImageData = SproutImageDataMO(context: managedObjectContext!)
         }
         
-        fullImageData?.rawData = correcetedImage?.pngData()
+        fullImageData?.rawData = correcetedImage?.jpegData(compressionQuality: 0.8)
     }
 
     public enum ImageSize {
