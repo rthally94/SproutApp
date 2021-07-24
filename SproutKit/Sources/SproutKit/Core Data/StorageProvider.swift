@@ -9,6 +9,12 @@ import CoreData
 import UIKit
 
 public class StorageProvider {
+    public static let preview: StorageProvider = {
+        let provider = StorageProvider(storeType: .inMemory)
+        provider.loadSampleData()
+        return provider
+    }()
+    
     public static var managedObjectModel: NSManagedObjectModel = {
         //        let bundle = Bundle(for: StorageProvider.self)
         guard let url = Bundle.module.url(forResource: "SproutCoreDataModel", withExtension: "momd") else {

@@ -63,6 +63,12 @@ struct SettingsView: View {
 
                 #if DEBUG
                 Section(header: Text("Debugging Controls")) {
+                    NavigationLink(
+                        destination: AllModelTypesList(),
+                        label: {
+                            Label("All Model Data", systemImage: "opticaldiscdrive")
+                        })
+                    
                     Button(action: {
                         storageProvider.loadSampleData()
                     }, label: {

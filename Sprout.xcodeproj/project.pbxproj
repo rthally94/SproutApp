@@ -64,6 +64,8 @@
 		FB8D9CA32680C2D40032F390 /* UIImage+Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D9CA22680C2D40032F390 /* UIImage+Constants.swift */; };
 		FB8D9CAC2680DC3D0032F390 /* SproutKit in Frameworks */ = {isa = PBXBuildFile; productRef = FB8D9CAB2680DC3D0032F390 /* SproutKit */; };
 		FB8D9CAE2683B0A60032F390 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8D9CAD2683B0A60032F390 /* UIColor+Extensions.swift */; };
+		FB8ED10E26AC145D00CD7822 /* AllModelTypesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8ED10D26AC145D00CD7822 /* AllModelTypesList.swift */; };
+		FB8ED11026AC149C00CD7822 /* AllModelTypesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB8ED10F26AC149C00CD7822 /* AllModelTypesViewModel.swift */; };
 		FB92AF66262E093D0062DE47 /* SproutCareDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB92AF65262E093D0062DE47 /* SproutCareDetailCell.swift */; };
 		FB98B92C266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */; };
 		FB98B94326645BD800629C1B /* SproutLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB98B94226645BD800629C1B /* SproutLabel.swift */; };
@@ -178,6 +180,8 @@
 		FB8D9CA22680C2D40032F390 /* UIImage+Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Constants.swift"; sourceTree = "<group>"; };
 		FB8D9CAD2683B0A60032F390 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		FB8D9CB12687D9780032F390 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB8ED10D26AC145D00CD7822 /* AllModelTypesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllModelTypesList.swift; sourceTree = "<group>"; };
+		FB8ED10F26AC149C00CD7822 /* AllModelTypesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllModelTypesViewModel.swift; sourceTree = "<group>"; };
 		FB92AF65262E093D0062DE47 /* SproutCareDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutCareDetailCell.swift; sourceTree = "<group>"; };
 		FB98B92B266199CF00629C1B /* UIViewController+DismissKeyboardGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+DismissKeyboardGesture.swift"; sourceTree = "<group>"; };
 		FB98B94226645BD800629C1B /* SproutLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SproutLabel.swift; sourceTree = "<group>"; };
@@ -460,6 +464,15 @@
 			path = Constants;
 			sourceTree = "<group>";
 		};
+		FB8ED10C26AC144300CD7822 /* CoreDataExplorer */ = {
+			isa = PBXGroup;
+			children = (
+				FB8ED10D26AC145D00CD7822 /* AllModelTypesList.swift */,
+				FB8ED10F26AC149C00CD7822 /* AllModelTypesViewModel.swift */,
+			);
+			path = CoreDataExplorer;
+			sourceTree = "<group>";
+		};
 		FB98B9552669794F00629C1B /* Local Notifications */ = {
 			isa = PBXGroup;
 			children = (
@@ -517,6 +530,7 @@
 		FBCA563026740BFC008DBFFC /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				FB8ED10C26AC144300CD7822 /* CoreDataExplorer */,
 				FBCA563126740BFC008DBFFC /* SettingsView.swift */,
 			);
 			path = Settings;
@@ -798,6 +812,7 @@
 				FBCA566E26740BFD008DBFFC /* UpNextItem.swift in Sources */,
 				FB4A1E5F268B9A46004DED91 /* MainCoordinator.swift in Sources */,
 				FBCA567A2674FB3C008DBFFC /* ListCellConfiguration.swift in Sources */,
+				FB8ED11026AC149C00CD7822 /* AllModelTypesViewModel.swift in Sources */,
 				FB5CB86226739F5D00A7F60E /* SproutDayOfMonthPickerCollectionViewCell.swift in Sources */,
 				FB43D645266E665E00FA9FA1 /* UserDefaults+Extensions.swift in Sources */,
 				FBCA565D26740BFC008DBFFC /* AddEditPlantViewController.swift in Sources */,
@@ -871,6 +886,7 @@
 				FBEB4959260BEB9700F6060C /* UICellAccessory+Extensions.swift in Sources */,
 				FB8D9CAE2683B0A60032F390 /* UIColor+Extensions.swift in Sources */,
 				FB9C66AA263A539D00CDC15A /* SproutCardView.swift in Sources */,
+				FB8ED10E26AC145D00CD7822 /* AllModelTypesList.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
